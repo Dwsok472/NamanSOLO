@@ -7,7 +7,7 @@ import Login from './components/Login';
 import ToDo from './pages/ToDo';
 import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
-
+import Register from './Register';
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
@@ -65,15 +65,30 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<DummyPage title="회원가입 페이지" />} />
-              <Route path="/story/all" element={<DummyPage title="전체 스토리" />} />
+              <Route path="/signup" element={<Register />} />
+              <Route
+                path="/story/all"
+                element={<DummyPage title="전체 스토리" />}
+              />
               <Route path="/map" element={<ImageMap />} />
               <Route path="/events" element={<DummyPage title="이벤트" />} />
-              <Route path="/mypage/info" element={<DummyPage title="커플 정보" />} />
-              <Route path="/mypage/diary" element={<DummyPage title="나의 다이어리" />} />
-              <Route path="/mypage/letter" element={<DummyPage title="나의 편지" />} />
+              <Route
+                path="/mypage/info"
+                element={<DummyPage title="커플 정보" />}
+              />
+              <Route
+                path="/mypage/diary"
+                element={<DummyPage title="나의 다이어리" />}
+              />
+              <Route
+                path="/mypage/letter"
+                element={<DummyPage title="나의 편지" />}
+              />
               <Route path="/mypage/todo" element={<ToDo />} />
-              <Route path="/mypage/painting" element={<DummyPage title="그림" />} />
+              <Route
+                path="/mypage/painting"
+                element={<DummyPage title="그림" />}
+              />
             </Routes>
           </MainContent>
           <Footer />
