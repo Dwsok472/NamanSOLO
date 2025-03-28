@@ -16,6 +16,9 @@ const Button = styled.button`
         border: 1px solid #3333;
         color: #1b1b1b;
     }
+    &:focus{
+      outline: none;
+    }
 `
 
 

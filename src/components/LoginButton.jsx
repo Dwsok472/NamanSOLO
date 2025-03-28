@@ -19,7 +19,7 @@ const Button = styled.button`
         color: white;
         border: 1px solid #3333;
     }
-    &:active{
+    &:focus{
       outline: none;
     }
 `;

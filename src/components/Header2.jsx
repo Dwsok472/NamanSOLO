@@ -14,7 +14,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Container = styled.header`
-  width: 97%;
+  width: 100%;
   height: 100px;
   background-color: #ffcbc2;
   display: flex;
@@ -234,9 +234,9 @@ function Header2({
         </Nav>
 
         <ButtonGroup>
-  <LoginButton />
-  <RegisterButton />
-</ButtonGroup>
+          <LoginButton />
+          <RegisterButton />
+        </ButtonGroup>
 
         <Hamburger onClick={() => setSidebarOpen(true)}>☰</Hamburger>
       </Container>
