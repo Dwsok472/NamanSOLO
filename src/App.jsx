@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
 const AppWrapper = styled.div`
+  width: 100vw;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
