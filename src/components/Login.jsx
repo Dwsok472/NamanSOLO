@@ -79,7 +79,7 @@ const SmallBox = styled.div`
   justify-content: center;
   align-items: center;
   margin-top:10px;
-  height: 100%;
+  height: 70px;
 `;
 const Input = styled.input`
   width: 80%;
@@ -91,14 +91,15 @@ const Input = styled.input`
 
 const FindBox = styled.div`
     width: 100%;
-    height: 80px;
+    height: 60px;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items:center;
 
 `
 const ButtonWrap = styled.div`
     width: 100%;
-    height: 70px;
+    height: 60px;
     display: flex;
   justify-content: center;
   align-items: center;
@@ -128,7 +129,7 @@ const ImgWrap = styled.div`
    display: flex;
   justify-content: center; 
   align-items: center; 
-  width: 50%; 
+  width: 45%; 
   padding-right: 30px;
   
   & img {
@@ -143,7 +144,7 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: center; 
   align-items: center; 
-  height: 100vh; 
+  height: 90vh; 
   padding: 0 400px; /* 전체 컨테이너에 좌우 간격을 추가 (옵션) */
 
 `

@@ -16,7 +16,7 @@ const FooterInner = styled.div`
 `;
 
 const FooterTitle = styled.h4`
-  font-size: 1.3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin-top: 1px;
   margin-bottom: 6px;
@@ -25,7 +25,7 @@ const FooterTitle = styled.h4`
 
 const FooterLine = styled.hr`
   border: none;
-  border-top: 1px solid #f4dfda;
+  border-top: 1px solid #ffffff;
   margin: 6px 0 12px;
 `;
 
@@ -75,10 +75,13 @@ const FixedBtn = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
-
   &:hover {
-    background-color: #fde3de;
+    font-weight: 700;
   }
+  &:focus{
+      outline: none;
+    }
+
 `;
 
 const Footer = () => {
@@ -86,7 +89,7 @@ const Footer = () => {
     <>
       <FooterWrapper>
         <FooterInner>
-          <FooterTitle>WE ARE...</FooterTitle>
+          <FooterTitle>We ARE...</FooterTitle>
           <FooterLine />
           <FooterGrid>
             <Column>
