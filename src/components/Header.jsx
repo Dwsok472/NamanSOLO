@@ -184,7 +184,7 @@ const Overlay = styled.div`
   z-index: 999;
 `;
 
-function Header2({
+function Header({
   logoText = 'WeARE',
   menuItems = [],
   subMenuItems = [],
@@ -261,4 +261,4 @@ function Header2({
   );
 }
 
-export default Header2;
+export default Header;
