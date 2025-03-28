@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { IconPassword, IconUser } from './Icons'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components';
@@ -9,6 +9,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { useRef, useState } from "react";
 import { BrowserRouter } from 'react-router-dom';
 import Couple from './img/lover.png';
+import { UserLogin } from './api';
 
 
 const CardWrap = styled.div`
@@ -166,18 +167,21 @@ export const useUserStore = create(
 function Login() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const { user, login, logout } = useUserStore();
-  const buttonRef = useRef(null);
-  const [loading, setLoading] = useState(true);
+  const { login, user, isLoggedIn } = useUserStore();
 
-  function handleSubmit() {
-    login({ username: username });
-    setUsername("");
-    setPassword("");
-  }
-  async function getLoginForm() {
 
+  async function handleSubmit() {
+    try {
+      const userData = await UserLogin(username, password); // 로그인 API 호출
+      login({ username: userData.username }); // Zustand 상태에 로그인 정보 저장
+      setUsername(''); // 입력 필드 초기화
+      setPassword(''); // 입력 필드 초기화
+    } catch (error) {
+      alert('로그인 실패! 다시 시도해주세요.');
+    }
   }
+
+
   return (
     <Container>
       <ImgWrap>
@@ -215,7 +219,7 @@ function Login() {
                 <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
               </FindBox>
               <ButtonWrap>
-                <LoginButton ref={buttonRef} onClick={handleSubmit} />
+                <LoginButton onClick={handleSubmit} />
               </ButtonWrap>
               <ButtonWrap>
                 <RegisterButton />

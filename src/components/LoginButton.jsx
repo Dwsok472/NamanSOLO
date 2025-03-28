@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Button = styled.button`
   width: 90px;
+
   border-radius: 10px;
   background-color: white;
   border: 1px solid white;
@@ -23,14 +24,25 @@ const Button = styled.button`
     }
 `;
 
-function LoginButton() {
+function LoginButton({ type }) {
   const navigate = useNavigate();
 
-  return (
-    <Button onClick={() => navigate('/login')}>
-      로그인
-    </Button>
-  );
+  if (type === "navigate") {
+    return (
+      <Button onClick={() => navigate('/login')}>
+        로그인
+      </Button>
+    );
+  } else {
+    return (
+      <Button>
+        로그인
+      </Button>
+    );
+
+  }
+
+
 }
 
 export default LoginButton;

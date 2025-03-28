@@ -234,7 +234,7 @@ function Header2({
         </Nav>
 
         <ButtonGroup>
-          <LoginButton />
+          <LoginButton type='navigate' />
           <RegisterButton />
         </ButtonGroup>
 
