@@ -5,7 +5,9 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import Login from './components/Login';
 import ToDo from './pages/ToDo';
+import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
+
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
@@ -65,7 +67,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<DummyPage title="회원가입 페이지" />} />
               <Route path="/story/all" element={<DummyPage title="전체 스토리" />} />
-              <Route path="/map" element={<DummyPage title="맵" />} />
+              <Route path="/map" element={<ImageMap />} />
               <Route path="/events" element={<DummyPage title="이벤트" />} />
               <Route path="/mypage/info" element={<DummyPage title="커플 정보" />} />
               <Route path="/mypage/diary" element={<DummyPage title="나의 다이어리" />} />
