@@ -4,10 +4,10 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import Login from './components/Login';
+import Register from './components/Register';
 import ToDo from './pages/ToDo';
 import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
-import Register from './Register';
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
