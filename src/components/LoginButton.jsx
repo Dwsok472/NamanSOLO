@@ -12,10 +12,15 @@ const Button = styled.button`
   font-weight: 700;
   border: 1px solid #3333;
     color: #1b1b1b;
+
     cursor: pointer;
     &:hover{
-        background-color:#ffccc3;
+        background-color:#ff9987;
         color: white;
+        border: 1px solid #3333;
+    }
+    &:active{
+      outline: none;
     }
 `;
 

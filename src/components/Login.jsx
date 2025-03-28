@@ -207,10 +207,8 @@ function Login() {
                                 />
                             </SmallBox>
                             <FindBox>
-                                <BrowserRouter>
-                                    <StyledLink to="/find-id">아이디 찾기</StyledLink>
-                                    <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
-                                </BrowserRouter>
+                                <StyledLink to="/find-id">아이디 찾기</StyledLink>
+                                <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
                             </FindBox>
                             <ButtonWrap>
                                 <LoginButton ref={buttonRef} onClick={handleSubmit} />

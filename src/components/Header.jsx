@@ -188,7 +188,7 @@ const Overlay = styled.div`
   z-index: 998;
 `;
 
-function Header2() {
+function Header() {
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -270,4 +270,4 @@ function Header2() {
   );
 }
 
-export default Header2;
+export default Header;
