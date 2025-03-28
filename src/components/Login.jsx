@@ -83,7 +83,6 @@ const SmallBox = styled.div`
 `;
 const Input = styled.input`
   width: 80%;
-  margin: 20px 0 10px;
   border: none;
   outline: none;
   padding-left: 30px;
@@ -150,79 +149,83 @@ const Container = styled.div`
 `
 
 export const useUserStore = create(
-    persist(
-        (set) => ({
-            user: null,
-            isLoggedIn: false,
-            login: (user) => set({ user, isLoggedIn: true }), // 로그인 처리
-            logout: () => set({ user: null, isLoggedIn: false }), // 로그아웃 처리
-        }),
-        {
-            name: "user-storage", // sessionStorage에 저장될 키 이름
-            storage: createJSONStorage(() => sessionStorage), // sessionStorage에 저장
-        }
-    )
+  persist(
+    (set) => ({
+      user: null,
+      isLoggedIn: false,
+      login: (user) => set({ user, isLoggedIn: true }), // 로그인 처리
+      logout: () => set({ user: null, isLoggedIn: false }), // 로그아웃 처리
+    }),
+    {
+      name: "user-storage", // sessionStorage에 저장될 키 이름
+      storage: createJSONStorage(() => sessionStorage), // sessionStorage에 저장
+    }
+  )
 );
 
 function Login() {
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
-    const { user, login, logout } = useUserStore();
-    const buttonRef = useRef(null);
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const { user, login, logout } = useUserStore();
+  const buttonRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
-    function handleSubmit() {
-        login({ username: username });
-        setUsername("");
-        setPassword("");
-    }
-    return (
-        <Container>
-            <ImgWrap>
-                <img src={Couple} />
-            </ImgWrap>
-            <CardWrap>
-                <Card>
-                    <Top>
-                        <H1>LOGIN</H1>
-                    </Top>
-                    <ButtomWrap>
-                        <Buttom>
-                            <SmallBox>
-                                <IconUser />
-                                <Input
-                                    type="text"
-                                    placeholder="아이디를 입력해주세요"
-                                    autoComplete="off" // 자동완성 기능 끄기
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                />
-                            </SmallBox>
-                            <SmallBox>
-                                <IconPassword />
-                                <Input
-                                    type="password"
-                                    autoComplete="off"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="비밀번호를 입력해주세요"
-                                />
-                            </SmallBox>
-                            <FindBox>
-                                <StyledLink to="/find-id">아이디 찾기</StyledLink>
-                                <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
-                            </FindBox>
-                            <ButtonWrap>
-                                <LoginButton ref={buttonRef} onClick={handleSubmit} />
-                            </ButtonWrap>
-                            <ButtonWrap>
-                                <RegisterButton />
-                            </ButtonWrap>
-                        </Buttom>
-                    </ButtomWrap>
-                </Card>
-            </CardWrap>
-        </Container>
-    )
+  function handleSubmit() {
+    login({ username: username });
+    setUsername("");
+    setPassword("");
+  }
+  async function getLoginForm() {
+
+  }
+  return (
+    <Container>
+      <ImgWrap>
+        <img src={Couple} />
+      </ImgWrap>
+      <CardWrap>
+        <Card>
+          <Top>
+            <H1>LOGIN</H1>
+          </Top>
+          <ButtomWrap>
+            <Buttom>
+              <SmallBox>
+                <IconUser />
+                <Input
+                  type="text"
+                  placeholder="아이디를 입력해주세요"
+                  autoComplete="off" // 자동완성 기능 끄기
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </SmallBox>
+              <SmallBox>
+                <IconPassword />
+                <Input
+                  type="password"
+                  autoComplete="off"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="비밀번호를 입력해주세요"
+                />
+              </SmallBox>
+              <FindBox>
+                <StyledLink to="/find-id">아이디 찾기</StyledLink>
+                <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
+              </FindBox>
+              <ButtonWrap>
+                <LoginButton ref={buttonRef} onClick={handleSubmit} />
+              </ButtonWrap>
+              <ButtonWrap>
+                <RegisterButton />
+              </ButtonWrap>
+            </Buttom>
+          </ButtomWrap>
+        </Card>
+      </CardWrap>
+    </Container>
+  )
 }
 
 export default Login
