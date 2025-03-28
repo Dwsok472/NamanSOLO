@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { IconPassword, IconUser } from './Icons';
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  margin-top: 170px;
+  margin-top: 100px;
   margin-bottom: 170px;
 `;
 const H1 = styled.h1`
@@ -22,7 +23,7 @@ const CardWrap = styled.div`
 `;
 const Card = styled.div`
   width: 550px;
-  height: 600px;
+  height: 650px;
   background-color: #ffdcd6;
   clip-path: polygon(
     10% 0%,
@@ -83,7 +84,7 @@ const Top = styled.div`
     content: '';
     position: absolute;
     top: 50%;
-    left: 22%;
+    left: 20.5%;
     transform: translate(-50%, -50%);
     width: 15px;
     height: 15px;
@@ -99,11 +100,95 @@ const Top = styled.div`
     font-weight: 700;
   }
 `;
+const SmallBox = styled.div`
+  width: 85%;
+  margin: 0 auto;
+  border: 1px solid #02020233;
+  border-radius: 30px;
+  background-color: white;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  height: 70px;
+  position: relative;
+  button {
+    width: 95px;
+    background-color: #a0a0a0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 20px;
+    color: white;
+    position: absolute;
+    right: 10px;
+    outline: none;
+    &:hover {
+      color: #212121;
+    }
+  }
+`;
+const Input = styled.input`
+  width: 80%;
+  border: none;
+  outline: none;
+  padding-left: 30px;
+`;
+
+const ButtomWrap = styled.div`
+  width: 85%;
+  height: 70%;
+  margin: 0 auto;
+`;
+const Buttom = styled.div`
+  width: 100%;
+  border: 1px solid #1a1a1a33;
+  background-color: white;
+  border-radius: 50px;
+  margin: 0 auto;
+  gap: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  height: 80%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  margin-top: 10px;
+`;
+
 function Register() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [matchpassword, setmatchpassword] = useState('');
   const [isChecked, setIsChecked] = useState(false);
+  const [buttonText, setButtonText] = useState('중복확인');
+  const [matchText, setmatchText] = useState('확인');
   const handleChange = () => {
     setIsChecked(!isChecked); // 체크된 상태를 반전
   };
+
+  async function handleCheckUsername() {
+    try {
+      const check = await UserLogin(username);
+      if (check.data === true) {
+        setButtonText('사용 가능');
+      } else {
+        alert('이미 등록된 아이디입니다');
+        return;
+      }
+    } catch (error) {
+      setButtonText('중복확인');
+    }
+  }
+
+  async function handleMatchPwd() {
+    if (password === matchpassword) {
+      setmatchText('완료');
+    } else {
+      alert('입력하신 비밀번호가 일치하지 않습니다');
+      return;
+    }
+  }
   return (
     <Container>
       <H1>회원가입</H1>
@@ -183,56 +268,44 @@ function Register() {
               <label htmlFor="agree">동의</label>
             </div>
           </Top>
+          <ButtomWrap>
+            <Buttom>
+              <SmallBox>
+                <IconUser />
+                <Input
+                  type="text"
+                  placeholder="아이디를 입력해주세요"
+                  autoComplete="off" // 자동완성 기능 끄기
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <button onClick={handleCheckUsername}>{buttonText}</button>
+              </SmallBox>
+              <SmallBox>
+                <IconPassword />
+                <Input
+                  type="password"
+                  placeholder="비밀번호를 입력해주세요"
+                  autoComplete="off"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </SmallBox>
+              <SmallBox>
+                <IconPassword />
+                <Input
+                  type="password"
+                  placeholder="비밀번호를 재입력해주세요"
+                  autoComplete="off"
+                  value={matchpassword}
+                  onChange={(e) => setmatchpassword(e.target.value)}
+                />
+                <button onClick={handleMatchPwd}>{matchText}</button>
+              </SmallBox>
+            </Buttom>
+          </ButtomWrap>
         </Card>
       </CardWrap>
-      <ButtomWrap>
-        <Buttom>
-          <SmallBox>
-            <IconUser />
-            <Input
-              type="text"
-              placeholder="아이디를 입력해주세요"
-              autoComplete="off" // 자동완성 기능 끄기
-              // value={username}
-              // onChange={(e) => setUsername(e.target.value)}
-            />
-          </SmallBox>
-          <SmallBox>
-            <IconBirthday />
-            <Input
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              autoComplete="off"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </SmallBox>
-          <SmallBox>
-            <IconEmail />
-            <Input
-              type="password"
-              placeholder="비밀번호를 재입력해주세요"
-              autoComplete="off"
-            />
-          </SmallBox>
-          <SmallBox>
-            <IconPhone />
-            <Input
-              type="text"
-              placeholder="전화번호를 입력주세요"
-              autoComplete="off" // 자동완성 기능 끄기
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              readOnly={!isEditable}
-            />
-          </SmallBox>
-        </Buttom>
-        {isProfilePage && (
-          <ButtonWrap>
-            <Button buttoncolor={buttoncolor}>수정하기</Button>
-          </ButtonWrap>
-        )}
-      </ButtomWrap>
     </Container>
   );
 }
