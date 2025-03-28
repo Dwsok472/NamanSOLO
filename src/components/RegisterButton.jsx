@@ -10,6 +10,12 @@ const Button = styled.button`
     font-size: 1rem;
     font-weight: 700;
     color: white;
+    cursor: pointer;
+    &:hover{
+        background-color: white;
+        border: 1px solid #3333;
+        color: #1b1b1b;
+    }
 `
 
 

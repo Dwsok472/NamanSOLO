@@ -10,7 +10,13 @@ const Button = styled.button`
   border: 1px solid white;
   font-size: 1rem;
   font-weight: 700;
-  margin-right: 10px;
+  border: 1px solid #3333;
+    color: #1b1b1b;
+    cursor: pointer;
+    &:hover{
+        background-color:#ffccc3;
+        color: white;
+    }
 `;
 
 function LoginButton() {
