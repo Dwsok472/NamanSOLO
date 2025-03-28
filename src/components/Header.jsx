@@ -39,7 +39,8 @@ const Nav = styled.nav`
   gap: 2.5rem;
   margin-left: 3rem;
 
-  a, div {
+  a,
+  div {
     font-size: 1.3rem;
     color: white;
     font-weight: 500;
@@ -162,7 +163,8 @@ const Sidebar = styled.div`
     li {
       padding: 12px 0;
 
-      a, span {
+      a,
+      span {
         color: #6a2b1b;
         text-decoration: none;
         font-size: 1.2rem;
@@ -180,7 +182,7 @@ const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 `;
 
@@ -216,17 +218,30 @@ function Header({
 
         <Nav>
           {menuItems.map(({ to, label }) => (
-            <Link key={to} to={to}>{label}</Link>
+            <Link key={to} to={to}>
+              {label}
+            </Link>
           ))}
 
           <MenuWrapper>
             <div onClick={toggleSubMenu}>
-              마이페이지 <span style={{ transform: isSubOpen ? 'rotate(180deg)' : 'none', display: 'inline-block', transition: '0.2s' }}>▼</span>
+              마이페이지{' '}
+              <span
+                style={{
+                  transform: isSubOpen ? 'rotate(180deg)' : 'none',
+                  display: 'inline-block',
+                  transition: '0.2s',
+                }}
+              >
+                ▼
+              </span>
             </div>
             {isSubOpen && (
               <SubMenu>
                 {subMenuItems.map(({ to, label }) => (
-                  <li key={to}><Link to={to}>{label}</Link></li>
+                  <li key={to}>
+                    <Link to={to}>{label}</Link>
+                  </li>
                 ))}
               </SubMenu>
             )}
@@ -234,7 +249,7 @@ function Header({
         </Nav>
 
         <ButtonGroup>
-          <LoginButton type='navigate' />
+          <LoginButton type="navigate" />
           <RegisterButton />
         </ButtonGroup>
 
@@ -245,16 +260,33 @@ function Header({
       <Sidebar $open={isSidebarOpen}>
         <ul>
           {menuItems.map(({ to, label }) => (
-            <li key={to}><Link to={to} onClick={closeSidebar}>{label}</Link></li>
+            <li key={to}>
+              <Link to={to} onClick={closeSidebar}>
+                {label}
+              </Link>
+            </li>
           ))}
           <li onClick={toggleSubMenu}>
             <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
           </li>
-          {isSubOpen && subMenuItems.map(({ to, label }) => (
-            <li key={to}><Link to={to} onClick={closeSidebar}>{label}</Link></li>
-          ))}
-          <li><Link to="/login" onClick={closeSidebar}>{loginText}</Link></li>
-          <li><Link to="/signup" onClick={closeSidebar}>{signupText}</Link></li>
+          {isSubOpen &&
+            subMenuItems.map(({ to, label }) => (
+              <li key={to}>
+                <Link to={to} onClick={closeSidebar}>
+                  {label}
+                </Link>
+              </li>
+            ))}
+          <li>
+            <Link to="/login" onClick={closeSidebar}>
+              {loginText}
+            </Link>
+          </li>
+          <li>
+            <Link to="/signup" onClick={closeSidebar}>
+              {signupText}
+            </Link>
+          </li>
         </ul>
       </Sidebar>
     </>
