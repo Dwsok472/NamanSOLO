@@ -90,8 +90,8 @@ function App() {
                 path="/mypage/painting"
                 element={<DummyPage title="그림" />}
               />
-              <Route path="/find-id" element={<Find />} />
-              <Route path="/find-pwd" element={<Find />} />
+              <Route path="/find-id" element={<Find isFindId={true} />} />
+              <Route path="/find-pwd" element={<Find isFindId={false} />} />
             </Routes>
           </MainContent>
           <Footer />
