@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { IconEmail, IconPhone, IconUser } from './Icons';
 import LoginButton from './LoginButton';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
   margin-top: 100px;
   margin-bottom: 170px;
+  & hr {
+    width: 90%;
+    opacity: 0.5;
+    margin: 0 auto;
+  }
 `;
 const H1 = styled.h1`
   font-size: 5rem;
@@ -29,7 +35,7 @@ const Top = styled.div`
 `;
 const Card = styled.div`
   width: 550px;
-  height: 650px;
+  padding-bottom: 50px;
   background-color: #ffdcd6;
   clip-path: polygon(
     10% 0%,
@@ -72,7 +78,29 @@ const SmallBox = styled.div`
       color: #212121;
     }
   }
+  label {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
 `;
+const Button = styled.button`
+  width: 120px;
+  background-color: #a0a0a0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 20px;
+  color: white;
+  margin: 0 auto;
+  margin-top: 5px;
+  outline: none;
+  &:hover {
+    color: #212121;
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
 const Input = styled.input`
   width: 80%;
   border: none;
@@ -129,6 +157,14 @@ const Box = styled.div`
     color: white;
   }
 `;
+
+const ButtonWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+`;
 function Find({ isFindId }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -143,11 +179,21 @@ function Find({ isFindId }) {
   const [writeOneMorePassword, setWriteOneMorePassword] = useState('');
 
   const [selectedOption, setSelectedOption] = useState('phone');
+  const navigate = useNavigate(); // useNavigate 훅으로 페이지 이동 함수 생성
+
+  const handleLoginRedirect = () => {
+    if (newPassword === writeOneMorePassword) {
+      alert('변경이 완료되었습니다');
+      navigate('/login'); // 로그인 페이지로 이동
+    } else {
+      alert('작성하신 비밀번호가 일치하지 않습니다. 다시 확인 부탁드립니다');
+      return;
+    }
+  };
 
   const handleBoxClick = (option) => {
     setSelectedOption(option);
   };
-
   // 인증번호 처리
   async function handleCode() {
     if (code === correctCode) {
@@ -206,17 +252,31 @@ function Find({ isFindId }) {
                     onChange={(e) => setName(e.target.value)}
                   />
                 </SmallBox>
-                <SmallBox>
-                  <IconPhone />
-                  <Input
-                    type="text"
-                    placeholder="전화번호를 입력해주세요"
-                    autoComplete="off" // 자동완성 기능 끄기
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                  />
-                </SmallBox>
-                <button> 인증하기</button>
+                {selectedOption === 'phone' ? (
+                  <SmallBox>
+                    <IconPhone />
+                    <Input
+                      type="text"
+                      placeholder="전화번호를 입력해주세요"
+                      autoComplete="off" // 자동완성 기능 끄기
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                    />
+                  </SmallBox>
+                ) : (
+                  <SmallBox>
+                    <IconEmail />
+                    <Input
+                      type="text"
+                      placeholder="이메일을 입력해주세요"
+                      autoComplete="off" // 자동완성 기능 끄기
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </SmallBox>
+                )}
+
+                <Button> 인증번호 발송</Button>
                 <SmallBox>
                   <label>인증번호</label>
                   <Input
@@ -228,7 +288,7 @@ function Find({ isFindId }) {
                   />
                   <button onClick={handleCode}>{codeText}</button>
                 </SmallBox>
-                <br />
+                <hr />
                 <SmallBox>
                   <label>나의 아이디</label>
                   <Input
@@ -241,8 +301,10 @@ function Find({ isFindId }) {
                 </SmallBox>
               </Buttom>
             </ButtomWrap>
-            <LoginButton type="navigate" />
           </Card>
+          <ButtonWrap>
+            <LoginButton type="navigate" />
+          </ButtonWrap>
         </CardWrap>
       ) : (
         <CardWrap>
@@ -269,7 +331,7 @@ function Find({ isFindId }) {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </SmallBox>
-                <button> 인증하기</button>
+                <Button> 인증번호 발송</Button>
                 <SmallBox>
                   <label>인증번호</label>
                   <Input
@@ -281,7 +343,7 @@ function Find({ isFindId }) {
                   />
                   <button onClick={handleCode}>{codeText}</button>
                 </SmallBox>
-                <br />
+                <hr />
                 <SmallBox>
                   <label>새 비밀번호</label>
                   <Input
@@ -302,6 +364,7 @@ function Find({ isFindId }) {
                     onChange={(e) => setWriteOneMorePassword(e.target.value)}
                   />
                 </SmallBox>
+                <Button onClick={handleLoginRedirect}> 확인 </Button>
               </Buttom>
             </ButtomWrap>
           </Card>
