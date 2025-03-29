@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { IconPassword, IconUser } from './Icons';
+import NextButton from './NextButton';
+import Octagon from './Octagon';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -154,6 +156,9 @@ const Buttom = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 `;
 
 function Register() {
@@ -279,6 +284,7 @@ function Register() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
+
                 <button onClick={handleCheckUsername}>{buttonText}</button>
               </SmallBox>
               <SmallBox>
@@ -300,8 +306,10 @@ function Register() {
                   value={matchpassword}
                   onChange={(e) => setmatchpassword(e.target.value)}
                 />
+
                 <button onClick={handleMatchPwd}>{matchText}</button>
               </SmallBox>
+              <NextButton />
             </Buttom>
           </ButtomWrap>
         </Card>
