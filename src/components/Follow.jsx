@@ -10,12 +10,9 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Container = styled.div``;
-
 const SearchBox = styled.div``;
-
 const InputBox = styled.div``;
 const Input = styled.input``;
-
 const ContentBox = styled.div``;
 const SmallBox = styled.div``;
 const Left = styled.div``;
