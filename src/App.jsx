@@ -72,7 +72,7 @@ function App() {
                 element={<DummyPage title="전체 스토리" />}
               />
               <Route path="/map" element={<ImageMap />} />
-              <Route path="/events" element={<DummyPage title="이벤트" />} />
+              <Route path="/events" element={<Event />} />
               <Route
                 path="/mypage/info"
                 element={<DummyPage title="커플 정보" />}
