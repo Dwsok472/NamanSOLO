@@ -10,6 +10,7 @@ import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
 import Find from './components/Find';
 import Event from './components/Event';
+import Follow from './components/Follow';
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
@@ -93,6 +94,7 @@ function App() {
               />
               <Route path="/find-id" element={<Find isFindId={true} />} />
               <Route path="/find-pwd" element={<Find isFindId={false} />} />
+              <Route path="/follow" element={<Follow />} />
             </Routes>
           </MainContent>
           <Footer />
