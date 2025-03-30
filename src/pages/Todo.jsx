@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import styled from 'styled-components';
+import coupleImg from '../components/img/lover.png';
 
 // 커플 시작일(예: 2022-01-01)
 const COUPLE_START_DATE = new Date(2022, 0, 0);
@@ -25,6 +27,11 @@ function ToDo() {
 
   // 팔레트 열림/닫힘 상태
   const [paletteOpen, setPaletteOpen] = useState(false);
+
+  const CoupleImg = styled.img`
+    width: 45%;
+    height: 45%;
+  `;
 
   // 8가지 색상 샘플
   const colorSamples = [
@@ -139,10 +146,8 @@ function ToDo() {
 
           {/* 사람 아이콘 (예시) */}
           <div style={{ marginTop: '10px' }}>
-            <img
-              src="./components/img/lover.png" // 실제 아이콘 경로로 교체
-              alt="Couple Icon"
-              style={{ width: '60px', height: '60px' }}
+            <CoupleImg // 실제 아이콘 경로로 교체
+              src={coupleImg} alt="Couple Icon"
             />
           </div>
 
@@ -151,6 +156,7 @@ function ToDo() {
             type="button"
             onClick={() => setIsModalOpen(true)}
             style={{
+              color: '#444',
               padding: '10px 20px',
               backgroundColor: '#fff',
               border: '1px solid #ccc',
@@ -172,13 +178,13 @@ function ToDo() {
         }}>
           {/* 캘린더 헤더 */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <button onClick={() => changeMonth(-1)} style={{ cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', padding: '5px' }}>
+            <button onClick={() => changeMonth(-1)} style={{ color: '#444', cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', padding: '5px' }}>
               ⬅ Prev
             </button>
             <h3 style={{ margin: '0', color: '#333' }}>
               {currentYear}년 {currentMonth + 1}월
             </h3>
-            <button onClick={() => changeMonth(1)} style={{ cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', padding: '5px' }}>
+            <button onClick={() => changeMonth(1)} style={{ color: '#444', cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', padding: '5px' }}>
               Next ➡
             </button>
           </div>
@@ -344,6 +350,7 @@ function ToDo() {
                   type="button"
                   onClick={() => setPaletteOpen(!paletteOpen)}
                   style={{
+                    color: '#444', 
                     padding: '5px 10px',
                     cursor: 'pointer',
                     border: '1px solid #ccc',
