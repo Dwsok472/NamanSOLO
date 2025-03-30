@@ -9,6 +9,7 @@ import ToDo from './pages/ToDo';
 import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
 import Find from './components/Find';
+import Event from './components/Event';
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
