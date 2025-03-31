@@ -2,6 +2,7 @@ import React from 'react'
 import Octagon from './Octagon'
 import heartRate from '../img/heart-rate.png'
 import styled from 'styled-components'
+import NextButton from '../Button/NextButton';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -29,8 +30,15 @@ const Content = styled.div`
         object-fit: cover;
     }
 `
+const ButtonWrap = styled.div`
+    width: 100%;
+    margin: o auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
 
-function RegisterStep2() {
+function RegisterStep2({ onNext }) {
     return (
         <Container>
             <H1>회원가입</H1>
@@ -54,6 +62,9 @@ function RegisterStep2() {
                     isProfilePage={false}
                     isSignUpPage={true} />
             </Content>
+            <ButtonWrap>
+                <NextButton onClick={onNext} />
+            </ButtonWrap>
         </Container>
     )
 }

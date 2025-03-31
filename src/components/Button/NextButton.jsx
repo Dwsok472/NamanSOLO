@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Button = styled.button`
-  width: 80%;
+  width: 80px;
   border-radius: 10px;
   background-color: #ffcbc1;
   border: 1px solid white;
@@ -19,10 +19,10 @@ const Button = styled.button`
   }
 `;
 
-function NextButton() {
+function NextButton({ onClick }) {
   return (
     <div>
-      <Button>다음</Button>
+      <Button onClick={onClick}>다음</Button>
     </div>
   );
 }

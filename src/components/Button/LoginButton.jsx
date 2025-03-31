@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Button = styled.button`
   width: 90px;
-
   border-radius: 10px;
   background-color: white;
   border: 1px solid white;

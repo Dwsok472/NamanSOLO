@@ -161,7 +161,7 @@ const Buttom = styled.div`
   text-align: center;
 `;
 
-function RegisterStep1() {
+function RegisterStep1({ onNext }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [matchpassword, setmatchpassword] = useState('');
@@ -309,7 +309,7 @@ function RegisterStep1() {
 
                 <button onClick={handleMatchPwd}>{matchText}</button>
               </SmallBox>
-              <NextButton />
+              <NextButton onClick={onNext} />
             </Buttom>
           </ButtomWrap>
         </Card>
