@@ -12,6 +12,7 @@ import Find from "./components/FindIdAndPwd/Find";
 import Event from "./components/Event";
 import Follow from "./components/MyPage/Follow";
 import MyProfile from "./components/MyPage/MyProfile";
+import ToDo from "./components/MyPage/Todo";
 
 const DummyPage = ({ title }) => <div style={{ padding: "40px" }}>{title}</div>;
 
