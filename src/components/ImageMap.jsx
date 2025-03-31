@@ -37,9 +37,10 @@ const SlideBox = styled.div`
 `;
 
 const SlideImage = styled.div`
+  position: relative; // 추가!
   width: 100%;
-  background-color: #fff;
   border-radius: 12px;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
