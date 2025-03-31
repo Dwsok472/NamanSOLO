@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { IconPhoto } from "../Icons";
-import defaultcouple from "../img/defaultcouple.jpg";
-import puzzle from "../img/puzzle.png";
+import { IconPhoto } from "./icons";
+import defaultcouple from "../components/img/defaultcouple.jpg";
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 90vh;
   padding: 20px;
   background-color: ${({ bgColor }) => bgColor || "#fff"};
 `;
@@ -38,8 +37,8 @@ const PhotoSection = styled.div`
 `;
 
 const ProfilePhotoContainer = styled.div`
-  width: 170px;
-  height: 170px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   border: 2px solid #9d97977f;
   overflow: hidden;
@@ -55,7 +54,7 @@ const PlusButton = styled.label`
   position: absolute;
   bottom: -10px;
   right: 20%;
-  width: 30px;
+  width: 35px;
   border-radius: 50%;
   background-color: transparent;
   color: ${({ color }) => color || "#9d97977f"};
@@ -69,14 +68,14 @@ const PlusButton = styled.label`
 `;
 
 const DateInfo = styled.div`
-  margin-top: 10%;
+  margin-top: 5%;
 
   border-top: 1px solid ${({ borderColor }) => borderColor || "#2d2828a8"};
-  padding-top: 5%;
+  padding-top: 3%;
 `;
 
 const MeetingDate = styled.p`
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   color: ${({ color }) => color || "#333"};
 `;
@@ -93,11 +92,20 @@ const NameHeartSection = styled.div`
   justify-content: space-evenly;
   align-items: center;
   padding-top: 5%;
-  margin-top: 10px;
+  margin-top: 5%;
   margin-bottom: 10px;
 `;
 
-const NameBox = styled.image`
+const NameBox1 = styled.image`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ bgColor }) => bgColor || "#f1f1f1"};
+  padding: 10px;
+  border-radius: 5px;
+  height: 110px;
+`;
+const NameBox2 = styled.image`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,23 +116,23 @@ const NameBox = styled.image`
 `;
 
 const Heart = styled.span`
-  font-size: 24px;
+  font-size: 30px;
 `;
 
 const Name = styled.p`
   font-size: 15px;
   font-weight: bold;
-  padding: 10px;
+  padding: 5%;
   display: inline-block;
   background-color: ${({ bgColor }) => bgColor || "#f1f1f1"};
   text-align: center;
-  width: 70px;
+  width: 80px;
   margin: 0;
 `;
 
 const RightProfileCard = styled.div`
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -132,15 +140,21 @@ const RightProfileCard = styled.div`
   min-height: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  position: relative;
+  overflow-y: auto;
+  max-height: 600px;
 `;
-
 const RightSection = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding-bottom: 5px;
   border-bottom: 1px solid ${({ borderColor }) => borderColor || "#ababa8"};
+  position: sticky;
+  top: 0;
+  background-color: ${({ bgColor }) => bgColor || "#fff"};
+  z-index: 10;
 `;
 
 const Button = styled.button`
@@ -217,7 +231,7 @@ const BellWrapper = styled.div`
 `;
 
 function MyProfile() {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(defaultcouple);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(new Date());
   const [name, setName] = useState("");
@@ -249,7 +263,7 @@ function MyProfile() {
       <ProfileCard>
         <PhotoSection>
           <ProfilePhotoContainer>
-            {<ProfilePhoto src={defaultcouple} alt="profile" />}
+            {<ProfilePhoto src={image} alt="profile" />}
           </ProfilePhotoContainer>
           <PlusButton htmlFor="image-upload">
             <IconPhoto />
@@ -272,13 +286,13 @@ function MyProfile() {
         </DateInfo>
 
         <NameHeartSection>
-          <NameBox src={puzzle}>
+          <NameBox1>
             <Name>{name || "김동인"}</Name>
-          </NameBox>
+          </NameBox1>
           <Heart>❤️</Heart>
-          <NameBox>
+          <NameBox2>
             <Name>{name || "박서진"}</Name>
-          </NameBox>
+          </NameBox2>
         </NameHeartSection>
       </ProfileCard>
 
