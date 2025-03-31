@@ -220,7 +220,79 @@ const CloseMapButton = styled.button`
   cursor: pointer;
 `;
 
-// 📍 지역별 장소 데이터
+const PlaceFormWrapper = styled.div`
+  background: #fffafa;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+`;
+
+const ImageUpload = styled.div`
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: #fff0f0;
+  border: 2px dashed #ff5777;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  label {
+    font-size: 2rem;
+    color: #ff5777;
+    cursor: pointer;
+  }
+
+  input {
+    display: none;
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+`;
+
+const SubmitBtn = styled.button`
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #ff5777;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: #e84664;
+  }
+`;
+
+
 const regionPlaces = {
   '충청남도': [
     {
@@ -259,6 +331,15 @@ const ImageMap = () => {
   const [showMap, setShowMap] = useState(false);
   const [mapAddress, setMapAddress] = useState('');
   const [googleLoaded, setGoogleLoaded] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [placesByRegion, setPlacesByRegion] = useState(regionPlaces);
+  const [newPlace, setNewPlace] = useState({
+    name: '',
+    category: '',
+    address: '',
+    description: '',
+    image: null,
+  });
 
   const slides = [
     { label: '데이트 코스 1', image: course1 },
@@ -312,7 +393,7 @@ const ImageMap = () => {
     if (showMap && googleLoaded && mapAddress) {
       const timeout = setTimeout(() => {
         renderMap(mapAddress);
-      }, 100); // 100ms 딜레이로 map-container가 렌더링되도록 보장
+      }, 100);
   
       return () => clearTimeout(timeout);
     }
@@ -378,12 +459,56 @@ const ImageMap = () => {
     },
   ];
 
-
   const filteredPlaces = selectedRegion
-    ? (regionPlaces[selectedRegion] || []).filter(
-        (place) => activeCategory === '전체' || place.category === activeCategory
-      )
-    : [];
+  ? (placesByRegion[selectedRegion] || []).filter(
+      (place) => activeCategory === '전체' || place.category === activeCategory
+    )
+  : [];
+
+    const updateNewPlace = (field, value) => {
+      setNewPlace((prev) => ({ ...prev, [field]: value }));
+    };
+    
+    const handleImageUpload = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+    
+      const previewURL = URL.createObjectURL(file);
+    
+      setNewPlace((prev) => ({
+        ...prev,
+        image: file,
+        preview: previewURL,
+      }));
+    };
+    
+    const handleRegister = () => {
+      if (!newPlace.image) {
+        alert('이미지를 업로드해주세요.');
+        return;
+      }
+
+      const newItem = {
+        ...newPlace,
+        id: Date.now(),
+        address: selectedRegion,
+        region: selectedRegion,
+        thumbnail: URL.createObjectURL(newPlace.image),
+      };
+    
+      // 해당 지역의 기존 장소 리스트
+      const updatedList = [...(placesByRegion[selectedRegion] || []), newItem];
+    
+      // 상태 갱신
+      setPlacesByRegion({
+        ...placesByRegion,
+        [selectedRegion]: updatedList
+      });
+    
+      // 폼 리셋
+      setShowAddForm(false);
+      setNewPlace({ name: '', category: '', address: '', description: '', image: null });
+    };
 
   return (
     <Container>
@@ -420,7 +545,7 @@ const ImageMap = () => {
                   </Tab>
                 ))}
               </CategoryTabs>
-
+              
               <PlaceGrid>
                 {filteredPlaces.map((place) => (
                   <React.Fragment key={place.id}>
@@ -471,8 +596,70 @@ const ImageMap = () => {
                   </React.Fragment>
                 ))}
               </PlaceGrid>
+              {viewMode === 'list' && !showAddForm && (
+  <button onClick={() => setShowAddForm(true)}>+ 장소 추가</button>
+)}
             </>
           )}
+
+{showAddForm && (
+  <PlaceFormWrapper>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <h2>MAP 등록</h2>
+
+    {selectedRegion && (
+  <p style={{ fontSize: '0.85rem', color: '#888', margin: '8px 0' }}>
+    선택된 지역: <strong>{selectedRegion}</strong>
+  </p>
+)}
+
+    <button
+        onClick={() => setShowAddForm(false)}
+        style={{
+          background: '#ff5777',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '6px',
+          padding: '4px 10px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+        }}
+      >
+        ✕
+      </button>
+    </div>
+    
+    <ImageUpload>
+    {newPlace.preview ? (
+    <img
+      src={newPlace.preview}
+      alt="미리보기"
+      style={{ maxWidth: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
+    />
+  ) : (
+    <>
+      <label htmlFor="upload-image">+</label>
+      <input type="file" id="upload-image" accept="image/*" onChange={handleImageUpload} />
+    </>
+  )}
+    </ImageUpload>
+
+    <Select value={newPlace.category} onChange={(e) => updateNewPlace('category', e.target.value)}>
+      <option value="">카테고리 선택</option>
+      <option value="맛집">맛집</option>
+      <option value="카페">카페</option>
+      <option value="호텔">호텔</option>
+      <option value="관광지">관광지</option>
+      <option value="포토존">포토존</option>
+    </Select>
+
+    <Input placeholder="상호명" value={newPlace.name} onChange={(e) => updateNewPlace('name', e.target.value)} />
+    <Input placeholder="설명" value={newPlace.description} onChange={(e) => updateNewPlace('description', e.target.value)} />
+
+    <SubmitBtn onClick={handleRegister}>등록하기</SubmitBtn>
+  </PlaceFormWrapper>
+)}
+
         </SlideBox>
 
         {viewMode === 'slide' && <Description>지역 이름은 지역별 데이트 장소 추천입니다</Description>}
