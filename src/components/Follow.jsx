@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconFollowing, IconSearch } from './Icons';
+import { IconFollowing, IconSearch, IconUsers } from './Icons';
 import styled from 'styled-components';
 // import {
 //   getAllFollower,
@@ -9,17 +9,144 @@ import styled from 'styled-components';
 // } from './api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const Container = styled.div``;
-const SearchBox = styled.div``;
-const InputBox = styled.div``;
-const Input = styled.input``;
-const ContentBox = styled.div``;
-const SmallBox = styled.div``;
-const Left = styled.div``;
-const Img = styled.img``;
-const Right = styled.div``;
-const TopButton = styled.button``;
-const ButtomButton = styled.button``;
+const Container = styled.div`
+  width: 400px;
+  margin: 0 auto;
+  margin-top: 30px;
+`
+
+const ContainerMain = styled.div`
+  width: 100%;
+  border-radius: 30px;
+  padding-top: 10px;
+  background-color: #c0c0c09e;
+  height: 480px;
+`;
+
+const Top = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  gap: 15px;
+`
+const SearchBox = styled.div`
+width: 90%;
+height: 50px;
+border: 1px solid #ffffff33;
+border-radius: 30px;
+display: flex;
+align-items: center;
+margin: 0 auto;
+background-color: white;
+`;
+const InputBox = styled.div`
+width: 95%;
+height: 40px;
+display: flex;
+align-items: center;
+`
+  ;
+const Input = styled.input`
+outline:none;
+border: none;
+width: 100%;
+border: 1px solid #3333;
+border-radius: 30px;
+height: 100%;
+margin-left: 10px;
+padding-left: 10px;
+margin-right: 5px;
+&::placeholder{
+  font-size: 1rem;
+  font-weight: 700;
+}
+`;
+const ContentBox = styled.div`
+width:90%;
+height: 400px;
+margin: 0 auto;
+margin-top: 10px;
+overflow: scroll;
+overflow-x: hidden;
+&::-webkit-scrollbar {
+  width: 7px;  /* 세로 스크롤바의 너비를 8px로 설정 */
+}
+&::-webkit-scrollbar-thumb {
+  background-color: #7a7a7a;  /* 핸들의 색상 */
+  border-radius: 10px;
+}
+`;
+const SmallBox = styled.div`
+border: 1px solid #3333;
+width: 90%;
+height: 100px;
+margin: 0 auto;
+border-radius: 10px;
+display: flex;
+margin-bottom: 10px;
+background-color: white;
+`;
+const Left = styled.div`
+width: 60%;
+padding-left: 10px;
+display: flex;
+align-items: center;
+.userName{
+  font-size: 1rem;
+  font-weight: 700;
+  padding-left: 10px;
+}
+`;
+const Img = styled.img`
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #3333;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+
+`;
+const Right = styled.div`
+width: 40%;
+display: grid;
+grid-template-rows: 1fr 1fr;
+align-items: center;
+
+`;
+const TopButton = styled.button`
+width: 120px;
+border: 1px solid #3333;
+font-size: 0.8rem;
+font-weight: 700;
+background-color: white;
+color: #222222;
+transition: all 0.3s ease;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+   background-color: #afafaf;
+   color: white;
+   border: none;
+  }
+`;
+const ButtomButton = styled.button`
+  width: 120px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: 1px solid #3333;
+  color: #fc2e2e;
+  background-color: white;
+  &:focus {
+    outline: none;
+  }
+  &:hover {
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+`;
 
 function Follow({ type }) {
   const [inputKeyword, setInputKeyword] = useState('');
@@ -34,7 +161,22 @@ function Follow({ type }) {
   useEffect(() => {
     setData([
       {
-        id: 7,
+        id: 1,
+        imgurl: "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234"
+      },
+      {
+        id: 2,
+        imgurl: "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234"
+      },
+      {
+        id: 3,
+        imgurl: "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234"
+      },
+      {
+        id: 4,
         imgurl: "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
         username: "sangsu1234"
       }
@@ -130,47 +272,53 @@ function Follow({ type }) {
 
   return (
     <Container>
-      <SearchBox>
-        <InputBox>
-          <Input
-            type="text"
-            value={inputKeyword}
-            onChange={(e) => setInputKeyword(e.target.value)}
-            placeholder="검색어를 입력해주세요"
-          />
-          <IconSearch
-            onClick={() => {
-              inputKeyword
-                ? navigate(`/search?username=${inputKeyword}`)
-                : alert('검색어를 입력해주세요');
-            }}
-          />
-        </InputBox>
-      </SearchBox>
-      <ContentBox>
-        {loading ? (
-          <p>LOADING...</p>
-        ) : (
-          data.map((item) => (
-            <SmallBox key={item.id}>
-              <Left>
-                <Img src={item.imgurl} />
-                <p className="userName">{item.username}</p>
-              </Left>
-              <Right>
-                <TopButton>
-                  {' '}
-                  {type === 'follower' ? '피드 구경가기' : '팔로우 하기'}
-                </TopButton>
-                <ButtomButton>
-                  {' '}
-                  {type === 'follower' ? '팔로우 취소' : '팔로우 하기'}
-                </ButtomButton>
-              </Right>
-            </SmallBox>
-          ))
-        )}
-      </ContentBox>
+      <Top>
+        <IconUsers />
+        <h1>{type === 'follower' ? '팔로워' : '팔로윙'}</h1>
+      </Top>
+      <ContainerMain>
+        <SearchBox>
+          <InputBox>
+            <Input
+              type="text"
+              value={inputKeyword}
+              onChange={(e) => setInputKeyword(e.target.value)}
+              placeholder="검색어를 입력해주세요"
+            />
+            <IconSearch
+              onClick={() => {
+                inputKeyword
+                  ? navigate(`/search?username=${inputKeyword}`)
+                  : alert('검색어를 입력해주세요');
+              }}
+            />
+          </InputBox>
+        </SearchBox>
+        <ContentBox>
+          {loading ? (
+            <p>LOADING...</p>
+          ) : (
+            data.map((item) => (
+              <SmallBox key={item.id}>
+                <Left>
+                  <Img src={item.imgurl} />
+                  <p className="userName">{item.username}</p>
+                </Left>
+                <Right>
+                  <TopButton>
+                    {' '}
+                    {type === 'follower' ? '차단' : '피드 구경가기'}
+                  </TopButton>
+                  <ButtomButton>
+                    {' '}
+                    {type === 'follower' ? '팔로우 하기' : '팔로우 취소'}
+                  </ButtomButton>
+                </Right>
+              </SmallBox>
+            ))
+          )}
+        </ContentBox>
+      </ContainerMain>
     </Container>
   );
 }
