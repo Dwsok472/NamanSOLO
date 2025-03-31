@@ -9,6 +9,8 @@ import ToDo from './pages/ToDo';
 import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
 import Find from './components/Find';
+import Event from './components/Event';
+import Follow from './components/Follow';
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
@@ -72,7 +74,7 @@ function App() {
                 element={<DummyPage title="전체 스토리" />}
               />
               <Route path="/map" element={<ImageMap />} />
-              <Route path="/events" element={<DummyPage title="이벤트" />} />
+              <Route path="/events" element={<Event />} />
               <Route
                 path="/mypage/info"
                 element={<DummyPage title="커플 정보" />}
@@ -90,8 +92,10 @@ function App() {
                 path="/mypage/painting"
                 element={<DummyPage title="그림" />}
               />
-              <Route path="/find-id" element={<Find />} />
-              <Route path="/find-pwd" element={<Find />} />
+              <Route path="/find-id" element={<Find isFindId={true} />} />
+              <Route path="/find-pwd" element={<Find isFindId={false} />} />
+              <Route path="/follower" element={<Follow type="follower" />} />
+              <Route path="/following" element={<Follow type="following" />} />
             </Routes>
           </MainContent>
           <Footer />
