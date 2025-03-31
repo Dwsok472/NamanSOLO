@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { IconFollowing, IconSearch } from './Icons';
 import styled from 'styled-components';
-import {
-  getAllFollower,
-  getAllFollowing,
-  getFollowerByUsername,
-  getFollowingByUsername,
-} from './api';
+// import {
+//   getAllFollower,
+//   getAllFollowing,
+//   getFollowerByUsername,
+//   getFollowingByUsername,
+// } from './api';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Container = styled.div``;
@@ -24,99 +24,109 @@ const ButtomButton = styled.button``;
 function Follow({ type }) {
   const [inputKeyword, setInputKeyword] = useState('');
   const [data, setData] = useState(null);
-  // const [follower, setFollower] = useState([]);
-  // const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
   const urlKeyword = new URLSearchParams(location.search).get('username');
 
+  //임시용
   useEffect(() => {
-    if (urlKeyword) {
-      if (type === 'follower') {
-        searchFollower(urlKeyword); // 팔로워 검색
-      } else if (type === 'following') {
-        searchFollowing(urlKeyword); // 팔로윙 검색
+    setData([
+      {
+        id: 7,
+        imgurl: "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234"
       }
-    } else {
-      setData(null);
-      setLoading(true);
-    }
-  }, [urlKeyword, type]);
+    ]);
+    setLoading(false);  // 데이터가 로드된 후 로딩 상태를 false로 설정
+  }, [])
 
-  useEffect(() => {
-    if (type === 'follower') {
-      getFollower(); // 팔로워 목록 조회
-    } else if (type === 'following') {
-      getFollowing(); // 팔로윙 목록 조회
-    }
-  }, [type]);
+  // useEffect(() => {
+  //   if (urlKeyword) {
+  //     if (type === 'follower') {
+  //       searchFollower(urlKeyword); // 팔로워 검색
+  //     } else if (type === 'following') {
+  //       searchFollowing(urlKeyword); // 팔로윙 검색
+  //     }
+  //   } else {
+  //     setData(null);
+  //     setLoading(true);
+  //   }
+  // }, [urlKeyword, type]);
 
-  // 팔로워 목록을 가져오는 함수
-  async function getFollower() {
-    try {
-      let response = await getAllFollower();
-      if (!response || response.length === 0) {
-        console.log('데이터를 가져오지 못했습니다.');
-        return;
-      }
-      console.log(response);
-      setData(response);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-    }
-  }
-  // 팔로잉 목록을 가져오는 함수
-  async function getFollowing() {
-    try {
-      let response = await getAllFollowing();
-      if (!response || response.length === 0) {
-        console.log('데이터를 가져오지 못했습니다.');
-        return;
-      }
-      console.log(response);
-      setData(response);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-    }
-  }
-  // 특정 username으로 팔로윙 검색
-  async function searchFollowing(username) {
-    try {
-      let response = await getFollowingByUsername(username);
-      if (!response || response.length === 0) {
-        console.log('데이터를 가져오지 못했습니다.');
-        return;
-      }
-      console.log(response);
-      setData(response); // 검색된 팔로워 데이터 설정
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-    }
-  }
-  // 특정 username으로 팔로워 검색
-  async function searchFollower(username) {
-    try {
-      let response = await getFollowerByUsername(username);
-      if (!response || response.length === 0) {
-        console.log('데이터를 가져오지 못했습니다.');
-        return;
-      }
-      console.log(response);
-      setData(response); // 검색된 팔로워 데이터 설정
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-    }
-  }
+  // useEffect(() => {
+  //   if (type === 'follower') {
+  //     getFollower(); // 팔로워 목록 조회
+  //   } else if (type === 'following') {
+  //     getFollowing(); // 팔로윙 목록 조회
+  //   }
+  // }, [type]);
+
+  // // 팔로워 목록을 가져오는 함수
+  // async function getFollower() {
+  //   try {
+  //     let response = await getAllFollower();
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
+  // // 팔로잉 목록을 가져오는 함수
+  // async function getFollowing() {
+  //   try {
+  //     let response = await getAllFollowing();
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
+  // // 특정 username으로 팔로윙 검색
+  // async function searchFollowing(username) {
+  //   try {
+  //     let response = await getFollowingByUsername(username);
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response); // 검색된 팔로워 데이터 설정
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
+  // // 특정 username으로 팔로워 검색
+  // async function searchFollower(username) {
+  //   try {
+  //     let response = await getFollowerByUsername(username);
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response); // 검색된 팔로워 데이터 설정
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
 
   return (
     <Container>
@@ -144,7 +154,7 @@ function Follow({ type }) {
           data.map((item) => (
             <SmallBox key={item.id}>
               <Left>
-                <Img src={item.img} />
+                <Img src={item.imgurl} />
                 <p className="userName">{item.username}</p>
               </Left>
               <Right>
