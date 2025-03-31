@@ -13,6 +13,7 @@ import ToDo from './components/MyPage/todo/Todo';
 import RegisterMain from './components/Register/RegisterMain';
 import AllStories from './components/Story/AllStories';
 import MainPage from './components/MainPage';
+import Other from './components/MyPage/Other';
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
@@ -74,20 +75,7 @@ function App() {
               <Route path="/story/all" element={<AllStories />} />
               <Route path="/map" element={<ImageMap />} />
               <Route path="/events" element={<Event />} />
-              <Route path="/mypage/info" element={<MyProfile />} />
-              <Route
-                path="/mypage/story"
-                element={<DummyPage title="나의 다이어리" />}
-              />
-              <Route
-                path="/mypage/comment"
-                element={<DummyPage title="나의 편지" />}
-              />
-              <Route path="/mypage/todo" element={<ToDo />} />
-              <Route
-                path="/mypage/other"
-                element={<DummyPage title="그림" />}
-              />
+              <Route path="/mypage/*" element={<MyProfile />} />
               <Route path="/find-id" element={<Find isFindId={true} />} />
               <Route path="/find-pwd" element={<Find isFindId={false} />} />
             </Routes>

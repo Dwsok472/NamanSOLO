@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import defaultcouple from "../img/couple.png";
-import { IconImage } from "../Icons";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import defaultcouple from '../img/couple.png';
+import { IconImage } from '../Icons';
 import heart from '../img/heart.png';
-import { getDdayByUsername } from "../api";
-import Octagon from "../Register/Octagon";
-import RegisterMain from "../Register/RegisterMain";
-import ToDo from "./todo/Todo";
-import Follow from "./Follow";
+import { getDdayByUsername } from '../api';
+import Octagon from '../Register/Octagon';
+import RegisterMain from '../Register/RegisterMain';
+import ToDo from './todo/Todo';
+import Follow from './Follow';
+import Other from './Other';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import RegisterStep2 from '../Register/RegisterStep2';
 
 const Container = styled.div`
   display: flex;
@@ -15,7 +18,7 @@ const Container = styled.div`
   align-items: center;
   height: 100vh;
   padding: 20px;
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
+  background-color: ${({ bgColor }) => bgColor || '#fff'};
 `;
 
 const ProfileCard = styled.div`
@@ -24,7 +27,7 @@ const ProfileCard = styled.div`
   padding: 20px;
   border-radius: 30px;
   text-align: center;
-  background-color: ${({ bgColor }) => bgColor || "#ffdcd6"};
+  background-color: ${({ bgColor }) => bgColor || '#ffdcd6'};
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -42,7 +45,6 @@ const PhotoSection = styled.div`
   display: flex;
   justify-content: center;
 `;
-
 
 const Img = styled.img`
   width: 280px;
@@ -64,31 +66,29 @@ const FileButton = styled.button`
   position: absolute;
   bottom: 0px;
   right: 30px;
-  &:focus{
+  &:focus {
     outline: none;
   }
 `;
 
-
 const DateInfo = styled.div`
   margin-top: 5%;
-  border-top: 1px solid ${({ borderColor }) => borderColor || "#7c7c7ca8"};
+  border-top: 1px solid ${({ borderColor }) => borderColor || '#7c7c7ca8'};
   padding-top: 3%;
   padding-bottom: 3%;
 `;
 
 const DaysSince = styled.p`
   font-size: 4.5rem;
-  color: ${({ color }) => color || "#ff7979e3"};
+  color: ${({ color }) => color || '#ff7979e3'};
   font-weight: 700;
   margin: 0 auto;
 `;
 
 const MeetingDate = styled.p`
   font-size: 1.2rem;
-  color: ${({ color }) => color || "#808080"};
+  color: ${({ color }) => color || '#808080'};
 `;
-
 
 const NameHeartSection = styled.div`
   display: flex;
@@ -99,26 +99,24 @@ const NameHeartSection = styled.div`
   margin-top: 50px;
   margin-bottom: 5px;
   position: relative;
-  .heart{
+  .heart {
     display: block;
     width: 70px;
     height: 70px;
-  
   }
-  .girl{
+  .girl {
     font-size: 1.8rem;
     font-weight: 700;
     position: absolute;
     left: 0;
     margin-left: 40px;
   }
-  .boy{
+  .boy {
     font-size: 1.8rem;
     font-weight: 700;
     position: absolute;
     right: 0;
     margin-right: 30px;
-
   }
 `;
 
@@ -128,7 +126,7 @@ const RightProfileCard = styled.div`
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 30px;
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
+  background-color: ${({ bgColor }) => bgColor || '#fff'};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -137,30 +135,30 @@ const RightProfileCard = styled.div`
   height: 750px;
 `;
 const TopSection = styled.div`
-  display: flex ;
-  border-bottom: 1px solid ${({ borderColor }) => borderColor || "#ababa8"};
+  display: flex;
+  border-bottom: 1px solid ${({ borderColor }) => borderColor || '#ababa8'};
   position: sticky;
   top: 0;
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
+  background-color: ${({ bgColor }) => bgColor || '#fff'};
   z-index: 10;
 `;
 const Left = styled.div`
-width:100%
-`
+  width: 100%;
+`;
 
 const Button = styled.button`
-  background-color: ${({ bgColor }) => bgColor || "#fcf7c9"};
+  background-color: ${({ bgColor }) => bgColor || '#fcf7c9'};
   padding: 10px 20px;
   font-size: 1.2rem;
   font-weight: 700;
-  border: 1px solid ${({ borderColor }) => borderColor || "#fefdf1"};
+  border: 1px solid ${({ borderColor }) => borderColor || '#fefdf1'};
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: ${({ hoverColor }) => hoverColor || "#fff56f"};
+    background-color: ${({ hoverColor }) => hoverColor || '#fff56f'};
   }
-  &:focus{
+  &:focus {
     outline: none;
   }
 `;
@@ -179,16 +177,16 @@ const BellWrapper = styled.div`
     transition-duration: 0.3s;
     box-shadow: 2px 2px 10px rgba(87, 86, 86, 0.13);
     border: none;
-    &:focus{
-    outline: none;
-  }
+    &:focus {
+      outline: none;
+    }
   }
   .bell {
     width: 20px;
   }
 
   .bell path {
-    fill: ${({ bellColor }) => bellColor || "rgb(99, 97, 97)"};
+    fill: ${({ bellColor }) => bellColor || 'rgb(99, 97, 97)'};
   }
   .button:hover .bell {
     animation: bellRing 0.9s both;
@@ -221,41 +219,46 @@ const BellWrapper = styled.div`
   }
 `;
 
-const BottomSection = styled.div``
+const BottomSection = styled.div``;
 
 function MyProfile() {
   const [image, setImage] = useState(defaultcouple);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
-  const [girlname, setGirlname] = useState("");
-  const [boyname, setBoyname] = useState("");
+  const [girlname, setGirlname] = useState('');
+  const [boyname, setBoyname] = useState('');
   const [menu, setMenu] = useState('커플 정보');
+  const navigate = useNavigate();
+  const [currentComponent, setCurrentComponent] = useState(null);
 
   const handleButtonClick = (menuName) => {
     setMenu(menuName);
-  };
-
-  const handleMenu = () => {
-    switch (menu) {
-      case "커플 정보":
-        return <Octagon />;
-      case "나의 피드":
-        return <RegisterMain />;
-      case "나의 댓글":
-        return <Octagon />;
-      case "캘린더":
-        return <ToDo />;
-      case "그 외":
-        return (
-          <><Follow type="follower" />
-            <Follow type="following" /></>
-        )
-          ;
-
+    switch (menuName) {
+      case '커플 정보':
+        navigate('/mypage/info');
+        setCurrentComponent(<Octagon />);
+        break;
+      case '나의 스토리':
+        navigate('/mypage/story');
+        setCurrentComponent(<RegisterStep2 />);
+        break;
+      case '나의 댓글':
+        navigate('/mypage/comment');
+        setCurrentComponent(<Octagon />);
+        break;
+      case '캘린더':
+        navigate('/mypage/todo');
+        setCurrentComponent(<ToDo />);
+        break;
+      case '그 외':
+        navigate('/mypage/other');
+        setCurrentComponent(<Other />);
+        break;
       default:
-        return null;
+        break;
     }
   };
+
   /* useEffect(() => {
     getDday();
   }, []);
@@ -274,8 +277,8 @@ function MyProfile() {
   } */
   //임시용
   useEffect(() => {
-    setMeetingDate("2025.03.30");
-  }, [])
+    setMeetingDate('2025.03.30');
+  }, []);
 
   useEffect(() => {
     if (meetingDate) {
@@ -307,10 +310,7 @@ function MyProfile() {
     <Container>
       <ProfileCard>
         <PhotoSection>
-          <Img
-            src={image}
-            onClick={FileInput}
-          />
+          <Img src={image} onClick={FileInput} />
           <ImgInput
             type="file"
             id="file-upload"
@@ -323,28 +323,40 @@ function MyProfile() {
         </PhotoSection>
         <DateInfo>
           {daysSince !== null && meetingDate && (
-            <DaysSince >{daysSince}일</DaysSince>
+            <DaysSince>{daysSince}일</DaysSince>
           )}
           {meetingDate && (
-            <MeetingDate>{new Date(meetingDate).toLocaleDateString()}</MeetingDate>
+            <MeetingDate>
+              {new Date(meetingDate).toLocaleDateString()}
+            </MeetingDate>
           )}
         </DateInfo>
 
         <NameHeartSection>
-          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>{girlname || "박서진"}</div>
+          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
+            {girlname || '박서진'}
+          </div>
           <img src={heart} className="heart" />
-          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>{boyname || "김동인"}</div>
+          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
+            {boyname || '김동인'}
+          </div>
         </NameHeartSection>
       </ProfileCard>
 
       <RightProfileCard>
         <TopSection>
           <Left>
-            <Button onClick={() => handleButtonClick("커플 정보")}>커플 정보</Button>
-            <Button onClick={() => handleButtonClick("나의 피드")}>나의 피드</Button>
-            <Button onClick={() => handleButtonClick("나의 댓글")}>나의 댓글</Button>
-            <Button onClick={() => handleButtonClick("캘린더")}>캘린더</Button>
-            <Button onClick={() => handleButtonClick("그 외")}>그 외</Button>
+            <Button onClick={() => handleButtonClick('커플 정보')}>
+              커플 정보
+            </Button>
+            <Button onClick={() => handleButtonClick('나의 스토리')}>
+              나의 스토리
+            </Button>
+            <Button onClick={() => handleButtonClick('나의 댓글')}>
+              나의 댓글
+            </Button>
+            <Button onClick={() => handleButtonClick('캘린더')}>캘린더</Button>
+            <Button onClick={() => handleButtonClick('그 외')}>그 외</Button>
           </Left>
           <BellWrapper>
             <button className="button">
@@ -354,9 +366,7 @@ function MyProfile() {
             </button>
           </BellWrapper>
         </TopSection>
-        <BottomSection>
-          {handleMenu()}
-        </BottomSection>
+        <BottomSection>{currentComponent}</BottomSection>
       </RightProfileCard>
     </Container>
   );
