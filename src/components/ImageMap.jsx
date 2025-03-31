@@ -5,20 +5,20 @@ import course1 from '../components/img/course1.jpg';
 import course2 from '../components/img/course2.jpg';
 import course3 from '../components/img/course3.jpg';
 
-// 🔸 스타일 컴포넌트
 const Container = styled.div`
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 20px;
   max-width: 1100px;
   margin: 40px auto;
-  gap: 20px;
-  position: relative;
+  overflow: hidden;
 `;
 
 const SlideBoxWrapper = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  flex: 1;
   max-width: 580px;
 `;
 
@@ -63,14 +63,50 @@ const NavButton = styled.button`
 `;
 
 const MapWrapper = styled.div`
-  position: relative;
   flex: 1.2;
   max-width: 720px;
+  position: relative;
+  align-self: stretch; // 💡 핵심: 왼쪽 높이에 맞춰 늘림!
+`;
+
+const MapImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: auto;
 `;
 
 const MapImage = styled.img`
   width: 100%;
-  height: auto;
+  display: block;
+`;
+
+const RegionOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: ${({ $clip }) => $clip};
+  background-color: ${({ $active }) => $active ? 'rgba(255,0,0,0.2)' : 'transparent'};
+  z-index: 2;
+  pointer-events: none;
+`;
+
+const RegionLabel = styled.div`
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  background: rgba(255,255,255,0.8);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  pointer-events: auto;
+
+  &:hover {
+    background: #ff91a4;
+    color: white;
+  }
 `;
 
 const Region = styled.div`
@@ -105,6 +141,10 @@ const Label = styled.div`
     background: #ff91a4;
     color: white;
     // transform: scale(1.1);
+  }
+
+    &:focus {
+    outline: none;
   }
 `;
 
@@ -296,6 +336,78 @@ const SubmitBtn = styled.button`
 
 const regionPlaces = {
   '충청남도': [
+    {
+      id: 1,
+      name: '로보쿡 둔산점',
+      category: '맛집',
+      address: '대전 서구 둔산로 221',
+      description: '로봇 테마 맛집',
+      thumbnail: course1,
+    },
+    {
+      id: 2,
+      name: '카페라떼온더문',
+      category: '카페',
+      address: '대전 서구 월평동 123-4',
+      description: '달빛 분위기 카페',
+      thumbnail: course2,
+    },
+    {
+      id: 3,
+      name: '스윗포토존',
+      category: '포토존',
+      address: '대전 서구 탄방동 77',
+      description: '감성 포토존',
+      thumbnail: course3,
+    },
+    {
+      id: 1,
+      name: '로보쿡 둔산점',
+      category: '맛집',
+      address: '대전 서구 둔산로 221',
+      description: '로봇 테마 맛집',
+      thumbnail: course1,
+    },
+    {
+      id: 2,
+      name: '카페라떼온더문',
+      category: '카페',
+      address: '대전 서구 월평동 123-4',
+      description: '달빛 분위기 카페',
+      thumbnail: course2,
+    },
+    {
+      id: 3,
+      name: '스윗포토존',
+      category: '포토존',
+      address: '대전 서구 탄방동 77',
+      description: '감성 포토존',
+      thumbnail: course3,
+    },
+    {
+      id: 1,
+      name: '로보쿡 둔산점',
+      category: '맛집',
+      address: '대전 서구 둔산로 221',
+      description: '로봇 테마 맛집',
+      thumbnail: course1,
+    },
+    {
+      id: 2,
+      name: '카페라떼온더문',
+      category: '카페',
+      address: '대전 서구 월평동 123-4',
+      description: '달빛 분위기 카페',
+      thumbnail: course2,
+    },
+    {
+      id: 3,
+      name: '스윗포토존',
+      category: '포토존',
+      address: '대전 서구 탄방동 77',
+      description: '감성 포토존',
+      thumbnail: course3,
+    },
     {
       id: 1,
       name: '로보쿡 둔산점',
@@ -736,30 +848,36 @@ const ImageMap = () => {
       </SlideBoxWrapper>
 
       <MapWrapper>
-        <MapImage src={koreaMap} alt="대한민국 지도" />
-        {regions.map((region, i) => (
-          <React.Fragment key={i}>
-            <Region
-              $clip={region.clip}
-              $active={selectedRegion === region.name}
-              onClick={() => {
-                setSelectedRegion(region.name);
-                setViewMode('list');
-              }}
-            />
-            <Label
-              $top={region.labelTop}
-              $left={region.labelLeft}
-              onClick={() => {
-                setSelectedRegion(region.name);
-                setViewMode('list');
-              }}
-            >
-              {region.name}
-            </Label>
-          </React.Fragment>
-        ))}
+        <MapImageWrapper>
+          <MapImage src={koreaMap} alt="대한민국 지도" />
+          
+          {regions.map((region, i) => (
+            <React.Fragment key={i}>
+              <RegionOverlay
+                $clip={region.clip}
+                $active={selectedRegion === region.name}
+                onClick={() => {
+                  setSelectedRegion(region.name);
+                  setViewMode('list');
+                }}
+              />
+              <RegionLabel
+                style={{
+                  top: `${region.labelTop}%`,
+                  left: `${region.labelLeft}%`,
+                }}
+                onClick={() => {
+                  setSelectedRegion(region.name);
+                  setViewMode('list');
+                }}
+              >
+                {region.name}
+              </RegionLabel>
+            </React.Fragment>
+          ))}
+        </MapImageWrapper>
       </MapWrapper>
+
 
       {showMap && (
         <MapOverlay>
