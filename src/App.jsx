@@ -8,10 +8,10 @@ import Register from "./components/Register";
 import ToDo from "./pages/Todo";
 import ImageMap from "./components/ImageMap";
 import { createGlobalStyle } from "styled-components";
-import Find from "./components/Find";
+import Find from "./components/FindIdAndPwd/Find";
 import Event from "./components/Event";
-import Follow from "./components/Follow";
-import MyProfile from "./components/MyProfile";
+import Follow from "./components/MyPage/Follow";
+import MyProfile from "./components/MyPage/MyProfile";
 
 const DummyPage = ({ title }) => <div style={{ padding: "40px" }}>{title}</div>;
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import LoginButton from './LoginButton';
-import RegisterButton from './RegisterButton';
+import LoginButton from './Button/LoginButton';
+import RegisterButton from './Button/RegisterButton';
 
 const GlobalStyle = createGlobalStyle`
   body.blur #main-content {

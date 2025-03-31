@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IconFollowing, IconSearch, IconUsers } from './Icons';
+import { IconFollowing, IconSearch, IconUsers } from '../Icons/Icons';
 import styled from 'styled-components';
 // import {
 //   getAllFollower,

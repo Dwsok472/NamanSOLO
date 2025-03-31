@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { IconClose } from './Icons';
+import { IconClose } from './Icons/Icons';
 
 const CardWrap = styled.div`
   width: ${(props) => props.width || '550px'};

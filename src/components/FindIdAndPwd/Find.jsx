@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { IconEmail, IconPhone, IconUser } from './Icons';
-import LoginButton from './LoginButton';
+import { IconEmail, IconPhone, IconUser } from '../Icons/Icons';
+import LoginButton from '../Button/LoginButton';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 

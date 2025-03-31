@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { IconPhoto } from "./Icons";
+import { IconPhoto } from "../Icons/Icons";
 import defaultcouple from "../components/img/defaultcouple.jpg";
 import puzzle from "../components/img/puzzle.png";
 
