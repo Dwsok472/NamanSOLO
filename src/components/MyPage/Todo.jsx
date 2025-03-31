@@ -295,8 +295,26 @@ function ToDo() {
             {events.map((event, index) => {
               const diff = getDiffInDays(event.date);
               return (
-                <li key={index} style={{ marginBottom: '5px' }}>
-                  <strong>{event.title}</strong> - {event.date} / {formatDDay(diff)}
+                <li
+                  key={index}
+                  style={{
+                    marginBottom: '10px',
+                    padding: '10px 0',
+                    borderBottom: '1px solid #ccc',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{event.title}</div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                      {diff >= 0 ? `D +${diff}` : `D ${diff}`}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#999' }}>
+                      {event.date}
+                    </div>
+                  </div>
                 </li>
               );
             })}
