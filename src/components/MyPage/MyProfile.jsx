@@ -11,6 +11,7 @@ import Follow from './Follow';
 import Other from './Other';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import RegisterStep2 from '../Register/RegisterStep2';
+import heartRate from '../img/heart-rate.png';
 
 const Container = styled.div`
   display: flex;
@@ -219,7 +220,13 @@ const BellWrapper = styled.div`
   }
 `;
 
-const BottomSection = styled.div``;
+const BottomSection = styled.div`
+  .heartRate {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+`;
 
 function MyProfile() {
   const [image, setImage] = useState(defaultcouple);
@@ -236,7 +243,31 @@ function MyProfile() {
     switch (menuName) {
       case '커플 정보':
         navigate('/mypage/info');
-        setCurrentComponent(<Octagon />);
+        setCurrentComponent(
+          <>
+            <Octagon
+              width="450px"
+              cardwidth="400px"
+              cardheight="500px"
+              cardbackground="#e0f7fa"
+              imgwidth="120px"
+              imgheight="120px"
+              isProfilePage={true}
+              isSignUpPage={false}
+            />
+            <img src={heartRate} className="heartRate" />
+            <Octagon
+              width="450px"
+              cardwidth="400px"
+              cardheight="500px"
+              cardbackground="#ffdcd6"
+              imgwidth="120px"
+              imgheight="120px"
+              isProfilePage={true}
+              isSignUpPage={false}
+            />
+          </>
+        );
         break;
       case '나의 스토리':
         navigate('/mypage/story');
