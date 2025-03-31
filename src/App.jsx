@@ -94,8 +94,8 @@ function App() {
               />
               <Route path="/find-id" element={<Find isFindId={true} />} />
               <Route path="/find-pwd" element={<Find isFindId={false} />} />
-              <Route path="/follower" element={<Follow type={follower} />} />
-              <Route path="/following" element={<Follow type={following} />} />
+              <Route path="/follower" element={<Follow type="follower" />} />
+              <Route path="/following" element={<Follow type="following" />} />
             </Routes>
           </MainContent>
           <Footer />
