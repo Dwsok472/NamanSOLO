@@ -4,6 +4,10 @@ import defaultcouple from "../img/couple.png";
 import { IconImage } from "../Icons";
 import heart from '../img/heart.png';
 import { getDdayByUsername } from "../api";
+import Octagon from "../Register/Octagon";
+import RegisterMain from "../Register/RegisterMain";
+import ToDo from "./todo/Todo";
+import Follow from "./Follow";
 
 const Container = styled.div`
   display: flex;
@@ -225,7 +229,29 @@ function MyProfile() {
   const [meetingDate, setMeetingDate] = useState(null);
   const [girlname, setGirlname] = useState("");
   const [boyname, setBoyname] = useState("");
+  const [menu, setMenu] = useState('커플 정보');
 
+  const handleButtonClick = (menuName) => {
+    setMenu(menuName);
+  };
+
+  const handleMenu = () => {
+    switch (menu) {
+      case "커플 정보":
+        return <Octagon />;
+      case "나의 피드":
+        return <RegisterMain />;
+      case "나의 댓글":
+        return <Octagon />;
+      case "캘린더":
+        return <ToDo />;
+      case "그 외":
+        return <Follow />;
+
+      default:
+        return null;
+    }
+  };
   /* useEffect(() => {
     getDday();
   }, []);
@@ -310,11 +336,11 @@ function MyProfile() {
       <RightProfileCard>
         <TopSection>
           <Left>
-            <Button >커플 정보</Button>
-            <Button>나의 피드</Button>
-            <Button>나의 댓글</Button>
-            <Button>캘린더</Button>
-            <Button>즐겨찾기</Button>
+            <Button onClick={() => handleButtonClick("커플 정보")}>커플 정보</Button>
+            <Button onClick={() => handleButtonClick("나의 피드")}>나의 피드</Button>
+            <Button onClick={() => handleButtonClick("나의 댓글")}>나의 댓글</Button>
+            <Button onClick={() => handleButtonClick("캘린더")}>캘린더</Button>
+            <Button onClick={() => handleButtonClick("그 외")}>그 외</Button>
           </Left>
           <BellWrapper>
             <button className="button">
@@ -325,6 +351,7 @@ function MyProfile() {
           </BellWrapper>
         </TopSection>
         <BottomSection>
+          {handleMenu()}
         </BottomSection>
       </RightProfileCard>
     </Container>
