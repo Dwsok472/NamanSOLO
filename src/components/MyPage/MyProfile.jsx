@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { IconPhoto } from "./icons";
-import defaultcouple from "../components/img/defaultcouple.jpg";
+import { IconPhoto } from "../Icons";
+import defaultcouple from "../img/defaultcouple.jpg";
 
 const Container = styled.div`
   display: flex;
