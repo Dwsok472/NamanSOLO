@@ -1,59 +1,50 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import koreaMap from '../components/img/map1.jpg';
 import course1 from '../components/img/course1.jpg';
 import course2 from '../components/img/course2.jpg';
 import course3 from '../components/img/course3.jpg';
 
+// 🔸 스타일 컴포넌트
 const Container = styled.div`
-  display: flex; // 좌우 정렬
+  display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   max-width: 1100px;
   margin: 40px auto;
   gap: 20px;
+  position: relative;
 `;
 
 const SlideBoxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between; // 핵심!
   flex: 1;
   max-width: 580px;
 `;
 
 const SlideBox = styled.div`
   flex: 1;
-  max-width: 580px;
   background-color: #ffe9ea;
   padding: 20px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-
   ${({ $mode }) =>
     $mode === 'slide'
-      ? `
-    height: 540px;
-    overflow: hidden;
-  `
-      : `
-    max-height: 720px;
-    overflow-y: auto;
-  `}
+      ? `height: 540px; overflow: hidden;`
+      : `max-height: 720px; overflow-y: auto;`}
 `;
 
 const SlideImage = styled.div`
   width: 100%;
-  border-radius: 12px;
   background-color: #fff;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 16px;
 `;
-
 
 const NavButton = styled.button`
   position: absolute;
@@ -66,22 +57,14 @@ const NavButton = styled.button`
   border-radius: 50%;
   cursor: pointer;
   z-index: 2;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.6);
-  }
-
   ${({ $left }) => $left && `left: 16px;`}
   ${({ $right }) => $right && `right: 16px;`}
 `;
 
-
-
 const MapWrapper = styled.div`
   position: relative;
   flex: 1.2;
-  max-width: 72\                0px;
+  max-width: 720px;
 `;
 
 const MapImage = styled.img`
@@ -99,12 +82,8 @@ const Region = styled.div`
   background-color: ${({ $active }) =>
     $active ? 'rgba(255, 46, 99, 0.3)' : 'transparent'};
   transition: background-color 0.3s;
-  cursor: pointer;
-  z-index: 2;
-
-  &:hover {
-    background-color: rgba(252, 1, 76, 0.43);
-  }
+  z-index: 1;
+  pointer-events: none; // 포인터 완전 차단
 `;
 
 const Label = styled.div`
@@ -114,19 +93,17 @@ const Label = styled.div`
   transform: translate(-50%, -50%);
   font-size: 0.75rem;
   font-weight: bold;
-  color: #333;
   background: rgba(255, 255, 255, 0.7);
   padding: 4px 8px;
   border-radius: 5px;
   z-index: 3;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  pointer-events: auto; // ✅ 이 줄 끝에 세미콜론 필수!
 
   &:hover {
     background: #ff91a4;
     color: white;
-    transform: translate(-50%, -50%) scale(1.1);
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
+    // transform: scale(1.1);
   }
 `;
 
@@ -135,75 +112,7 @@ const Description = styled.div`
   background: #fff6f7;
   border-radius: 10px;
   padding: 12px 16px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #444;
   text-align: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-`;
-
-const SlideWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
-const EditHeader = styled.div`
-  font-weight: bold;
-  font-size: 1rem;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CloseBtn = styled.button`
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-`;
-
-const ImagePlaceholder = styled.div`
-  background: #ffe9ea;
-  height: 140px;
-  border-radius: 10px;
-  margin-bottom: 16px;
-`;
-
-const Info = styled.p`
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-`;
-
-const SubmitBtn = styled.button`
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: #ff5777;
-  color: white;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-
-  &:hover {
-    background: #e84664;
-  }
 `;
 
 const CategoryTabs = styled.div`
@@ -234,28 +143,21 @@ const PlaceCard = styled.div`
   gap: 12px;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   padding: 12px;
   cursor: pointer;
-  transition: 0.2s;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const PlaceThumbnail = styled.img`
   width: 80px;
   height: 80px;
-  border-radius: 8px;
   object-fit: cover;
+  border-radius: 8px;
 `;
-
 
 const PlaceInfo = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
   .category {
     color: #ff5777;
@@ -265,7 +167,6 @@ const PlaceInfo = styled.div`
   .title {
     font-weight: bold;
     font-size: 1rem;
-    margin-top: 4px;
   }
 
   .address {
@@ -278,14 +179,13 @@ const PlaceDetail = styled.div`
   background: #fffafa;
   border-radius: 8px;
   padding: 12px 16px;
-  margin-top: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
   .header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
     font-weight: bold;
+    margin-bottom: 8px;
   }
 
   p {
@@ -294,29 +194,33 @@ const PlaceDetail = styled.div`
   }
 `;
 
-const NoData = styled.div`
-  text-align: center;
-  color: #aaa;
-  margin-top: 40px;
+const MapOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-const SelectedPlaceInfo = styled.div`
-  background: #fffdfd;
-  border: 2px solid #ffe0e5;
-  border-radius: 10px;
-  padding: 16px;
-  margin: 10px 0 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+const CloseMapButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: #ff5777;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
 `;
 
-const DescriptionBox = styled.p`
-  margin-top: 10px;
-  color: #333;
-  font-size: 0.9rem;
-  line-height: 1.5;
-`;
-
-
+// 📍 지역별 장소 데이터
 const regionPlaces = {
   '충청남도': [
     {
@@ -346,44 +250,81 @@ const regionPlaces = {
   ],
 };
 
-
 const ImageMap = () => {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [slideIndex, setSlideIndex] = useState(0);
-  const [editingRegion, setEditingRegion] = useState(null);
   const [activeCategory, setActiveCategory] = useState('전체');
   const [viewMode, setViewMode] = useState('slide');
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+  const [showMap, setShowMap] = useState(false);
+  const [mapAddress, setMapAddress] = useState('');
+  const [googleLoaded, setGoogleLoaded] = useState(false);
 
   const slides = [
-    {
-      label: '데이트 코스 1',
-      image: course1,
-    },
-    {
-      label: '데이트 코스 2',
-      image: course2,
-    },
-    {
-      label: '데이트 코스 3',
-      image: course3,
-    },
+    { label: '데이트 코스 1', image: course1 },
+    { label: '데이트 코스 2', image: course2 },
+    { label: '데이트 코스 3', image: course3 },
   ];
 
   useEffect(() => {
+    if (viewMode !== 'slide') return;
     const interval = setInterval(() => {
       setSlideIndex((prev) => (prev + 1) % slides.length);
-    }, 3000); 
-
+    }, 3000);
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, [viewMode, slides.length]);
+
+  useEffect(() => {
+    if (window.google) {
+      setGoogleLoaded(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setGoogleLoaded(true);
+    document.body.appendChild(script);
+  }, []);
+
+  const renderMap = (address) => {
+    const mapDiv = document.getElementById('map-container');
+    if (!window.google || !mapDiv) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === 'OK') {
+        const map = new window.google.maps.Map(mapDiv, {
+          center: results[0].geometry.location,
+          zoom: 15,
+        });
+        new window.google.maps.Marker({
+          map,
+          position: results[0].geometry.location,
+        });
+      } else {
+        mapDiv.innerText = `주소를 찾을 수 없습니다: ${status}`;
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (showMap && googleLoaded && mapAddress) {
+      const timeout = setTimeout(() => {
+        renderMap(mapAddress);
+      }, 100); // 100ms 딜레이로 map-container가 렌더링되도록 보장
+  
+      return () => clearTimeout(timeout);
+    }
+  }, [showMap, googleLoaded, mapAddress]);
+  
 
   const categories = ['전체', '맛집', '카페', '호텔', '관광지', '포토존'];
 
   const regions = [
     {
       name: '서울/경기',
-      clip: 'polygon(35% 41%, 40% 27%, 45% 30%, 48% 36%, 44% 40%, 41% 44%, 38% 44%, 33% 36%)',
+      clip: 'polygon(35% 41%, 40% 27%, 45% 30%, 48% 36%, 44% 40%, 41% 44%, 38% 44%, 33% 35%)',
       labelTop: 35,
       labelLeft: 39,
     },
@@ -437,98 +378,105 @@ const ImageMap = () => {
     },
   ];
 
-  const filteredPlaces = selectedRegion
-  ? (regionPlaces[selectedRegion] || []).filter(place =>
-      activeCategory === '전체' ? true : place.category === activeCategory
-    )
-  : [];
 
+  const filteredPlaces = selectedRegion
+    ? (regionPlaces[selectedRegion] || []).filter(
+        (place) => activeCategory === '전체' || place.category === activeCategory
+      )
+    : [];
 
   return (
     <Container>
-    <SlideBoxWrapper>
-  <SlideBox $mode={viewMode}>
-    {viewMode === 'slide' && (
-      <>
-        <SlideImage>
-          <SlideWrapper>
-            <NavButton
-              $left
-              onClick={() =>
-                setSlideIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
-              }
-            >
-              ◀
-            </NavButton>
-            <img
-              src={slides[slideIndex].image}
-              alt={slides[slideIndex].label}
-              style={{ width: '100%', height: 'auto', maxWidth: '800px' }}
-            />
-            <NavButton
-              $right
-              onClick={() => setSlideIndex((prev) => (prev + 1) % slides.length)}
-            >
-              ▶
-            </NavButton>
-          </SlideWrapper>
-        </SlideImage>
-      </>
-    )}
-
-    {viewMode === 'list' && (
-      <>
-        <CategoryTabs>
-          {categories.map((cat) => (
-            <Tab
-              key={cat}
-              $active={activeCategory === cat}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </Tab>
-          ))}
-        </CategoryTabs>
-
-        <PlaceGrid>
-          {filteredPlaces.map((place) => (
-            <React.Fragment key={place.id}>
-              <PlaceCard
-                onClick={() =>
-                  setSelectedPlaceId(selectedPlaceId === place.id ? null : place.id)
-                }
+      <SlideBoxWrapper>
+        <SlideBox $mode={viewMode}>
+          {viewMode === 'slide' && (
+            <SlideImage>
+              <NavButton
+                $left
+                onClick={() => setSlideIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1))}
               >
-                <PlaceThumbnail src={place.thumbnail} alt={place.name} />
-                <PlaceInfo>
-                  <strong className="category">{place.category}</strong>
-                  <p className="title">{place.name}</p>
-                  <p className="address">{place.address}</p>
-                </PlaceInfo>
-              </PlaceCard>
+                ◀
+              </NavButton>
+              <img
+                src={slides[slideIndex].image}
+                alt={slides[slideIndex].label}
+                style={{ width: '100%', height: 'auto' }}
+              />
+              <NavButton
+                $right
+                onClick={() => setSlideIndex((prev) => (prev + 1) % slides.length)}
+              >
+                ▶
+              </NavButton>
+            </SlideImage>
+          )}
 
-              {selectedPlaceId === place.id && (
-                <PlaceDetail>
-                  <div className="header">
-                    <span>{place.category}</span>
-                    <button onClick={() => setSelectedPlaceId(null)}>✕</button>
-                  </div>
-                  <p><strong>{place.name}</strong></p>
-                  <p>{place.address}</p>
-                  <p>{place.description}</p>
-                </PlaceDetail>
-              )}
-            </React.Fragment>
-          ))}
-        </PlaceGrid>
-      </>
-    )}
-  </SlideBox>
+          {viewMode === 'list' && (
+            <>
+              <CategoryTabs>
+                {categories.map((cat) => (
+                  <Tab key={cat} $active={activeCategory === cat} onClick={() => setActiveCategory(cat)}>
+                    {cat}
+                  </Tab>
+                ))}
+              </CategoryTabs>
 
-  {viewMode === 'slide' && (
-    <Description>지역 이름은 지역별 데이트 장소 추천입니다</Description>
-  )}
-</SlideBoxWrapper>
+              <PlaceGrid>
+                {filteredPlaces.map((place) => (
+                  <React.Fragment key={place.id}>
+                    <PlaceCard onClick={() => setSelectedPlaceId(selectedPlaceId === place.id ? null : place.id)}>
+                      <PlaceThumbnail src={place.thumbnail} alt={place.name} />
+                      <PlaceInfo>
+                        <span className="category">{place.category}</span>
+                        <p className="title">{place.name}</p>
+                        <p className="address">{place.address}</p>
+                      </PlaceInfo>
+                    </PlaceCard>
 
+                    {selectedPlaceId === place.id && (
+                      <PlaceDetail>
+                        <div className="header">
+                          <span>{place.category}</span>
+                          <button onClick={() => setSelectedPlaceId(null)}>✕</button>
+                        </div>
+                        <p><strong>{place.name}</strong></p>
+                        <p>{place.address}</p>
+                        <p>{place.description}</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
+                          <p style={{ fontSize: '0.85rem', color: '#555' }}>{place.address}</p>
+                          <button
+                            onClick={() => {
+                              setShowMap(true);
+                              setMapAddress(place.address);
+                              if (googleLoaded) {
+                                renderMap(place.address);
+                              }
+                            }}
+                            style={{
+                              backgroundColor: '#ffebee',
+                              color: '#ff5777',
+                              fontSize: '0.75rem',
+                              padding: '4px 8px',
+                              borderRadius: '6px',
+                              border: 'none',
+                              cursor: 'pointer',
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            지도 보기
+                          </button>
+                        </div>
+                      </PlaceDetail>
+                    )}
+                  </React.Fragment>
+                ))}
+              </PlaceGrid>
+            </>
+          )}
+        </SlideBox>
+
+        {viewMode === 'slide' && <Description>지역 이름은 지역별 데이트 장소 추천입니다</Description>}
+      </SlideBoxWrapper>
 
       <MapWrapper>
         <MapImage src={koreaMap} alt="대한민국 지도" />
@@ -539,27 +487,29 @@ const ImageMap = () => {
               $active={selectedRegion === region.name}
               onClick={() => {
                 setSelectedRegion(region.name);
-                setEditingRegion(region.name);
                 setViewMode('list');
               }}
-              title={region.name}
             />
             <Label
               $top={region.labelTop}
               $left={region.labelLeft}
               onClick={() => {
                 setSelectedRegion(region.name);
-                setEditingRegion(region.name);
                 setViewMode('list');
               }}
             >
               {region.name}
             </Label>
           </React.Fragment>
-
-          
         ))}
       </MapWrapper>
+
+      {showMap && (
+        <MapOverlay>
+          <div id="map-container" style={{ width: '100%', height: '100%' }}></div>
+          <CloseMapButton onClick={() => setShowMap(false)}>✕</CloseMapButton>
+        </MapOverlay>
+      )}
     </Container>
   );
 };
