@@ -56,6 +56,7 @@ const Img = styled.img`
   border: 1px solid #3333;
   align-items: center;
   cursor: pointer;
+
 `;
 
 const ButtomWrap = styled.div`
@@ -91,7 +92,6 @@ const SmallBox = styled.div`
 `;
 const Input = styled.input`
   width: 80%;
-  margin: 20px 0 10px;
   border: none;
   outline: none;
   padding-left: 30px;
@@ -105,6 +105,11 @@ const FileButton = styled.button`
   border: none;
   cursor: pointer;
   background-color: transparent;
+  position: absolute;
+  bottom: 0px;
+  &:focus{
+    outline: none;
+  }
 `;
 const ButtonWrap = styled.div`
   display: flex;
