@@ -5,7 +5,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import Login from './components/Login';
 import Register from './components/Register';
-import ToDo from './pages/ToDo';
+import ToDo from './pages/Todo';
 import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
 import Find from './components/Find';
