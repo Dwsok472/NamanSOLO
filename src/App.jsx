@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import HomePage from "./pages/HomePage";
 import Login from "./components/Login/Login";
 import ImageMap from "./components/ImageMap";
 import { createGlobalStyle } from "styled-components";
@@ -13,6 +12,7 @@ import MyProfile from "./components/MyPage/MyProfile";
 import ToDo from "./components/MyPage/Todo";
 import RegisterMain from "./components/Register/RegisterMain";
 import AllStories from "./components/Story/AllStories";
+import MainPage from "./components/MainPage";
 
 const DummyPage = ({ title }) => <div style={{ padding: "40px" }}>{title}</div>;
 
@@ -68,7 +68,7 @@ function App() {
           />
           <MainContent>
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<RegisterMain />} />
               <Route path="/story/all" element={<AllStories />} />

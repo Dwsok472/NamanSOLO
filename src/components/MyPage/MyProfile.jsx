@@ -17,9 +17,9 @@ const ProfileCard = styled.div`
   max-width: 380px;
   padding: 20px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 30px;
   text-align: center;
-  background-color: ${({ bgColor }) => bgColor || "#ffae9f5c"};
+  background-color: ${({ bgColor }) => bgColor || "#ffdcd6"};
   min-height: 600px;
   display: flex;
   flex-direction: column;
