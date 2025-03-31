@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import PopUp from '../../PopUp';
+import AddAnniversaryPopup from './addtodo';
+import AddTravelPopup from './addtravel';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -23,10 +24,24 @@ const CalendarSection = styled.section`
   position: relative;
 `;
 
-const Header = styled.div`
+const CalendarHeader = styled.div`
   margin-bottom: 10px;
   text-align: center;
   cursor: pointer;
+  position: relative;
+`;
+
+const AddTravelButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 6px 14px;
+  background-color: #6fa8dc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 `;
 
 const YearPickerWrap = styled.div`
@@ -143,8 +158,9 @@ function ToDo() {
   ]);
   const [editingEvent, setEditingEvent] = useState(null);
   const [newEvent, setNewEvent] = useState({ title: '', date: '', color: '#ffc0cb' });
-  const [paletteOpen, setPaletteOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
+  const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [yearRangeStart, setYearRangeStart] = useState(currentYear - 2);
@@ -195,9 +211,10 @@ function ToDo() {
     <Wrapper>
       <Main>
         <CalendarSection>
-          <Header onClick={() => setIsPickerOpen(!isPickerOpen)}>
+          <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
             <h3>{currentYear}년 {currentMonth + 1}월 ⬇</h3>
-          </Header>
+            <AddTravelButton onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}>+</AddTravelButton>
+          </CalendarHeader>
 
           {isPickerOpen && (
             <YearPickerWrap>
@@ -284,6 +301,45 @@ function ToDo() {
           </List>
         </AnniversarySection>
       </Main>
+
+      
+      <AddAnniversaryPopup
+        name="기념일 추가"
+        onClose={() => {
+          setIsModalOpen(false);
+          setAnniversaryPaletteOpen(false);
+        }}
+        newEvent={newEvent}
+        setNewEvent={setNewEvent}
+        paletteOpen={anniversaryPaletteOpen}
+        setPaletteOpen={setAnniversaryPaletteOpen}
+        colorSamples={colorSamples}
+        onSubmit={(e) => {
+          e.preventDefault();
+          setEvents([...events, newEvent]);
+          setNewEvent({ title: '', date: '', color: '#ffc0cb' });
+          setIsModalOpen(false);
+          setAnniversaryPaletteOpen(false);
+        }}
+      />
+
+        <AddTravelPopup
+          name="여행 추가"
+          onClose={() => { setIsTravelModalOpen(false);     setTravelPaletteOpen(false);
+          }}
+          newEvent={newEvent}
+          setNewEvent={setNewEvent}
+          paletteOpen={travelPaletteOpen}
+          setPaletteOpen={setTravelPaletteOpen}
+          colorSamples={colorSamples}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setEvents([...events, newEvent]);
+            setNewEvent({ title: '', date: '', color: '#ffc0cb' });
+            setIsModalOpen(false);
+            setTravelPaletteOpen(false);
+          }}
+        />
     </Wrapper>
   );
 }
