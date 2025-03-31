@@ -9,7 +9,7 @@ import Find from "./components/FindIdAndPwd/Find";
 import Event from "./components/Event";
 import Follow from "./components/MyPage/Follow";
 import MyProfile from "./components/MyPage/MyProfile";
-import ToDo from "./components/MyPage/Todo";
+import ToDo from "./components/MyPage/todo/Todo";
 import RegisterMain from "./components/Register/RegisterMain";
 import AllStories from "./components/Story/AllStories";
 import MainPage from "./components/MainPage";
