@@ -246,7 +246,11 @@ function MyProfile() {
       case "캘린더":
         return <ToDo />;
       case "그 외":
-        return <Follow />;
+        return (
+          <><Follow type="follower" />
+            <Follow type="following" /></>
+        )
+          ;
 
       default:
         return null;
