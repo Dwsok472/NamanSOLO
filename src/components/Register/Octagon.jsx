@@ -6,9 +6,9 @@ import {
   IconModify,
   IconPhone,
   IconUser,
-} from './Icons';
+} from '../Icons';
 import { useState } from 'react';
-import Profile from './img/people.png';
+import Profile from '../img/people.png';
 
 const CardWrap = styled.div`
   width: ${(props) => props.width || '550px'};

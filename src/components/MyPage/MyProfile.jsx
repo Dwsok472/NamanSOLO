@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { IconPhoto } from "../Icons/Icons";
-import defaultcouple from "../components/img/defaultcouple.jpg";
-import puzzle from "../components/img/puzzle.png";
+import { IconPhoto } from "../Icons";
+import defaultcouple from "../img/defaultcouple.jpg";
+import puzzle from "../img/puzzle.png";
 
 const Container = styled.div`
   display: flex;

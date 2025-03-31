@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
-import { IconPassword, IconUser } from './Icons';
-import NextButton from './NextButton';
+import { IconPassword, IconUser } from '../Icons'
 import Octagon from './Octagon';
+
 
 const Container = styled.div`
   margin: 0 auto;

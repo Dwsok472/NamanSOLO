@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { IconPassword, IconUser } from './Icons';
+import { IconPassword, IconUser } from '../Icons';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import LoginButton from './Button/LoginButton';
-import RegisterButton from './Button/RegisterButton';
+import LoginButton from '../Button/LoginButton';
+import RegisterButton from '../Button/RegisterButton';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { useRef, useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import Couple from './img/lover.png';
-import { UserLogin } from './api';
+import Couple from '../img/lover.png';
+import { UserLogin } from '../api';
 
 const CardWrap = styled.div`
   width: 550px;
