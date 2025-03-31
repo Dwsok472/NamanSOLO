@@ -259,7 +259,11 @@ function ToDo() {
                                 borderRadius: '4px',
                                 padding: '2px 4px',
                                 marginBottom: '2px',
-                                fontSize: '0.8rem'
+                                fontSize: '0.8rem',
+                                whiteSpace: 'nowrap',          // 줄바꿈 방지
+                                overflow: 'hidden',            // 넘친 부분 숨김
+                                textOverflow: 'ellipsis',      // ... 처리
+                                maxWidth: '100%',              // 부모 너비 기준
                               }}
                             >
                               <div>{event.title}</div>
