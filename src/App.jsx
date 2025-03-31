@@ -1,20 +1,21 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import styled from "styled-components";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Login from "./components/Login/Login";
-import ImageMap from "./components/ImageMap";
-import { createGlobalStyle } from "styled-components";
-import Find from "./components/FindIdAndPwd/Find";
-import Event from "./components/Event";
-import Follow from "./components/MyPage/Follow";
-import MyProfile from "./components/MyPage/MyProfile";
-import ToDo from "./components/MyPage/todo/Todo";
-import RegisterMain from "./components/Register/RegisterMain";
-import AllStories from "./components/Story/AllStories";
-import MainPage from "./components/MainPage";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Login from './components/Login/Login';
+import ImageMap from './components/ImageMap';
+import { createGlobalStyle } from 'styled-components';
+import Find from './components/FindIdAndPwd/Find';
+import Event from './components/Event';
+import Follow from './components/MyPage/Follow';
+import MyProfile from './components/MyPage/MyProfile';
+import ToDo from './components/MyPage/todo/Todo';
+import RegisterMain from './components/Register/RegisterMain';
+import AllStories from './components/Story/AllStories';
+import MainPage from './components/MainPage';
+import Other from './components/MyPage/Other';
 
-const DummyPage = ({ title }) => <div style={{ padding: "40px" }}>{title}</div>;
+const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
 const AppWrapper = styled.div`
   width: 100vw;
@@ -24,7 +25,7 @@ const AppWrapper = styled.div`
 `;
 
 const MainContent = styled.main.attrs(() => ({
-  id: "main-content",
+  id: 'main-content',
 }))`
   flex: 1;
   padding-top: 100px;
@@ -52,16 +53,16 @@ function App() {
           <Header
             logoText="WeARE"
             menuItems={[
-              { to: "/story/all", label: "전체 스토리" },
-              { to: "/map", label: "맵" },
-              { to: "/events", label: "이벤트" },
+              { to: '/story/all', label: '전체 스토리' },
+              { to: '/map', label: '맵' },
+              { to: '/events', label: '이벤트' },
             ]}
             subMenuItems={[
-              { to: "/mypage/info", label: "커플 정보" },
-              { to: "/mypage/diary", label: "나의 다이어리" },
-              { to: "/mypage/letter", label: "나의 편지" },
-              { to: "/mypage/todo", label: "캘린더" },
-              { to: "/mypage/painting", label: "그림" },
+              { to: '/mypage/info', label: '커플 정보' },
+              { to: '/mypage/story', label: '나의 스토리' },
+              { to: '/mypage/comment', label: '나의 댓글' },
+              { to: '/mypage/todo', label: '캘린더' },
+              { to: '/mypage/other', label: '그 외' },
             ]}
             loginText="로그인"
             signupText="회원가입"
@@ -74,24 +75,9 @@ function App() {
               <Route path="/story/all" element={<AllStories />} />
               <Route path="/map" element={<ImageMap />} />
               <Route path="/events" element={<Event />} />
-              <Route path="/mypage/info" element={<MyProfile />} />
-              <Route
-                path="/mypage/diary"
-                element={<DummyPage title="나의 다이어리" />}
-              />
-              <Route
-                path="/mypage/letter"
-                element={<DummyPage title="나의 편지" />}
-              />
-              <Route path="/mypage/todo" element={<ToDo />} />
-              <Route
-                path="/mypage/painting"
-                element={<DummyPage title="그림" />}
-              />
+              <Route path="/mypage/*" element={<MyProfile />} />
               <Route path="/find-id" element={<Find isFindId={true} />} />
               <Route path="/find-pwd" element={<Find isFindId={false} />} />
-              // <Route path="/follower" element={<Follow type="follower" />} />
-              // <Route path="/following" element={<Follow type="following" />} />
             </Routes>
           </MainContent>
           <Footer />
