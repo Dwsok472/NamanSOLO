@@ -302,27 +302,29 @@ function ToDo() {
         </AnniversarySection>
       </Main>
 
-      
-      <AddAnniversaryPopup
-        name="기념일 추가"
-        onClose={() => {
-          setIsModalOpen(false);
-          setAnniversaryPaletteOpen(false);
-        }}
-        newEvent={newEvent}
-        setNewEvent={setNewEvent}
-        paletteOpen={anniversaryPaletteOpen}
-        setPaletteOpen={setAnniversaryPaletteOpen}
-        colorSamples={colorSamples}
-        onSubmit={(e) => {
-          e.preventDefault();
-          setEvents([...events, newEvent]);
-          setNewEvent({ title: '', date: '', color: '#ffc0cb' });
-          setIsModalOpen(false);
-          setAnniversaryPaletteOpen(false);
-        }}
-      />
+      {isModalOpen && (
+        <AddAnniversaryPopup
+          name="기념일 추가"
+          onClose={() => {
+            setIsModalOpen(false);
+            setAnniversaryPaletteOpen(false);
+          }}
+          newEvent={newEvent}
+          setNewEvent={setNewEvent}
+          paletteOpen={anniversaryPaletteOpen}
+          setPaletteOpen={setAnniversaryPaletteOpen}
+          colorSamples={colorSamples}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setEvents([...events, newEvent]);
+            setNewEvent({ title: '', date: '', color: '#ffc0cb' });
+            setIsModalOpen(false);
+            setAnniversaryPaletteOpen(false);
+          }}
+        />
+      )}
 
+      {isTravelModalOpen && (
         <AddTravelPopup
           name="여행 추가"
           onClose={() => { setIsTravelModalOpen(false);     setTravelPaletteOpen(false);
@@ -340,6 +342,7 @@ function ToDo() {
             setTravelPaletteOpen(false);
           }}
         />
+      )}
     </Wrapper>
   );
 }
