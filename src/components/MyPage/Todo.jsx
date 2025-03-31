@@ -1,9 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
-import coupleImg from '../components/img/lover.png';
+import coupleImg from '../img/lover.png';
 
 // 커플 시작일(예: 2022-01-01)
-const COUPLE_START_DATE = new Date(2022, 0, 0);
+const COUPLE_START_DATE = new Date(2022, 0, 2, 0, 0, 0, 0);
+
+const CoupleImg = styled.img`
+    width: 45%;
+    height: 45%;
+  `;
 
 function ToDo() {
   // 오늘 날짜 (00:00 고정)
@@ -11,7 +16,7 @@ function ToDo() {
   today.setHours(0, 0, 0, 0);
 
   // ───────────── [커플 일수 계산] ─────────────
-  const coupleDays = Math.floor((today - COUPLE_START_DATE) / (1000 * 60 * 60 * 24));
+  const coupleDays = Math.floor((today - COUPLE_START_DATE) / (1000 * 60 * 60 * 24)) + 1;
 
   // ───────────── [캘린더 & 이벤트 관련 상태] ─────────────
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -27,11 +32,6 @@ function ToDo() {
 
   // 팔레트 열림/닫힘 상태
   const [paletteOpen, setPaletteOpen] = useState(false);
-
-  const CoupleImg = styled.img`
-    width: 45%;
-    height: 45%;
-  `;
 
   // 8가지 색상 샘플
   const colorSamples = [
@@ -53,7 +53,7 @@ function ToDo() {
   // 날짜 배열 생성
   const generateCalendar = () => {
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+    const lastDayOfMonth = new Date(currentYear, currentMonth+1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
     const startDay = firstDayOfMonth.getDay();
 
@@ -64,7 +64,7 @@ function ToDo() {
 
     return calendarCells.reduce((weeks, day, i) => {
       if (i % 7 === 0) weeks.push([]);
-      weeks[weeks.length - 1].push(day);
+      weeks[weeks.length- 1].push(day);
       return weeks;
     }, []);
   };
@@ -75,8 +75,17 @@ function ToDo() {
   // 특정 날짜의 이벤트 가져오기
   const getEventsForDay = (date) => {
     if (!date) return [];
-    const dateStr = date.toISOString().split('T')[0];
-    return events.filter(event => event.date === dateStr);
+
+    // 📌 자정으로 고정한 셀 날짜
+    const cellDate = new Date(date);
+    cellDate.setHours(0, 0, 0, 0);
+  
+    return events.filter(event => {
+      const eventDate = new Date(`${event.date}T00:00:00`);
+      eventDate.setHours(0, 0, 0, 0);
+  
+      return cellDate.getTime() === eventDate.getTime();
+    });
   };
 
   // D-Day 계산 (과거는 D+N, 미래는 D-N, 오늘은 D-DAY)
@@ -84,7 +93,7 @@ function ToDo() {
     // 날짜가 하루 밀리는 문제를 방지하기 위해 "T00:00:00" 붙여서 생성
     const eventDate = new Date(`${dateStr}T00:00:00`);
     eventDate.setHours(0, 0, 0, 0);
-    return Math.floor((eventDate - today) / (1000 * 60 * 60 * 24)) + 1;
+    return Math.floor((eventDate - today) / (1000 * 60 * 60 * 24));
   };
 
   // D-Day 문자열 포맷
@@ -122,7 +131,7 @@ function ToDo() {
   return (
     <div style={{ fontFamily: 'sans-serif', color: '#333', maxWidth: '1200px', margin: '0 auto' }}>
       {/* ───────────── 메인 컨테이너 ───────────── */}
-      <main style={{ display: 'flex', flexWrap: 'wrap', padding: '20px', gap: '20px' }}>
+      <main style={{ display: 'flex', padding: '20px', gap: '20px' }}>
         
         {/* 왼쪽 영역: 커플 카드 */}
         <section style={{
@@ -190,7 +199,7 @@ function ToDo() {
           </div>
 
           {/* 캘린더 테이블 */}
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
             <thead>
               <tr>
                 {['일', '월', '화', '수', '목', '금', '토'].map(day => (
@@ -216,7 +225,10 @@ function ToDo() {
                     if (!date) {
                       // 비어있는 셀
                       return (
-                        <td key={dIdx} style={{ border: '1px solid #ccc', height: '80px' }}></td>
+                        <td key={dIdx} style={{ border: '1px solid #ccc', height: '100px', verticalAlign: 'top', overflow: 'hidden', padding: '5px',
+                          backgroundColor: 'transparent', color: '#333', }}>
+
+                        </td>
                       );
                     }
                     const dateStr = date.toISOString().split('T')[0];
@@ -236,7 +248,6 @@ function ToDo() {
                         <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>
                           {date.getDate()}
                         </div>
-                        {/* 해당 날짜 이벤트 목록 */}
                         {getEventsForDay(date).map((event, i) => {
                           const diff = getDiffInDays(event.date);
                           return (
@@ -264,36 +275,24 @@ function ToDo() {
             </tbody>
           </table>
 
-          {/* '우리의 기념일' 섹션 */}
           <div style={{ marginTop: '20px', color: '#333' }}>
-            <h3>우리의 기념일</h3>
-            <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-              {events.map((event, index) => {
-                const diff = getDiffInDays(event.date);
-                return (
-                  <li key={index} style={{ marginBottom: '5px' }}>
-                    <strong>{event.title}</strong> - {event.date} / {formatDDay(diff)}
-                  </li>
-                );
-              })}
-            </ul>
+            
           </div>
         </section>
 
-        {/* D-DAY 목록 (하단) */}
         <section style={{
           flex: '1 1 100%',
           backgroundColor: '#ffeef0',
           borderRadius: '10px',
           padding: '20px'
         }}>
-          <h3 style={{ color: '#333' }}>D-DAY 목록</h3>
-          <ul style={{ listStyle: 'none', paddingLeft: 0, color: '#333' }}>
+          <h3>우리의 기념일</h3>
+          <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
             {events.map((event, index) => {
               const diff = getDiffInDays(event.date);
               return (
                 <li key={index} style={{ marginBottom: '5px' }}>
-                  <strong>{event.title}</strong> ({event.date}) - {formatDDay(diff)}
+                  <strong>{event.title}</strong> - {event.date} / {formatDDay(diff)}
                 </li>
               );
             })}
@@ -301,7 +300,6 @@ function ToDo() {
         </section>
       </main>
 
-      {/* ───────────── [일정 추가 모달] ───────────── */}
       {isModalOpen && (
         <div
           style={{
@@ -343,7 +341,6 @@ function ToDo() {
                 style={{ padding: '5px' }}
               />
 
-              {/* 색상 선택 영역 */}
               <div>
                 <label style={{ marginRight: '10px' }}>색상 선택:</label>
                 <button
@@ -360,7 +357,6 @@ function ToDo() {
                 >
                   팔레트
                 </button>
-                {/* 현재 선택된 색상 미리보기 */}
                 <div
                   style={{
                     display: 'inline-block',
@@ -375,7 +371,6 @@ function ToDo() {
                 />
               </div>
 
-              {/* 팔레트 패널 */}
               {paletteOpen && (
                 <div
                   style={{
