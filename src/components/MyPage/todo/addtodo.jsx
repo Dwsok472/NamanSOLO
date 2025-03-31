@@ -115,7 +115,7 @@ function AddAnniversaryPopup({
     <CardWrap width={width}>
       <Card cardwidth={cardwidth} cardheight={cardheight}>
         <Top topbackground={topbackground}>
-          <TopX><IconClose onClick={onClose} /></TopX>
+          <TopX onClick={onClose}><IconClose/></TopX>
           <Title>{name}</Title>
         </Top>
         <Bottom>

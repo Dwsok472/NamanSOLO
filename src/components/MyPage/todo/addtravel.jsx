@@ -105,7 +105,7 @@ function AddTravelPopup({
       <Card cardwidth={cardwidth} cardheight={cardheight}>
         <Top topbackground={topbackground}>
           <TopX onClick={onClose}>
-            <IconClose />
+            <IconClose/>
           </TopX>
           <H2>{name}</H2>
         </Top>
