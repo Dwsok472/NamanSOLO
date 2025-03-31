@@ -1,6 +1,6 @@
 import React from 'react'
 import Octagon from './Octagon'
-import heartRate from '../img/lover.png'
+import heartRate from '../img/heart-rate.png'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -17,8 +17,17 @@ const H1 = styled.h1`
 `;
 
 const Content = styled.div`
-    width: 100%;
+    width: 50%;
+    margin: 0 auto;
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    .heartRate{
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+    }
 `
 
 function RegisterStep2() {
@@ -32,10 +41,9 @@ function RegisterStep2() {
                     cardbackground="#e0f7fa"
                     imgwidth="120px"
                     imgheight="120px"
-                    buttoncolor="#bfe4fb"
                     isProfilePage={false}
                     isSignUpPage={true} />
-                <img src={heartRate} />
+                <img src={heartRate} className='heartRate' />
                 <Octagon
                     width="450px"
                     cardwidth="400px"
@@ -43,7 +51,6 @@ function RegisterStep2() {
                     cardbackground="#ffdcd6"
                     imgwidth="120px"
                     imgheight="120px"
-                    buttoncolor="#fda899"
                     isProfilePage={false}
                     isSignUpPage={true} />
             </Content>
