@@ -333,6 +333,7 @@ const ImageMap = () => {
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [placesByRegion, setPlacesByRegion] = useState(regionPlaces);
+  const [editTargetId, setEditTargetId] = useState(null);
   const [newPlace, setNewPlace] = useState({
     name: '',
     category: '',
@@ -487,29 +488,67 @@ const ImageMap = () => {
         alert('이미지를 업로드해주세요.');
         return;
       }
-
+    
       const newItem = {
         ...newPlace,
-        id: Date.now(),
+        id: editTargetId ?? Date.now(), // 수정이면 기존 id 유지, 아니면 새로 발급
         address: selectedRegion,
         region: selectedRegion,
-        thumbnail: URL.createObjectURL(newPlace.image),
+        thumbnail: typeof newPlace.image === 'string'
+          ? newPlace.image // 기존 수정일 경우 문자열 유지
+          : URL.createObjectURL(newPlace.image), // 새 이미지 업로드일 경우 변환
       };
     
-      // 해당 지역의 기존 장소 리스트
-      const updatedList = [...(placesByRegion[selectedRegion] || []), newItem];
+      const updatedList = editTargetId
+        ? (placesByRegion[selectedRegion] || []).map(item =>
+            item.id === editTargetId ? newItem : item
+          )
+        : [...(placesByRegion[selectedRegion] || []), newItem];
     
-      // 상태 갱신
       setPlacesByRegion({
         ...placesByRegion,
-        [selectedRegion]: updatedList
+        [selectedRegion]: updatedList,
       });
     
-      // 폼 리셋
+      // 상태 초기화
       setShowAddForm(false);
+      setEditTargetId(null); // 👈 꼭 초기화해줘야 합니다!
       setNewPlace({ name: '', category: '', address: '', description: '', image: null });
     };
+    
+    const handleEdit = (place) => {
+      setShowAddForm(true);
+      setEditTargetId(place.id);
+      setNewPlace({
+        name: place.name,
+        category: place.category,
+        address: place.address,
+        description: place.description,
+        image: place.thumbnail,
+      });
+    };
 
+    const handleCloseForm = () => {
+      setShowAddForm(false);
+      setEditTargetId(null);
+      setNewPlace({ name: '', category: '', address: '', description: '', image: null });
+    };
+    
+    const handleDelete = (id) => {
+      const confirmed = window.confirm('정말 삭제하시겠습니까?');
+    
+      if (!confirmed) return;
+    
+      const updatedList = placesByRegion[selectedRegion].filter(place => place.id !== id);
+      setPlacesByRegion({
+        ...placesByRegion,
+        [selectedRegion]: updatedList,
+      });
+    
+      if (selectedPlaceId === id) {
+        setSelectedPlaceId(null);
+      }
+    };
   return (
     <Container>
       <SlideBoxWrapper>
@@ -589,6 +628,36 @@ const ImageMap = () => {
                             }}
                           >
                             지도 보기
+                          </button>
+                          <button
+                            onClick={() => handleEdit(place)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#ff5777',
+                              fontSize: '0.9rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            ✏️ <span style={{ fontSize: '0.85rem' }}>수정</span>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(place.id)}
+                            style={{
+                              background: 'none',
+                              border: 'none',
+                              color: '#aaa',
+                              fontSize: '0.9rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            🗑️ <span style={{ fontSize: '0.85rem' }}>삭제</span>
                           </button>
                         </div>
                       </PlaceDetail>
