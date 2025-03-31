@@ -69,7 +69,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/register" element={<RegisterStep1 />} />
               <Route
                 path="/story/all"
                 element={<DummyPage title="전체 스토리" />}

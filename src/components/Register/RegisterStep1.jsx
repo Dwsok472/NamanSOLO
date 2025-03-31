@@ -161,7 +161,7 @@ const Buttom = styled.div`
   text-align: center;
 `;
 
-function Register() {
+function RegisterStep1() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [matchpassword, setmatchpassword] = useState('');
@@ -318,4 +318,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterStep1;
