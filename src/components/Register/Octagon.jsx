@@ -202,7 +202,7 @@ function Octagon({
                 autoComplete="off" // 자동완성 기능 끄기
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                readOnly={!isEditable}
+                readOnly={isProfilePage || !isSignUpPage}
               />
             </SmallBox>
             <SmallBox>
@@ -224,7 +224,7 @@ function Octagon({
                 autoComplete="off" // 자동완성 기능 끄기
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                readOnly={!isEditable}
+                readOnly={isProfilePage || !isSignUpPage}
               />
             </SmallBox>
             <SmallBox>
@@ -235,7 +235,7 @@ function Octagon({
                 autoComplete="off" // 자동완성 기능 끄기
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                readOnly={!isEditable}
+                readOnly={isProfilePage || !isSignUpPage}
               />
             </SmallBox>
           </Buttom>
