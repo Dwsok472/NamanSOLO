@@ -153,11 +153,12 @@ function ToDo() {
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
-    { title: '첫 데이트 기념일', date: '2025-04-02', color: '#ffb6c1' },
-    { title: '100일 기념', date: '2025-04-10', color: '#ffc0cb' },
+    { title: '첫 데이트 기념일', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
+    { title: '100일 기념', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
   ]);
   const [editingEvent, setEditingEvent] = useState(null);
-  const [newEvent, setNewEvent] = useState({ title: '', date: '', color: '#ffc0cb' });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', date: '', color: '#ffc0cb', type:'anniversary' });
+  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', date: '', color: '#87cefa', type:'travel' });
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
   const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
@@ -289,7 +290,7 @@ function ToDo() {
           <AddButton onClick={() => setIsModalOpen(true)}>+</AddButton>
           <h3>우리의 기념일</h3>
           <List>
-            {events.map((event, idx) => (
+            {events.filter(event => event.type === 'anniversary').map((event, idx) => (
               <ListItem key={idx}>
                 <div>{event.title}</div>
                 <div>
@@ -309,15 +310,23 @@ function ToDo() {
             setIsModalOpen(false);
             setAnniversaryPaletteOpen(false);
           }}
-          newEvent={newEvent}
-          setNewEvent={setNewEvent}
+          newEvent={newAnniversaryEvent}
+          setNewEvent={setNewAnniversaryEvent}
           paletteOpen={anniversaryPaletteOpen}
           setPaletteOpen={setAnniversaryPaletteOpen}
           colorSamples={colorSamples}
           onSubmit={(e) => {
             e.preventDefault();
-            setEvents([...events, newEvent]);
-            setNewEvent({ title: '', date: '', color: '#ffc0cb' });
+            
+            const eventToAdd = {
+              title: newAnniversaryEvent.title,
+              date: newAnniversaryEvent.date,
+              color: newAnniversaryEvent.color,
+              type: 'anniversary',
+            };
+          
+            setEvents([...events, eventToAdd]);
+            setNewAnniversaryEvent({ title: '', date: '', color: '#ffc0cb', type: 'anniversary' });
             setIsModalOpen(false);
             setAnniversaryPaletteOpen(false);
           }}
@@ -329,16 +338,26 @@ function ToDo() {
           name="여행 추가"
           onClose={() => { setIsTravelModalOpen(false);     setTravelPaletteOpen(false);
           }}
-          newEvent={newEvent}
-          setNewEvent={setNewEvent}
+          newEvent={newTravelEvent}
+          setNewEvent={setNewTravelEvent}
           paletteOpen={travelPaletteOpen}
           setPaletteOpen={setTravelPaletteOpen}
           colorSamples={colorSamples}
           onSubmit={(e) => {
             e.preventDefault();
-            setEvents([...events, newEvent]);
-            setNewEvent({ title: '', date: '', color: '#ffc0cb' });
-            setIsModalOpen(false);
+
+            const eventToAdd = {
+              title: newTravelEvent.title,
+              date: newTravelEvent.startDate, // 📌 캘린더 렌더링용
+              startDate: newTravelEvent.startDate,
+              endDate: newTravelEvent.endDate,
+              color: newTravelEvent.color,
+              type: 'travel'
+            };
+
+            setEvents([...events, eventToAdd ]);
+            setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', type: 'travel' });
+            setIsTravelModalOpen(false);
             setTravelPaletteOpen(false);
           }}
         />
