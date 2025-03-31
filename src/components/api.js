@@ -40,3 +40,7 @@ export async function CheckDuplicateId(username) {
 // export async function getFollowingByUsername(username) {
 //   return axios.get('');
 // }
+
+export async function getDdayByUsername(username) {
+  return axios.get('');
+}
