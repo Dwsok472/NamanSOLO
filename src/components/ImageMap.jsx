@@ -7,33 +7,42 @@ import course3 from '../components/img/course3.jpg';
 
 const Container = styled.div`
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  gap: 20px;
+  align-items: stretch; // 핵심!
   max-width: 1100px;
   margin: 40px auto;
-  overflow: hidden;
+  gap: 20px;
+  height: 720px; // 기준 고정 높이
 `;
 
 const SlideBoxWrapper = styled.div`
   flex: 1;
+  max-width: 580px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  max-width: 580px;
 `;
 
 const SlideBox = styled.div`
-  flex: 1;
   background-color: #ffe9ea;
-  padding: 20px;
   border-radius: 12px;
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  ${({ $mode }) =>
-    $mode === 'slide'
-      ? `height: 540px; overflow: hidden;`
-      : `max-height: 720px; overflow-y: auto;`}
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #7a7a7a;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 `;
 
 const SlideImage = styled.div`
@@ -63,10 +72,10 @@ const NavButton = styled.button`
 `;
 
 const MapWrapper = styled.div`
-  flex: 1.2;
-  max-width: 720px;
+  flex: 1;
+  max-width: 580px;
+  height: 100%;
   position: relative;
-  align-self: stretch; // 💡 핵심: 왼쪽 높이에 맞춰 늘림!
 `;
 
 const MapImageWrapper = styled.div`
@@ -77,7 +86,8 @@ const MapImageWrapper = styled.div`
 
 const MapImage = styled.img`
   width: 100%;
-  display: block;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const RegionOverlay = styled.div`
@@ -119,8 +129,8 @@ const Region = styled.div`
   background-color: ${({ $active }) =>
     $active ? 'rgba(255, 46, 99, 0.3)' : 'transparent'};
   transition: background-color 0.3s;
-  z-index: 1;
-  pointer-events: none; // 포인터 완전 차단
+  z-index: 2;
+  pointer-events: none;
 `;
 
 const Label = styled.div`
@@ -135,15 +145,14 @@ const Label = styled.div`
   border-radius: 5px;
   z-index: 3;
   cursor: pointer;
-  pointer-events: auto; // ✅ 이 줄 끝에 세미콜론 필수!
+  pointer-events: auto;
 
   &:hover {
     background: #ff91a4;
     color: white;
-    // transform: scale(1.1);
   }
 
-    &:focus {
+  &:focus {
     outline: none;
   }
 `;
@@ -361,7 +370,7 @@ const regionPlaces = {
       thumbnail: course3,
     },
     {
-      id: 1,
+      id: 4,
       name: '로보쿡 둔산점',
       category: '맛집',
       address: '대전 서구 둔산로 221',
@@ -369,7 +378,7 @@ const regionPlaces = {
       thumbnail: course1,
     },
     {
-      id: 2,
+      id: 5,
       name: '카페라떼온더문',
       category: '카페',
       address: '대전 서구 월평동 123-4',
@@ -377,7 +386,7 @@ const regionPlaces = {
       thumbnail: course2,
     },
     {
-      id: 3,
+      id: 6,
       name: '스윗포토존',
       category: '포토존',
       address: '대전 서구 탄방동 77',
@@ -385,7 +394,7 @@ const regionPlaces = {
       thumbnail: course3,
     },
     {
-      id: 1,
+      id: 7,
       name: '로보쿡 둔산점',
       category: '맛집',
       address: '대전 서구 둔산로 221',
@@ -393,7 +402,7 @@ const regionPlaces = {
       thumbnail: course1,
     },
     {
-      id: 2,
+      id: 8,
       name: '카페라떼온더문',
       category: '카페',
       address: '대전 서구 월평동 123-4',
@@ -401,7 +410,7 @@ const regionPlaces = {
       thumbnail: course2,
     },
     {
-      id: 3,
+      id: 9,
       name: '스윗포토존',
       category: '포토존',
       address: '대전 서구 탄방동 77',
@@ -409,7 +418,7 @@ const regionPlaces = {
       thumbnail: course3,
     },
     {
-      id: 1,
+      id: 10,
       name: '로보쿡 둔산점',
       category: '맛집',
       address: '대전 서구 둔산로 221',
@@ -417,7 +426,7 @@ const regionPlaces = {
       thumbnail: course1,
     },
     {
-      id: 2,
+      id: 11,
       name: '카페라떼온더문',
       category: '카페',
       address: '대전 서구 월평동 123-4',
@@ -425,7 +434,7 @@ const regionPlaces = {
       thumbnail: course2,
     },
     {
-      id: 3,
+      id: 12,
       name: '스윗포토존',
       category: '포토존',
       address: '대전 서구 탄방동 77',
