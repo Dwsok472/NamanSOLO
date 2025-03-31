@@ -1,6 +1,6 @@
 import React from 'react'
 import Octagon from './Octagon'
-import heartRate from './img/lover.png'
+import heartRate from '../img/lover.png'
 import styled from 'styled-components'
 
 const Container = styled.div`

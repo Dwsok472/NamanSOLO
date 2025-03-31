@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { IconPassword, IconUser } from '../Icons'
-import Octagon from './Octagon';
+import NextButton from '../Button/NextButton';
 
 
 const Container = styled.div`

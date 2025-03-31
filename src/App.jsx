@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import Login from "./components/Login/Login";
 import RegisterStep1 from "./components/Register/RegisterStep1";
+import RegisterStep2 from "./components/Register/RegisterStep2";
 import ToDo from "./pages/Todo";
 import ImageMap from "./components/ImageMap";
 import { createGlobalStyle } from "styled-components";
