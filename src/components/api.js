@@ -25,3 +25,18 @@ export async function CheckDuplicateId(username) {
     throw error; // 에러 처리
   }
 }
+
+
+// export async function getAllFollower() {
+//   return axios.get('');
+// }
+// export async function getAllFollowing() {
+//   return axios.get('');
+// }
+
+// export async function getFollowerByUsername(username) {
+//   return axios.get('');
+// }
+// export async function getFollowingByUsername(username) {
+//   return axios.get('');
+// }
