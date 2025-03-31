@@ -4,8 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import Login from "./components/Login/Login";
-import RegisterStep1 from "./components/Register/RegisterStep1";
-import RegisterStep2 from "./components/Register/RegisterStep2";
+
 import ImageMap from "./components/ImageMap";
 import { createGlobalStyle } from "styled-components";
 import Find from "./components/FindIdAndPwd/Find";
@@ -13,6 +12,7 @@ import Event from "./components/Event";
 import Follow from "./components/MyPage/Follow";
 import MyProfile from "./components/MyPage/MyProfile";
 import ToDo from "./components/MyPage/Todo";
+import RegisterMain from "./components/Register/RegisterMain";
 
 const DummyPage = ({ title }) => <div style={{ padding: "40px" }}>{title}</div>;
 
@@ -70,7 +70,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<RegisterStep1 />} />
+              <Route path="/register" element={<RegisterMain />} />
               <Route
                 path="/story/all"
                 element={<DummyPage title="전체 스토리" />}
