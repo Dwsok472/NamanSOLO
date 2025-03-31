@@ -45,6 +45,10 @@ function ToDo() {
     '#b0c4de', // 라이트스틸블루
   ];
 
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [yearRangeStart, setYearRangeStart] = useState(currentYear - 2);
+
   // 일정 추가 모달 열림/닫힘
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -132,71 +136,138 @@ function ToDo() {
     <div style={{ fontFamily: 'sans-serif', color: '#333', maxWidth: '1200px', margin: '0 auto' }}>
       {/* ───────────── 메인 컨테이너 ───────────── */}
       <main style={{ display: 'flex', padding: '20px', gap: '20px' }}>
-        
-        {/* 왼쪽 영역: 커플 카드 */}
+
         <section style={{
-          flex: '1 1 300px',
-          minWidth: '280px',
-          backgroundColor: '#ffeef0',
-          borderRadius: '10px',
-          padding: '20px',
-          textAlign: 'center',
-          position: 'relative'
-        }}>
-          <h2 style={{ marginBottom: '10px', color: '#333' }}>
-            {coupleDays}일째
-          </h2>
-          <p style={{ fontSize: '1.1rem', margin: '5px 0', color: '#555' }}>
-            김동인 ♡ 박서진
-          </p>
-          <p style={{ fontSize: '0.9rem', color: '#666' }}>
-            {COUPLE_START_DATE.toISOString().split('T')[0]} 시작
-          </p>
-
-          {/* 사람 아이콘 (예시) */}
-          <div style={{ marginTop: '10px' }}>
-            <CoupleImg // 실제 아이콘 경로로 교체
-              src={coupleImg} alt="Couple Icon"
-            />
-          </div>
-
-          {/* 일정 추가 모달 열기 버튼 */}
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            style={{
-              color: '#444',
-              padding: '10px 20px',
-              backgroundColor: '#fff',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            일정 추가
-          </button>
-        </section>
-
-        {/* 오른쪽 영역: 캘린더 + "우리의 기념일" */}
-        <section style={{
-          flex: '2 1 600px',
+          flex: '2 1 100%',
           minWidth: '400px',
           backgroundColor: '#fff',
           borderRadius: '10px',
-          padding: '20px'
+          padding: '20px',
+          position:'relative'
         }}>
-          {/* 캘린더 헤더 */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <button onClick={() => changeMonth(-1)} style={{ color: '#444', cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', padding: '5px' }}>
-              ⬅ Prev
-            </button>
-            <h3 style={{ margin: '0', color: '#333' }}>
-              {currentYear}년 {currentMonth + 1}월
+          {/* 오른쪽 영역: 캘린더 + "우리의 기념일" */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              position: 'absolute',
+              top: '10px',
+              right: '10px',
+              padding: '8px 16px',
+              backgroundColor: '#ff7f7f',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              zIndex: 10,
+              boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
+            }}
+          >
+              +
+          </button>
+          <div
+            style={{
+              marginBottom: '10px',
+              cursor: 'pointer',
+              textAlign: 'center'
+            }}
+          >
+            <h3
+              onClick={() => setIsPickerOpen(!isPickerOpen)}
+              style={{ margin: '0', color: '#333', display: 'inline-block' }}
+            >
+              {currentYear}년 {currentMonth + 1}월 ⬇
             </h3>
-            <button onClick={() => changeMonth(1)} style={{ color: '#444', cursor: 'pointer', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', padding: '5px' }}>
-              Next ➡
-            </button>
           </div>
+          {isPickerOpen && (
+            <div
+            style={{
+              marginBottom: '20px',
+              padding: '10px',
+              backgroundColor: '#f9f9f9',
+              border: '1px solid #ccc',
+              borderRadius: '8px'
+            }}
+          >
+            {/* 연도 선택 + 페이지네이션 */}
+            <div style={{ marginBottom: '10px', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}>
+              <button
+                onClick={() => setYearRangeStart(yearRangeStart - 5)}
+                style={{
+                  padding: '5px 10px',
+                  border: '1px solid #ccc',
+                  backgroundColor: '#fff',
+                  cursor: 'pointer',
+                  borderRadius: '4px'
+                }}
+              >
+                ⬅
+              </button>
+        
+              {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map((year) => (
+                <button
+                  key={year}
+                  onClick={() => setSelectedYear(year)}
+                  style={{
+                    margin: '0 2px',
+                    padding: '5px 10px',
+                    backgroundColor: year === selectedYear ? '#ffe4e6' : '#fff',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {year}
+                </button>
+              ))}
+        
+              <button
+                onClick={() => setYearRangeStart(yearRangeStart + 5)}
+                style={{
+                  padding: '5px 10px',
+                  border: '1px solid #ccc',
+                  backgroundColor: '#fff',
+                  cursor: 'pointer',
+                  borderRadius: '4px'
+                }}
+              >
+                ➡
+              </button>
+            </div>
+        
+            {/* 월 선택 */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: '8px',
+                textAlign: 'center'
+              }}
+            >
+              {Array.from({ length: 12 }, (_, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    setCurrentYear(selectedYear);
+                    setCurrentMonth(i);
+                    setIsPickerOpen(false);
+                  }}
+                  style={{
+                    padding: '10px 0',
+                    backgroundColor:
+                      selectedYear === currentYear && i === currentMonth
+                        ? '#ffe4e6'
+                        : '#fff',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {i + 1}월
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+          
 
           {/* 캘린더 테이블 */}
           <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
@@ -226,9 +297,7 @@ function ToDo() {
                       // 비어있는 셀
                       return (
                         <td key={dIdx} style={{ border: '1px solid #ccc', height: '100px', verticalAlign: 'top', overflow: 'hidden', padding: '5px',
-                          backgroundColor: 'transparent', color: '#333', }}>
-
-                        </td>
+                          backgroundColor: 'transparent', color: '#333', }}></td>
                       );
                     }
                     const dateStr = date.toISOString().split('T')[0];
@@ -285,7 +354,7 @@ function ToDo() {
         </section>
 
         <section style={{
-          flex: '1 1 100%',
+          flex: '1 1 30%',
           backgroundColor: '#ffeef0',
           borderRadius: '10px',
           padding: '20px'
