@@ -132,13 +132,11 @@ const RightProfileCard = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   position: relative;
-  overflow-y: auto;
   height: 750px;
 `;
 const TopSection = styled.div`
   display: flex;
   border-bottom: 1px solid ${({ borderColor }) => borderColor || '#ababa8'};
-  position: sticky;
   top: 0;
   background-color: ${({ bgColor }) => bgColor || '#fff'};
   z-index: 10;
@@ -154,6 +152,7 @@ const Button = styled.button`
   font-weight: 700;
   border: 1px solid ${({ borderColor }) => borderColor || '#fefdf1'};
   border-radius: 20px;
+  width: 145px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
@@ -161,6 +160,10 @@ const Button = styled.button`
   }
   &:focus {
     outline: none;
+  }
+  &.selected {
+    background-color: #fff56f;
+    color: #181818;
   }
 `;
 const BellWrapper = styled.div`
@@ -221,73 +224,58 @@ const BellWrapper = styled.div`
 `;
 
 const BottomSection = styled.div`
+width: 100%;
+overflow: scroll;
+overflow-x: hidden;
   .heartRate {
     width: 50px;
     height: 50px;
     object-fit: cover;
   }
+  &::-webkit-scrollbar {
+  width: 7px;  /* 세로 스크롤바의 너비를 8px로 설정 */
+}
+&::-webkit-scrollbar-thumb {
+  background-color: #727272;  /* 핸들의 색상 */
+  border-radius: 10px;
+}
 `;
-
-function MyProfile() {
+function MyPage() {
   const [image, setImage] = useState(defaultcouple);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
   const [girlname, setGirlname] = useState('');
   const [boyname, setBoyname] = useState('');
   const [menu, setMenu] = useState('커플 정보');
+  const [selectedOption, setSelectedOption] = useState('커플 정보');
   const navigate = useNavigate();
-  const [currentComponent, setCurrentComponent] = useState(null);
 
-  const handleButtonClick = (menuName) => {
-    setMenu(menuName);
-    switch (menuName) {
+
+  const handleButtonClick = (menu) => {
+    setMenu(menu);
+    switch (menu) {
       case '커플 정보':
         navigate('/mypage/info');
-        setCurrentComponent(
-          <>
-            <Octagon
-              width="450px"
-              cardwidth="400px"
-              cardheight="500px"
-              cardbackground="#e0f7fa"
-              imgwidth="120px"
-              imgheight="120px"
-              isProfilePage={true}
-              isSignUpPage={false}
-            />
-            <img src={heartRate} className="heartRate" />
-            <Octagon
-              width="450px"
-              cardwidth="400px"
-              cardheight="500px"
-              cardbackground="#ffdcd6"
-              imgwidth="120px"
-              imgheight="120px"
-              isProfilePage={true}
-              isSignUpPage={false}
-            />
-          </>
-        );
         break;
       case '나의 스토리':
         navigate('/mypage/story');
-        setCurrentComponent(<RegisterStep2 />);
         break;
       case '나의 댓글':
         navigate('/mypage/comment');
-        setCurrentComponent(<Octagon />);
         break;
       case '캘린더':
         navigate('/mypage/todo');
-        setCurrentComponent(<ToDo />);
         break;
       case '그 외':
         navigate('/mypage/other');
-        setCurrentComponent(<Other />);
         break;
       default:
         break;
     }
+  };
+
+  const handleBoxClick = (option) => {
+    setSelectedOption(option);
   };
 
   /* useEffect(() => {
@@ -377,17 +365,38 @@ function MyProfile() {
       <RightProfileCard>
         <TopSection>
           <Left>
-            <Button onClick={() => handleButtonClick('커플 정보')}>
+            <Button onClick={() => {
+              handleButtonClick('커플 정보');
+              handleBoxClick('커플 정보');
+            }}
+              className={selectedOption === '커플 정보' ? 'selected' : ''}
+            >
               커플 정보
             </Button>
-            <Button onClick={() => handleButtonClick('나의 스토리')}>
+            <Button onClick={() => {
+              handleButtonClick('나의 스토리');
+              handleBoxClick('나의 스토리');
+            }}
+              className={selectedOption === '나의 스토리' ? 'selected' : ''}>
               나의 스토리
             </Button>
-            <Button onClick={() => handleButtonClick('나의 댓글')}>
+            <Button onClick={() => {
+              handleButtonClick('나의 댓글');
+              handleBoxClick('나의 댓글');
+            }}
+              className={selectedOption === '나의 댓글' ? 'selected' : ''}>
               나의 댓글
             </Button>
-            <Button onClick={() => handleButtonClick('캘린더')}>캘린더</Button>
-            <Button onClick={() => handleButtonClick('그 외')}>그 외</Button>
+            <Button onClick={() => {
+              handleButtonClick('캘린더');
+              handleBoxClick('캘린더');
+            }}
+              className={selectedOption === '캘린더' ? 'selected' : ''}>캘린더</Button>
+            <Button onClick={() => {
+              handleButtonClick('그 외');
+              handleBoxClick('그 외');
+            }}
+              className={selectedOption === '그 외' ? 'selected' : ''}>그 외</Button>
           </Left>
           <BellWrapper>
             <button className="button">
@@ -397,10 +406,16 @@ function MyProfile() {
             </button>
           </BellWrapper>
         </TopSection>
-        <BottomSection>{currentComponent}</BottomSection>
+        <BottomSection>   <Routes>
+          <Route path="/info" element={<Octagon />} />
+          <Route path="/story" element={<RegisterStep2 />} />
+          <Route path="/comment" element={<Octagon />} />
+          <Route path="/todo" element={<ToDo />} />
+          <Route path="/other" element={<Other />} />
+        </Routes></BottomSection>
       </RightProfileCard>
-    </Container>
+    </Container >
   );
 }
 
-export default MyProfile;
+export default MyPage;

@@ -7,13 +7,11 @@ import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
 import Find from './components/FindIdAndPwd/Find';
 import Event from './components/Event';
-import Follow from './components/MyPage/Follow';
-import MyProfile from './components/MyPage/MyProfile';
-import ToDo from './components/MyPage/todo/Todo';
 import RegisterMain from './components/Register/RegisterMain';
 import AllStories from './components/Story/AllStories';
 import MainPage from './components/MainPage';
-import Other from './components/MyPage/Other';
+import MyPage from './components/MyPage/MyPage';
+
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
 
@@ -75,7 +73,7 @@ function App() {
               <Route path="/story/all" element={<AllStories />} />
               <Route path="/map" element={<ImageMap />} />
               <Route path="/events" element={<Event />} />
-              <Route path="/mypage/*" element={<MyProfile />} />
+              <Route path="/mypage/*" element={<MyPage />} />
               <Route path="/find-id" element={<Find isFindId={true} />} />
               <Route path="/find-pwd" element={<Find isFindId={false} />} />
             </Routes>
