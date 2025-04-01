@@ -124,7 +124,7 @@ const Button = styled.button`
   border-radius: 15px;
   background-color: #ffffff;
   border: 1px solid white;
-  font-size: 100%;
+  font-size: 60%;
   font-weight: 700;
   color: #414141;
   cursor: pointer;

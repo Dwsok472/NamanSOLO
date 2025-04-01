@@ -12,6 +12,7 @@ import Other from './Other';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import RegisterStep2 from '../Register/RegisterStep2';
 import heartRate from '../img/heart-rate.png';
+import CoupleProfile from './CoupleProfile';
 
 const Container = styled.div`
   display: flex;
@@ -407,7 +408,7 @@ function MyPage() {
           </BellWrapper>
         </TopSection>
         <BottomSection>   <Routes>
-          <Route path="/info" element={<Octagon />} />
+          <Route path="/info" element={<CoupleProfile />} />
           <Route path="/story" element={<RegisterStep2 />} />
           <Route path="/comment" element={<Octagon />} />
           <Route path="/todo" element={<ToDo />} />
