@@ -7,8 +7,9 @@ import {
   IconPhone,
   IconUser,
 } from '../Icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Profile from '../img/people.png';
+import { ModifyUserInfo } from '../api';
 
 const CardWrap = styled.div`
   width: ${(props) => props.width || '550px'};
@@ -153,6 +154,8 @@ function Octagon({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditable, setIsEditable] = useState(false);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -167,6 +170,26 @@ function Octagon({
   const handleIconClick = () => {
     setIsEditable(true);   // 클릭 시 수정 가능하게(readonly false로 만들기)
   };
+  // useEffect(() => {
+  //   ModifyInfo();
+  // }, [])
+  // async function ModifyInfo() {
+  //   try {
+  //     let response = await ModifyUserInfo(sendData);
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response);
+  //     setLoading(false);
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
+
   return (
     <CardWrap width={width}>
       <Card
@@ -207,7 +230,7 @@ function Octagon({
                 autoComplete="off" // 자동완성 기능 끄기
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                readOnly={isProfilePage || !isSignUpPage}
+                readOnly={isProfilePage && !isEditable}
               />
             </SmallBox>
             <SmallBox>
@@ -229,7 +252,7 @@ function Octagon({
                 autoComplete="off" // 자동완성 기능 끄기
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                readOnly={isProfilePage || !isSignUpPage}
+                readOnly={isProfilePage && !isEditable}
               />
             </SmallBox>
             <SmallBox>
@@ -240,13 +263,13 @@ function Octagon({
                 autoComplete="off" // 자동완성 기능 끄기
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                readOnly={isProfilePage || !isSignUpPage}
+                readOnly={isProfilePage && !isEditable}
               />
             </SmallBox>
           </Buttom>
           {isProfilePage && (
             <ButtonWrap>
-              <Button buttoncolor={buttoncolor}>수정하기</Button>
+              <Button buttoncolor={buttoncolor} onClick={ModifyInfo}>수정하기</Button>
             </ButtonWrap>
           )}
 

@@ -19,7 +19,7 @@ const initialStories = [
   {
     id: 1,
     author: "하늘",
-    content: "벚꽃길을 걷다가 찍은 사진이에요 🌸 #데이트 #벚꽃 #서울숲",
+    content: "아아아아아아아아아아아아 🌸 #귀엽다",
     images: [baby1, baby2, baby3],
     createdAt: "3시간 전",
     likeCount: 4,
@@ -27,12 +27,12 @@ const initialStories = [
     liked: false,
     bookmarked: false,
     location: "서울숲",
-    tags: ["아기", "10개월", "딸", "용띠아기기"],
+    tags: ["아기", "10개월", "딸", "용띠아기"],
   },
   {
     id: 2,
     author: "바람",
-    content: "여행 중 찍은 바다 사진입니다 🌊 #여행 #바다",
+    content: "오오오오오오오오오ㅇㅇㅇㅇㅇㅇ 🌊 #이쁘다",
     images: [baby4, baby5, baby6],
     createdAt: "1일 전",
     likeCount: 10,
@@ -40,7 +40,7 @@ const initialStories = [
     liked: false,
     bookmarked: false,
     location: "속초해변",
-    tags: ["baby", "cutebaby", "아기방꾸미기기"],
+    tags: ["baby", "cutebaby", "아기방꾸미기"],
   },
 ];
 
