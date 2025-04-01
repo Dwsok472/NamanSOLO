@@ -4,8 +4,11 @@ import { IconClose } from '../../Icons';
 
 const CardWrap = styled.div`
   width: ${(props) => props.$width || '550px'};
-  margin: 0 auto;
-  margin-top: 50px;
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
 `;
 
 const Card = styled.div`

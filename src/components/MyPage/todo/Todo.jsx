@@ -25,7 +25,7 @@ const CalendarSection = styled.section`
 `;
 
 const CalendarHeader = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   text-align: center;
   cursor: pointer;
   position: relative;
@@ -41,7 +41,7 @@ const AddTravelButton = styled.button`
   border: none;
   border-radius: 6px;
   font-size: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const YearPickerWrap = styled.div`
@@ -78,34 +78,48 @@ const MonthBox = styled.div`
 
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 4px; // 셀 사이 간격 부드럽게
   table-layout: fixed;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
 `;
 
 const StyledTh = styled.th`
-  border: 1px solid #ccc;
+  padding: 12px 0;
   background-color: #fff0f2;
-  padding: 5px;
+  font-weight: 600;
+  color: #444;
+  border-radius: 8px;
+  text-align: center;
 `;
 
 const StyledTd = styled.td`
-  border: 1px solid #ccc;
-  padding: 5px;
-  background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : 'transparent')};
+  background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
+  padding: 10px 5px;
+  border-radius: 10px;
+  vertical-align: top;
+  text-align: right;
 `;
 
 const DayCell = styled.div`
   font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 4px;
 `;
 
 const EventBox = styled.div`
-  background-color: ${({ color }) => color};
-  padding: 2px 4px;
-  margin-bottom: 2px;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  background-color: ${({ color }) => color || '#ffc0cb'};
+  padding: 4px 6px;
+  margin: 2px 0;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  word-break: keep-all;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const AnniversarySection = styled.section`
@@ -125,7 +139,10 @@ const AddButton = styled.button`
   color: #fff;
   border: none;
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  &:hover {
+    font-weight: 700;
+  }
 `;
 
 const List = styled.ul`
@@ -148,13 +165,12 @@ const ListDate = styled.div`
 function ToDo() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const coupleDays = Math.floor((today - new Date(2022, 0, 1)) / (1000 * 60 * 60 * 24));
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
-    { title: '첫 데이트 기념일', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { title: '100일 기념', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
+    { title: '첫 데이트', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
+    { title: '100일', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
   ]);
   const [editingEvent, setEditingEvent] = useState(null);
   const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', date: '', color: '#ffc0cb', type:'anniversary' });
@@ -205,7 +221,7 @@ function ToDo() {
 
   const formatDDay = (diff) => {
     if (diff === 0) return '오늘';
-    return diff > 0 ? `D-${diff}` : `D+${Math.abs(diff)}`;
+    return diff > 0 ? `D - ${diff}` : `D + ${Math.abs(diff)}`;
   };
 
   return (

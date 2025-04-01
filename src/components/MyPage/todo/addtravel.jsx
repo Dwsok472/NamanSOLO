@@ -4,8 +4,11 @@ import { IconClose } from '../../Icons';
 
 const CardWrap = styled.div`
   width: ${(props) => props.width || '550px'};
-  margin: 0 auto;
-  margin-top: 50px;
+  position: absolute;
+  top: 58%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
 `;
 
 const Card = styled.div`
@@ -37,8 +40,9 @@ const TopX = styled.div`
   cursor: pointer;
 `;
 
-const H2 = styled.h2`
+const Title = styled.h1`
   margin: 0 auto;
+  font-size: 1.5rem;
 `;
 
 const Bottom = styled.div`
@@ -107,7 +111,7 @@ function AddTravelPopup({
           <TopX onClick={onClose}>
             <IconClose/>
           </TopX>
-          <H2>{name}</H2>
+          <Title>{name}</Title>
         </Top>
         <Bottom>
           <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
