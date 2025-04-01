@@ -269,7 +269,7 @@ function Octagon({
           </Buttom>
           {isProfilePage && (
             <ButtonWrap>
-              <Button buttoncolor={buttoncolor} onClick={ModifyInfo}>수정하기</Button>
+              <Button buttoncolor={buttoncolor} >수정하기</Button>
             </ButtonWrap>
           )}
 
