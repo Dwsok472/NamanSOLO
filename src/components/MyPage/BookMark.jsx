@@ -118,59 +118,70 @@ function BookMark() {
     setData((prevData) => prevData.filter((item) => item.id !== id));
   };
 
-  //임시용
+  // 페이지 로드 시 로컬스토리지에서 데이터 불러오기
   useEffect(() => {
-    setData([
-      {
-        id: 1,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu12",
-      },
-      {
-        id: 2,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu12",
-      },
-      {
-        id: 3,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sagsu12",
-      },
-      {
-        id: 4,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1",
-      },
-      {
-        id: 5,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu",
-      },
-      {
-        id: 6,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangs",
-      },
-      {
-        id: 7,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangs1",
-      },
-      {
-        id: 8,
-        imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangs12",
-      },
-    ]);
-    setLoading(false); // 데이터가 로드된 후 로딩 상태를 false로 설정
+    const savedData = JSON.parse(localStorage.getItem("bookmarks"));
+    if (savedData) {
+      setData(savedData);
+    } else {
+      setData([
+        {
+          id: 1,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sangsu1",
+        },
+        {
+          id: 2,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sangsu2",
+        },
+        {
+          id: 3,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu3",
+        },
+        {
+          id: 4,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu4",
+        },
+        {
+          id: 5,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu5",
+        },
+        {
+          id: 6,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu6",
+        },
+        {
+          id: 7,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu7",
+        },
+        {
+          id: 8,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu8",
+        },
+        {
+          id: 9,
+          imgurl:
+            "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+          username: "sagsu9",
+        },
+      ]);
+    }
+    setLoading(false);
   }, []);
 
   return (
