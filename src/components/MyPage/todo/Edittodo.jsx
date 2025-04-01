@@ -100,40 +100,37 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-function Addtodo({
-  width,
-  cardwidth,
-  cardheight,
-  topbackground,
-  name,
-  newEvent,
-  setNewEvent,
+function Edittodo({
+  event,
+  setEvent,
   paletteOpen,
   setPaletteOpen,
   colorSamples,
   onClose,
   onSubmit
 }) {
+  if (!event) return null;
+
   return (
-    <CardWrap width={width}>
-      <Card cardwidth={cardwidth} cardheight={cardheight}>
-        <Top topbackground={topbackground}>
-          <TopX onClick={onClose}><IconClose/></TopX>
-          <Title>{name}</Title>
+    <CardWrap>
+      <Card>
+        <Top>
+          <TopX onClick={onClose}><IconClose /></TopX>
+          <Title>기념일 수정</Title>
         </Top>
         <Bottom>
           <form onSubmit={onSubmit}>
             <Input
               type="text"
               placeholder="기념일 제목"
-              value={newEvent.title}
-              onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+              value={event.title}
+              onChange={(e) => setEvent({ ...event, title: e.target.value })}
               required
             />
             <Input
               type="date"
-              value={newEvent.date}
-              onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+              value={event.date}
+              onChange={(e) => setEvent({ ...event, date: e.target.value })}
               required
             />
             <div>
@@ -145,7 +142,7 @@ function Addtodo({
               >
                 팔레트
               </button>
-              <ColorPreview $color={newEvent.color} />
+              <ColorPreview $color={event.color} />
             </div>
             {paletteOpen && (
               <PaletteContainer>
@@ -154,7 +151,7 @@ function Addtodo({
                     key={color}
                     $color={color}
                     onClick={() => {
-                      setNewEvent({ ...newEvent, color });
+                      setEvent({ ...event, color });
                       setPaletteOpen(false);
                     }}
                     title={color}
@@ -164,7 +161,7 @@ function Addtodo({
             )}
             <ButtonRow>
               <Button type="button" onClick={onClose} $bg="#aaa">취소</Button>
-              <Button type="submit" $bg="#ff7f7f">추가</Button>
+              <Button type="submit" $bg="#ff7f7f">수정</Button>
             </ButtonRow>
           </form>
         </Bottom>
@@ -173,4 +170,4 @@ function Addtodo({
   );
 }
 
-export default Addtodo;
+export default Edittodo;

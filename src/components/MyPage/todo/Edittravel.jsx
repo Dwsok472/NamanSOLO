@@ -23,7 +23,7 @@ const Card = styled.div`
 
 const Top = styled.div`
   height: 15%;
-  background-color: ${(props) => props.$topbackground || '#ffdcd6'};
+  background-color: ${(props) => props.$topbackground || '#d6ecff'};
   font-size: 1.2rem;
   display: flex;
   justify-content: center;
@@ -100,42 +100,47 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-function Addtodo({
-  width,
-  cardwidth,
-  cardheight,
-  topbackground,
-  name,
-  newEvent,
-  setNewEvent,
+function Edittravel({
+  event,
+  setEvent,
   paletteOpen,
   setPaletteOpen,
   colorSamples,
   onClose,
   onSubmit
 }) {
+  if (!event) return null;
+
   return (
-    <CardWrap width={width}>
-      <Card cardwidth={cardwidth} cardheight={cardheight}>
-        <Top topbackground={topbackground}>
-          <TopX onClick={onClose}><IconClose/></TopX>
-          <Title>{name}</Title>
+    <CardWrap>
+      <Card>
+        <Top>
+          <TopX onClick={onClose}><IconClose /></TopX>
+          <Title>여행 일정 수정</Title>
         </Top>
         <Bottom>
           <form onSubmit={onSubmit}>
             <Input
               type="text"
-              placeholder="기념일 제목"
-              value={newEvent.title}
-              onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+              placeholder="여행 제목"
+              value={event.title}
+              onChange={(e) => setEvent({ ...event, title: e.target.value })}
               required
             />
-            <Input
-              type="date"
-              value={newEvent.date}
-              onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
-              required
-            />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <Input
+                type="date"
+                value={event.startDate}
+                onChange={(e) => setEvent({ ...event, startDate: e.target.value })}
+                required
+              />
+              <Input
+                type="date"
+                value={event.endDate}
+                onChange={(e) => setEvent({ ...event, endDate: e.target.value })}
+                required
+              />
+            </div>
             <div>
               <label>색상 선택:</label>
               <button
@@ -145,7 +150,7 @@ function Addtodo({
               >
                 팔레트
               </button>
-              <ColorPreview $color={newEvent.color} />
+              <ColorPreview $color={event.color} />
             </div>
             {paletteOpen && (
               <PaletteContainer>
@@ -154,7 +159,7 @@ function Addtodo({
                     key={color}
                     $color={color}
                     onClick={() => {
-                      setNewEvent({ ...newEvent, color });
+                      setEvent({ ...event, color });
                       setPaletteOpen(false);
                     }}
                     title={color}
@@ -164,7 +169,7 @@ function Addtodo({
             )}
             <ButtonRow>
               <Button type="button" onClick={onClose} $bg="#aaa">취소</Button>
-              <Button type="submit" $bg="#ff7f7f">추가</Button>
+              <Button type="submit" $bg="#87cefa">수정</Button>
             </ButtonRow>
           </form>
         </Bottom>
@@ -173,4 +178,4 @@ function Addtodo({
   );
 }
 
-export default Addtodo;
+export default Edittravel;

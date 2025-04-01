@@ -90,7 +90,7 @@ const Button = styled.button`
   color: #222;
 `;
 
-function addtravel({
+function Addtravel({
   width,
   cardwidth,
   cardheight,
@@ -180,4 +180,4 @@ function addtravel({
   );
 }
 
-export default addtravel;
+export default Addtravel;
