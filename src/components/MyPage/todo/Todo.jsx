@@ -388,11 +388,19 @@ function Todo() {
           paletteOpen={travelPaletteOpen}
           setPaletteOpen={setTravelPaletteOpen}
           colorSamples={colorSamples}
+          
           onSubmit={(e) => {
             e.preventDefault();
           
             const start = new Date(newTravelEvent.startDate);
             const end = new Date(newTravelEvent.endDate);
+
+            if (start > end) {
+              alert('종료일은 시작일보다 빠를 수 없습니다!');
+              setNewEvent({ ...newEvent, endDate: '' }); // 무효화
+              return;
+            }
+
             const addedEvents = [];
           
             for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
