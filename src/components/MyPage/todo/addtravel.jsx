@@ -90,7 +90,7 @@ const Button = styled.button`
   color: #222;
 `;
 
-function AddTravelPopup({
+function addtravel({
   width,
   cardwidth,
   cardheight,
@@ -180,4 +180,4 @@ function AddTravelPopup({
   );
 }
 
-export default AddTravelPopup;
+export default addtravel;

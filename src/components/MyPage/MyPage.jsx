@@ -6,7 +6,7 @@ import heart from '../img/heart.png';
 import { getDdayByUsername } from '../api';
 import Octagon from '../Register/Octagon';
 import RegisterMain from '../Register/RegisterMain';
-import ToDo from './todo/Todo';
+import Todo from './todo/Todo';
 import Follow from './Follow';
 import Other from './Other';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
@@ -411,7 +411,7 @@ function MyPage() {
           <Route path="/info" element={<CoupleProfile />} />
           <Route path="/story" element={<RegisterStep2 />} />
           <Route path="/comment" element={<Octagon />} />
-          <Route path="/todo" element={<ToDo />} />
+          <Route path="/todo" element={<Todo />} />
           <Route path="/other" element={<Other />} />
         </Routes></BottomSection>
       </RightProfileCard>

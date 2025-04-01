@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import AddAnniversaryPopup from './addtodo';
-import AddTravelPopup from './addtravel';
+import addtodo from './addtodo';
+import addtravel from './addtravel';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -162,7 +162,7 @@ const ListDate = styled.div`
   color: #999;
 `;
 
-function ToDo() {
+function Todo() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -320,7 +320,7 @@ function ToDo() {
       </Main>
 
       {isModalOpen && (
-        <AddAnniversaryPopup
+        <addtodo
           name="기념일 추가"
           onClose={() => {
             setIsModalOpen(false);
@@ -350,7 +350,7 @@ function ToDo() {
       )}
 
       {isTravelModalOpen && (
-        <AddTravelPopup
+        <addtravel
           name="여행 추가"
           onClose={() => { setIsTravelModalOpen(false);     setTravelPaletteOpen(false);
           }}
@@ -382,4 +382,4 @@ function ToDo() {
   );
 }
 
-export default ToDo;
+export default Todo;

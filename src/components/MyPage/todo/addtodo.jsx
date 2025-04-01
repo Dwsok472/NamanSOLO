@@ -100,7 +100,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-function AddAnniversaryPopup({
+function addtodo({
   width,
   cardwidth,
   cardheight,
@@ -173,4 +173,4 @@ function AddAnniversaryPopup({
   );
 }
 
-export default AddAnniversaryPopup;
+export default addtodo;
