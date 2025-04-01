@@ -101,7 +101,7 @@ function MainMap() {
             <ContentBox>
                 <LeftBox>
                     <Wrap>
-                        <h1><span class="highlight">가장 행복한 하루</span>를 <br />보내는 오늘</h1>
+                        <h1><span class="highlight">가장 행복한 하루</span>를 <br />보낼 오늘</h1>
                         <span className='hash'>#데이트</span>
                         <span className='hash'>#이색체험</span>
                         <span className='hash'>#핫플</span>
