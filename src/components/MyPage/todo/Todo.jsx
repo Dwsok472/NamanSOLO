@@ -99,7 +99,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  padding: 12px 0;
+  padding: 8px 0;
   background-color: #fff0f2;
   font-weight: 600;
   color: #444;
