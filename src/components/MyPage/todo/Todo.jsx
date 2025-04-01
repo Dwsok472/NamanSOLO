@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import addtodo from './addtodo';
-import addtravel from './addtravel';
+import Addtodo from './Addtodo';
+import Addtravel from './Addtravel';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -320,7 +320,7 @@ function Todo() {
       </Main>
 
       {isModalOpen && (
-        <addtodo
+        <Addtodo
           name="기념일 추가"
           onClose={() => {
             setIsModalOpen(false);
@@ -350,7 +350,7 @@ function Todo() {
       )}
 
       {isTravelModalOpen && (
-        <addtravel
+        <Addtravel
           name="여행 추가"
           onClose={() => { setIsTravelModalOpen(false);     setTravelPaletteOpen(false);
           }}

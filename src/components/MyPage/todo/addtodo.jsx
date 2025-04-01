@@ -100,7 +100,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-function addtodo({
+function Addtodo({
   width,
   cardwidth,
   cardheight,
@@ -173,4 +173,4 @@ function addtodo({
   );
 }
 
-export default addtodo;
+export default Addtodo;
