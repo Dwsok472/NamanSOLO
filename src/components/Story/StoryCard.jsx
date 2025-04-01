@@ -240,6 +240,7 @@ const StoryCard = ({ story, onToggleLike }) => {
   const [activeReplyId, setActiveReplyId] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [likes, setLikes] = useState([]);
+  const [showAllComments, setShowAllComments] = useState(false);
 
   const handleAddComment = (text) => {
     const newComment = {
@@ -267,6 +268,11 @@ const StoryCard = ({ story, onToggleLike }) => {
     setComments(updated);
     setReplyText('');
   };
+
+  const getTotalCommentCount = () => {
+    return comments.reduce((acc, comment) => acc + 1 + comment.replies.length, 0);
+  };
+
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? story.images.length - 1 : prevIndex - 1
@@ -349,19 +355,21 @@ const StoryCard = ({ story, onToggleLike }) => {
         </LocationRow>
       )}
 
-      <CommentListWrapper>
-        {comments.map((comment) => (
+     <CommentListWrapper>
+        {(showAllComments ? comments : comments.slice(0, 1)).map((comment) => (
           <CommentItem key={comment.id}>
-          <CommentHeader>
-            <CommentText>
-              <strong>{comment.user}</strong>: {comment.content}
-            </CommentText>
-            <ReplyToggle onClick={() =>
-              setActiveReplyId(activeReplyId === comment.id ? null : comment.id)
-            }>
-              💬 {comment.replies.length} 답글
-            </ReplyToggle>
-          </CommentHeader>
+            <CommentHeader>
+              <CommentText>
+                <strong>{comment.user}</strong>: {comment.content}
+              </CommentText>
+              <ReplyToggle
+                onClick={() =>
+                  setActiveReplyId(activeReplyId === comment.id ? null : comment.id)
+                }
+              >
+                💬 {comment.replies.length} 답글
+              </ReplyToggle>
+            </CommentHeader>
 
             {activeReplyId === comment.id && (
               <>
@@ -385,6 +393,12 @@ const StoryCard = ({ story, onToggleLike }) => {
             )}
           </CommentItem>
         ))}
+
+        {!showAllComments && comments.length > 1 && (
+          <ReplyToggle onClick={() => setShowAllComments(true)}>
+            댓글 {comments.length - 1}개 더 보기
+          </ReplyToggle>
+        )}
       </CommentListWrapper>
 
   
