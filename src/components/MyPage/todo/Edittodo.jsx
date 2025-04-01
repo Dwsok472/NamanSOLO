@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { IconClose } from '../../Icons';
 
 const CardWrap = styled.div`
-  width: ${(props) => props.$width || '550px'};
+  width: 500px;
   position: absolute;
   top: 58%;
   left: 50%;
@@ -12,8 +12,7 @@ const CardWrap = styled.div`
 `;
 
 const Card = styled.div`
-  width: ${(props) => props.$cardwidth || '500px'};
-  height: ${(props) => props.$cardheight || '600px'};
+  height: 400px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
@@ -23,8 +22,9 @@ const Card = styled.div`
 
 const Top = styled.div`
   height: 15%;
-  background-color: ${(props) => props.$topbackground || '#ffdcd6'};
-  font-size: 1.2rem;
+  background-color: #ffdcd6;
+  font-size: 1.5rem;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,63 +40,79 @@ const TopX = styled.div`
   cursor: pointer;
 `;
 
-const Title = styled.h1`
-  margin: 0;
-  font-size: 1.5rem;
+const Bottom = styled.div`
+  flex: 1;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
-const Bottom = styled.div`
-  padding: 20px;
-  flex: 1;
+const Label = styled.label`
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
 `;
 
 const Input = styled.input`
-  padding: 8px;
-  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ffc0cb;
+  outline: none;
+  font-size: 1rem;
   width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 6px;
 `;
 
-const ColorPreview = styled.div`
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-left: 10px;
-  background-color: ${(props) => props.$color};
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const PaletteContainer = styled.div`
+const ColorSection = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
+  align-items: center;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ffc0cb;
+  width: fit-content;
+  cursor: pointer;
 `;
 
-const ColorBox = styled.div`
-  width: 30px;
-  height: 30px;
-  background-color: ${(props) => props.$color};
-  border-radius: 4px;
+const SelectedColorPreview = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: ${(props) => props.color || '#eee'};
+  border: 2px solid #ccc;
+`;
+
+const ColorPalette = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+`;
+
+const ColorDot = styled.div`
+  width: 24px;
+  height: 24px;
+  background-color: ${(props) => props.color};
+  border-radius: 50%;
   cursor: pointer;
   border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #ccc;
 `;
 
 const ButtonRow = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: auto;
 `;
 
 const Button = styled.button`
-  padding: 6px 12px;
+  padding: 8px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   background-color: ${(props) => props.$bg || '#ccc'};
   color: #222;
+  font-weight: bold;
+  font-size: 0.9rem;
   cursor: pointer;
 `;
 
@@ -116,49 +132,45 @@ function Edittodo({
       <Card>
         <Top>
           <TopX onClick={onClose}><IconClose /></TopX>
-          <Title>기념일 수정</Title>
+          기념일 수정
         </Top>
         <Bottom>
           <form onSubmit={onSubmit}>
             <Input
               type="text"
               placeholder="기념일 제목"
-              value={event.title}
+              value={event.title || ''}
               onChange={(e) => setEvent({ ...event, title: e.target.value })}
               required
             />
+
             <Input
               type="date"
-              value={event.date}
+              value={event.date || ''}
               onChange={(e) => setEvent({ ...event, date: e.target.value })}
               required
             />
-            <div>
-              <label>색상 선택:</label>
-              <button
-                type="button"
-                onClick={() => setPaletteOpen(!paletteOpen)}
-                style={{ marginLeft: '10px', padding: '4px 8px', cursor: 'pointer' }}
-              >
-                팔레트
-              </button>
-              <ColorPreview $color={event.color} />
-            </div>
+
+            <Label>색상</Label>
+            <ColorSection onClick={() => setPaletteOpen((prev) => !prev)}>
+              <SelectedColorPreview color={event.color} />
+            </ColorSection>
+
             {paletteOpen && (
-              <PaletteContainer>
+              <ColorPalette>
                 {colorSamples.map((color) => (
-                  <ColorBox
+                  <ColorDot
                     key={color}
-                    $color={color}
+                    color={color}
                     onClick={() => {
                       setEvent({ ...event, color });
                       setPaletteOpen(false);
                     }}
-                    title={color}
                   />
                 ))}
-              </PaletteContainer>
+              </ColorPalette>
             )}
+
             <ButtonRow>
               <Button type="button" onClick={onClose} $bg="#aaa">취소</Button>
               <Button type="submit" $bg="#ff7f7f">수정</Button>

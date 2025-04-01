@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './components/Login/Login';
-import ImageMap from './components/ImageMap';
 import { createGlobalStyle } from 'styled-components';
 import Find from './components/FindIdAndPwd/Find';
 import Event from './components/Event';
@@ -11,6 +10,7 @@ import RegisterMain from './components/Register/RegisterMain';
 import AllStories from './components/Story/AllStories';
 import MainPage from './components/MainPage';
 import MyPage from './components/MyPage/MyPage';
+import MainMap from './components/Map/MainMap';
 
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
@@ -71,7 +71,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<RegisterMain />} />
               <Route path="/story/all" element={<AllStories />} />
-              <Route path="/map" element={<ImageMap />} />
+              <Route path="/map" element={<MainMap />} />
               <Route path="/events" element={<Event />} />
               <Route path="/mypage/*" element={<MyPage />} />
               <Route path="/find-id" element={<Find isFindId={true} />} />

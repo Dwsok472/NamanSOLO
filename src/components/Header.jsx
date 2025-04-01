@@ -25,6 +25,7 @@ const Container = styled.header`
   top: 0;
   left: 0;
   z-index: 999;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);;
 `;
 
 const Logo = styled.h1`
