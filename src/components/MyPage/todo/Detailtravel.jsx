@@ -66,24 +66,6 @@ const ImageRow = styled.div`
   flex-wrap: wrap;
 `;
 
-const ButtonRow = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: auto;
-`;
-
-const Button = styled.button`
-  padding: 8px 20px;
-  border: none;
-  border-radius: 20px;
-  background-color: ${(props) => props.$bg || '#ccc'};
-  color: #222;
-  font-weight: bold;
-  font-size: 0.9rem;
-  cursor: pointer;
-`;
-
 function TravelDetailView({ event, onClose, onEdit }) {
   if (!event) return null;
 
@@ -91,7 +73,9 @@ function TravelDetailView({ event, onClose, onEdit }) {
     <CardWrap>
       <Card>
         <Top>
-            <IconEdit onClick={onEdit} /> 수정
+            <TopX onClick={onEdit}>
+                <IconEdit />
+            </TopX>
             <TopX onClick={onClose}>
                 <IconClose />
             </TopX>
