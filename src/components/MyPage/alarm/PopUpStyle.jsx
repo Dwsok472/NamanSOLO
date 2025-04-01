@@ -1,6 +1,6 @@
+import React from 'react'
 import styled from 'styled-components';
 import { IconClose } from './Icons';
-import React from 'react'
 
 const CardWrap = styled.div`
   width: ${(props) => props.width || '550px'};
@@ -37,20 +37,19 @@ const H1 = styled.h1`
 `;
 const Buttom = styled.div``;
 
-function PopUp({ width, cardwidth, cardheight, topbackground, name }) {
-  return (
-    <CardWrap width={width}>
-      <Card cardwidth={cardwidth} cardheight={cardheight}>
-        <Top topbackground={topbackground}>
-          <TopX>
-            <IconClose />
-          </TopX>
-          <H1 name={name}>{name}</H1>
-        </Top>
-        <Buttom></Buttom>
-      </Card>
-    </CardWrap>
-  );
+function AlarmMain({ width, cardwidth, cardheight, topbackground, name }) {
+    return (
+        <CardWrap width={width}>
+            <Card cardwidth={cardwidth} cardheight={cardheight}>
+                <Top topbackground={topbackground}>
+                    <TopX>
+                        <IconClose />
+                    </TopX>
+                    <H1 name={name}>{name}</H1>
+                </Top>
+                <Buttom></Buttom>
+            </Card>
+        </CardWrap>
+    );
 }
-
-export default PopUp;
+export default AlarmMain
