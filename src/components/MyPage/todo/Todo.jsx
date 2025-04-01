@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Addtodo from './Addtodo';
 import Addtravel from './Addtravel';
+import { IconEdit } from '../../Icons';
+import leftThought from '../../img/leftThought.png'
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -90,8 +92,8 @@ const MonthBox = styled.div`
 
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 4px; // 셀 사이 간격 부드럽게
+  border: 0.5px solid;
+  border-spacing: 4px;
   table-layout: fixed;
   background-color: #fff;
   border-radius: 12px;
@@ -100,35 +102,38 @@ const StyledTable = styled.table`
 
 const StyledTh = styled.th`
   padding: 8px 0;
+  border: 0.5px solid;
   background-color: #fff0f2;
   font-weight: 600;
   color: #444;
   border-radius: 8px;
   text-align: center;
+  height: 20px;
 `;
 
 const StyledTd = styled.td`
   background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
-  padding: 10px 5px;
+  border: 0.5px solid;
+  padding: 2px;
   border-radius: 10px;
   vertical-align: top;
   text-align: right;
+  height: 80px;
 `;
 
 const DayCell = styled.div`
   font-weight: bold;
   font-size: 1rem;
-  margin-bottom: 4px;
 `;
 
 const EventBox = styled.div`
   background-color: ${({ color }) => color || '#ffc0cb'};
   padding: 4px 6px;
-  margin: 2px 0;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  line-height: 1.1;
-  word-break: keep-all;
+  margin: 0 auto;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  line-height: 0.8;
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -195,7 +200,7 @@ function Todo() {
   ]);
   const [editingEvent, setEditingEvent] = useState(null);
   const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', date: '', color: '#ffc0cb', type:'anniversary' });
-  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', date: '', color: '#87cefa', type:'travel' });
+  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', date: '', color: '#87cefa', type:'travel', image: leftThought });
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
   const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
@@ -315,7 +320,6 @@ function Todo() {
                             onClick={() => setEditingEvent(event)}
                           >
                             <div>{event.title}</div>
-                            <div>{formatDDay(getDiffInDays(event.date))}</div>
                           </EventBox>
                         ))}
                       </StyledTd>
@@ -386,17 +390,25 @@ function Todo() {
           colorSamples={colorSamples}
           onSubmit={(e) => {
             e.preventDefault();
-
-            const eventToAdd = {
-              title: newTravelEvent.title,
-              date: newTravelEvent.startDate, // 📌 캘린더 렌더링용
-              startDate: newTravelEvent.startDate,
-              endDate: newTravelEvent.endDate,
-              color: newTravelEvent.color,
-              type: 'travel'
-            };
-
-            setEvents([...events, eventToAdd ]);
+          
+            const start = new Date(newTravelEvent.startDate);
+            const end = new Date(newTravelEvent.endDate);
+            const addedEvents = [];
+          
+            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+              const dateStr = d.toISOString().split('T')[0];
+              addedEvents.push({
+                title: newTravelEvent.title,
+                date: dateStr,
+                startDate: newTravelEvent.startDate,
+                endDate: newTravelEvent.endDate,
+                color: newTravelEvent.color,
+                type: 'travel',
+                image: newTravelEvent.image
+              });
+            }
+          
+            setEvents([...events, ...addedEvents]);
             setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', type: 'travel' });
             setIsTravelModalOpen(false);
             setTravelPaletteOpen(false);

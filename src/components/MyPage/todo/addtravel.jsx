@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IconClose } from '../../Icons';
+import { IconClose, IconPhoto } from '../../Icons'; // Update this file to include new icon if needed
 
 const CardWrap = styled.div`
-  width: ${(props) => props.width || '550px'};
+  width: 500px;
   position: absolute;
   top: 58%;
   left: 50%;
@@ -12,8 +12,7 @@ const CardWrap = styled.div`
 `;
 
 const Card = styled.div`
-  width: ${(props) => props.cardwidth || '500px'};
-  height: ${(props) => props.cardheight || '600px'};
+  height: 600px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
@@ -23,8 +22,9 @@ const Card = styled.div`
 
 const Top = styled.div`
   height: 15%;
-  background-color: ${(props) => props.topbackground || '#ffdcd6'};
-  font-size: 1.2rem;
+  background-color: #ffdcd6;
+  font-size: 1.5rem;
+  font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,14 +35,9 @@ const Top = styled.div`
 
 const TopX = styled.div`
   position: absolute;
-  top: 0px;
+  top: 0;
   right: 20px;
   cursor: pointer;
-`;
-
-const Title = styled.h1`
-  margin: 0 auto;
-  font-size: 1.5rem;
 `;
 
 const Bottom = styled.div`
@@ -50,51 +45,153 @@ const Bottom = styled.div`
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
 `;
 
 const Input = styled.input`
-  padding: 8px;
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ffc0cb;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+`;
+
+const Label = styled.label`
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center; 
+  gap: 16px;
+`;
+
+const FileInput = styled.input`
+  display: none;
+`;
+
+const FileInputLabel = styled.label`
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ffc0cb;
+  width: fit-content;
+  cursor: pointer;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+const FolderIcon = styled.div`
+  font-size: 1.5rem;
+`;
+
+const PreviewContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
+const PreviewWrapper = styled.div`
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
   border: 1px solid #ccc;
-  border-radius: 5px;
+`;
+
+const PreviewImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+
+  &:hover {
+    background: #ffdddd;
+  }
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+`;
+
+const ColorSection = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #ffc0cb;
+  width: fit-content;
+  cursor: pointer;
+`;
+
+const SelectedColorPreview = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: ${(props) => props.color || '#eee'};
+  border: 2px solid #ccc;
+  cursor: pointer;
 `;
 
 const ColorPalette = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
 `;
 
 const ColorDot = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   background-color: ${(props) => props.color};
-  border-radius: 5px;
+  border-radius: 50%;
   cursor: pointer;
   border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #ccc;
 `;
 
 const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
   margin-top: auto;
+  display: flex;
+  justify-content: center;
 `;
 
-const Button = styled.button`
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
+const SubmitButton = styled.button`
+  padding: 8px 20px;
   border: none;
-  color: #222;
+  border-radius: 20px;
+  background-color: #ffe4e6;
+  color: #444;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
 `;
 
-function Addtravel({
-  width,
-  cardwidth,
-  cardheight,
-  topbackground,
+function AddTravel({
   name,
   newEvent,
   setNewEvent,
@@ -104,74 +201,100 @@ function Addtravel({
   onClose,
   onSubmit
 }) {
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files).filter((file) => file instanceof File);
+    setNewEvent({
+      ...newEvent,
+      images: [...(newEvent.images || []), ...files],
+    });
+  };
+
+  const handleDeleteImage = (idx) => {
+    const updated = [...(newEvent.images || [])];
+    updated.splice(idx, 1);
+    setNewEvent({ ...newEvent, images: updated });
+  };
+
   return (
-    <CardWrap width={width}>
-      <Card cardwidth={cardwidth} cardheight={cardheight}>
-        <Top topbackground={topbackground}>
+    <CardWrap>
+      <Card>
+        <Top>
           <TopX onClick={onClose}>
-            <IconClose/>
+            <IconClose />
           </TopX>
-          <Title>{name}</Title>
+          {name}
         </Top>
         <Bottom>
-          <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <form onSubmit={onSubmit}>
             <Input
               type="text"
-              placeholder="여행 제목"
-              value={newEvent.title}
+              value={newEvent.title || ''}
+              placeholder='제목을 입력해주세요'
               onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               required
             />
-            <Input
-              type="date"
-              value={newEvent.startDate || ''}
-              onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
-              required
-            />
-            <Input
-              type="date"
-              value={newEvent.endDate || ''}
-              onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
-              required
-            />
-            <div>
-              <label style={{ marginRight: '10px' }}>색상 선택:</label>
-              <Button
-                type="button"
-                onClick={() => setPaletteOpen(!paletteOpen)}
-                style={{ backgroundColor: '#fff', border: '1px solid #ccc' }}
-              >
-                팔레트
-              </Button>
-              <span
-                style={{
-                  display: 'inline-block',
-                  width: '20px',
-                  height: '20px',
-                  marginLeft: '10px',
-                  backgroundColor: newEvent.color,
-                  border: '1px solid #ccc',
-                  borderRadius: '4px'
-                }}
+            <Row>
+              <Input
+                type="date"
+                value={newEvent.startDate || ''}
+                onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
+                required
               />
-            </div>
+              <Input
+                type="date"
+                value={newEvent.endDate || ''}
+                onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
+                required
+              />
+            </Row>
 
+            <Label>사진</Label>
+            <FileInputLabel htmlFor="image-upload">
+              <IconPhoto />
+            </FileInputLabel>
+            <FileInput
+              type="file"
+              id="image-upload"
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+
+            {newEvent.images?.length > 0 && (
+              <PreviewContainer>
+                {newEvent.images.map((img, i) => (
+                  <PreviewWrapper key={i}>
+                    <PreviewImg src={URL.createObjectURL(img)} alt="미리보기" />
+                    <DeleteButton type="button" onClick={() => handleDeleteImage(i)}>
+                      <IconClose />
+                    </DeleteButton>
+                  </PreviewWrapper>
+                ))}
+              </PreviewContainer>
+            )}
+
+            <br />
+            <Label>색상</Label>
+            <ColorSection>
+              <SelectedColorPreview color={newEvent.color}  type="button" onClick={() => setPaletteOpen(!paletteOpen)} />
+            </ColorSection>
             {paletteOpen && (
               <ColorPalette>
                 {colorSamples.map((color) => (
                   <ColorDot
                     key={color}
                     color={color}
-                    onClick={() => setNewEvent({ ...newEvent, color })}
-                    title={color}
+                    onClick={() => {
+                      setNewEvent({ ...newEvent, color });
+                      setPaletteOpen(false);
+                    }}
                   />
                 ))}
               </ColorPalette>
             )}
 
             <ButtonGroup>
-              <Button onClick={onClose} type="button" style={{ backgroundColor: '#aaa' }}>취소</Button>
-              <Button type="submit" style={{ backgroundColor: '#ff7f7f' }}>추가</Button>
+              <SubmitButton type="submit">등록</SubmitButton>
             </ButtonGroup>
           </form>
         </Bottom>
@@ -180,4 +303,4 @@ function Addtravel({
   );
 }
 
-export default Addtravel;
+export default AddTravel;
