@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Addtodo from './Addtodo';
 import Addtravel from './Addtravel';
-import { IconEdit } from '../../Icons';
-import leftThought from '../../img/leftThought.png'
+import { IconEdit, IconClose } from '../../Icons';
+import leftThought from '../../img/leftThought.png';
+import LeftKey from '../../img/leftkey.png';
+import RightKey from '../../img/rightkey.png';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -56,6 +58,10 @@ const AddTravelButton = styled.button`
     font-weight: 700;
     box-shadow: none;
   }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const YearPickerWrap = styled.div`
@@ -70,11 +76,36 @@ const YearButtons = styled.div`
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
-  gap: 5px;
+  align-items: center;
+  gap: 12px;
+`;
+
+const YearArrow = styled.img`
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const YearButton = styled.button`
   background-color: ${({ $active }) => ($active ? '#ffe4e6' : '#fff')};
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #ffedf0;
+  }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const MonthGrid = styled.div`
@@ -92,7 +123,6 @@ const MonthBox = styled.div`
 
 const StyledTable = styled.table`
   width: 100%;
-  border: 0.5px solid;
   border-spacing: 4px;
   table-layout: fixed;
   background-color: #fff;
@@ -147,6 +177,23 @@ const AnniversarySection = styled.section`
   position: relative;
 `;
 
+const EditButton = styled.button`
+  background-color: #ffd6db;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #444;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #ffb6c1;
+  }
+`;
+
 const AddButton = styled.button`
   position: absolute;
   bottom: 20px;
@@ -168,6 +215,10 @@ const AddButton = styled.button`
   &:hover {
     font-weight: 700;
     box-shadow: none;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -198,7 +249,9 @@ function Todo() {
     { title: '첫 데이트', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
     { title: '100일', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
   ]);
-  const [editingEvent, setEditingEvent] = useState(null);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [editingTodoEvent, setEditingTodoEvent] = useState(null);
+  const [editingTravelEvent, setEditingTravelEvent] = useState(null);
   const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', date: '', color: '#ffc0cb', type:'anniversary' });
   const [newTravelEvent, setNewTravelEvent] = useState({ title: '', date: '', color: '#87cefa', type:'travel', image: leftThought });
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
@@ -266,7 +319,7 @@ function Todo() {
           {isPickerOpen && (
             <YearPickerWrap>
               <YearButtons>
-                <button onClick={() => setYearRangeStart(yearRangeStart - 5)}>⬅</button>
+                <YearArrow src={LeftKey} onClick={() => setYearRangeStart(yearRangeStart - 5)}/>
                 {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map(year => (
                   <YearButton
                     key={year}
@@ -276,7 +329,7 @@ function Todo() {
                     {year}
                   </YearButton>
                 ))}
-                <button onClick={() => setYearRangeStart(yearRangeStart + 5)}>➡</button>
+                <YearArrow src={RightKey} onClick={() => setYearRangeStart(yearRangeStart + 5)}/>
               </YearButtons>
               <MonthGrid>
                 {Array.from({ length: 12 }, (_, i) => (
@@ -317,7 +370,7 @@ function Todo() {
                           <EventBox
                             key={i}
                             color={event.color}
-                            onClick={() => setEditingEvent(event)}
+                            onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setEditingTravelEvent(event) }
                           >
                             <div>{event.title}</div>
                           </EventBox>
@@ -335,15 +388,31 @@ function Todo() {
           <AddButton onClick={() => setIsModalOpen(true)}>+</AddButton>
           <h3>우리의 기념일</h3>
           <List>
-            {events.filter(event => event.type === 'anniversary').map((event, idx) => (
-              <ListItem key={idx}>
+            {events.filter(e => e.type === 'anniversary').map((event, idx) => {
+              hoveredItem === idx;
+              const isHovered = hoveredItem;
+              editingTodoEvent === idx;
+              const isEditing = editingTodoEvent;
+
+              return (
+              <ListItem
+                onMouseEnter={() => setHoveredItem(idx)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
                 <div>{event.title}</div>
                 <div>
-                  <div>{getDiffInDays(event.date) >= 0 ? `D - ${getDiffInDays(event.date)}` : `D + ${getDiffInDays(event.date)}`}</div>
+                  <div>{getDiffInDays(event.date) >= 0 ? `D - ${getDiffInDays(event.date)}` : `D + ${Math.abs(getDiffInDays(event.date))}`}</div>
                   <ListDate>{event.date}</ListDate>
                 </div>
+      
+                {/* ✏️ 수정 버튼은 마우스 올라갔을 때만 보이게 */}
+                {isHovered && (
+                  <EditButton onClick={() => setEditingTodoEvent(idx)}>
+                    <IconEdit />
+                  </EditButton>
+                )}
               </ListItem>
-            ))}
+            )})}
           </List>
         </AnniversarySection>
       </Main>
@@ -415,6 +484,49 @@ function Todo() {
                 image: newTravelEvent.image
               });
             }
+
+            {editingTodoEvent && (
+              <Edittodo
+                event={editingTodoEvent}
+                setEvent={setEditingTodoEvent}
+                onClose={() => setEditingTodoEvent(null)}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  // 업데이트 로직
+                  const updated = events.map((ev) =>
+                    ev.date === editingTodoEvent.date && ev.title === editingTodoEvent.title
+                      ? editingTodoEvent
+                      : ev
+                  );
+                  setEvents(updated);
+                  setEditingTodoEvent(null);
+                }}
+                paletteOpen={anniversaryPaletteOpen}
+                setPaletteOpen={setAnniversaryPaletteOpen}
+                colorSamples={colorSamples}
+              />
+            )}
+            
+            {editingTravelEvent && (
+              <Edittravel
+                event={editingTravelEvent}
+                setEvent={setEditingTravelEvent}
+                onClose={() => setEditingTravelEvent(null)}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const updatedEvents = events.map((ev) =>
+                    ev.date === editingTravelEvent.date && ev.title === editingTravelEvent.title
+                      ? editingTravelEvent
+                      : ev
+                  );
+                  setEvents(updatedEvents);
+                  setEditingTravelEvent(null);
+                }}
+                paletteOpen={travelPaletteOpen}
+                setPaletteOpen={setTravelPaletteOpen}
+                colorSamples={colorSamples}
+              />
+            )}            
           
             setEvents([...events, ...addedEvents]);
             setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', type: 'travel' });
