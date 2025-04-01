@@ -7,10 +7,11 @@ import course3 from '../img/3.jpg';
 import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
 const Container = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  /* justify-content: space-between; */
+  flex-direction: row;
   align-items: stretch; // 핵심!
-  max-width: 1100px;
+
   margin: 40px auto;
   gap: 20px;
   /* height: 600px; // 기준 고정 높이 */
@@ -125,45 +126,6 @@ const RegionLabel = styled.div`
     color: white;
   }
 `;
-
-const Region = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  clip-path: ${({ $clip }) => $clip};
-  background-color: ${({ $active }) =>
-    $active ? 'rgba(255, 46, 99, 0.3)' : 'transparent'};
-  transition: background-color 0.3s;
-  z-index: 2;
-  pointer-events: none;
-`;
-
-const Label = styled.div`
-  position: absolute;
-  top: ${({ $top }) => $top}%;
-  left: ${({ $left }) => $left}%;
-  transform: translate(-50%, -50%);
-  font-size: 0.75rem;
-  font-weight: bold;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 4px 8px;
-  border-radius: 5px;
-  z-index: 3;
-  cursor: pointer;
-  pointer-events: auto;
-
-  &:hover {
-    background: #ff91a4;
-    color: white;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
 
 
 const CategoryTabs = styled.div`
