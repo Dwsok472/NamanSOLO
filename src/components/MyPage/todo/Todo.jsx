@@ -335,7 +335,7 @@ function Todo() {
               <ListItem key={idx}>
                 <div>{event.title}</div>
                 <div>
-                  <div>{getDiffInDays(event.date) >= 0 ? `D-${getDiffInDays(event.date)}` : `D+${getDiffInDays(event.date)}`}</div>
+                  <div>{getDiffInDays(event.date) >= 0 ? `D - ${getDiffInDays(event.date)}` : `D + ${getDiffInDays(event.date)}`}</div>
                   <ListDate>{event.date}</ListDate>
                 </div>
               </ListItem>
