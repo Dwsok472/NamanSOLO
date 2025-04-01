@@ -4,7 +4,7 @@ import LikeButton from "./LikeButton";
 import CommentInput from "./CommentInput";
 
 const Card = styled.div`
-  width: 780px;
+  width: 680px;
   min-height: 90vh;
   background-color: #fff0eb;
   clip-path: polygon(
@@ -26,23 +26,31 @@ const Card = styled.div`
 
 const StoryImageWrapper = styled.div`
   position: relative;
-  width: 100%;
+  width: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 40px;
+  margin: 0 auto;
 `;
 
 const StoryImage = styled.img`
-  width: 85%;
+  width: 500%;
+  max-height: 520px;
   border-radius: 8px;
   object-fit: cover;
+  position: relative;
 `;
 
 const SlideIndicator = styled.div`
-  text-align: right;
-  font-size: 12px;
-  color: #888;
-  margin-top: 4px;
+  position: absolute;
+  bottom: 12px;
+  right: 20px;
+  font-size: 13px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 6px;
 `;
 
 const SlideArea = styled.div`
@@ -61,16 +69,17 @@ const SlideArea = styled.div`
 `;
 
 const ArrowIcon = styled.span`
-  font-size: 20px;
+  font-size: 25px;
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
+
 
 const ContentText = styled.p`
   margin: 12px 0 16px;
@@ -240,6 +249,7 @@ const StoryCard = ({ story, onToggleLike }) => {
   const [activeReplyId, setActiveReplyId] = useState(null);
   const [replyText, setReplyText] = useState('');
   const [likes, setLikes] = useState([]);
+  const [showComments, setShowComments] = useState(false);
   const [showAllComments, setShowAllComments] = useState(false);
 
   const handleAddComment = (text) => {
@@ -308,12 +318,12 @@ const StoryCard = ({ story, onToggleLike }) => {
         <SlideArea onClick={handleNext} $position="right">
           <ArrowIcon>›</ArrowIcon>
         </SlideArea>
-      </StoryImageWrapper>
-  
-      <SlideIndicator>
+
+        <SlideIndicator>
         {currentIndex + 1}/{story.images.length}
-      </SlideIndicator>
-  
+       </SlideIndicator>
+      </StoryImageWrapper>
+
       <ContentText>{story.content}</ContentText>
   
       <MetaRow>
@@ -333,7 +343,9 @@ const StoryCard = ({ story, onToggleLike }) => {
             likeCount={likes.length}
             onClick={toggleLike}
           />
-          <span>💬 {comments.length}</span>
+          <span style={{ cursor: "pointer" }} onClick={() => setShowComments(prev => !prev)}>
+            💬 {getTotalCommentCount()}
+          </span>
           <span>⭐</span>
         </ActionIcons>
       </MetaRow>
@@ -348,60 +360,69 @@ const StoryCard = ({ story, onToggleLike }) => {
 
       {story.location && (
         <LocationRow>
-          <span role="img" aria-label="pin">📍</span>
+          <span role="img" aria-label="pin">📍 위치</span>
           <LocationButton onClick={() => alert(`여기서 지도 열 예정: ${story.location.name}`)}>
             {story.location.address} ({story.location.name})
           </LocationButton>
         </LocationRow>
       )}
 
-     <CommentListWrapper>
-        {(showAllComments ? comments : comments.slice(0, 1)).map((comment) => (
-          <CommentItem key={comment.id}>
-            <CommentHeader>
-              <CommentText>
-                <strong>{comment.user}</strong>: {comment.content}
-              </CommentText>
-              <ReplyToggle
-                onClick={() =>
-                  setActiveReplyId(activeReplyId === comment.id ? null : comment.id)
-                }
-              >
-                💬 {comment.replies.length} 답글
-              </ReplyToggle>
-            </CommentHeader>
+      {showComments && (
+        <CommentListWrapper>
+          {(showAllComments ? comments : comments.slice(0, 1)).map((comment) => (
+            <CommentItem key={comment.id}>
+              <CommentHeader>
+                <CommentText>
+                  <strong>{comment.user}</strong>: {comment.content}
+                </CommentText>
+                <ReplyToggle
+                  onClick={() =>
+                    setActiveReplyId(activeReplyId === comment.id ? null : comment.id)
+                  }
+                >
+                  💬 {comment.replies.length} 답글
+                </ReplyToggle>
+              </CommentHeader>
 
-            {activeReplyId === comment.id && (
-              <>
-                <ReplyList>
-                  {comment.replies.map((reply) => (
-                    <ReplyItem key={reply.id}>
-                      ↪ <strong>{reply.user}</strong>: {reply.content}
-                    </ReplyItem>
-                  ))}
-                </ReplyList>
+              {activeReplyId === comment.id && (
+                <>
+                  <ReplyList>
+                    {comment.replies.map((reply) => (
+                      <ReplyItem key={reply.id}>
+                        ↪ <strong>{reply.user}</strong>: {reply.content}
+                      </ReplyItem>
+                    ))}
+                  </ReplyList>
 
-                <ReplyInputWrapper>
-                  <input
-                    value={replyText}
-                    onChange={(e) => setReplyText(e.target.value)}
-                    placeholder="답글을 입력하세요"
-                  />
-                  <button onClick={() => handleAddReply(comment.id)}>등록</button>
-                </ReplyInputWrapper>
-              </>
-            )}
-          </CommentItem>
-        ))}
+                  <ReplyInputWrapper>
+                    <input
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      placeholder="답글을 입력하세요"
+                    />
+                    <button onClick={() => handleAddReply(comment.id)}>등록</button>
+                  </ReplyInputWrapper>
+                </>
+              )}
+            </CommentItem>
+          ))}
 
-        {!showAllComments && comments.length > 1 && (
-          <ReplyToggle onClick={() => setShowAllComments(true)}>
-            댓글 {comments.length - 1}개 더 보기
-          </ReplyToggle>
-        )}
-      </CommentListWrapper>
+          {!showAllComments && comments.length > 1 && (
+            <ReplyToggle onClick={() => setShowAllComments(true)}>
+              댓글 {comments.length - 1}개 더 보기
+            </ReplyToggle>
+          )}
+        </CommentListWrapper>
+      )}
 
-  
+        {showComments && (
+                    <ReplyToggle
+                      style={{ display: "block", textAlign: "center", marginTop: "8px" }}
+                      onClick={() => setShowComments(false)}
+                    >
+                      댓글 접기 ▲
+                    </ReplyToggle>
+                  )}
       <CommentInput onSubmit={handleAddComment} />
     </Card>
   );
