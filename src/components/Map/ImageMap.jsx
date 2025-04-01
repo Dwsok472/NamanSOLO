@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import koreaMap from '../img/map1.jpg';
+import koreaMap from '../img/map1.png';
 import course1 from '../img/1.jpg';
 import course2 from '../img/2.jpg';
 import course3 from '../img/3.jpg';
@@ -8,16 +8,12 @@ import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
 const Container = styled.div`
   display: grid;
-  /* justify-content: space-between; */
   flex-direction: row;
-  align-items: stretch; // 핵심!
-
+  align-items: stretch; 
   margin: 40px auto;
   gap: 20px;
-  /* height: 600px; // 기준 고정 높이 */
-  
+  width: 100%;
 `;
-
 const SlideBoxWrapper = styled.div`
   flex: 1;
   max-width: 580px;
@@ -30,7 +26,6 @@ const SlideBox = styled.div`
   padding: 20px;
   flex: 1;
   overflow-y: auto;
-
   gap: 16px;
   display: flex;
   justify-content: center;
@@ -47,36 +42,6 @@ const SlideBox = styled.div`
   }
 `;
 
-const SlideImage = styled.div`
-  position: relative; // 추가!
-  width: 100%;
-  background-color: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const NavButton = styled.button`
-  position: absolute;
-  bottom: 16px;;
-  border: none;
-  font-size: 1.2rem;
-  padding: 8px 12px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 2;
-  ${({ $left }) => $left && `left: 16px;`}
-  ${({ $right }) => $right && `right: 16px;`}
-  background: transparent;  /* 배경색을 투명하게 설정 */
-  img{
-    object-fit:cover;
-    width: 20px;
-    height: 20px;
-  }
-  &:focus{
-    outline: none;
-  }
-`;
 
 const MapWrapper = styled.div`
   flex: 1;
@@ -92,15 +57,12 @@ const MapImageWrapper = styled.div`
 `;
 
 const MapImage = styled.img`
-  width: 100%;
+  width: 750px;
   height: 100%;
   object-fit: cover;
 `;
 
 const RegionOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   clip-path: ${({ $clip }) => $clip};
@@ -120,7 +82,6 @@ const RegionLabel = styled.div`
   cursor: pointer;
   pointer-events: auto;
   font-weight: 700;
-
   &:hover {
     background: #32eb1ac5;
     color: white;
@@ -138,11 +99,15 @@ const CategoryTabs = styled.div`
 const Tab = styled.button`
   padding: 6px 12px;
   border: none;
-  background: ${({ $active }) => ($active ? '#ffdddf' : '#f2f2f2')};
-  color: ${({ $active }) => ($active ? '#ff5777' : '#555')};
-  border-radius: 8px;
+  background: ${({ $active }) => ($active ? '#fcf7c9' : '#fff56f')};
+  color: ${({ $active }) => ($active ? '#181818' : '#181818')};
+  border-radius: 20px;
   font-weight: bold;
+  width: 80px;
   cursor: pointer;
+  &:focus{
+    outline: none;
+  }
 `;
 
 const PlaceGrid = styled.div`
@@ -612,13 +577,6 @@ const ImageMap = () => {
       image: place.thumbnail,
     });
   };
-
-  const handleCloseForm = () => {
-    setShowAddForm(false);
-    setEditTargetId(null);
-    setNewPlace({ name: '', category: '', address: '', description: '', image: null });
-  };
-
   const handleDelete = (id) => {
     const confirmed = window.confirm('정말 삭제하시겠습니까?');
 
@@ -638,28 +596,6 @@ const ImageMap = () => {
     <Container>
       <SlideBoxWrapper>
         <SlideBox $mode={viewMode}>
-          {viewMode === 'slide' && (
-            <SlideImage>
-              <NavButton
-                $left
-                onClick={() => setSlideIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1))}
-              >
-                <img src={leftkey} />
-              </NavButton>
-              <img
-                src={slides[slideIndex].image}
-                alt={slides[slideIndex].label}
-                style={{ width: '100%', height: 'auto' }}
-              />
-              <NavButton
-                $right
-                onClick={() => setSlideIndex((prev) => (prev + 1) % slides.length)}
-              >
-                <img src={rightkey} />
-              </NavButton>
-            </SlideImage>
-          )}
-
           {viewMode === 'list' && (
             <>
               <CategoryTabs>
