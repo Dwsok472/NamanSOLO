@@ -20,28 +20,40 @@ const CalendarSection = styled.section`
   flex: 2 1 100%;
   background-color: #fff;
   border-radius: 10px;
-  padding: 20px;
   position: relative;
 `;
 
-const CalendarHeader = styled.div`
+const CalendarHeader = styled.h3`
   margin-bottom: 20px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 6px;
   cursor: pointer;
-  position: relative;
 `;
 
 const AddTravelButton = styled.button`
   position: absolute;
   top: 0;
-  right: 0;
-  padding: 6px 14px;
-  background-color: #6fa8dc;
-  color: #fff;
+  right: 0px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background-color: #ff7f7f;
+  color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 700;
+    box-shadow: none;
+  }
 `;
 
 const YearPickerWrap = styled.div`
@@ -132,16 +144,25 @@ const AnniversarySection = styled.section`
 
 const AddButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 8px 16px;
+  bottom: 20px;
+  left: 20px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  font-size: 1.5rem;
   background-color: #ff7f7f;
   color: #fff;
   border: none;
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
   &:hover {
     font-weight: 700;
+    box-shadow: none;
   }
 `;
 
@@ -229,8 +250,12 @@ function Todo() {
       <Main>
         <CalendarSection>
           <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
-            <h3>{currentYear}년 {currentMonth + 1}월 ⬇</h3>
-            <AddTravelButton onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}>+</AddTravelButton>
+            {currentYear}년 {currentMonth + 1}월 ⬇
+            <AddTravelButton
+              onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}
+            >
+              +
+            </AddTravelButton>
           </CalendarHeader>
 
           {isPickerOpen && (
