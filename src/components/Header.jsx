@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import styled, { createGlobalStyle } from 'styled-components';
-import LoginButton from './Button/LoginButton';
-import RegisterButton from './Button/RegisterButton';
+import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import styled, { createGlobalStyle } from "styled-components";
+import LoginButton from "./Button/LoginButton";
+import RegisterButton from "./Button/RegisterButton";
 
 const GlobalStyle = createGlobalStyle`
   body.blur #main-content {
@@ -25,7 +25,7 @@ const Container = styled.header`
   top: 0;
   left: 0;
   z-index: 999;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
 `;
 
 const Logo = styled.h1`
@@ -148,7 +148,7 @@ const Hamburger = styled.button`
 const Sidebar = styled.div`
   position: fixed;
   top: 0;
-  left: ${({ $open }) => ($open ? '0' : '-300px')};
+  left: ${({ $open }) => ($open ? "0" : "-300px")};
   width: 280px;
   height: 100%;
   background-color: #fff0eb;
@@ -177,7 +177,7 @@ const Sidebar = styled.div`
 `;
 
 const Overlay = styled.div`
-  display: ${({ $open }) => ($open ? 'block' : 'none')};
+  display: ${({ $open }) => ($open ? "block" : "none")};
   position: fixed;
   top: 0;
   left: 0;
@@ -188,14 +188,15 @@ const Overlay = styled.div`
 `;
 
 function Header({
-  logoText = 'WeARE',
+  logoText = "WeARE",
   menuItems = [],
   subMenuItems = [],
-  loginText = '로그인',
-  signupText = '회원가입',
+  loginText = "로그인",
+  signupText = "회원가입",
 }) {
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const subMenuRef = useRef(null);
 
   const toggleSubMenu = () => setSubOpen(!isSubOpen);
   const closeSidebar = () => {
@@ -205,10 +206,25 @@ function Header({
 
   useEffect(() => {
     if (isSubOpen) {
-      document.body.classList.add('blur');
+      document.body.classList.add("blur");
     } else {
-      document.body.classList.remove('blur');
+      document.body.classList.remove("blur");
     }
+  }, [isSubOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        isSubOpen &&
+        subMenuRef.current &&
+        !subMenuRef.current.contains(e.target)
+      ) {
+        setSubOpen(false); // 여기서 false로 바뀌면 위 useEffect가 실행됨
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSubOpen]);
 
   return (
@@ -224,14 +240,14 @@ function Header({
             </Link>
           ))}
 
-          <MenuWrapper>
+          <MenuWrapper ref={subMenuRef}>
             <div onClick={toggleSubMenu}>
-              마이페이지{' '}
+              마이페이지{" "}
               <span
                 style={{
-                  transform: isSubOpen ? 'rotate(180deg)' : 'none',
-                  display: 'inline-block',
-                  transition: '0.2s',
+                  transform: isSubOpen ? "rotate(180deg)" : "none",
+                  display: "inline-block",
+                  transition: "0.2s",
                 }}
               >
                 ▼
@@ -268,7 +284,7 @@ function Header({
             </li>
           ))}
           <li onClick={toggleSubMenu}>
-            <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
+            <span>마이페이지 {isSubOpen ? "▲" : "▼"}</span>
           </li>
           {isSubOpen &&
             subMenuItems.map(({ to, label }) => (
