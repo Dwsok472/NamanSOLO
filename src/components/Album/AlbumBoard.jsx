@@ -17,25 +17,15 @@ import tape7 from '../img/tape7.png';
 import back from '../img/back111.png';
 import marker from '../img/marker.png';
 import eraser from '../img/eraser.png';
+import LeftBox from "./LeftBox";
 
 const BoardWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
-  padding: 40px 0;
+  justify-content: start;
+  gap: 10px;
+  padding: 40px 30px;
   height: 860px;
-  .marker{
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    cursor: pointer;
-  }
-  .eraser{
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    cursor: pointer;
-  }
 `;
 
 const BoardFrame = styled.div`
@@ -49,10 +39,28 @@ background-image: url(${back}); /* back2.jpg 이미지 적용 */
   width: 75%;
   max-width: 1900px;
   min-height: 750px;
-  /* padding 제거 */
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  .marker{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: -30px;
+  }
+  .eraser{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: -30px;
+  }
 `;
 
 const PhotoArea = styled.div`
@@ -193,9 +201,8 @@ const AlbumBoard = () => {
 
   return (
     <BoardWrapper>
-
-      <img src={marker} alt="marker" className="marker" onClick={handlePrevPage} />
       <BoardFrame>
+        <img src={marker} alt="marker" className="marker" onClick={handlePrevPage} />
         <BoardInner>
           <EmojiTopLeft src={imo2} alt="left emoji" />
           <EmojiBottomRight src={imo1} alt="right emoji" />
@@ -203,8 +210,9 @@ const AlbumBoard = () => {
             {loading ? <p>LOADING...</p> : generateItems()}  {/* 로딩 중일 때 메시지 */}
           </PhotoArea>
         </BoardInner>
+        <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
       </BoardFrame>
-      <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
+      <LeftBox />
     </BoardWrapper>
   );
 };
