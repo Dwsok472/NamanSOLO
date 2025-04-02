@@ -123,32 +123,36 @@ const MonthBox = styled.div`
 
 const StyledTable = styled.table`
   width: 100%;
-  border-spacing: 4px;
   table-layout: fixed;
+  border-collapse: collapse;
   background-color: #fff;
   border-radius: 12px;
   overflow: hidden;
+  tr{
+    border: 0.5px solid black;
+  }
 `;
 
 const StyledTh = styled.th`
+  border: 0.5px solid black;
   padding: 8px 0;
-  border: 0.5px solid;
   background-color: #fff0f2;
   font-weight: 600;
   color: #444;
-  border-radius: 8px;
   text-align: center;
   height: 20px;
+  &:first-child {
+    border: 0.5 solid black;
+  }
 `;
 
 const StyledTd = styled.td`
   background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
-  border: 0.5px solid;
   padding: 2px;
-  border-radius: 10px;
   vertical-align: top;
   text-align: right;
   height: 80px;
+  border: 0.5px solid black;
 `;
 
 const DayCell = styled.div`
