@@ -8,6 +8,7 @@ import heart from "../../img/heart.png";
 import group from "../../img/group.png";
 import { IconClose } from "../../Icons";
 import { useNavigate } from "react-router-dom";
+import Setting from "./Setting";
 
 // OpenWeatherMap API 키
 const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
@@ -74,7 +75,7 @@ const ModalContainer = styled.div`
 
   cursor: pointer;
   user-select: none;
-  border-radius: 50px;
+  border-radius: 10px;
 `;
 
 const Top = styled.div`
@@ -86,8 +87,8 @@ const Top = styled.div`
   border-bottom: 1px solid #ddd;
   background-color: #ffdcd6;
   padding: 15px;
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 `;
 
 const CloseButton = styled.button`
@@ -219,9 +220,10 @@ function Alarm({ onClose }) {
   const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
   const [weather, setWeather] = useState(null); // 날씨 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
-  const [isDragging, setIsDragging] = useState(false); // 드래그 상태
+  const [isDraggingAlarm, setIsDraggingAlarm] = useState(false); // Alarm 모달만 위한 드래그 상태
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // 마우스 위치
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
+  const [showSetting, setShowSetting] = useState(false); // 설정 모달 상태 추가
 
   // 날씨 정보를 가져오는 함수
   const fetchWeather = async (cityName) => {
@@ -251,17 +253,17 @@ function Alarm({ onClose }) {
   }, [city]);
 
   // 마우스를 누를 때, 드래그 시작
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
+  const handleMouseDownAlarm = (e) => {
+    setIsDraggingAlarm(true);
     setOffset({
-      x: e.clientX - position.x, // 마우스와 모달의 x 차이
-      y: e.clientY - position.y, // 마우스와 모달의 y 차이
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
     });
   };
 
   // 마우스 이동 중, 드래그한 위치로 모달 이동
-  const handleMouseMove = (e) => {
-    if (isDragging) {
+  const handleMouseMoveAlarm = (e) => {
+    if (isDraggingAlarm) {
       setPosition({
         x: e.clientX - offset.x,
         y: e.clientY - offset.y,
@@ -270,47 +272,50 @@ function Alarm({ onClose }) {
   };
 
   // 마우스를 놓을 때, 드래그 종료
-  const handleMouseUp = () => {
-    setIsDragging(false);
+  const handleMouseUpAlarm = () => {
+    setIsDraggingAlarm(false);
   };
 
-  // 마우스 이벤트 리스너
+  // useEffect 안에서 이벤트 리스너
   useEffect(() => {
-    const modal = document.querySelector(".modal-container");
+    const modal = document.querySelector(".alarm-modal-container");
     if (modal) {
-      modal.addEventListener("mousemove", handleMouseMove);
-      modal.addEventListener("mouseup", handleMouseUp);
-      modal.addEventListener("mouseleave", handleMouseUp);
+      modal.addEventListener("mousemove", handleMouseMoveAlarm);
+      modal.addEventListener("mouseup", handleMouseUpAlarm);
+      modal.addEventListener("mouseleave", handleMouseUpAlarm);
     }
     return () => {
       if (modal) {
-        modal.removeEventListener("mousemove", handleMouseMove);
-        modal.removeEventListener("mouseup", handleMouseUp);
-        modal.removeEventListener("mouseleave", handleMouseUp);
+        modal.removeEventListener("mousemove", handleMouseMoveAlarm);
+        modal.removeEventListener("mouseup", handleMouseUpAlarm);
+        modal.removeEventListener("mouseleave", handleMouseUpAlarm);
       }
     };
-  }, [isDragging, offset]);
+  }, [isDraggingAlarm, offset]);
 
   // 마우스 클릭시 페이지 이동
   const handleNavigate = (path) => {
     navigate(path); // 페이지 이동
     onClose(); // 모달 닫기
   };
+
+  // 설정 모달 열기/닫기 토글 함수
   const toggleSetting = () => {
-    setShowAlarm((prev) => !prev);
+    setShowSetting((prev) => !prev);
   };
   return (
     <Container>
       <ModalContainer
-        className="modal-container"
-        onMouseDown={handleMouseDown} // 마우스 다운 시 드래그 시작
+        className="alarm-modal-container"
+        onMouseDown={handleMouseDownAlarm} // 마우스 다운 시 드래그 시작
         style={{
           left: `${position.x}px`,
           top: `${position.y}px`,
         }} // 모달 위치 설정
       >
         <Top>
-          <Image src={settings} alt="Settings" />
+          <Image src={settings} alt="Settings" onClick={toggleSetting} />{" "}
+          {/* 설정 아이콘 클릭 시 모달 열기 */}
           <h2>알람</h2>
           <CloseButton onClick={onClose}>
             <IconClose />
@@ -376,6 +381,7 @@ function Alarm({ onClose }) {
             <TextWrapper>username이 본인을 팔로우 팔로우하였습니다</TextWrapper>
           </AlarmItem>
         </ContainerMain>
+        {showSetting && <Setting onClose={toggleSetting} />}
       </ModalContainer>
     </Container>
   );
