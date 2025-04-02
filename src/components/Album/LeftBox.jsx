@@ -50,6 +50,7 @@ const MiddleBox = styled.div`
   border-radius: 16px;
 `;
 const SearchBox = styled.div`
+  position: relative;
   width: 90%;
   height: 50px;
   border: 1px solid #6d6d6d33;
@@ -58,7 +59,6 @@ const SearchBox = styled.div`
   align-items: center;
   margin: 0 auto;
   background-color: #bbbbbb;
-  position: relative;
 `;
 const InputBox = styled.div`
   width: 95%;
@@ -81,18 +81,13 @@ const Input = styled.input`
     font-weight: 700;
   }
 `;
-const BottomBox = styled.div`
-  /* border: 1px solid black;
-  width: 100%;
-  border-radius: 16px;
-  height: 550px; */
-`;
+
 const SearchResults = styled.div`
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 30px;
   position: absolute;
-  top: 50px; /* 검색창 바로 아래 위치 */
+  top: 52px; /* 검색창 바로 아래 위치 */
   left: 0;
   right: 0;
   max-height: 200px;
@@ -156,6 +151,13 @@ const Block = styled.div`
   }
 `;
 
+const BottomBox = styled.div`
+  border: 1px solid black;
+  width: 100%;
+  border-radius: 16px;
+  height: 150px;
+`;
+
 function LeftBox() {
   const [inputKeyword, setInputKeyword] = useState('');
   const navigate = useNavigate();
@@ -184,6 +186,7 @@ function LeftBox() {
       if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
         setShowResults(false); // 검색바 외부 클릭 시 결과 숨기기
         setInputKeyword('');
+        setSearchResultsHeight(0);
       }
     };
     // 클릭 이벤트 등록
@@ -225,6 +228,7 @@ function LeftBox() {
 
     setSearchResults(filteredUsers); // 필터링된 결과를 상태에 저장
     setShowResults(filteredUsers.length > 0); // 결과가 있을 때만 보여주기
+    setSearchResultsHeight(filteredUsers.length > 0 ? 200 : 0); // 결과가 있으면 높이 설정
   }
   console.log(searchResults);
 
