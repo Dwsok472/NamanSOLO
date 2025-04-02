@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconClose, IconPhoto } from '../../Icons';
+import LeftKey from '../../img/leftkey.png';
+import RightKey from '../../img/rightkey.png';
 
 const CardWrap = styled.div`
   width: 500px;
@@ -31,6 +33,77 @@ const Top = styled.div`
   position: relative;
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
+`;
+
+const ImagePreviewContainer = styled.div`
+  width: 100%;
+  height: 200px;
+  border-radius: 20px;
+  background-color: #f8f8f8;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PreviewImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  cursor: pointer;
+`;
+
+const DefaultUpload = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #ddd;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  cursor: pointer;
+
+  svg {
+    width: 48px;
+    height: 48px;
+  }
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const PrevButton = styled.button`
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 10;
+
+  img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const NextButton = styled(PrevButton)`
+  left: auto;
+  right: 8px;
 `;
 
 const TopX = styled.div`
@@ -158,6 +231,18 @@ function Edittravel({
     });
   };
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex(prev => (prev - 1 + event.images.length) % event.images.length);
+  };
+  
+  const handleNextImage = () => {
+    setCurrentImageIndex(prev => (prev + 1) % event.images.length);
+  };
+
+  const fileInputRef = useRef(null);
+
   return (
     <CardWrap>
       <Card>
@@ -166,10 +251,36 @@ function Edittravel({
           여행 일정 수정
         </Top>
         <Bottom>
+        <ImagePreviewContainer>
+          {event.images && event.images.length > 0 ? (
+            <>
+              <PreviewImage
+                src={
+                  event.images[currentImageIndex] instanceof File
+                    ? URL.createObjectURL(event.images[currentImageIndex])
+                    : event.images[currentImageIndex]
+                }
+                alt="여행 사진 미리보기"
+                onClick={() => fileInputRef.current.click()}
+              />
+              {event.images.length > 1 && (
+                <>
+                  <PrevButton type="button" onClick={handlePrevImage}><img src={LeftKey}/></PrevButton>
+                  <NextButton type="button" onClick={handleNextImage}><img src={RightKey}/></NextButton>
+                </>
+              )}
+            </>
+          ) : (
+            <DefaultUpload onClick={() => fileInputRef.current.click()}>
+              <IconPhoto />
+            </DefaultUpload>
+          )}
+            <HiddenFileInput type="file" ref={fileInputRef} accept="image/*" multiple onChange={handleFileChange} />
+          </ImagePreviewContainer>
           <form onSubmit={onSubmit}>
             <Input
               type="text"
-              placeholder="여행 제목"
+              placeholder="제목을 입력해주세요"
               value={event.title || ''}
               onChange={(e) => setEvent({ ...event, title: e.target.value })}
               required
@@ -190,18 +301,6 @@ function Edittravel({
                 required
               />
             </Row>
-
-            <Label>사진</Label>
-            <FileInputLabel htmlFor="image-edit-upload">
-              <IconPhoto />
-            </FileInputLabel>
-            <FileInput
-              type="file"
-              id="image-edit-upload"
-              multiple
-              accept="image/*"
-              onChange={handleFileChange}
-            />
 
             <Label>색상</Label>
             <ColorSection onClick={() => setPaletteOpen((prev) => !prev)}>

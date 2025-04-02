@@ -153,7 +153,7 @@ const StyledTd = styled.td`
   padding: 2px;
   vertical-align: top;
   text-align: right;
-  height: 80px;
+  height: 105px;
   border: 0.5px solid black;
 `;
 
@@ -523,7 +523,7 @@ function Todo() {
           onClose={() => setEditingTravelEvent(null)}
           onSubmit={(e) => {
             e.preventDefault();
-            
+
             const start = new Date(editingTravelEvent.startDate);
             const end = new Date(editingTravelEvent.endDate);
           
