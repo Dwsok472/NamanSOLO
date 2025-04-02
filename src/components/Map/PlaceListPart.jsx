@@ -22,6 +22,10 @@ const AddButton = styled.button`
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const CloseBtn = styled.button`
@@ -35,6 +39,10 @@ const CloseBtn = styled.button`
 
   &:hover {
     color: #ff5777;
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
@@ -115,6 +123,10 @@ const SmallBtn = styled.button`
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const MapWrapper = styled.div`
