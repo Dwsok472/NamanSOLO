@@ -122,6 +122,25 @@ const AlbumBoard = () => {
     ]);
     setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
   }, []); // 최초 렌더링 시 데이터 불러오기
+  // async function getAllAlbum() {
+  //   try {
+  //     let response = await GetAllAlbum();
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response);
+  //      setLoading(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getAllAlbum();
+  // }, [])
 
   const generateItems = () => {
     const items = [];
@@ -174,6 +193,7 @@ const AlbumBoard = () => {
 
   return (
     <BoardWrapper>
+
       <img src={marker} alt="marker" className="marker" onClick={handlePrevPage} />
       <BoardFrame>
         <BoardInner>
