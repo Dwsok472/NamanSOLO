@@ -26,7 +26,6 @@ export async function CheckDuplicateId(username) {
   }
 }
 
-
 export async function getAllFollower() {
   return axios.get('');
 }
@@ -85,3 +84,10 @@ export async function GetAlbumById(id) {
   return axios.get('');
 }
 
+export function getAllUsername() {
+  return axios.get(``);
+}
+
+export function searchUsernameByKeyword(keyword) {
+  return axios.get(``);
+}
