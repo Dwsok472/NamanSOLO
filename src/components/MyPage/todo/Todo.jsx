@@ -173,6 +173,16 @@ const EventBox = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  div {
+    text-align: center;
+
+    &:hover {
+      color: #c900c9;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      font-weight: 700;
+    }
+  }
 `;
 
 const AnniversarySection = styled.section`
@@ -419,7 +429,7 @@ function Todo() {
                             color={event.color}
                             onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setViewingTravelEvent(event) }
                           >
-                            <div>{event.title}</div>
+                            <div title={event.type === 'travel' ? `여행 일정 ${event.startDate} ~ ${event.endDate}` : ` 기념일 일정 ${event.date}`}>{event.title}</div>
                           </EventBox>
                         ))}
                       </StyledTd>
