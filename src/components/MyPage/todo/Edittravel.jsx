@@ -136,6 +136,26 @@ const Input = styled.input`
   width: 100%;
 `;
 
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 6px;
+  padding: 6px;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    background-color: #cccccc;
+  }
+
+  &:focus {
+    outline : none;
+  }
+`;
+
 const Row = styled.div`
   display: flex;
   align-items: center;
@@ -223,6 +243,24 @@ function Edittravel({
 }) {
   if (!event) return null;
 
+  const handleDeleteCurrentImage = () => {
+    const confirmed = window.confirm('정말 이 이미지를 삭제하시겠어요?');
+    
+    if (!confirmed) return;
+
+    const updatedImages = [...(event.images || [])];
+    updatedImages.splice(currentImageIndex, 1);
+  
+    setEvent({
+      ...event,
+      images: updatedImages,
+    });
+  
+    setCurrentImageIndex((prev) =>
+      prev > 0 ? prev - 1 : 0
+    );
+  };
+
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files).filter((file) => file instanceof File);
     setEvent({
@@ -269,13 +307,15 @@ function Edittravel({
                   <NextButton type="button" onClick={handleNextImage}><img src={RightKey}/></NextButton>
                 </>
               )}
+
+
             </>
           ) : (
             <DefaultUpload onClick={() => fileInputRef.current.click()}>
               <IconPhoto />
             </DefaultUpload>
           )}
-            <HiddenFileInput type="file" ref={fileInputRef} accept="image/*" multiple onChange={handleFileChange} />
+            <DeleteButton onClick={handleDeleteCurrentImage}><IconClose /></DeleteButton>
           </ImagePreviewContainer>
           <form onSubmit={onSubmit}>
             <Input
