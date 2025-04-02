@@ -11,6 +11,7 @@ import AllStories from './components/Story/AllStories';
 import MainPage from './components/MainPage';
 import MyPage from './components/MyPage/MyPage';
 import MainMap from './components/Map/MainMap';
+import AlbumBoard from './components/Album/AlbumBoard';
 
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
@@ -70,7 +71,7 @@ function App() {
               <Route path="/" element={<MainPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<RegisterMain />} />
-              <Route path="/story/all" element={<AllStories />} />
+              <Route path="/story/all" element={<AlbumBoard />} />
               <Route path="/map" element={<MainMap />} />
               <Route path="/events" element={<Event />} />
               <Route path="/mypage/*" element={<MyPage />} />
