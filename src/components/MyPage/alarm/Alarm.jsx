@@ -1,7 +1,44 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import settings from "../../img/settings.png";
+import firework from "../../img/firework.png";
+import add from "../../img/add.png";
+import place from "../../img/place.png";
+import heart from "../../img/heart.png";
+import group from "../../img/group.png";
 import { IconClose } from "../../Icons";
+import { useNavigate } from "react-router-dom";
+
+// OpenWeatherMap API 키
+const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
+
+// 대한민국 주요 도시 목록
+const cities = [
+  "Seoul",
+  "Busan",
+  "Incheon",
+  "Daegu",
+  "Daejeon",
+  "Gwangju",
+  "Ulsan",
+  "Jeonju",
+  "Changwon",
+  "Suwon",
+];
+
+// 도시 이름과 한국어 매핑 객체
+const cityTranslations = {
+  Seoul: "서울",
+  Busan: "부산",
+  Incheon: "인천",
+  Daegu: "대구",
+  Daejeon: "대전",
+  Gwangju: "광주",
+  Ulsan: "울산",
+  Jeonju: "전주",
+  Changwon: "창원",
+  Suwon: "수원",
+};
 
 const Container = styled.div`
   position: fixed;
@@ -16,13 +53,14 @@ const Container = styled.div`
 
 const ModalContainer = styled.div`
   background: white;
-  border-radius: 8px;
-  min-width: 400px;
-  max-width: 700px;
+  border-radius: 50px;
+  min-width: 350px;
+  max-width: 500px;
+  height: 480px;
   text-align: center;
   position: relative;
-  cursor: grab; /* 드래그 가능하도록 설정 */
-  user-select: none; /* 텍스트 선택 불가 */
+  cursor: pointer;
+  user-select: none;
   border-radius: 50px;
 `;
 
@@ -57,26 +95,41 @@ const ContainerMain = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 15px;
+  padding: 10px;
   border-bottom: 1px solid #eee;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+
+  align-items: center;
+`;
+
+const Img = styled.img`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  cursor: pointer;
 `;
 
 const AlarmItem = styled.div`
   padding: 15px;
   border-bottom: 1px solid #eee;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+  align-items: center; /* 이미지와 텍스트를 수평으로 가운데 정렬 */
+
   cursor: pointer;
+  white-space: nowrap; /* 텍스트가 한 줄로만 표시되도록 설정 */
+  overflow: hidden; /* 텍스트가 넘치면 숨김 */
+  text-overflow: ellipsis; /* 넘친 텍스트는 '...' 으로 표시 */
 
   &:hover {
-    background-color: #f9f9f9;
+    color: #8f8f8fe8;
   }
 
   &:focus {
     outline: none;
-  }
-
-  &:last-child {
-    border-bottom-left-radius: 50px;
-    border-bottom-right-radius: 50px;
   }
 `;
 
@@ -88,9 +141,40 @@ const Image = styled.img`
 `;
 
 function Alarm({ onClose }) {
+  const navigate = useNavigate(); // useNavigate 훅 사용
+  const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
+  const [weather, setWeather] = useState(null); // 날씨 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
   const [isDragging, setIsDragging] = useState(false); // 드래그 상태
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // 마우스 위치
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
+
+  // 날씨 정보를 가져오는 함수
+  const fetchWeather = async (cityName) => {
+    setLoading(true); // 데이터 로딩 시작
+    try {
+      const response = await fetch(
+        `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=kr`
+      );
+      const data = await response.json();
+      if (data.weather && data.weather[0]) {
+        setWeather({
+          description: data.weather[0].description,
+          temperature: data.main.temp,
+          icon: data.weather[0].icon,
+        });
+      }
+    } catch (error) {
+      console.error("날씨 데이터를 가져오는 데 오류가 발생했습니다.", error);
+    } finally {
+      setLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 변경
+    }
+  };
+
+  // 도시가 변경될 때마다 날씨 정보 새로 가져오기
+  useEffect(() => {
+    fetchWeather(city);
+  }, [city]);
 
   // 마우스를 누를 때, 드래그 시작
   const handleMouseDown = (e) => {
@@ -133,8 +217,9 @@ function Alarm({ onClose }) {
     };
   }, [isDragging, offset]);
 
+  // 마우스 클릭시 페이지 이동
   const handleNavigate = (path) => {
-    history.push(path); // 페이지 이동
+    navigate(path); // 페이지 이동
     onClose(); // 모달 닫기
   };
 
@@ -156,21 +241,53 @@ function Alarm({ onClose }) {
         </Top>
 
         <ContainerMain>
-          <Content>다가오는 200일에 날씨는 흐릴 것으로 예상됩니다</Content>
+          {/* 날씨 정보 표시 */}
+          <Content>
+            {loading ? (
+              <span>날씨 정보를 불러오는 중...</span>
+            ) : weather ? (
+              <>
+                <Img
+                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                  alt={weather.description}
+                />
+                <span>
+                  {city} 날씨: {weather.temperature}°C, {weather.description}
+                </span>
+              </>
+            ) : (
+              <span>날씨 정보를 불러오는 데 실패했습니다.</span>
+            )}
+            {/* 도시 선택 드롭다운 */}
+            <select onChange={(e) => setCity(e.target.value)} value={city}>
+              {cities.map((cityName, index) => (
+                <option key={index} value={cityName}>
+                  {cityTranslations[cityName] || cityName}{" "}
+                  {/* 한국어 도시 이름 표시 */}
+                </option>
+              ))}
+            </select>
+          </Content>
+
+          {/* 알람 항목들 */}
           <AlarmItem onClick={() => handleNavigate("/mypage/todo")}>
-            곧 200일이 다가오고 있어요 데이트 코스를 미리 짜고 예약하는 것은
-            어떨까요?
+            <Img src={firework} alt="Firework" />곧 200일이 다가오고 있어요
+            데이트 코스를 미리 짜고 예약하는 것은 어떨까요?
           </AlarmItem>
-          <AlarmItem onClick={() => handleNavigate("/notifications")}>
+          <AlarmItem onClick={() => handleNavigate("/events")}>
+            <Img src={add} alt="Add" />
             이벤트 공지사항이 추가되었습니다
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/map")}>
+            <Img src={place} alt="Place" />
             데이트 장소 추천이 업데이트되었습니다
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/mypage/story")}>
+            <Img src={heart} alt="Heart" />
             username이 본인의 피드에 좋아요를 눌렀습니다
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/mypage/other")}>
+            <Img src={group} alt="Group" />
             username이 본인을 팔로우 팔로우하였습니다
           </AlarmItem>
         </ContainerMain>
