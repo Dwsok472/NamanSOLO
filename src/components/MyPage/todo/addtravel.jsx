@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IconClose, IconPhoto } from '../../Icons'; // Update this file to include new icon if needed
+import { IconClose, IconPhoto } from '../../Icons';
+import LeftKey from '../../img/leftkey.png';
+import RightKey from '../../img/rightkey.png';
 
 const CardWrap = styled.div`
   width: 500px;
@@ -33,9 +35,78 @@ const Top = styled.div`
   border-top-right-radius: 50px;
 `;
 
+const ImagePreviewContainer = styled.div`
+  width: 100%;
+  height: 200px;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PreviewImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+`;
+
+const DefaultUpload = styled.div`
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  cursor: pointer;
+
+  svg {
+    width: 48px;
+    height: 48px;
+  }
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const PrevButton = styled.button`
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 10;
+
+  img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const NextButton = styled(PrevButton)`
+  left: auto;
+  right: 8px;
+`;
+
 const TopX = styled.div`
   position: absolute;
-  top: 0;
+  top: 10px;
   right: 20px;
   cursor: pointer;
 `;
@@ -48,6 +119,12 @@ const Bottom = styled.div`
   gap: 16px;
 `;
 
+const Label = styled.label`
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+`;
+
 const Input = styled.input`
   padding: 10px;
   border: none;
@@ -57,16 +134,30 @@ const Input = styled.input`
   width: 100%;
 `;
 
-const Label = styled.label`
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 4px;
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border-radius: 50%;
+  font-size: 6px;
+  padding: 6px;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    background-color: #cccccc;
+  }
+
+  &:focus {
+    outline : none;
+  }
 `;
 
 const Row = styled.div`
   display: flex;
-  align-items: center; 
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
 `;
 
 const FileInput = styled.input`
@@ -76,7 +167,6 @@ const FileInput = styled.input`
 const FileInputLabel = styled.label`
   display: flex;
   align-items: center;
-  font-size: 1rem;
   padding-bottom: 6px;
   border-bottom: 2px solid #ffc0cb;
   width: fit-content;
@@ -85,56 +175,6 @@ const FileInputLabel = styled.label`
   svg {
     width: 24px;
     height: 24px;
-  }
-`;
-
-const FolderIcon = styled.div`
-  font-size: 1.5rem;
-`;
-
-const PreviewContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-`;
-
-const PreviewWrapper = styled.div`
-  position: relative;
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #ccc;
-`;
-
-const PreviewImg = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-const DeleteButton = styled.button`
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  background: rgba(255, 255, 255, 0.85);
-  border: none;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  cursor: pointer;
-
-  &:hover {
-    background: #ffdddd;
-  }
-
-  svg {
-    width: 10px;
-    height: 10px;
   }
 `;
 
@@ -153,7 +193,6 @@ const SelectedColorPreview = styled.div`
   border-radius: 50%;
   background-color: ${(props) => props.color || '#eee'};
   border: 2px solid #ccc;
-  cursor: pointer;
 `;
 
 const ColorPalette = styled.div`
@@ -201,38 +240,84 @@ function AddTravel({
   onClose,
   onSubmit
 }) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const fileInputRef = useRef(null);
+
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files).filter((file) => file instanceof File);
+    const files = Array.from(e.target.files).filter(f => f instanceof File);
     setNewEvent({
       ...newEvent,
-      images: [...(newEvent.images || []), ...files],
+      images: [...(newEvent.images || []), ...files]
     });
   };
 
-  const handleDeleteImage = (idx) => {
+  const handleDeleteImage = () => {
+    const confirmDelete = window.confirm('이 이미지를 삭제할까요?');
+    if (!confirmDelete) return;
+
     const updated = [...(newEvent.images || [])];
-    updated.splice(idx, 1);
+    updated.splice(currentImageIndex, 1);
     setNewEvent({ ...newEvent, images: updated });
+    setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : 0));
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex(prev => (prev - 1 + newEvent.images.length) % newEvent.images.length);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex(prev => (prev + 1) % newEvent.images.length);
   };
 
   return (
     <CardWrap>
       <Card>
         <Top>
-          <TopX onClick={onClose}>
-            <IconClose />
-          </TopX>
+          <TopX onClick={onClose}><IconClose /></TopX>
           {name}
         </Top>
         <Bottom>
+          <ImagePreviewContainer>
+            {newEvent.images?.length > 0 ? (
+              <>
+                <PreviewImage
+                  src={URL.createObjectURL(newEvent.images[currentImageIndex])}
+                  alt="미리보기"
+                  onClick={() => fileInputRef.current?.click()}
+                />
+                {newEvent.images.length > 1 && (
+                  <>
+                    <PrevButton onClick={handlePrevImage}><img src={LeftKey} alt="이전" /></PrevButton>
+                    <NextButton onClick={handleNextImage}><img src={RightKey} alt="다음" /></NextButton>
+                  </>
+                )}
+              </>
+            ) : (
+              <DefaultUpload onClick={() => fileInputRef.current?.click()}>
+                <IconPhoto />
+              </DefaultUpload>
+            )}
+            <HiddenFileInput
+              type="file"
+              ref={fileInputRef}
+              multiple
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {newEvent.images?.length > 0 && (
+              <DeleteButton onClick={handleDeleteImage}><IconClose /></DeleteButton>
+            )}
+          </ImagePreviewContainer>
+
           <form onSubmit={onSubmit}>
             <Input
               type="text"
               value={newEvent.title || ''}
-              placeholder='제목을 입력해주세요'
+              placeholder="제목을 입력해주세요"
               onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               required
             />
+            <Label>날짜</Label>
             <Row>
               <Input
                 type="date"
@@ -248,39 +333,14 @@ function AddTravel({
               />
             </Row>
 
-            <Label>사진</Label>
-            <FileInputLabel htmlFor="image-upload">
-              <IconPhoto />
-            </FileInputLabel>
-            <FileInput
-              type="file"
-              id="image-upload"
-              multiple
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-
-            {newEvent.images?.length > 0 && (
-              <PreviewContainer>
-                {newEvent.images.map((img, i) => (
-                  <PreviewWrapper key={i}>
-                    <PreviewImg src={URL.createObjectURL(img)} alt="미리보기" />
-                    <DeleteButton type="button" onClick={() => handleDeleteImage(i)}>
-                      <IconClose />
-                    </DeleteButton>
-                  </PreviewWrapper>
-                ))}
-              </PreviewContainer>
-            )}
-
-            <br />
             <Label>색상</Label>
-            <ColorSection>
-              <SelectedColorPreview color={newEvent.color}  type="button" onClick={() => setPaletteOpen(!paletteOpen)} />
+            <ColorSection onClick={() => setPaletteOpen(!paletteOpen)}>
+              <SelectedColorPreview color={newEvent.color} />
             </ColorSection>
+
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.map((color) => (
+                {colorSamples.map(color => (
                   <ColorDot
                     key={color}
                     color={color}

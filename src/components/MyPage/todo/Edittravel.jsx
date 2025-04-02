@@ -38,7 +38,7 @@ const Top = styled.div`
 const ImagePreviewContainer = styled.div`
   width: 100%;
   height: 200px;
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: #f8f8f8;
   position: relative;
   display: flex;
@@ -50,7 +50,6 @@ const PreviewImage = styled.img`
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  border-radius: 12px;
   cursor: pointer;
 `;
 
@@ -58,7 +57,6 @@ const DefaultUpload = styled.div`
   width: 100%;
   height: 100%;
   border: 2px dashed #ddd;
-  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -244,9 +242,9 @@ function Edittravel({
   if (!event) return null;
 
   const handleDeleteCurrentImage = () => {
-    const confirmed = window.confirm('정말 이 이미지를 삭제하시겠어요?');
+    const confirmDel = window.confirm('정말 이 이미지를 삭제하시겠어요?');
     
-    if (!confirmed) return;
+    if (!confirmDel) {return;}
 
     const updatedImages = [...(event.images || [])];
     updatedImages.splice(currentImageIndex, 1);
@@ -315,6 +313,7 @@ function Edittravel({
               <IconPhoto />
             </DefaultUpload>
           )}
+            <HiddenFileInput type="file" ref={fileInputRef} accept="image/*" multiple onChange={handleFileChange} />
             <DeleteButton onClick={handleDeleteCurrentImage}><IconClose /></DeleteButton>
           </ImagePreviewContainer>
           <form onSubmit={onSubmit}>

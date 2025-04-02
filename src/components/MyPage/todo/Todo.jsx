@@ -8,6 +8,7 @@ import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
 import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
+import DetailTravel from './Detailtravel';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -272,7 +273,8 @@ function Todo() {
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
   const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id:events.length+1, title: '', date: '', color: '#ffc0cb', type:'anniversary' });
-  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', date: '', color: '#87cefa', type:'travel', image: leftThought });
+  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', date: '', color: '#87cefa', type:'travel', images: [] });
+  const [viewingTravelEvent, setViewingTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
   const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
@@ -412,7 +414,7 @@ function Todo() {
                           <EventBox
                             key={i}
                             color={event.color}
-                            onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setEditingTravelEvent(event) }
+                            onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setViewingTravelEvent(event) }
                           >
                             <div>{event.title}</div>
                           </EventBox>
@@ -516,6 +518,17 @@ function Todo() {
         />
       )}
 
+      {viewingTravelEvent && (
+        <DetailTravel
+          event={viewingTravelEvent}
+          onClose={() => setViewingTravelEvent(null)}
+          onEdit={() => {
+            setEditingTravelEvent(viewingTravelEvent);
+            setViewingTravelEvent(null); // detail view는 닫기
+          }}
+        />
+      )}
+
       {editingTravelEvent && (
         <Edittravel
           event={editingTravelEvent}
@@ -571,12 +584,12 @@ function Todo() {
               startDate: newTravelEvent.startDate,
               endDate: newTravelEvent.endDate,
               color: newTravelEvent.color,
-              image: newTravelEvent.image,
+              images: newTravelEvent.images || [],
               type: 'travel'
             };
 
             setEvents([...events, travelEvent]);
-            setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', type: 'travel' });
+            setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', images: [], type: 'travel' });
             setIsTravelModalOpen(false);
             setTravelPaletteOpen(false);
           }}

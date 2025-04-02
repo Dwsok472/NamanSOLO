@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { IconClose, IconEdit } from '../../Icons';
+import LeftKey from '../../img/leftkey.png';
+import RightKey from '../../img/rightkey.png';
 
 const CardWrap = styled.div`
   width: 500px;
@@ -12,16 +14,16 @@ const CardWrap = styled.div`
 `;
 
 const Card = styled.div`
-  height: 400px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const Top = styled.div`
-  height: 15%;
+  height: 60px;
   background-color: #ffdcd6;
   font-size: 1.5rem;
   font-weight: bold;
@@ -29,72 +31,142 @@ const Top = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  border-top-left-radius: 50px;
-  border-top-right-radius: 50px;
 `;
 
-const TopX = styled.div`
+const IconWrap = styled.div`
   position: absolute;
-  top: 10px;
-  right: 20px;
+  top: 12px;
+  right: ${(props) => props.$right || '20px'};
   cursor: pointer;
 `;
 
+const ImagePreviewContainer = styled.div`
+  width: 100%;
+  height: 220px;
+  background-color: #f8f8f8;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PreviewImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+`;
+
+const PrevButton = styled.button`
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 5;
+
+  img {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
+const NextButton = styled(PrevButton)`
+  left: auto;
+  right: 10px;
+`;
+
 const Bottom = styled.div`
-  flex: 1;
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
+`;
+
+const ColorSection = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 6px;
+  width: fit-content;
+`;
+
+const SelectedColorPreview = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: ${(props) => props.color || '#eee'};
+  border: 2px solid #ccc;
 `;
 
 const Info = styled.div`
   font-size: 1rem;
+  word-break: break-all;
 `;
 
-const ImagePreview = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-right: 8px;
-`;
-
-const ImageRow = styled.div`
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-`;
-
-function TravelDetailView({ event, onClose, onEdit }) {
+function DetailTravel({ event, onClose, onEdit }) {
   if (!event) return null;
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const images = event.images || [];
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const currentImage = images[currentImageIndex];
 
   return (
     <CardWrap>
       <Card>
         <Top>
-            <TopX onClick={onEdit}>
-                <IconEdit />
-            </TopX>
-            <TopX onClick={onClose}>
-                <IconClose />
-            </TopX>
-            여행 일정
+          <IconWrap $right="50px" onClick={onEdit}>
+            <IconEdit />
+          </IconWrap>
+          <IconWrap onClick={onClose}>
+            <IconClose />
+          </IconWrap>
+          여행 일정
         </Top>
+
+        {currentImage && (
+          <ImagePreviewContainer>
+            <PreviewImage
+              src={
+                currentImage instanceof File
+                  ? URL.createObjectURL(currentImage)
+                  : currentImage
+              }
+              alt="대표 이미지"
+            />
+            {images.length > 1 && (
+              <>
+                <PrevButton onClick={handlePrevImage}>
+                  <img src={LeftKey} alt="이전" />
+                </PrevButton>
+                <NextButton onClick={handleNextImage}>
+                  <img src={RightKey} alt="다음" />
+                </NextButton>
+              </>
+            )}
+          </ImagePreviewContainer>
+        )}
+
         <Bottom>
-          <Info>{event.title}</Info>
+          <Info><strong>{event.title}</strong></Info>
           <Info>{event.startDate} ~ {event.endDate}</Info>
-          {event.images?.length > 0 && (
-            <ImageRow>
-              {event.images.map((img, idx) => (
-                <ImagePreview key={idx} src={URL.createObjectURL(img)} alt="여행사진" />
-              ))}
-            </ImageRow>
-          )}
+          <ColorSection>
+            <SelectedColorPreview color={event.color} />
+          </ColorSection>
         </Bottom>
       </Card>
     </CardWrap>
   );
 }
 
-export default TravelDetailView;
+export default DetailTravel;
