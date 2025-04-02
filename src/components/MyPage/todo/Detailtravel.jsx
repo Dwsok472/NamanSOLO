@@ -38,6 +38,11 @@ const IconWrap = styled.div`
   top: 12px;
   right: ${(props) => props.$right || '20px'};
   cursor: pointer;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
 `;
 
 const ImagePreviewContainer = styled.div`
