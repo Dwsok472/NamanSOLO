@@ -1,0 +1,50 @@
+import React from "react";
+import styled from "styled-components";
+
+const CardWrapper = styled.div`
+  width: 260px;
+  height: 300px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transform: ${({ rotate, offsetY }) => `rotate(${rotate}deg) translateY(${offsetY}px)`};
+  transition: transform 0.3s;
+  position: relative;
+  text-align: center;
+`;
+
+const Pin = styled.div`
+  font-size: 20px;
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+
+const Image = styled.img`
+  width: 240px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  pointer-events: none;
+`;
+
+const Caption = styled.div`
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #555;
+`;
+
+const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = "📌", caption = "" }) => {
+  return (
+    <CardWrapper rotate={rotate} offsetY={offsetY}>
+      <Pin>{pinColor}</Pin>
+      <Image src={src} alt="album" />
+      {caption && <Caption>{caption}</Caption>}
+    </CardWrapper>
+  );
+};
+
+export default PhotoCard;

@@ -1,66 +1,54 @@
 import React from "react";
 import styled from "styled-components";
 
-const Bar = styled.div`
+export const FilterBarWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
+  gap: 12px;
   margin-bottom: 24px;
 `;
 
-const Tabs = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const TabButton = styled.button`
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: none;
-  background-color: ${(props) => (props.$active ? "#fda899" : "#eee")};
-  color: ${(props) => (props.$active ? "#fff" : "#555")};
-  font-weight: 500;
-  cursor: pointer;
-`;
-
-const SearchBox = styled.input`
+export const FilterButton = styled.button`
   padding: 8px 14px;
+  border: none;
   border-radius: 20px;
-  border: 1px solid #ccc;
-  width: 200px;
+  font-size: 13px;
+  cursor: pointer;
+  background-color: ${({ active }) => (active ? "#ffa3a3" : "#f0f0f0")};
+  color: ${({ active }) => (active ? "#fff" : "#444")};
+  font-weight: ${({ active }) => (active ? "700" : "500")};
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${({ active }) => (active ? "#ff8b8b" : "#e0e0e0")};
+  }
 `;
 
-const FilterBar = ({ filter, onFilterChange, search, onSearchChange }) => {
+const FilterBar = ({ filter, onFilterChange }) => {
   return (
-    <Bar>
-      <Tabs>
-        <TabButton
-          $active={filter === "latest"}
-          onClick={() => onFilterChange("latest")}
-        >
-          최신순
-        </TabButton>
-        <TabButton
-          $active={filter === "comments"}
-          onClick={() => onFilterChange("comments")}
-        >
-          댓글순
-        </TabButton>
-        <TabButton
-          $active={filter === "likes"}
-          onClick={() => onFilterChange("likes")}
-        >
-          좋아요순
-        </TabButton>
-      </Tabs>
-
-      <SearchBox
-        placeholder="userName 검색"
-        value={search}
-        onChange={(e) => onSearchChange(e.target.value)}
-      />
-    </Bar>
+    <FilterBarWrapper>
+      <FilterButton
+        active={filter === "latest"}
+        onClick={() => onFilterChange("latest")}
+      >
+        최신순
+      </FilterButton>
+      <FilterButton
+        active={filter === "comments"}
+        onClick={() => onFilterChange("comments")}
+      >
+        댓글순
+      </FilterButton>
+      <FilterButton
+        active={filter === "likes"}
+        onClick={() => onFilterChange("likes")}
+      >
+        좋아요순
+      </FilterButton>
+    </FilterBarWrapper>
   );
 };
 
 export default FilterBar;
+
