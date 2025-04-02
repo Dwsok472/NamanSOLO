@@ -7,31 +7,40 @@ function Event() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 컴포넌트가 마운트되면 Fake Store API로부터 데이터 가져오기
+  
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then((response) => response.json())
-      .then((data) => {
-        // 남성용 선물과 여성용 선물로 분리
-        const male = data.filter(
-          (item) =>
-            item.category === "men's clothing" || item.category === 'jewelery'
+    const fetchGifts = async () => {
+      try {
+        const headers = {
+          'X-Naver-Client-Id': 'J0AxHpAMVHb7L3qbN9MW',
+          'X-Naver-Client-Secret': 'CUUY3zdK_8',
+        };
+  
+        // 여자 선물 검색
+        const femaleRes = await fetch(
+          `https://openapi.naver.com/v1/search/shop.json?query=${encodeURIComponent('여자 선물')}&display=10`,
+          { headers }
         );
-        const female = data.filter(
-          (item) =>
-            item.category === "women's clothing" ||
-            item.category === 'womens accessories' ||
-            item.category === 'jewelery'
+        const femaleData = await femaleRes.json();
+  
+        // 남자 선물 검색
+        const maleRes = await fetch(
+          `https://openapi.naver.com/v1/search/shop.json?query=${encodeURIComponent('남자 선물')}&display=10`,
+          { headers }
         );
-
-        setMaleGifts(male.slice(0, 10)); // 남성 선물 상위 10개
-        setFemaleGifts(female.slice(0, 10)); // 여성 선물 상위 10개
+        const maleData = await maleRes.json();
+  
+        // state에 저장
+        setFemaleGifts(femaleData.items);
+        setMaleGifts(maleData.items);
         setLoading(false);
-      })
-      .catch((err) => {
-        setError('선물 데이터를 불러오는 데 문제가 발생했습니다.');
+      } catch (err) {
+        setError('네이버 쇼핑 데이터를 불러오는 데 문제가 발생했습니다.');
         setLoading(false);
-      });
+      }
+    };
+  
+    fetchGifts();
   }, []);
 
   // 로딩 중일 때 메시지
