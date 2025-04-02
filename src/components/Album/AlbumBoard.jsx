@@ -7,7 +7,7 @@ import couple3 from "../img/couple3.png";
 import couple4 from "../img/couple4.png";
 import couple5 from "../img/couple5.png";
 import couple6 from "../img/couple6.png";
-import back from "../img/back2.png";
+
 import imo1 from "../img/imo1.png";
 import imo2 from "../img/imo2.png";
 import tape1 from '../img/tape1.png';
@@ -17,6 +17,7 @@ import tape4 from '../img/tape4.png';
 import tape5 from '../img/tape5.png';
 import tape6 from '../img/tape6.png';
 import tape7 from '../img/tape7.png';
+import back from '../img/back111.png'
 
 const BoardWrapper = styled.div`
   width: 100%;
@@ -26,6 +27,10 @@ const BoardWrapper = styled.div`
 `;
 
 const BoardFrame = styled.div`
+background-image: url(${back}); /* back2.jpg 이미지 적용 */
+  background-size: cover;  /* 배경 이미지가 전체 영역을 덮도록 설정 */
+  background-position: center;  /* 이미지가 중앙에 오도록 설정 */
+  background-repeat: no-repeat; /* 배경 이미지가 반복되지 않도록 설정 */
   border: 20px solid #deb887;
   border-radius: 16px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
@@ -41,9 +46,9 @@ const BoardFrame = styled.div`
 const PhotoArea = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr); //3개의 열로 배치
-  grid-template-rows: 1fr 1fr; //2개의 행으로 배치 (위 3개, 아래 3개)
+  grid-template-rows: repeat(2, 1fr); //2개의 행으로 배치 (위 3개, 아래 3개)
   gap: 24px; /* 아이템 간 간격 */
-  width: 115%;
+  width: 105%;
   height: 100%;
   justify-items: center; /* 아이템들을 중앙 정렬 */
   align-items: center; /* 아이템들을 중앙 정렬 */
@@ -61,7 +66,7 @@ const EmojiTopLeft = styled.img`
 
 const EmojiBottomRight = styled.img`
   position: absolute;
-  bottom: 20px;
+  top: 0px;
   right: 20px;
   width: 200px;
   height: auto;
@@ -81,8 +86,8 @@ const BoardInner = styled.div`
   align-items: center;
 `;
 
-const imageList = [couple1, couple2, couple3, couple4, couple5, couple6, couple1, couple2, couple3, couple4];
-const captions = ["커플1", "커플2", "커플3", "생각 중", "장난감과 함께", "귀여운 표정", "커플4", "커플5", "커플6", "커플7",];
+const imageList = [couple1, couple2, couple3, couple4, couple5, couple6, couple1, couple2];
+const captions = ["커플1", "커플2", "커플3", "생각 중", "장난감과 함께", "귀여운 표정", "커플4", "커플5"];
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const AlbumBoard = () => {
   const generateItems = () => {
@@ -94,6 +99,10 @@ const AlbumBoard = () => {
       const pinColor = pin[i % pin.length];
       const offsetY = Math.floor(Math.random() * 151) - 80;
       const caption = captions[i]; // caption 값
+
+      // 랜덤 colSpan, rowSpan 값 (3~5 범위)
+      const colSpan = Math.floor(Math.random() * 2);
+      const rowSpan = Math.floor(Math.random() * 4);
       items.push(
         <PhotoCard
           key={i}
@@ -102,7 +111,8 @@ const AlbumBoard = () => {
           pinColor={pinColor}
           offsetY={offsetY}   // 수직 오프셋
           caption={caption}   // 캡션
-
+          colSpan={colSpan}   // colSpan 값
+          rowSpan={rowSpan}   // rowSpan 값
         />
       );
     }
