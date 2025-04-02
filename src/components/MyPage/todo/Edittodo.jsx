@@ -100,7 +100,7 @@ const ColorDot = styled.div`
 
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 10px;
   margin-top: auto;
 `;
@@ -114,6 +114,10 @@ const Button = styled.button`
   font-weight: bold;
   font-size: 0.9rem;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 function Edittodo({
@@ -172,8 +176,7 @@ function Edittodo({
             )}
 
             <ButtonRow>
-              <Button type="button" onClick={onClose} $bg="#aaa">취소</Button>
-              <Button type="submit" $bg="#ff7f7f">수정</Button>
+              <Button type="submit" $bg="#ffe4e6">수정</Button>
             </ButtonRow>
           </form>
         </Bottom>

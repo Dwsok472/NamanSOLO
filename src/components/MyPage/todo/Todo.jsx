@@ -6,6 +6,7 @@ import { IconEdit, IconClose } from '../../Icons';
 import leftThought from '../../img/leftThought.png';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
+import Edittodo from './Edittodo';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -182,20 +183,32 @@ const AnniversarySection = styled.section`
 `;
 
 const EditButton = styled.button`
-  background-color: #ffd6db;
+  position: absolute;
+  top: 0px;
+  left: 8px;
+  background-color: #ffeef0;
   border: none;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  color: #444;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
+  width: 10px;
+  height: 10px;
+  padding: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 0; // 텍스트 크기 제거
+  cursor: pointer;
 
-  &:hover {
-    background-color: #ffb6c1;
+  svg {
+    width: 10px;
+    height: 10px;
   }
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const IconButton = styled(EditButton)`
+  left : -2px;
 `;
 
 const AddButton = styled.button`
@@ -205,7 +218,7 @@ const AddButton = styled.button`
   width: 48px;
   height: 48px;
   padding: 0;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   background-color: #ff7f7f;
   color: #fff;
   border: none;
@@ -236,6 +249,7 @@ const ListItem = styled.li`
   border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
+  position: relative;
 `;
 
 const ListDate = styled.div`
@@ -300,11 +314,6 @@ function Todo() {
     const eventDate = new Date(`${dateStr}T00:00:00`);
     eventDate.setHours(0, 0, 0, 0);
     return Math.floor((eventDate - today) / (1000 * 60 * 60 * 24));
-  };
-
-  const formatDDay = (diff) => {
-    if (diff === 0) return '오늘';
-    return diff > 0 ? `D - ${diff}` : `D + ${Math.abs(diff)}`;
   };
 
   return (
@@ -393,27 +402,37 @@ function Todo() {
           <h3>우리의 기념일</h3>
           <List>
             {events.filter(e => e.type === 'anniversary').map((event, idx) => {
-              hoveredItem === idx;
-              const isHovered = hoveredItem;
-              editingTodoEvent === idx;
-              const isEditing = editingTodoEvent;
+              let isHovered = false;
+              if (hoveredItem === idx) {
+                isHovered = true;
+              }
+              
+              let isEditing = false;
+              if (editingTodoEvent === idx) {
+                isEditing = true;
+              }
 
               return (
               <ListItem
+                key={idx}
                 onMouseEnter={() => setHoveredItem(idx)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
                 <div>{event.title}</div>
                 <div>
-                  <div>{getDiffInDays(event.date) >= 0 ? `D - ${getDiffInDays(event.date)}` : `D + ${Math.abs(getDiffInDays(event.date))}`}</div>
+                  <div>{getDiffInDays(event.date) >= 0 ? getDiffInDays(event.date) == 0 ? `D - Day` :`D - ${getDiffInDays(event.date)}` : `D + ${Math.abs(getDiffInDays(event.date))}`}</div>
                   <ListDate>{event.date}</ListDate>
                 </div>
       
-                {/* ✏️ 수정 버튼은 마우스 올라갔을 때만 보이게 */}
                 {isHovered && (
-                  <EditButton onClick={() => setEditingTodoEvent(idx)}>
-                    <IconEdit />
-                  </EditButton>
+                  <>
+                    <IconButton onClick={() => handleDelete(event)}>
+                      <IconClose />
+                    </IconButton>
+                    <EditButton onClick={() => setEditingTodoEvent(event)}>
+                      <IconEdit />
+                    </EditButton>
+                  </>
                 )}
               </ListItem>
             )})}
@@ -451,6 +470,27 @@ function Todo() {
         />
       )}
 
+      {editingTodoEvent && (
+        <Edittodo
+          event={editingTodoEvent}
+          setEvent={setEditingTodoEvent}
+          onClose={() => setEditingTodoEvent(null)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            // 업데이트 로직
+            const updated = events.map((ev) =>
+              ev.date === editingTodoEvent.date && ev.title === editingTodoEvent.title
+                ? editingTodoEvent
+                : ev
+            );
+            setEvents(updated);
+            setEditingTodoEvent(null);
+          }}
+          paletteOpen={anniversaryPaletteOpen}
+          setPaletteOpen={setAnniversaryPaletteOpen}
+          colorSamples={colorSamples}
+        />
+      )}
       {isTravelModalOpen && (
         <Addtravel
           name="여행 추가"
@@ -489,27 +529,7 @@ function Todo() {
               });
             }
 
-            {editingTodoEvent && (
-              <Edittodo
-                event={editingTodoEvent}
-                setEvent={setEditingTodoEvent}
-                onClose={() => setEditingTodoEvent(null)}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  // 업데이트 로직
-                  const updated = events.map((ev) =>
-                    ev.date === editingTodoEvent.date && ev.title === editingTodoEvent.title
-                      ? editingTodoEvent
-                      : ev
-                  );
-                  setEvents(updated);
-                  setEditingTodoEvent(null);
-                }}
-                paletteOpen={anniversaryPaletteOpen}
-                setPaletteOpen={setAnniversaryPaletteOpen}
-                colorSamples={colorSamples}
-              />
-            )}
+            
             
             {editingTravelEvent && (
               <Edittravel
