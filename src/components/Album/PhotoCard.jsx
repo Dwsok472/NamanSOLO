@@ -12,6 +12,8 @@ const CardWrapper = styled.div`
   transition: transform 0.3s;
   position: relative;
   text-align: center;
+  grid-column: span ${(props) => props.colSpan};
+  grid-row: span ${(props) => props.rowSpan};
 `;
 
 const Pin = styled.div`
@@ -42,9 +44,9 @@ const Caption = styled.div`
   color: #555;
 `;
 
-const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', caption = "" }) => {
+const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', caption = "", colSpan, rowSpan }) => {
   return (
-    <CardWrapper rotate={rotate} offsetY={offsetY}>
+    <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan}>
       <Pin ><img src={pinColor} className="pin" /></Pin>
       <Image src={src} alt="album" />
       {caption && <Caption>{caption}</Caption>}
