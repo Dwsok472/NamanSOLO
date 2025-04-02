@@ -21,9 +21,15 @@ const cities = [
   "Daejeon",
   "Gwangju",
   "Ulsan",
+  "Ungsang",
   "Jeonju",
   "Changwon",
   "Suwon",
+  "Sokcho",
+  "Yangyang",
+  "Cheongjusi",
+  "Boryeong",
+  "Kimje",
 ];
 
 // 도시 이름과 한국어 매핑 객체
@@ -35,9 +41,15 @@ const cityTranslations = {
   Daejeon: "대전",
   Gwangju: "광주",
   Ulsan: "울산",
+  Ungsang: "울진",
   Jeonju: "전주",
   Changwon: "창원",
   Suwon: "수원",
+  Sokcho: "속초",
+  Yangyang: "양양",
+  Cheongjusi: "청주시",
+  Boryeong: "보령",
+  Kimje: "김제",
 };
 
 const Container = styled.div`
@@ -55,10 +67,11 @@ const ModalContainer = styled.div`
   background: white;
   border-radius: 50px;
   min-width: 350px;
-  max-width: 500px;
-  height: 480px;
+  max-width: 400px;
+  height: 430px;
   text-align: center;
   position: relative;
+
   cursor: pointer;
   user-select: none;
   border-radius: 50px;
@@ -90,40 +103,91 @@ const CloseButton = styled.button`
   }
 `;
 
+// 스타일링된 select 요소
+const StyledSelect = styled.select`
+  font-size: 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  width: 20%;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const StyledOption = styled.option`
+  font-size: 16px; /* option 항목의 글자 크기 설정 */
+  padding: 10px; /* option 항목에 패딩을 추가하여 여백을 조정 */
+  height: 25px; /* option 항목의 높이 설정 */
+  overflow: scroll; /* 내용이 넘칠 경우 스크롤바 표시 */
+  overflow-x: hidden; /* 가로 스크롤바는 숨김 */
+
+  /* 드롭다운 스크롤 기능 추가 */
+  max-height: 500px; /* 드롭다운 메뉴의 최대 높이 */
+
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 7px로 설정 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 스크롤바의 핸들 색상을 설정 */
+    border-radius: 10px; /* 스크롤바 핸들의 둥근 모서리 설정 */
+  }
+`;
+
 const ContainerMain = styled.div`
+  width: 90%;
+  height: 330px;
+  margin: 0 auto;
   font-size: 16px;
+  overflow: scroll;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 핸들의 색상 */
+    border-radius: 10px;
+  }
 `;
 
 const Content = styled.div`
-  padding: 10px;
+  width: 100%;
+  padding: 15px;
   border-bottom: 1px solid #eee;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 15px;
   display: flex;
 
   align-items: center;
 `;
 
+const Show = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px; /* 이미지와 텍스트 간의 간격 */
+`;
+
 const Img = styled.img`
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   margin-right: 10px;
   cursor: pointer;
 `;
 
 const AlarmItem = styled.div`
+  width: 100%;
   padding: 15px;
   border-bottom: 1px solid #eee;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 15px;
   display: flex;
-  align-items: center; /* 이미지와 텍스트를 수평으로 가운데 정렬 */
+  align-items: center;
 
   cursor: pointer;
-  white-space: nowrap; /* 텍스트가 한 줄로만 표시되도록 설정 */
-  overflow: hidden; /* 텍스트가 넘치면 숨김 */
-  text-overflow: ellipsis; /* 넘친 텍스트는 '...' 으로 표시 */
-
+  white-space: nowrap;
+  overflow: hidden;
   &:hover {
     color: #8f8f8fe8;
   }
@@ -131,6 +195,16 @@ const AlarmItem = styled.div`
   &:focus {
     outline: none;
   }
+`;
+
+const TextWrapper = styled.div`
+  flex: 1; /* 텍스트가 남는 공간을 차지하도록 함 */
+  overflow: hidden; /* 텍스트가 넘칠 경우 숨김 */
+  white-space: nowrap; /* 텍스트 한 줄로 처리 */
+  text-overflow: ellipsis; /* 넘친 텍스트는 '...' 으로 표시 */
+  display: flex;
+
+  margin-left: 10px; /* 이미지와 텍스트 간의 간격 */
 `;
 
 const Image = styled.img`
@@ -222,7 +296,9 @@ function Alarm({ onClose }) {
     navigate(path); // 페이지 이동
     onClose(); // 모달 닫기
   };
-
+  const toggleSetting = () => {
+    setShowAlarm((prev) => !prev);
+  };
   return (
     <Container>
       <ModalContainer
@@ -234,7 +310,8 @@ function Alarm({ onClose }) {
         }} // 모달 위치 설정
       >
         <Top>
-          <Image src={settings} alt="Settings" /> <h2>알람</h2>
+          <Image src={settings} alt="Settings" />
+          <h2>알람</h2>
           <CloseButton onClick={onClose}>
             <IconClose />
           </CloseButton>
@@ -251,44 +328,52 @@ function Alarm({ onClose }) {
                   src={`http://openweathermap.org/img/w/${weather.icon}.png`}
                   alt={weather.description}
                 />
-                <span>
-                  {city} 날씨: {weather.temperature}°C, {weather.description}
-                </span>
+                <Show>
+                  {cityTranslations[city] || city} 날씨: {weather.temperature}
+                  °C, {weather.description}
+                </Show>
               </>
             ) : (
               <span>날씨 정보를 불러오는 데 실패했습니다.</span>
             )}
             {/* 도시 선택 드롭다운 */}
-            <select onChange={(e) => setCity(e.target.value)} value={city}>
+            <StyledSelect
+              onChange={(e) => setCity(e.target.value)}
+              value={city}
+            >
               {cities.map((cityName, index) => (
-                <option key={index} value={cityName}>
-                  {cityTranslations[cityName] || cityName}{" "}
-                  {/* 한국어 도시 이름 표시 */}
-                </option>
+                <StyledOption key={index} value={cityName}>
+                  {cityTranslations[cityName] || cityName}
+                </StyledOption>
               ))}
-            </select>
+            </StyledSelect>
           </Content>
 
           {/* 알람 항목들 */}
           <AlarmItem onClick={() => handleNavigate("/mypage/todo")}>
-            <Img src={firework} alt="Firework" />곧 200일이 다가오고 있어요
-            데이트 코스를 미리 짜고 예약하는 것은 어떨까요?
+            <Img src={firework} alt="Firework" />
+            <TextWrapper>
+              곧 200일이 다가오고 있어요 데이트 코스를 미리 짜고 예약하는 것은
+              어떨까요?
+            </TextWrapper>
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/events")}>
             <Img src={add} alt="Add" />
-            이벤트 공지사항이 추가되었습니다
+            <TextWrapper>이벤트 공지사항이 추가되었습니다</TextWrapper>
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/map")}>
             <Img src={place} alt="Place" />
-            데이트 장소 추천이 업데이트되었습니다
+            <TextWrapper>데이트 장소 추천이 업데이트되었습니다</TextWrapper>
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/mypage/story")}>
             <Img src={heart} alt="Heart" />
-            username이 본인의 피드에 좋아요를 눌렀습니다
+            <TextWrapper>
+              username이 본인의 피드에 좋아요를 눌렀습니다
+            </TextWrapper>
           </AlarmItem>
           <AlarmItem onClick={() => handleNavigate("/mypage/other")}>
             <Img src={group} alt="Group" />
-            username이 본인을 팔로우 팔로우하였습니다
+            <TextWrapper>username이 본인을 팔로우 팔로우하였습니다</TextWrapper>
           </AlarmItem>
         </ContainerMain>
       </ModalContainer>
