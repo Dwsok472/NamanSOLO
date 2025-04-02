@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import PhotoCard from "./PhotoCard";
 import couple1 from "../img/couple1.png";
@@ -7,7 +7,6 @@ import couple3 from "../img/couple3.png";
 import couple4 from "../img/couple4.png";
 import couple5 from "../img/couple5.png";
 import couple6 from "../img/couple6.png";
-
 import imo1 from "../img/imo1.png";
 import imo2 from "../img/imo2.png";
 import tape1 from '../img/tape1.png';
@@ -18,6 +17,7 @@ import tape5 from '../img/tape5.png';
 import tape6 from '../img/tape6.png';
 import tape7 from '../img/tape7.png';
 import back from '../img/back111.png'
+import { GetAllAlbum } from "../api";
 
 const BoardWrapper = styled.div`
   width: 100%;
@@ -86,35 +86,83 @@ const BoardInner = styled.div`
   align-items: center;
 `;
 
-const imageList = [couple1, couple2, couple3, couple4, couple5, couple6, couple1, couple2];
-const captions = ["커플1", "커플2", "커플3", "생각 중", "장난감과 함께", "귀여운 표정", "커플4", "커플5"];
+
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const AlbumBoard = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setData([
+      {
+        id: 1,
+        imgurl: [couple1, couple2, couple3, couple4],
+        title: "첫 나들이"
+      },
+      {
+        id: 2,
+        imgurl: [couple2, couple1, couple3, couple4],
+        title: "첫 데이트"
+      },
+      {
+        id: 3,
+        imgurl: [couple3, couple1, couple2, couple4],
+        title: "평화로운 주말"
+      },
+      {
+        id: 4,
+        imgurl: [couple4, couple1, couple3, couple4],
+        title: "행복한 먹방"
+      }
+    ]);
+    setLoading(false);  // 데이터가 로드된 후 로딩 상태를 false로 설정
+  }, [])
+
+  // async function getAllAlbum() {
+  //   try {
+  //     let response = await GetAllAlbum();
+  //     if (!response || response.length === 0) {
+  //       console.log('데이터를 가져오지 못했습니다.');
+  //       return;
+  //     }
+  //     console.log(response);
+  //     setData(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getAllAlbum();
+  // }, [])
+
+
   const generateItems = () => {
     const items = [];
-    for (let i = 0; i < imageList.length; i++) {
-      // 랜덤 회전
-      const rotation = Math.floor(Math.random() * 41) - 20;
-      // pinColor 배열에서 무작위로 선택
-      const pinColor = pin[i % pin.length];
-      const offsetY = Math.floor(Math.random() * 151) - 80;
-      const caption = captions[i]; // caption 값
-
-      // 랜덤 colSpan, rowSpan 값 (3~5 범위)
-      const colSpan = Math.floor(Math.random() * 2);
-      const rowSpan = Math.floor(Math.random() * 4);
-      items.push(
-        <PhotoCard
-          key={i}
-          src={imageList[i]}  // 해당 이미지
-          rotate={rotation} // 회전 값
-          pinColor={pinColor}
-          offsetY={offsetY}   // 수직 오프셋
-          caption={caption}   // 캡션
-          colSpan={colSpan}   // colSpan 값
-          rowSpan={rowSpan}   // rowSpan 값
-        />
-      );
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        const album = data[i];
+        // 랜덤 회전
+        const rotation = Math.floor(Math.random() * 41) - 20;
+        // pinColor 배열에서 무작위로 선택
+        const pinColor = pin[i % pin.length];
+        const offsetY = Math.floor(Math.random() * 151) - 80;
+        // 랜덤 colSpan, rowSpan 값 (3~5 범위)
+        const colSpan = Math.floor(Math.random() * 2);
+        const rowSpan = Math.floor(Math.random() * 4);
+        items.push(
+          <PhotoCard
+            key={album.id}
+            src={album.imgurl[0]}  // 해당 이미지
+            rotate={rotation} // 회전 값
+            pinColor={pinColor}
+            offsetY={offsetY}   // 수직 오프셋
+            title={album.title}   // 제목
+            colSpan={colSpan}   // colSpan 값
+            rowSpan={rowSpan}   // rowSpan 값
+          />
+        );
+      }
     }
     return items;
   };
@@ -127,7 +175,7 @@ const AlbumBoard = () => {
           <EmojiTopLeft src={imo2} alt="left emoji" />
           <EmojiBottomRight src={imo1} alt="right emoji" />
           <PhotoArea>
-            {generateItems()}
+            {loading ? <p>LOADING..</p> : generateItems()}
           </PhotoArea>
         </BoardInner>
       </BoardFrame>

@@ -57,3 +57,31 @@ export async function ModifyUserInfo(data) {
     throw error; // 에러 처리
   }
 }
+
+export async function AddAlbum(data) {
+  try {
+    // 서버로 중복 확인 요청
+    const response = await axios.post('', {
+      data,
+    });
+    return response.data; // 서버에서 반환한 데이터
+  } catch (error) {
+    alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+    throw error; // 에러 처리
+  }
+}
+
+export async function GetAllAlbum() {
+  try {
+    // 서버로 중복 확인 요청
+    const response = await axios.get('');
+    return response.data; // 서버에서 반환한 데이터
+  } catch (error) {
+    alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+    throw error; // 에러 처리
+  }
+}
+export async function GetAlbumById(id) {
+  return axios.get('');
+}
+

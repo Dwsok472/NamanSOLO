@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { AddAlbum, GetAlbumById, GetAllAlbum } from "../api";
+import couple1 from '../img/couple1.png';
+import couple2 from '../img/couple2.png';
+import couple3 from '../img/couple3.png';
+import couple4 from '../img/couple4.png';
 
 const CardWrapper = styled.div`
   width: 230px;
@@ -44,12 +49,13 @@ const Caption = styled.div`
   color: #555;
 `;
 
-const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', caption = "", colSpan, rowSpan }) => {
+const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan }) => {
+
   return (
     <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan}>
-      <Pin ><img src={pinColor} className="pin" /></Pin>
+      <Pin><img src={pinColor} className="pin" /></Pin>
       <Image src={src} alt="album" />
-      {caption && <Caption>{caption}</Caption>}
+      {title && <Caption>{title}</Caption>}
     </CardWrapper>
   );
 };
