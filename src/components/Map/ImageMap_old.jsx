@@ -268,6 +268,9 @@ const SubmitBtn = styled.button`
   &:hover {
     background: #e84664;
   }
+  &:focus {
+    outline: none;
+  }
 `;
 
 
