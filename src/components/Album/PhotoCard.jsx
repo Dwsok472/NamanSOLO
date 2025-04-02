@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 const CardWrapper = styled.div`
-  width: 260px;
-  height: 300px;
+  width: 230px;
+  height: 270px;
   padding: 10px;
   background: white;
   border-radius: 8px;
@@ -28,8 +28,8 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: 240px;
-  height: 200px;
+  width: 210px;
+  height: 180px;
   object-fit: cover;
   border-radius: 4px;
   pointer-events: none;
