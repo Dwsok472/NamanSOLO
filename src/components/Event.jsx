@@ -23,6 +23,7 @@ function Event() {
   const Category = styled.div`
     width: 100%;
     max-width: 480px;
+    height: fit-content;
     border-radius: 20px;
     padding: 28px 24px;
     background-color: ${(props) =>
