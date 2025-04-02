@@ -22,7 +22,7 @@ const Card = styled.div`
 
 const Top = styled.div`
   height: 15%;
-  background-color: #d6ecff;
+  background-color: #ffdcd6;
   font-size: 1.5rem;
   font-weight: bold;
   display: flex;
@@ -67,11 +67,6 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-`;
-
-const Tilde = styled.span`
-  font-size: 1rem;
-  color: #444;
 `;
 
 const FileInput = styled.input`
@@ -137,7 +132,7 @@ const SubmitButton = styled.button`
   padding: 8px 20px;
   border: none;
   border-radius: 20px;
-  background-color: #d6ecff;
+  background-color: #ffe4e6;
   color: #444;
   font-size: 0.9rem;
   font-weight: bold;
@@ -188,7 +183,6 @@ function Edittravel({
                 onChange={(e) => setEvent({ ...event, startDate: e.target.value })}
                 required
               />
-              <Tilde>~</Tilde>
               <Input
                 type="date"
                 value={event.endDate || ''}

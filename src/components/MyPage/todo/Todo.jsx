@@ -7,6 +7,7 @@ import leftThought from '../../img/leftThought.png';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
 import Edittodo from './Edittodo';
+import Edittravel from './Edittravel'
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -264,20 +265,36 @@ function Todo() {
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
-    { title: '첫 데이트', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { title: '100일', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
+    { id:1, title: '첫 데이트', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
+    { id:2, title: '100일', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
   ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', date: '', color: '#ffc0cb', type:'anniversary' });
-  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', date: '', color: '#87cefa', type:'travel', image: leftThought });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id:events.length+1, title: '', date: '', color: '#ffc0cb', type:'anniversary' });
+  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', date: '', color: '#87cefa', type:'travel', image: leftThought });
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
   const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [yearRangeStart, setYearRangeStart] = useState(currentYear - 2);
+
+  const handleUpdate = (updatedEvent) => {
+    setEvents(events.map(event =>
+      event.id === updatedEvent.id
+      ? updatedEvent
+      : event
+    ));
+    setEditingTodoEvent(null);
+  };
+
+  const handleDelete = (eventToDelete) => {
+    const confirmDelete = window.confirm(`${eventToDelete.title}, 이 일정을 정말 삭제하시겠어요?`);
+    if (!confirmDelete) return;
+
+    setEvents(events.filter(event => event !== eventToDelete));
+  };
 
   const colorSamples = ['#ffc0cb', '#ffb6c1', '#ffd700', '#90ee90', '#87cefa', '#dda0dd', '#ff7f50', '#b0c4de'];
 
@@ -301,12 +318,24 @@ function Todo() {
 
   const getEventsForDay = (date) => {
     if (!date) return [];
+
     const cellDate = new Date(date);
+
     cellDate.setHours(0, 0, 0, 0);
+
     return events.filter((event) => {
+      if (event.type === 'anniversary') {
       const eventDate = new Date(`${event.date}T00:00:00`);
-      eventDate.setHours(0, 0, 0, 0);
-      return cellDate.getTime() === eventDate.getTime();
+      return eventDate.getTime() === cellDate.getTime();
+    }
+
+      if (event.type === 'travel') {
+        const start = new Date(`${event.startDate}T00:00:00`);
+        const end = new Date(`${event.endDate}T00:00:00`);
+        return start <= cellDate && cellDate <= end;
+      }
+
+      return false;
     });
   };
 
@@ -429,7 +458,7 @@ function Todo() {
                     <IconButton onClick={() => handleDelete(event)}>
                       <IconClose />
                     </IconButton>
-                    <EditButton onClick={() => setEditingTodoEvent(event)}>
+                    <EditButton onClick={() => setEditingTodoEvent({...event})}>
                       <IconEdit />
                     </EditButton>
                   </>
@@ -442,7 +471,7 @@ function Todo() {
 
       {isModalOpen && (
         <Addtodo
-          name="기념일 추가"
+          name="기념일 일정 추가"
           onClose={() => {
             setIsModalOpen(false);
             setAnniversaryPaletteOpen(false);
@@ -456,6 +485,7 @@ function Todo() {
             e.preventDefault();
             
             const eventToAdd = {
+              id: events.length + 1,
               title: newAnniversaryEvent.title,
               date: newAnniversaryEvent.date,
               color: newAnniversaryEvent.color,
@@ -477,25 +507,47 @@ function Todo() {
           onClose={() => setEditingTodoEvent(null)}
           onSubmit={(e) => {
             e.preventDefault();
-            // 업데이트 로직
-            const updated = events.map((ev) =>
-              ev.date === editingTodoEvent.date && ev.title === editingTodoEvent.title
-                ? editingTodoEvent
-                : ev
-            );
-            setEvents(updated);
-            setEditingTodoEvent(null);
+
+            handleUpdate(editingTodoEvent);
           }}
           paletteOpen={anniversaryPaletteOpen}
           setPaletteOpen={setAnniversaryPaletteOpen}
           colorSamples={colorSamples}
         />
       )}
+
+      {editingTravelEvent && (
+        <Edittravel
+          event={editingTravelEvent}
+          setEvent={setEditingTravelEvent}
+          onClose={() => setEditingTravelEvent(null)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            
+            const start = new Date(editingTravelEvent.startDate);
+            const end = new Date(editingTravelEvent.endDate);
+          
+            if (start > end) {
+              alert('종료일은 시작일보다 빠를 수 없습니다!');
+              return;
+            }
+          
+            setEvents(events.map(ev => (
+              ev.id === editingTravelEvent.id ? editingTravelEvent : ev
+            )));
+          
+            setEditingTravelEvent(null);
+          }}
+          paletteOpen={travelPaletteOpen}
+          setPaletteOpen={setTravelPaletteOpen}
+          colorSamples={colorSamples}
+        />
+      )}  
+
       {isTravelModalOpen && (
         <Addtravel
-          name="여행 추가"
-          onClose={() => { setIsTravelModalOpen(false);     setTravelPaletteOpen(false);
-          }}
+          name="여행 일정 추가"
+          onClose={() => { setIsTravelModalOpen(false); setTravelPaletteOpen(false); }}
           newEvent={newTravelEvent}
           setNewEvent={setNewTravelEvent}
           paletteOpen={travelPaletteOpen}
@@ -510,49 +562,20 @@ function Todo() {
 
             if (start > end) {
               alert('종료일은 시작일보다 빠를 수 없습니다!');
-              setNewEvent({ ...newEvent, endDate: '' }); // 무효화
               return;
             }
-
-            const addedEvents = [];
           
-            for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-              const dateStr = d.toISOString().split('T')[0];
-              addedEvents.push({
-                title: newTravelEvent.title,
-                date: dateStr,
-                startDate: newTravelEvent.startDate,
-                endDate: newTravelEvent.endDate,
-                color: newTravelEvent.color,
-                type: 'travel',
-                image: newTravelEvent.image
-              });
-            }
+            const travelEvent = {
+              id: events.length + 1,
+              title: newTravelEvent.title,
+              startDate: newTravelEvent.startDate,
+              endDate: newTravelEvent.endDate,
+              color: newTravelEvent.color,
+              image: newTravelEvent.image,
+              type: 'travel'
+            };
 
-            
-            
-            {editingTravelEvent && (
-              <Edittravel
-                event={editingTravelEvent}
-                setEvent={setEditingTravelEvent}
-                onClose={() => setEditingTravelEvent(null)}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const updatedEvents = events.map((ev) =>
-                    ev.date === editingTravelEvent.date && ev.title === editingTravelEvent.title
-                      ? editingTravelEvent
-                      : ev
-                  );
-                  setEvents(updatedEvents);
-                  setEditingTravelEvent(null);
-                }}
-                paletteOpen={travelPaletteOpen}
-                setPaletteOpen={setTravelPaletteOpen}
-                colorSamples={colorSamples}
-              />
-            )}            
-          
-            setEvents([...events, ...addedEvents]);
+            setEvents([...events, travelEvent]);
             setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', type: 'travel' });
             setIsTravelModalOpen(false);
             setTravelPaletteOpen(false);

@@ -141,7 +141,7 @@ function Addtodo({
           <form onSubmit={onSubmit}>
             <Input
               type="text"
-              placeholder="기념일 제목"
+              placeholder="기념일 일정 제목"
               value={newEvent.title || ''}
               onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               required
@@ -175,7 +175,7 @@ function Addtodo({
             )}
 
             <ButtonRow>
-              <Button type="submit" $bg="#ffe4e6">추가</Button>
+              <Button type="submit" $bg="#ffe4e6">등록</Button>
             </ButtonRow>
           </form>
         </Bottom>

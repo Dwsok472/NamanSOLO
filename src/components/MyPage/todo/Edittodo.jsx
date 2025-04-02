@@ -136,7 +136,7 @@ function Edittodo({
       <Card>
         <Top>
           <TopX onClick={onClose}><IconClose /></TopX>
-          기념일 수정
+          기념일 일정 수정
         </Top>
         <Bottom>
           <form onSubmit={onSubmit}>
