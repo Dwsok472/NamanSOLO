@@ -68,9 +68,9 @@ const PhotoArea = styled.div`
   grid-template-columns: repeat(6, 1fr); 
   grid-template-rows: repeat(2, 1fr);
   gap: 24px; /* 아이템 간 간격 */
-  width: 105%;
+  width: 70%;
   height: 100%;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
 
 `;
