@@ -101,36 +101,61 @@ const NavButton = styled.button`
 
 const ContentBox = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 100px; 
   width: 100%;
-  margin-top: 60px;
+  height: calc(100vh - 60px); /* 뷰포트 기준 높이 설정 */
+  flex-direction: row;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    width: 90%;
+    height: auto;
   }
 `;
 
 const LeftBox = styled.div`
-  flex: 1.2; 
-  max-width: 600px;
+  width: 50%;
+  height: 100%;
+  background-color: #fff0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px dashed #ffa8a8;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 2px dashed #ffa8a8;
+  }
 `;
 
 const RightBox = styled.div`
-  flex: 1.2;
-  max-width: 800px;
+  width: 50%;
+  height: 100%;
+  background-color: #f0faff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 2px dashed #91caff;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    border-left: none;
+    border-top: 2px dashed #91caff;
+  }
 `;
 
-const Divider = styled.div`
-  width: 1px;
-  background-color: #ff0000;
-  height: 80%;
-  margin: 0 20px;
-  align-self: center;
-  opacity: 1;
+const InnerBox = styled.div`
+  width: 100%;
+  max-width: 600px;
+  padding: 40px;
+  box-sizing: border-box;
+
+  margin-left: -40px;
+
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
 `;
 
 const Wrap = styled.div`
@@ -144,7 +169,7 @@ const Wrap = styled.div`
   justify-content: center;
 
   h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     text-align: center;
   }
@@ -175,7 +200,7 @@ const HashWrap = styled.div`
 const BoxWrap = styled.div`
   padding: 10px;
   align-items: center;
-  margin-top: 120px;
+  margin-top: 160px;
   margin-left: 110px;
 `;
 
@@ -283,6 +308,7 @@ function MainMap() {
 
       <ContentBox id="contentBox">
         <LeftBox>
+          <InnerBox>
           {!selectedRegion ? (
             <>
               <Wrap>
@@ -317,12 +343,13 @@ function MainMap() {
               setRegionPlaces={setRegionPlaces}
             />
           )}
+          </InnerBox>
         </LeftBox>
 
-        <Divider />
-
         <RightBox>
+           <InnerBox>
           <ImageMapMapPart onRegionClick={setSelectedRegion} />
+          </InnerBox>
         </RightBox>
       </ContentBox>
     </Container>
