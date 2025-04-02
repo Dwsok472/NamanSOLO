@@ -4,6 +4,7 @@ import Addtodo from './Addtodo';
 import Addtravel from './Addtravel';
 import { IconEdit, IconClose } from '../../Icons';
 import leftThought from '../../img/leftThought.png';
+import Plus from '../../img/add.png';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
 import Edittodo from './Edittodo';
@@ -43,14 +44,13 @@ const AddTravelButton = styled.button`
   position: absolute;
   top: 0;
   right: 0px;
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   background-color: #ff7f7f;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 50%;
-  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,7 +58,6 @@ const AddTravelButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    font-weight: 700;
     box-shadow: none;
   }
 
@@ -217,10 +216,9 @@ const AddButton = styled.button`
   position: absolute;
   bottom: 20px;
   left: 20px;
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  font-size: 1.2rem;
   background-color: #ff7f7f;
   color: #fff;
   border: none;
@@ -232,13 +230,18 @@ const AddButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    font-weight: 700;
     box-shadow: none;
   }
 
   &:focus {
     outline: none;
   }
+`;
+
+const AddButtonImage = styled.img`
+  filter: brightness(0) invert(1);
+  width: 18px;
+  height: 18px;
 `;
 
 const List = styled.ul`
@@ -356,7 +359,7 @@ function Todo() {
             <AddTravelButton
               onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}
             >
-              +
+              <AddButtonImage src={Plus} />
             </AddTravelButton>
           </CalendarHeader>
 
@@ -429,7 +432,7 @@ function Todo() {
         </CalendarSection>
 
         <AnniversarySection>
-          <AddButton onClick={() => setIsModalOpen(true)}>+</AddButton>
+          <AddButton onClick={() => setIsModalOpen(true)}><AddButtonImage src={Plus}/></AddButton>
           <h3>우리의 기념일</h3>
           <List>
             {events.filter(e => e.type === 'anniversary').map((event, idx) => {
@@ -524,7 +527,7 @@ function Todo() {
           onClose={() => setViewingTravelEvent(null)}
           onEdit={() => {
             setEditingTravelEvent(viewingTravelEvent);
-            setViewingTravelEvent(null); // detail view는 닫기
+            setViewingTravelEvent(null);
           }}
         />
       )}
