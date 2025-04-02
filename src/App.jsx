@@ -12,6 +12,9 @@ import MainPage from './components/MainPage';
 import MyPage from './components/MyPage/MyPage';
 import MainMap from './components/Map/MainMap';
 import AlbumBoard from './components/Album/AlbumBoard';
+import AdminFeedPage from './components/Admin/AdminFeedPage';
+import AdminUserPage from './components/Admin/AdminUserPage';
+
 
 
 const DummyPage = ({ title }) => <div style={{ padding: '40px' }}>{title}</div>;
@@ -79,6 +82,8 @@ function App() {
               <Route path="/story/all" element={<AlbumBoard />} />
               <Route path="/map" element={<MainMap />} />
               <Route path="/events" element={<Event />} />
+              <Route path="/admin/users" element={<AdminUserPage />} />
+              <Route path="/admin/feeds" element={<AdminFeedPage />} />
               <Route path="/mypage/*" element={<MyPage />} />
               <Route path="/find-id" element={<Find isFindId={true} />} />
               <Route path="/find-pwd" element={<Find isFindId={false} />} />

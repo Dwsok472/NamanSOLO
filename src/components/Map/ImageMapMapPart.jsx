@@ -35,7 +35,7 @@ const RegionLabel = styled.div`
 const regions = [
   { name: '서울/경기', top: 35, left: 54 },
   { name: '강원도', top: 35, left: 71 },
-  { name: '충청남도', top: 52, left: 55 },
+  { name: '충청남도', top: 52, left: 51 },
   { name: '전라남도', top: 77, left: 55 },
   { name: '경상남도', top: 70, left: 69 },
   { name: '제주도', top: 91, left: 53 },
