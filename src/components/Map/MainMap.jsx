@@ -226,6 +226,12 @@ const Text = styled.div`
   padding-left: 10px;
 `;
 
+const ScrollWrapper = styled.div`
+  max-height: 600px; 
+  overflow-y: auto;
+  padding-right: 10px;
+`;
+
 function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
@@ -337,11 +343,13 @@ function MainMap() {
               </BoxWrap>
             </>
           ) : (
-            <PlaceListPart
-              selectedRegion={selectedRegion}
-              regionPlaces={regionPlaces}
-              setRegionPlaces={setRegionPlaces}
-            />
+            <ScrollWrapper>
+              <PlaceListPart
+                selectedRegion={selectedRegion}
+                regionPlaces={regionPlaces}
+                setRegionPlaces={setRegionPlaces}
+              />
+            </ScrollWrapper>
           )}
           </InnerBox>
         </LeftBox>
