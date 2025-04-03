@@ -506,7 +506,7 @@ function Todo() {
                             $isHovered={hoveringEventId === event.id}
                             onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setViewingTravelEvent(event) }
                           >
-                            <div title={event.type === 'travel' ? `여행 일정 ${event.startDate} ~ ${event.endDate}` : ` 기념일 일정 ${event.date}`}>{event.title}</div>
+                            <div title={event.type === 'travel' ? `${event.title} ${event.startDate} ~ ${event.endDate}` : `${event.title} ${event.date}`}>{event.title}</div>
                           </EventBox>
                         ))}
                       </StyledTd>
@@ -550,7 +550,7 @@ function Todo() {
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    <div className='eventTitle'>{event.title}</div>
+                    <div title={`${event.title} ${event.type === 'anniversary'?event.date:event.startDate+' ~ '+event.endDate}`} className='eventTitle'>{event.title}</div>
                     <div className='day'>
                       <div className='diff'>
                         {diffDays >= 0
