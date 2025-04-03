@@ -1,43 +1,62 @@
 import axios from 'axios';
 
-export const getAnniversaries = async () => {
-  const res = await api.get('/anniversary');
-  return res.data;
+const BASE_URL = 'http://localhost:8000/api/calendar';
+
+const handleError = (methodName, error) => {
+  console.error(`[API ERROR] ${methodName} failed:`, error);
+  throw error;
 };
 
-export const createAnniversary = async (data) => {
-  const res = await api.post('/anniversary', data);
-  return res.data;
+const api2 = {
+  async fetchAnniversaries() {
+    try {
+      return (await axios.get(`${BASE_URL}/anniversary`)).data;
+    } catch (error) {
+      handleError('fetchAnniversaries', error);
+    }
+  },
+
+  async fetchTravels() {
+    try {
+      return (await axios.get(`${BASE_URL}/travel`)).data;
+    } catch (error) {
+      handleError('fetchTravels', error);
+    }
+  },
+
+  async createAnniversary(data) {
+    try {
+      return (await axios.post(`${BASE_URL}/anniversary`, data)).data;
+    } catch (error) {
+      handleError('createAnniversary', error);
+    }
+  },
+
+  async createTravel(data) {
+    try {
+      return (await axios.post(`${BASE_URL}/travel`, data)).data;
+    } catch (error) {
+      handleError('createTravel', error);
+    }
+  },
+
+  async deleteEvent(id) {
+    try {
+      return (await axios.delete(`${BASE_URL}/${id}`)).data;
+    } catch (error) {
+      handleError('deleteEvent', error);
+    }
+  },
+
+  async updateEvent(event) {
+    try {
+      const { id, type, ...rest } = event;
+      const endpoint = type === 'travel' ? 'travel' : 'anniversary';
+      return (await axios.put(`${BASE_URL}/${endpoint}/${id}`, rest)).data;
+    } catch (error) {
+      handleError('updateEvent', error);
+    }
+  }
 };
 
-export const updateAnniversary = async (id, data) => {
-  const res = await api.put(`/anniversary/${id}`, data);
-  return res.data;
-};
-
-export const deleteAnniversary = async (id) => {
-  const res = await api.delete(`/anniversary/${id}`);
-  return res.data;
-};
-
-export const getTravels = async () => {
-  const res = await api.get('/travel');
-  return res.data;
-};
-
-export const createTravel = async (data) => {
-  const res = await api.post('/travel', data);
-  return res.data;
-};
-
-export const updateTravel = async (id, data) => {
-  const res = await api.put(`/travel/${id}`, data);
-  return res.data;
-};
-
-export const deleteTravel = async (id) => {
-  const res = await api.delete(`/travel/${id}`);
-  return res.data;
-};
-
-export default api;
+export default api2;
