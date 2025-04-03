@@ -368,14 +368,36 @@ function Alarm({ onClose /*, isOpen*/ }) {
 
   //   const load = async () => {
   //     try {
-  //       const calendarEvents = await fetchCalendarEvents(userId);
-  //       const calendarAlarms = getUpcomingAlarms(calendarEvents);
+  //   const calendar = await fetchUserEvents(userId);
+  //   const calendarAlarms = getUpcomingAlarms(calendar);
 
-  //       const eventItems = await fetchTodayEvents(userId);
-  //       const eventAlarms = getTodayEventAlarms(eventItems);
+  //   const todayEvents = await fetchTodayEvents(userId);
+  //   const eventAlarms = getTodayEventAlarms(todayEvents);
 
-  //       setAlarmList([...calendarAlarms, ...eventAlarms]);
-  //     } catch (err) {
+  //   const placeItems = await fetchRecommendedPlaces(userId);
+  //   const placeAlarms = getPlaceRecommendAlarms(placeItems);
+
+  //   const likeAlarms = await fetchLikeAlarms(userId);
+
+  //   const followAlarms = await fetchFollowAlarms(userId);
+
+  //   const weatherAlarms = await fetchWeatherAlarm(userId);
+
+  //   const commentAlarms = await fetchCommentAlarms(userId);
+
+  //   const replyAlarms = await fetchReplyAlarms(userId);
+
+  //   setAlarmList([
+  //     ...calendarAlarms,
+  //     ...eventAlarms,
+  //     ...placeAlarms,
+  //     ...likeAlarms,
+  //     ...followAlarms,
+  //     ...weatherAlarms,
+  //     ...commentAlarms,
+  //     ...replyAlarms
+  //   ]);
+  // } catch (err) {
   //       console.error("알림 로딩 실패:", err);
   //     }
   //   };

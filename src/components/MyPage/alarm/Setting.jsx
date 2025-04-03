@@ -160,6 +160,33 @@ function Setting({ onClose }) {
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // 마우스 위치
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
 
+  // const handleSwitchChange = async (setting) => {
+  //   const newSettings = {
+  //     ...alarmSettings,
+  //     [setting]: !alarmSettings[setting],
+  //   };
+  //   setAlarmSettings(newSettings);
+
+  //   try {
+  //     await saveAlarmSettings(userId, newSettings); // API 호출
+  //   } catch (err) {
+  //     console.error("알림 설정 저장 실패:", err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const fetchSettings = async () => {
+  //     try {
+  //       const res = await fetchAlarmSettings(userId); // API 호출
+  //       setAlarmSettings(res);
+  //     } catch (err) {
+  //       console.error("알림 설정 불러오기 실패:", err);
+  //     }
+  //   };
+
+  //   fetchSettings();
+  // }, [userId]);
+
   // 마우스를 누를 때, 드래그 시작
   const handleMouseDownSetting = (e) => {
     e.stopPropagation(); // 이벤트 버블링 막기
