@@ -1,12 +1,5 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:5173/api/calendar',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
 export const getAnniversaries = async () => {
   const res = await api.get('/anniversary');
   return res.data;

@@ -343,14 +343,14 @@ function Todo() {
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
-    { id:1, title: '첫 데이트', date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { id:2, title: '100일', date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
+    { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
+    { id:2, title: '100일', start_date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
   ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id:events.length+1, title: '', date: '', color: '#ffc0cb', type:'anniversary' });
-  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', date: '', color: '#87cefa', type:'travel', images: [] });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id:events.length+1, title: '', start_date: '', color: '#ffc0cb', type:'anniversary' });
+  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [] });
   const [viewingTravelEvent, setViewingTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
   const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
@@ -411,13 +411,13 @@ function Todo() {
     if (event.type !== activeSection) return false; // <-- 이 라인 추가
 
     if (event.type === 'anniversary') {
-      const eventDate = new Date(`${event.date}T00:00:00`);
+      const eventDate = new Date(`${event.start_date}T00:00:00`);
       return eventDate.getTime() === cellDate.getTime();
     }
 
     if (event.type === 'travel') {
-      const start = new Date(`${event.startDate}T00:00:00`);
-      const end = new Date(`${event.endDate}T00:00:00`);
+      const start = new Date(`${event.start_date}T00:00:00`);
+      const end = new Date(`${event.end_date}T00:00:00`);
       return start <= cellDate && cellDate <= end;
     }
 
@@ -506,7 +506,7 @@ function Todo() {
                             $isHovered={hoveringEventId === event.id}
                             onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setViewingTravelEvent(event) }
                           >
-                            <div title={event.type === 'travel' ? `${event.title} ${event.startDate} ~ ${event.endDate}` : `${event.title} ${event.date}`}>{event.title}</div>
+                            <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : `${event.title} ${event.date}`}>{event.title}</div>
                           </EventBox>
                         ))}
                       </StyledTd>
@@ -541,7 +541,7 @@ function Todo() {
               .filter(e => e.type === activeSection)
               .map((event, idx) => {
                 const diffDays = getDiffInDays(
-                  event.type === 'anniversary' ? event.date : event.startDate
+                  event.type === 'anniversary' ? event.start_date : event.start_date
                 );
 
                 return (
@@ -550,7 +550,7 @@ function Todo() {
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    <div title={`${event.title} ${event.type === 'anniversary'?event.date:event.startDate+' ~ '+event.endDate}`} className='eventTitle'>{event.title}</div>
+                    <div title={`${event.title} ${event.type === 'anniversary'?event.start_date:event.start_date+' ~ '+event.end_date}`} className='eventTitle'>{event.title}</div>
                     <div className='day'>
                       <div className='diff'>
                         {diffDays >= 0
@@ -561,8 +561,8 @@ function Todo() {
                       </div>
                       <ListDate>
                         {event.type === 'anniversary'
-                          ? event.date
-                          : <> {event.startDate} <br />~ {event.endDate} </> }
+                          ? event.start_date
+                          : <> {event.start_date} <br />~ {event.end_date} </> }
                       </ListDate>
                     </div>
 
@@ -607,7 +607,8 @@ function Todo() {
             const eventToAdd = {
               id: events.length + 1,
               title: newAnniversaryEvent.title,
-              date: newAnniversaryEvent.date,
+              start_date: newAnniversaryEvent.start_date,
+              end_date: null,
               color: newAnniversaryEvent.color,
               type: 'anniversary',
             };
@@ -655,8 +656,8 @@ function Todo() {
           onSubmit={(e) => {
             e.preventDefault();
 
-            const start = new Date(editingTravelEvent.startDate);
-            const end = new Date(editingTravelEvent.endDate);
+            const start = new Date(editingTravelEvent.start_date);
+            const end = new Date(editingTravelEvent.end_date);
           
             if (start > end) {
               alert('종료일은 시작일보다 빠를 수 없습니다!');
@@ -688,8 +689,8 @@ function Todo() {
           onSubmit={(e) => {
             e.preventDefault();
           
-            const start = new Date(newTravelEvent.startDate);
-            const end = new Date(newTravelEvent.endDate);
+            const start = new Date(newTravelEvent.start_date);
+            const end = new Date(newTravelEvent.end_date);
 
             if (start > end) {
               alert('종료일은 시작일보다 빠를 수 없습니다!');
@@ -699,15 +700,15 @@ function Todo() {
             const travelEvent = {
               id: events.length + 1,
               title: newTravelEvent.title,
-              startDate: newTravelEvent.startDate,
-              endDate: newTravelEvent.endDate,
+              start_date: newTravelEvent.start_date,
+              end_date: newTravelEvent.end_date,
               color: newTravelEvent.color,
               images: newTravelEvent.images || [],
               type: 'travel'
             };
 
             setEvents([...events, travelEvent]);
-            setNewTravelEvent({ title: '', startDate: '', endDate: '', color: '#ffc0cb', images: [], type: 'travel' });
+            setNewTravelEvent({ title: '', start_date: '', end_date: '', color: '#ffc0cb', images: [], type: 'travel' });
             setIsTravelModalOpen(false);
             setTravelPaletteOpen(false);
           }}

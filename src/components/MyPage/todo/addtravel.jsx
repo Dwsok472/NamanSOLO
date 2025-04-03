@@ -7,7 +7,7 @@ import RightKey from '../../img/rightkey.png';
 const CardWrap = styled.div`
   width: 500px;
   position: absolute;
-  top: 58%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
@@ -321,14 +321,14 @@ function AddTravel({
             <Row>
               <Input
                 type="date"
-                value={newEvent.startDate || ''}
-                onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
+                value={newEvent.start_date || ''}
+                onChange={(e) => setNewEvent({ ...newEvent, start_date: e.target.value })}
                 required
               />
               <Input
                 type="date"
-                value={newEvent.endDate || ''}
-                onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
+                value={newEvent.end_date || ''}
+                onChange={(e) => setNewEvent({ ...newEvent, end_date: e.target.value })}
                 required
               />
             </Row>

@@ -7,7 +7,7 @@ import RightKey from '../../img/rightkey.png';
 const CardWrap = styled.div`
   width: 500px;
   position: absolute;
-  top: 58%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
@@ -23,7 +23,7 @@ const Card = styled.div`
 `;
 
 const Top = styled.div`
-  height: 60px;
+  height: 75px;
   background-color: #ffdcd6;
   font-size: 1.5rem;
   font-weight: bold;
@@ -164,7 +164,7 @@ function DetailTravel({ event, onClose, onEdit }) {
 
         <Bottom>
           <Info><strong>{event.title}</strong></Info>
-          <Info>{event.startDate} ~ {event.endDate}</Info>
+          <Info>{event.start_date} ~ {event.end_date}</Info>
           <ColorSection>
             <SelectedColorPreview color={event.color} />
           </ColorSection>

@@ -7,14 +7,13 @@ import RightKey from '../../img/rightkey.png';
 const CardWrap = styled.div`
   width: 500px;
   position: absolute;
-  top: 58%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
 `;
 
 const Card = styled.div`
-  height: 600px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
@@ -23,7 +22,7 @@ const Card = styled.div`
 `;
 
 const Top = styled.div`
-  height: 15%;
+  height: 75px;
   background-color: #ffdcd6;
   font-size: 1.5rem;
   font-weight: bold;
@@ -329,14 +328,14 @@ function Edittravel({
             <Row>
               <Input
                 type="date"
-                value={event.startDate || ''}
-                onChange={(e) => setEvent({ ...event, startDate: e.target.value })}
+                value={event.start_date || ''}
+                onChange={(e) => setEvent({ ...event, start_date: e.target.value })}
                 required
               />
               <Input
                 type="date"
-                value={event.endDate || ''}
-                onChange={(e) => setEvent({ ...event, endDate: e.target.value })}
+                value={event.end_date || ''}
+                onChange={(e) => setEvent({ ...event, end_date: e.target.value })}
                 required
               />
             </Row>

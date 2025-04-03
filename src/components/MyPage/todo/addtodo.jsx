@@ -5,14 +5,14 @@ import { IconClose } from '../../Icons';
 const CardWrap = styled.div`
   width: 500px;
   position: absolute;
-  top: 58%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10;
 `;
 
 const Card = styled.div`
-  height: 400px;
+  height: 600px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
