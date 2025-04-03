@@ -121,15 +121,15 @@ const AlbumBoard = () => {
   useEffect(() => {
     setData([
       { id: 1, imgurl: [couple1, couple2, couple3, couple4], title: "첫 나들이", date: "2025-01-01", username: "user1", tag: ["맛집", "행복"] },
-      { id: 2, imgurl: [couple2, couple1, couple3, couple4], title: "첫 데이트", date: "2025-01-01", username: "user2", tag: ["맛집", "행복"] },
-      { id: 3, imgurl: [couple3, couple1, couple2, couple4], title: "평화로운 주말", date: "2025-01-01", username: "user3", tag: ["맛집", "행복"] },
-      { id: 4, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user4", tag: ["맛집", "행복"] },
-      { id: 5, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user5", tag: ["맛집", "행복"] },
-      { id: 6, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user6", tag: ["맛집", "행복"] },
-      { id: 7, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user7", tag: ["맛집", "행복"] },
-      { id: 8, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user8", tag: ["맛집", "행복"] },
-      { id: 9, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user9", tag: ["맛집", "행복"] },
-      { id: 10, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user10", tag: ["맛집", "행복"] }
+      { id: 2, imgurl: [couple2, couple1, couple3, couple4], title: "첫 데이트", date: "2025-01-01", username: "user2", tag: ["사랑", "싸움"] },
+      { id: 3, imgurl: [couple3, couple1, couple2, couple4], title: "평화로운 주말", date: "2025-01-01", username: "user3", tag: ["힐링", "후회"] },
+      { id: 4, imgurl: [couple4, couple1, couple3, couple4], title: "사랑과 전쟁", date: "2025-01-01", username: "user4", tag: ["기타", "등등"] },
+      { id: 5, imgurl: [couple4, couple1, couple3, couple4], title: "왜 너는 나를 만나서", date: "2025-01-01", username: "user5", tag: ["맛집", "행복"] },
+      { id: 6, imgurl: [couple4, couple1, couple3, couple4], title: "나를 아프게 하니", date: "2025-01-01", username: "user6", tag: ["맛집", "행복"] },
+      { id: 7, imgurl: [couple4, couple1, couple3, couple4], title: "나만 솔로", date: "2025-01-01", username: "user7", tag: ["맛집", "행복"] },
+      { id: 8, imgurl: [couple4, couple1, couple3, couple4], title: "응 너만 솔로", date: "2025-01-01", username: "user8", tag: ["맛집", "행복"] },
+      { id: 9, imgurl: [couple4, couple1, couple3, couple4], title: "하핫", date: "2025-01-01", username: "user9", tag: ["맛집", "행복"] },
+      { id: 10, imgurl: [couple4, couple1, couple3, couple4], title: "자고 싶다", date: "2025-01-01", username: "user10", tag: ["맛집", "행복"] }
     ]);
     setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
   }, []); // 최초 렌더링 시 데이터 불러오기
