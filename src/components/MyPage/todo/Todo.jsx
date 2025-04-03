@@ -302,7 +302,7 @@ const List = styled.ul`
 
 const ListItem = styled.li`
   font-weight: 700;
-  padding: 5px 0;
+  padding: 9px 0;
   border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
@@ -321,7 +321,7 @@ const ListItem = styled.li`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-top: -3%;
+    margin-top: -1%;
     line-height: 1.2;
     div.diff {
       color: #333;
