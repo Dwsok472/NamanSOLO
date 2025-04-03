@@ -8,6 +8,7 @@ import StarButton from './StarButton';
 import HeartButton from './HeartButton';
 import CommentButton from './CommentButton';
 import comment from '../img/comment.png'
+import Comment from './Comment';
 const Container = styled.div`
 width: 100%;
   background-color: #0e0e0e;
@@ -53,6 +54,9 @@ position: relative;
     position:absolute;
     right:5px;
     top:35%
+  }.boxwrap{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
   .box{
     font-size: 0.8rem;
@@ -72,7 +76,7 @@ position: relative;
   .button{
     display :flex;
     justify-content: end;
-    width: 70%;
+    padding-right: 5px;
 
   }
   .comment{
@@ -90,13 +94,18 @@ position: relative;
     border-bottom:1px solid white;
     margin-left: 10px;
     margin-right: 10px;
+    margin-bottom: 10px;
   }
 `
-
+const CommentBox = styled.div`
+    
+`
 
 function AlbumDetail({ albumData }) {
     const [albumDetail, setAlbumDetail] = useState(albumData);
     const [imageIndex, setImageIndex] = useState(0);
+    const [isCommentVisible, setIsCommentVisible] = useState(false);
+    const [selectedAlbumId, setSelectedAlbumId] = useState(null); // 선택된 앨범 ID
 
     // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
     const prevImage = () => {
@@ -106,6 +115,17 @@ function AlbumDetail({ albumData }) {
     const nextImage = () => {
         setImageIndex((prevIndex) => (prevIndex < albumDetail.imgurl.length - 1 ? prevIndex + 1 : 0));
     };
+    // 댓글 모음 토글 함수
+    const toggleCommentVisibility = (albumId) => {
+        // 같은 앨범을 다시 클릭하면 댓글을 숨기고, 다른 앨범을 클릭하면 댓글을 보이게 설정
+        if (selectedAlbumId === albumId) {
+            setIsCommentVisible((prev) => !prev); // 동일 앨범 클릭 시 토글
+        } else {
+            setSelectedAlbumId(albumId); // 새로운 앨범 클릭 시 해당 앨범으로 설정
+            setIsCommentVisible(true); // 새로운 앨범 댓글 보이게 설정
+        }
+    };
+
     useEffect(() => {
         if (albumData) {
             setAlbumDetail(albumData);
@@ -123,12 +143,16 @@ function AlbumDetail({ albumData }) {
                     <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />
                     <img src={albumDetail.imgurl[imageIndex]} alt="image" className='image' />
                     <img src={rightkey} alt="rightkey" className="rightkey" onClick={nextImage} />
-                    <div className='box'>
-                        <div className='username'>{albumDetail.username}</div>
-                        <div className='title'>{albumDetail.title}</div>
+
+                    <div className='boxwrap'>
+                        <div className='box'>
+                            <div className='username'>{albumDetail.username}</div>
+                            <div className='title'>{albumDetail.title}</div>
+                        </div>
                         <div className='button'>
                             <HeartButton />
-                            <img src={comment} alt="comment" className='comment' />
+                            <img src={comment} alt="comment" className='comment'
+                                onClick={() => toggleCommentVisibility(albumDetail.id)} />
                         </div>
                     </div>
                     <div className='tags'>{
@@ -141,8 +165,14 @@ function AlbumDetail({ albumData }) {
                         ) : (
                             <span>{" "}</span>
                         )}
+
                     </div>
                 </Box>
+                {isCommentVisible && selectedAlbumId === albumDetail.id && (
+                    <CommentBox>
+                        <Comment albumData={albumData} />
+                    </CommentBox>
+                )}
             </Main>
         </Container >
     )

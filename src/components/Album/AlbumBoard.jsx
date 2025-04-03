@@ -73,7 +73,6 @@ const PhotoArea = styled.div`
   height: 100%;
   justify-content: center;
   align-items: center;
-
 `;
 
 const EmojiTopLeft = styled.img`

@@ -91,3 +91,39 @@ export function getAllUsername() {
 export function searchUsernameByKeyword(keyword) {
   return axios.get(``);
 }
+
+export function getAllCommentByAlbumId(albumId) {
+  return axios.get(``);
+}
+
+export function getAllReCommentByCommentId(commentId) {
+  return axios.get(``);
+}
+
+
+export async function AddCommentByAlbumId(albumId) {
+  try {
+    // 서버로 중복 확인 요청
+    const response = await axios.post('', {
+      data,
+    });
+    return response.data; // 서버에서 반환한 데이터
+  } catch (error) {
+    alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+    throw error; // 에러 처리
+  }
+}
+
+export async function ReCommentByCommentId(commentId) {
+  try {
+    // 서버로 중복 확인 요청
+    const response = await axios.post('', {
+      data,
+    });
+    return response.data; // 서버에서 반환한 데이터
+  } catch (error) {
+    alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+    throw error; // 에러 처리
+  }
+}
+

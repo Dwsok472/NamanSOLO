@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import ReComment from "./ReComment";
-import { AddCommentByAlbumId, getAllCommentByAlbumId } from "../api";
-
 const Container = styled.div`
 width:100%;
 color: white;
 `
-const CommentList = styled.div`
-width: 100%;
+const ReCommentList = styled.div`
+width: 90%;
 display: flex;
 flex-direction: column;
+margin: 0 auto;
 `
 const Box = styled.div`
 width:100%;
 border-bottom: 1px solid #c0c0c033;
-font-size: 0.8rem;
+font-size: 0.7rem;
 color: #ffffff;
 padding: 3px;
 .username{
@@ -38,7 +36,7 @@ const InputWrap = styled.div`
   margin-top: 12px;
   margin-left: auto;
   margin-right: auto;
-  width: 90%;
+  width: 80%;
 `;
 
 const Input = styled.input`
@@ -56,35 +54,31 @@ const SubmitButton = styled.button`
   color: white;
   font-weight: 700;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   border-radius: 0;
 `;
 
-
-function Comment({ albumData }) {
+function ReComment({ commentId }) {
     const [value, setValue] = useState("");
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);  // 로딩 상태
 
-    console.log(albumData.id);
-
-
     useEffect(() => {
         const sendData = [
-            { id: 1, albumId: 2, text: "행복해 보이세요", username: "user1", date: "2025-01-01" },
-            { id: 2, albumId: 2, text: "어디로 놀러가신건가요 ?", username: "user2", date: "2025-01-02" },
-            { id: 3, albumId: 3, text: "부럽네요", username: "user3", date: "2025-01-03" },
-            { id: 4, albumId: 4, text: "저도 가고싶네요", username: "user4", date: "2025-01-04" },
-            { id: 5, albumId: 5, text: "커플 프로필 찍으신건가요", username: "user5", date: "2025-01-05" }
+            { id: 1, commentId: 2, text: "1", username: "user1", date: "2025-01-01" },
+            { id: 2, commentId: 3, text: "2", username: "user2", date: "2025-01-02" },
+            { id: 3, commentId: 4, text: "3", username: "user3", date: "2025-01-03" },
+            { id: 4, commentId: 5, text: "4", username: "user4", date: "2025-01-04" },
+            { id: 5, commentId: 1, text: "5", username: "user5", date: "2025-01-05" }
         ]
-        const filterdata = sendData.filter((e) => e.albumId === albumData.id);
+        const filterdata = sendData.filter((e) => e.commentId === commentId);
         setData(filterdata);
         setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
-    }, [albumData.id]);
+    }, [commentId]);
 
 
     const handleSubmit = () => {
-        AddComment(); // 댓글 등록 함수 호출
+        AddRecomment(); // 댓글 등록 함수 호출
     };
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
@@ -92,17 +86,17 @@ function Comment({ albumData }) {
         }
     };
 
-    const AddComment = async () => {
+    const AddRecomment = async () => {
         if (value.trim() === "") return; // 빈 댓글이 입력되면 등록하지 않음
 
-        const newComment = {
+        const newRecomment = {
             id: 6,
-            albumId: albumData.id,
+            commentId: commentId,
             text: value,
             username: "user1",
             date: new Date().toISOString().split('T')[0],
         };
-        setData((prevComments) => [...prevComments, newComment]);
+        setData((prevRecomments) => [...prevRecomments, newRecomment]);
         setValue("");
     }
     // const AddComment = async () => {
@@ -110,18 +104,18 @@ function Comment({ albumData }) {
 
     //     const newComment = {
     //         id: 6,
-    //         albumId: albumData.id,
+    //         commentId: comment.id,
     //         text: value,
     //         username: "user1",  // 실제 사용자 이름으로 변경
     //         date: new Date().toISOString().split('T')[0], // 현재 날짜 (YYYY-MM-DD 형식)
     //     };
 
     //     try {
-    //         // 서버에 댓글을 추가하는 API 요청 (AddCommentByAlbumId는 실제 API 호출 함수로 바꿔야 함)
-    //         let response = await AddCommentByAlbumId(albumData.id, newComment);
+    //         // 서버에 댓글을 추가하는 API 요청 (AddRecommentByCommentId는 실제 API 호출 함수로 바꿔야 함)
+    //         let response = await AddRecommentByCommentId(comment.id, newRecomment);
 
     //         // 새로운 댓글을 기존 데이터에 추가
-    //         setData((prevComments) => [...prevComments, response]);
+    //         setData((prevRecomments) => [...prevRecomments, response]);
     //         setValue(""); // 댓글 입력 필드 초기화
     //     } catch (error) {
     //         console.error("댓글 등록에 실패했습니다.", error);
@@ -132,7 +126,7 @@ function Comment({ albumData }) {
     // useEffect(() => {
     //     getAllComment();
     // })
-    // async function getAllComment() {
+    // async function getAllReComment() {
     //     try {
     //         let response = await getAllCommentByAlbumId(albumData.id);
     //         if (!response || response.length === 0) {
@@ -148,19 +142,17 @@ function Comment({ albumData }) {
 
     return (
         <Container>
-            <CommentList>
+            <ReCommentList>
                 {loading ? (<p>LOADING...</p>) : (
-                    data.map((comment) => (
-                        <Box key={comment.id}>
-                            <span className="username">{comment.username}</span>
-                            <span className="date">{comment.date}</span>
-                            <Text>{comment.text}</Text>
-                            <ReComment commentId={comment.id} />
+                    data.map((recomment) => (
+                        <Box key={recomment.id}>
+                            <span className="username">{recomment.username}</span>
+                            <span className="date">{recomment.date}</span>
+                            <Text>{recomment.text}</Text>
                         </Box>
                     ))
                 )}
-
-            </CommentList>
+            </ReCommentList>
             <InputWrap>
                 <Input
                     placeholder="댓글을 입력하세요"
@@ -170,10 +162,8 @@ function Comment({ albumData }) {
                 />
                 <SubmitButton onClick={handleSubmit}>등록</SubmitButton>
             </InputWrap>
-
         </Container>
+    )
+}
 
-    );
-};
-
-export default Comment
+export default ReComment
