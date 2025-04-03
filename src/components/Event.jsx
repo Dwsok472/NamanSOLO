@@ -9,7 +9,7 @@ function Event() {
   const Title = styled.h1`
     text-align: center;
     font-size: 2rem;
-    color: #333;
+    color : #C6B8E7;
     margin-bottom: 40px;
   `;
 
@@ -28,15 +28,15 @@ function Event() {
     padding: 28px 24px;
     background-color: ${(props) =>
       props.$gender === 'male' ? '#eef6ff' : '#fff0f5'};
-    border: 2px solid
-      ${(props) => (props.$gender === 'male' ? '#a3c8f2' : '#ffc9d9')};
+    border: 2px solid ${(props) => (props.$gender === 'male' ? '#a3c8f2' : '#ffc9d9')};
     box-shadow: 0 6px 16px rgba(200, 200, 200, 0.15);
   `;
 
   const SubTitle = styled.h2`
     font-size: 1.4rem;
     margin-bottom: 20px;
-    color: #444;
+    color: ${(props) =>
+      props.$gender === 'male' ? '#66b' : '#f013' };
     text-align: center;
     background-color: #ffffffcc;
     padding: 8px 12px;
@@ -129,7 +129,7 @@ function Event() {
       <Title>남자/여자 선물 추천 탑 10</Title>
       <CategoryContainer>
         <Category $gender="male">
-          <SubTitle>남자 선물 추천</SubTitle>
+          <SubTitle $gender="male">남자 선물 추천</SubTitle>
           <GiftList>
             {Array.isArray(maleGifts) && maleGifts.map((gift, index) => (
               <GiftItem key={index} title={stripHTML(gift.title)}>
@@ -144,7 +144,7 @@ function Event() {
         </Category>
 
         <Category $gender="female">
-          <SubTitle>여자 선물 추천</SubTitle>
+          <SubTitle $gender="female">여자 선물 추천</SubTitle>
           <GiftList>
             {Array.isArray(femaleGifts) && femaleGifts.map((gift, index) => (
               <GiftItem key={index} title={stripHTML(gift.title)}>

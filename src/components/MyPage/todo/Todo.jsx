@@ -103,6 +103,7 @@ const YearButton = styled.button`
 
   &:hover {
     background-color: #ffedf0;
+    font-weight: 600;
   }
 
   &:focus {
@@ -117,44 +118,61 @@ const MonthGrid = styled.div`
 `;
 
 const MonthBox = styled.div`
+  justify-content: center;       
+  align-items: center;
+  display: flex;  
   padding: 10px 0;
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
+  &:hover {
+    background-color: #ffedf0;
+    font-weight: 600;
+  }
 `;
 
 const StyledTable = styled.table`
   width: 100%;
   table-layout: fixed;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: #fff;
-  border-radius: 12px;
+  border-radius: 6px;
   overflow: hidden;
-  tr{
-    border: 0.5px solid black;
+  border: 0.5px solid #6b5c5c;
+
+  thead tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+  }
+
+  thead tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+  }
+
+  tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+  }
+
+  tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
   }
 `;
 
 const StyledTh = styled.th`
-  border: 0.5px solid black;
-  padding: 8px 0;
+  border: 0.5px solid #6b5c5c;
+  padding: 8px;
   background-color: #fff0f2;
-  font-weight: 600;
-  color: #444;
+  color: #333;
   text-align: center;
-  height: 20px;
-  &:first-child {
-    border: 0.5 solid black;
-  }
 `;
 
 const StyledTd = styled.td`
-  background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
-  padding: 2px;
+  border: 0.5px solid #6b5c5c;
+  padding: 4px;
+  height: 100px;
   vertical-align: top;
   text-align: right;
-  height: 105px;
-  border: 0.5px solid black;
+  background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
 `;
 
 const DayCell = styled.div`
@@ -320,10 +338,14 @@ function Todo() {
     const startDay = firstDay.getDay();
 
     const calendarCells = [
-      ...Array.from({ length: startDay }),
+      ...Array.from({ length: startDay }), 
       ...Array.from({ length: daysInMonth }, (_, i) => new Date(currentYear, currentMonth, i + 1)),
     ];
-
+  
+    while (calendarCells.length % 7 !== 0) {
+      calendarCells.push(null);
+    }
+  
     return calendarCells.reduce((weeks, day, i) => {
       if (i % 7 === 0) weeks.push([]);
       weeks[weeks.length - 1].push(day);
@@ -417,7 +439,7 @@ function Todo() {
               {generateCalendar().map((week, wIdx) => (
                 <tr key={wIdx}>
                   {week.map((date, dIdx) => {
-                    if (!date) return <StyledTd key={dIdx} />;
+                    if (!date) {return <StyledTd key={dIdx} />};
                     const dateStr = date.toISOString().split('T')[0];
                     const isToday = dateStr === today.toISOString().split('T')[0];
                     return (
