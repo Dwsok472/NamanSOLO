@@ -173,9 +173,6 @@ function RightBox({ albumData }) {
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
   const urlKeyword = new URLSearchParams(location.search).get('username');
 
-  // 앨범 ID를 URL에서 받아오기
-  const albumId = new URLSearchParams(location.search).get('albumId');
-
   //임시용
   useEffect(() => {
     setAllUsers([
@@ -301,10 +298,10 @@ function RightBox({ albumData }) {
           </SearchResults>
         )}
       </MiddleBox>
-      <BottomBox>{albumId && albumData &&
-        <AlbumDetail albumId={albumId} albumData={albumData} />
-      }
-      </BottomBox>
+      {albumData &&
+        <BottomBox>
+          <AlbumDetail albumData={albumData} />
+        </BottomBox>}
     </Container>
   );
 }

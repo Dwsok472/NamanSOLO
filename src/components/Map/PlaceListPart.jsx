@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+// import { getAllPlaces } from '../api/api1';
+// import { createPlace, updatePlace, deletePlace } from '../api/api1';
+// import { getPlacesByRegion } from '../api/api1';
+// import { getPlacesByCategory } from '../api/api1';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -165,6 +169,125 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [showMap, setShowMap] = useState(false);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const [mapId, setMapId] = useState(null);
+
+  // 카테고리별 장소조회 함수에서 카테고리별 가져온 리스트 저장하는거
+  // const [filteredPlaces, setFilteredPlaces] = useState([]);
+
+  // 장소목록 전체체 불러오는 함수 api1
+  // const [places, setPlaces] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchPlaces = async () => {
+  //     try {
+  //       const placesData = await getAllPlaces(); 
+  //       setPlaces(placesData);
+  //     } catch (error) {
+  //       console.error("장소 목록 불러오기 실패", error);
+  //     }
+  //   };
+
+  //   fetchPlaces();
+  // }, []);
+  // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  
+  // 지역별로 장소 불러오기
+  // useEffect(() => {
+  //   if (!selectedRegion) return;
+  
+  //   const fetchPlaces = async () => {
+  //     try {
+  //       const data = await getPlacesByRegion(selectedRegion);
+  //       setRegionPlaces(prev => ({ ...prev, [selectedRegion]: data }));
+  //     } catch (err) {
+  //       console.error("지역별 장소 조회 실패", err);
+  //     }
+  //   };
+  
+  //   fetchPlaces();
+  // }, [selectedRegion]); 
+// ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  // ***생성
+  // const handleRegister = async () => {
+  //   try {
+  //     const response = await createPlace(newPlace);
+  //     const updated = [...places, {
+  //       id: response.id,
+  //       ...newPlace,
+  //       thumbnail: typeof newPlace.image === 'string'
+  //         ? newPlace.image
+  //         : URL.createObjectURL(newPlace.image),
+  //     }];
+  //     setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
+  //     setShowForm(false);
+  //   } catch (error) {
+  //     console.error('등록 실패', error);
+  //   }
+  // };
+  
+  // *** 수정
+  // const handleUpdate = async () => {
+  //   try {
+  //     const response = await updatePlace(editingId, newPlace);
+  //     const updated = places.map((p) =>
+  //       p.id === editingId
+  //         ? {
+  //             ...p,
+  //             ...newPlace,
+  //             thumbnail: typeof newPlace.image === 'string'
+  //               ? newPlace.image
+  //               : URL.createObjectURL(newPlace.image),
+  //           }
+  //         : p
+  //     );
+  //     setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
+  //     setEditingId(null);
+  //   } catch (error) {
+  //     console.error('수정 실패', error);
+  //   }
+  // };
+  
+  // ***삭제
+  // const handleDelete = async (id) => {
+  //   if (!window.confirm('정말 삭제하시겠습니까?')) return;
+  //   try {
+  //     await deletePlace(id);
+  //     const updated = places.filter(p => p.id !== id);
+  //     setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
+  //   } catch (error) {
+  //     console.error('삭제 실패', error);
+  //   }
+  // };
+
+  // *** 지역별 장소조회
+
+  // useEffect(() => {
+  //   if (!selectedRegion) return;
+  
+  //   const fetchPlaces = async () => {
+  //     try {
+  //       const regionData = await getPlacesByRegion(selectedRegion);
+  //       setRegionPlaces(prev => ({ ...prev, [selectedRegion]: regionData }));
+  //     } catch (err) {
+  //       console.error("지역별 장소 조회 실패", err);
+  //     }
+  //   };
+  
+  //   fetchPlaces();
+  // }, [selectedRegion]);
+
+  // *** 카테고리별 장소조회
+  // const handleCategoryClick = async (category) => {
+  //   try {
+  //     const data = await getPlacesByCategory(category);
+  //     setFilteredPlaces(data); // 상태는 이름 자유롭게
+  //   } catch (err) {
+  //     console.error('카테고리 조회 실패', err);
+  //   }
+  // };
+
+  // 나중에 jsx 에 등록해서 써야함
+//   <button onClick={() => handleCategoryClick('카페')}>카페</button>
+// <button onClick={() => handleCategoryClick('맛집')}>맛집</button>
 
   const [newPlace, setNewPlace] = useState({
     name: '',
