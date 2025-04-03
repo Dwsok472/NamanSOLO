@@ -12,6 +12,17 @@ import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1;
+`;
+
 const Wrapper = styled.div`
   font-family: sans-serif;
   color: #333;
@@ -344,12 +355,12 @@ function Todo() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
     { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { id:2, title: '100일', start_date: '2025-04-10', color: '#ffc0cb', type:'anniversary' },
+    { id:2, title: '100일', start_date: '2025-04-10', color: '#ffc0cb', type:'anniversary', fixed:true },
   ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id:events.length+1, title: '', start_date: '', color: '#ffc0cb', type:'anniversary' });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary' });
   const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [] });
   const [viewingTravelEvent, setViewingTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
@@ -426,295 +437,299 @@ function Todo() {
   };
 
   const getDiffInDays = (dateStr) => {
-    const eventDate = new Date(`${dateStr}T00:00:00`);
-    eventDate.setHours(0, 0, 0, 0);
-    return Math.floor((eventDate - today) / (1000 * 60 * 60 * 24));
+    const event_date = new Date(`${dateStr}T00:00:00`);
+    event_date.setHours(0, 0, 0, 0);
+    return Math.floor((event_date - today) / (1000 * 60 * 60 * 24));
   };
 
   const [activeSection, setActiveSection] = useState('anniversary');
 
   return (
-    <Wrapper>
-      <Main>
-        <CalendarSection>
-          <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
-            {currentYear}년 {currentMonth + 1}월 ⬇
-            <AddTravelButton
-              onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}
-            >
-              <AddButtonImage src={Plus} />
-            </AddTravelButton>
-          </CalendarHeader>
+    <>
+    {(isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewingTravelEvent) && <Overlay />}
+      <Wrapper>
+        <Main>
+          <CalendarSection>
+            <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
+              {currentYear}년 {currentMonth + 1}월 ⬇
+              <AddTravelButton
+                onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}
+              >
+                <AddButtonImage src={Plus} />
+              </AddTravelButton>
+            </CalendarHeader>
 
-          {isPickerOpen && (
-            <YearPickerWrap>
-              <YearButtons>
-                <YearArrow src={LeftKey} onClick={() => setYearRangeStart(yearRangeStart - 5)}/>
-                {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map(year => (
-                  <YearButton
-                    key={year}
-                    $active={year === selectedYear}
-                    onClick={() => setSelectedYear(year)}
-                  >
-                    {year}
-                  </YearButton>
-                ))}
-                <YearArrow src={RightKey} onClick={() => setYearRangeStart(yearRangeStart + 5)}/>
-              </YearButtons>
-              <MonthGrid>
-                {Array.from({ length: 12 }, (_, i) => (
-                  <MonthBox
-                    key={i}
-                    onClick={() => {
-                      setCurrentYear(selectedYear);
-                      setCurrentMonth(i);
-                      setIsPickerOpen(false);
-                    }}
-                  >
-                    {i + 1}월
-                  </MonthBox>
-                ))}
-              </MonthGrid>
-            </YearPickerWrap>
-          )}
+            {isPickerOpen && (
+              <YearPickerWrap>
+                <YearButtons>
+                  <YearArrow src={LeftKey} onClick={() => setYearRangeStart(yearRangeStart - 5)}/>
+                  {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map(year => (
+                    <YearButton
+                      key={year}
+                      $active={year === selectedYear}
+                      onClick={() => setSelectedYear(year)}
+                    >
+                      {year}
+                    </YearButton>
+                  ))}
+                  <YearArrow src={RightKey} onClick={() => setYearRangeStart(yearRangeStart + 5)}/>
+                </YearButtons>
+                <MonthGrid>
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <MonthBox
+                      key={i}
+                      onClick={() => {
+                        setCurrentYear(selectedYear);
+                        setCurrentMonth(i);
+                        setIsPickerOpen(false);
+                      }}
+                    >
+                      {i + 1}월
+                    </MonthBox>
+                  ))}
+                </MonthGrid>
+              </YearPickerWrap>
+            )}
 
-          <StyledTable>
-            <thead>
-              <tr>
-                {['일', '월', '화', '수', '목', '금', '토'].map(day => (
-                  <StyledTh key={day}>{day}</StyledTh>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {generateCalendar().map((week, wIdx) => (
-                <tr key={wIdx}>
-                  {week.map((date, dIdx) => {
-                    if (!date) {return <StyledTd key={dIdx} />};
-                    const dateStr = date.toISOString().split('T')[0];
-                    const isToday = dateStr === today.toISOString().split('T')[0];
-                    return (
-                      <StyledTd key={dIdx} $isToday={isToday}>
-                        <DayCell>{date.getDate()}</DayCell>
-                        {getEventsForDay(date).map((event, i) => (
-                          <EventBox
-                            key={i}
-                            color={event.color}
-                            className={`${event.type}${event.id}`}
-                            onMouseEnter={() => setHoveringEventId(event.id)}
-                            onMouseLeave={() => setHoveringEventId(null)}
-                            $isHovered={hoveringEventId === event.id}
-                            onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setViewingTravelEvent(event) }
-                          >
-                            <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : `${event.title} ${event.date}`}>{event.title}</div>
-                          </EventBox>
-                        ))}
-                      </StyledTd>
-                    );
-                  })}
+            <StyledTable>
+              <thead>
+                <tr>
+                  {['일', '월', '화', '수', '목', '금', '토'].map(day => (
+                    <StyledTh key={day}>{day}</StyledTh>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </StyledTable>
-        </CalendarSection>
+              </thead>
+              <tbody>
+                {generateCalendar().map((week, wIdx) => (
+                  <tr key={wIdx}>
+                    {week.map((date, dIdx) => {
+                      if (!date) {return <StyledTd key={dIdx} />};
+                      const dateStr = date.toISOString().split('T')[0];
+                      const isToday = dateStr === today.toISOString().split('T')[0];
+                      return (
+                        <StyledTd key={dIdx} $isToday={isToday}>
+                          <DayCell>{date.getDate()}</DayCell>
+                          {getEventsForDay(date).map((event, i) => (
+                            <EventBox
+                              key={i}
+                              color={event.color}
+                              className={`${event.type}${event.id}`}
+                              onMouseEnter={() => setHoveringEventId(event.id)}
+                              onMouseLeave={() => setHoveringEventId(null)}
+                              $isHovered={hoveringEventId === event.id}
+                              onClick={() => event.type === 'anniversary' ? (!event.fixed ?setEditingTodoEvent(event):null) : setViewingTravelEvent(event) }
+                            >
+                              <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (event.fixed?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
+                            </EventBox>
+                          ))}
+                        </StyledTd>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </StyledTable>
+          </CalendarSection>
 
-        <AnniversarySection>
-          <AddButton onClick={() => {
-            activeSection === 'anniversary'
-              ? setIsModalOpen(true)
-              : setIsTravelModalOpen(true)
-          }}>
-            <AddButtonImage src={Plus}/>
-          </AddButton>
+          <AnniversarySection>
+            <AddButton onClick={() => {
+              activeSection === 'anniversary'
+                ? setIsModalOpen(true)
+                : setIsTravelModalOpen(true)
+            }}>
+              <AddButtonImage src={Plus}/>
+            </AddButton>
 
-          <SectionH3
-            onClick={() =>
-              setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary')
-            }
-            title="클릭해서 전환"
-          >
-            {activeSection === 'anniversary' ? '우리의 기념일' : '놀러간 일정'} <img src={Rotate} />
-          </SectionH3>
+            <SectionH3
+              onClick={() =>
+                setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary')
+              }
+              title="클릭해서 전환"
+            >
+              {activeSection === 'anniversary' ? '우리의 기념일' : '놀러간 일정'} <img src={Rotate} />
+            </SectionH3>
 
-          <List>
-            {events
-              .filter(e => e.type === activeSection)
-              .map((event, idx) => {
-                const diffDays = getDiffInDays(
-                  event.type === 'anniversary' ? event.start_date : event.start_date
-                );
+            <List>
+              {events
+                .filter(e => e.type === activeSection)
+                .map((event, idx) => {
+                  const diffDays = getDiffInDays(
+                    event.type === 'anniversary' ? event.start_date : event.start_date
+                  );
 
-                return (
-                  <ListItem
-                    key={idx}
-                    onMouseEnter={() => setHoveredItem(idx)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                  >
-                    <div title={`${event.title} ${event.type === 'anniversary'?event.start_date:event.start_date+' ~ '+event.end_date}`} className='eventTitle'>{event.title}</div>
-                    <div className='day'>
-                      <div className='diff'>
-                        {diffDays >= 0
-                          ? diffDays === 0
-                            ? 'Today'
-                            : `D -${diffDays}`
-                          : `D +${Math.abs(diffDays)}`}
+                  return (
+                    <ListItem
+                      key={idx}
+                      onMouseEnter={() => setHoveredItem(idx)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                    >
+                      <div title={`${ event.type === 'anniversary'?
+                        (event.fixed ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
+                        : event.title + ' ' + event.start_date+' ~ '+event.end_date }`} className='eventTitle'>{event.title}</div>
+                      <div className='day'>
+                        <div className='diff'>
+                          {diffDays >= 0
+                            ? diffDays === 0
+                              ? 'Today'
+                              : `D -${diffDays}`
+                            : `D +${Math.abs(diffDays)}`}
+                        </div>
+                        <ListDate>
+                          {event.type === 'anniversary'
+                            ? event.start_date
+                            : <> {event.start_date} <br />~ {event.end_date} </> }
+                        </ListDate>
                       </div>
-                      <ListDate>
-                        {event.type === 'anniversary'
-                          ? event.start_date
-                          : <> {event.start_date} <br />~ {event.end_date} </> }
-                      </ListDate>
-                    </div>
 
-                    {hoveredItem === idx && (
-                      <>
-                        <IconButton onClick={() => handleDelete(event)}>
-                          <IconClose />
-                        </IconButton>
-                        <EditButton
-                          onClick={() =>
-                            event.type === 'anniversary'
-                              ? setEditingTodoEvent({ ...event })
-                              : setEditingTravelEvent({ ...event })
-                          }
-                        >
-                          <IconEdit />
-                        </EditButton>
-                      </>
-                    )}
-                  </ListItem>
-                );
-              })}
-          </List>
-        </AnniversarySection>
-      </Main>
+                      {hoveredItem === idx && !event.fixed && (
+                        <>
+                          <IconButton onClick={() => handleDelete(event)}>
+                            <IconClose />
+                          </IconButton>
+                          <EditButton
+                            onClick={() =>
+                              event.type === 'anniversary'
+                                ? setEditingTodoEvent({ ...event })
+                                : setEditingTravelEvent({ ...event })
+                            }
+                          >
+                            <IconEdit />
+                          </EditButton>
+                        </>
+                      )}
+                    </ListItem>
+                  );
+                })}
+            </List>
+          </AnniversarySection>
+        </Main>
 
-      {isModalOpen && (
-        <Addtodo
-          name="기념일 일정 추가"
-          onClose={() => {
-            setIsModalOpen(false);
-            setAnniversaryPaletteOpen(false);
-          }}
-          newEvent={newAnniversaryEvent}
-          setNewEvent={setNewAnniversaryEvent}
-          paletteOpen={anniversaryPaletteOpen}
-          setPaletteOpen={setAnniversaryPaletteOpen}
-          colorSamples={colorSamples}
-          onSubmit={(e) => {
-            e.preventDefault();
+        {isModalOpen && (
+          <Addtodo
+            name="기념일 일정 추가"
+            onClose={() => {
+              setIsModalOpen(false);
+              setAnniversaryPaletteOpen(false);
+            }}
+            newEvent={newAnniversaryEvent}
+            setNewEvent={setNewAnniversaryEvent}
+            paletteOpen={anniversaryPaletteOpen}
+            setPaletteOpen={setAnniversaryPaletteOpen}
+            colorSamples={colorSamples}
+            onSubmit={(e) => {
+              e.preventDefault();
+              
+              const eventToAdd = {
+                id: events.length + 1,
+                title: newAnniversaryEvent.title,
+                start_date: newAnniversaryEvent.start_date,
+                color: newAnniversaryEvent.color,
+                type: 'anniversary',
+              };
             
-            const eventToAdd = {
-              id: events.length + 1,
-              title: newAnniversaryEvent.title,
-              start_date: newAnniversaryEvent.start_date,
-              end_date: null,
-              color: newAnniversaryEvent.color,
-              type: 'anniversary',
-            };
-          
-            setEvents([...events, eventToAdd]);
-            setNewAnniversaryEvent({ title: '', date: '', color: '#ffc0cb', type: 'anniversary' });
-            setIsModalOpen(false);
-            setAnniversaryPaletteOpen(false);
-          }}
-        />
-      )}
+              setEvents([...events, eventToAdd]);
+              setNewAnniversaryEvent({ title: '', date: '', color: '#ffc0cb', type: 'anniversary' });
+              setIsModalOpen(false);
+              setAnniversaryPaletteOpen(false);
+            }}
+          />
+        )}
 
-      {editingTodoEvent && (
-        <Edittodo
-          event={editingTodoEvent}
-          setEvent={setEditingTodoEvent}
-          onClose={() => setEditingTodoEvent(null)}
-          onSubmit={(e) => {
-            e.preventDefault();
+        {editingTodoEvent && (
+          <Edittodo
+            event={editingTodoEvent}
+            setEvent={setEditingTodoEvent}
+            onClose={() => setEditingTodoEvent(null)}
+            onSubmit={(e) => {
+              e.preventDefault();
 
-            handleUpdate(editingTodoEvent);
-          }}
-          paletteOpen={anniversaryPaletteOpen}
-          setPaletteOpen={setAnniversaryPaletteOpen}
-          colorSamples={colorSamples}
-        />
-      )}
+              handleUpdate(editingTodoEvent);
+            }}
+            paletteOpen={anniversaryPaletteOpen}
+            setPaletteOpen={setAnniversaryPaletteOpen}
+            colorSamples={colorSamples}
+          />
+        )}
 
-      {viewingTravelEvent && (
-        <DetailTravel
-          event={viewingTravelEvent}
-          onClose={() => setViewingTravelEvent(null)}
-          onEdit={() => {
-            setEditingTravelEvent(viewingTravelEvent);
-            setViewingTravelEvent(null);
-          }}
-        />
-      )}
+        {viewingTravelEvent && (
+          <DetailTravel
+            event={viewingTravelEvent}
+            onClose={() => setViewingTravelEvent(null)}
+            onEdit={() => {
+              setEditingTravelEvent(viewingTravelEvent);
+              setViewingTravelEvent(null);
+            }}
+          />
+        )}
 
-      {editingTravelEvent && (
-        <Edittravel
-          event={editingTravelEvent}
-          setEvent={setEditingTravelEvent}
-          onClose={() => setEditingTravelEvent(null)}
-          onSubmit={(e) => {
-            e.preventDefault();
+        {editingTravelEvent && (
+          <Edittravel
+            event={editingTravelEvent}
+            setEvent={setEditingTravelEvent}
+            onClose={() => setEditingTravelEvent(null)}
+            onSubmit={(e) => {
+              e.preventDefault();
 
-            const start = new Date(editingTravelEvent.start_date);
-            const end = new Date(editingTravelEvent.end_date);
-          
-            if (start > end) {
-              alert('종료일은 시작일보다 빠를 수 없습니다!');
-              return;
-            }
-          
-            setEvents(events.map(ev => (
-              ev.id === editingTravelEvent.id ? editingTravelEvent : ev
-            )));
-          
-            setEditingTravelEvent(null);
-          }}
-          paletteOpen={travelPaletteOpen}
-          setPaletteOpen={setTravelPaletteOpen}
-          colorSamples={colorSamples}
-        />
-      )}  
+              const start = new Date(editingTravelEvent.start_date);
+              const end = new Date(editingTravelEvent.end_date);
+            
+              if (start > end) {
+                alert('종료일은 시작일보다 빠를 수 없습니다!');
+                return;
+              }
+            
+              setEvents(events.map(ev => (
+                ev.id === editingTravelEvent.id ? editingTravelEvent : ev
+              )));
+            
+              setEditingTravelEvent(null);
+            }}
+            paletteOpen={travelPaletteOpen}
+            setPaletteOpen={setTravelPaletteOpen}
+            colorSamples={colorSamples}
+          />
+        )}  
 
-      {isTravelModalOpen && (
-        <Addtravel
-          name="여행 일정 추가"
-          onClose={() => { setIsTravelModalOpen(false); setTravelPaletteOpen(false); }}
-          newEvent={newTravelEvent}
-          setNewEvent={setNewTravelEvent}
-          paletteOpen={travelPaletteOpen}
-          setPaletteOpen={setTravelPaletteOpen}
-          colorSamples={colorSamples}
-          
-          onSubmit={(e) => {
-            e.preventDefault();
-          
-            const start = new Date(newTravelEvent.start_date);
-            const end = new Date(newTravelEvent.end_date);
+        {isTravelModalOpen && (
+          <Addtravel
+            name="여행 일정 추가"
+            onClose={() => { setIsTravelModalOpen(false); setTravelPaletteOpen(false); }}
+            newEvent={newTravelEvent}
+            setNewEvent={setNewTravelEvent}
+            paletteOpen={travelPaletteOpen}
+            setPaletteOpen={setTravelPaletteOpen}
+            colorSamples={colorSamples}
+            
+            onSubmit={(e) => {
+              e.preventDefault();
+            
+              const start = new Date(newTravelEvent.start_date);
+              const end = new Date(newTravelEvent.end_date);
 
-            if (start > end) {
-              alert('종료일은 시작일보다 빠를 수 없습니다!');
-              return;
-            }
-          
-            const travelEvent = {
-              id: events.length + 1,
-              title: newTravelEvent.title,
-              start_date: newTravelEvent.start_date,
-              end_date: newTravelEvent.end_date,
-              color: newTravelEvent.color,
-              images: newTravelEvent.images || [],
-              type: 'travel'
-            };
+              if (start > end) {
+                alert('종료일은 시작일보다 빠를 수 없습니다!');
+                return;
+              }
+            
+              const travelEvent = {
+                id: events.length + 1,
+                title: newTravelEvent.title,
+                start_date: newTravelEvent.start_date,
+                end_date: newTravelEvent.end_date,
+                color: newTravelEvent.color,
+                images: newTravelEvent.images || [],
+                type: 'travel'
+              };
 
-            setEvents([...events, travelEvent]);
-            setNewTravelEvent({ title: '', start_date: '', end_date: '', color: '#ffc0cb', images: [], type: 'travel' });
-            setIsTravelModalOpen(false);
-            setTravelPaletteOpen(false);
-          }}
-        />
-      )}
-    </Wrapper>
+              setEvents([...events, travelEvent]);
+              setNewTravelEvent({ title: '', start_date: '', end_date: '', color: '#ffc0cb', images: [], type: 'travel' });
+              setIsTravelModalOpen(false);
+              setTravelPaletteOpen(false);
+            }}
+          />
+        )}
+      </Wrapper>
+    </>
   );
 }
 

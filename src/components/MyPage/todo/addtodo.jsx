@@ -12,7 +12,6 @@ const CardWrap = styled.div`
 `;
 
 const Card = styled.div`
-  height: 600px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
@@ -21,7 +20,7 @@ const Card = styled.div`
 `;
 
 const Top = styled.div`
-  height: 15%;
+  height: 75px;
   background-color: #ffdcd6;
   font-size: 1.5rem;
   font-weight: bold;
@@ -70,6 +69,10 @@ const ColorSection = styled.div`
   border-bottom: 2px solid #ffc0cb;
   width: fit-content;
   cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const SelectedColorPreview = styled.div`
@@ -78,6 +81,10 @@ const SelectedColorPreview = styled.div`
   border-radius: 50%;
   background-color: ${(props) => props.color || '#eee'};
   border: 2px solid #ccc;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const ColorPalette = styled.div`
@@ -141,7 +148,7 @@ function Addtodo({
           <form onSubmit={onSubmit}>
             <Input
               type="text"
-              placeholder="기념일 일정 제목"
+              placeholder="제목을 입력해주세요"
               value={newEvent.title || ''}
               onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               required
@@ -149,8 +156,8 @@ function Addtodo({
 
             <Input
               type="date"
-              value={newEvent.date || ''}
-              onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+              value={newEvent.start_date || ''}
+              onChange={(e) => setNewEvent({ ...newEvent, start_date: e.target.value })}
               required
             />
 

@@ -14,7 +14,6 @@ const CardWrap = styled.div`
 `;
 
 const Card = styled.div`
-  height: 600px;
   background-color: white;
   border-radius: 50px;
   border: 1px solid #3333;
@@ -23,7 +22,7 @@ const Card = styled.div`
 `;
 
 const Top = styled.div`
-  height: 15%;
+  height: 75px;
   background-color: #ffdcd6;
   font-size: 1.5rem;
   font-weight: bold;
