@@ -302,11 +302,20 @@ const List = styled.ul`
 
 const ListItem = styled.li`
   font-weight: 700;
-  padding: 10px 0;
+  padding: 5px 0;
   border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
   position: relative;
+
+  div.eventTitle {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
 
   div.day {
     display: flex;
@@ -541,7 +550,7 @@ function Todo() {
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    <div>{event.title}</div>
+                    <div className='eventTitle'>{event.title}</div>
                     <div className='day'>
                       <div className='diff'>
                         {diffDays >= 0
