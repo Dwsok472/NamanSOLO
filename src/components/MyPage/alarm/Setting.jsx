@@ -3,14 +3,11 @@ import styled from "styled-components";
 import { IconClose } from "../../Icons";
 
 const Container = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: absolute;
+  top: 0; /* 설정 아이콘과 같은 높이 */
+  right: 100%; /* 부모 요소의 왼쪽에 딱 붙음 */
+  margin-right: 10px; /* 아이콘과의 간격 (원하는 만큼 조절 가능) */
+  z-index: 200;
 `;
 
 const ModalContainer = styled.div`

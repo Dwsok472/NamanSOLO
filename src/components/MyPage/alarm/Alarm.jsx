@@ -54,14 +54,10 @@ const cityTranslations = {
 };
 
 const Container = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: absolute; /* 벨 버튼 기준으로 위치 */
+  top: 70px; /* 버튼 아래 여백 */
+  right: 0; /* 오른쪽 정렬 */
+  z-index: 200;
 `;
 
 const ModalContainer = styled.div`
@@ -486,7 +482,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
       >
         <Top>
           <Image src={settings} alt="Settings" onClick={toggleSetting} />{" "}
-          {/* 설정 아이콘 클릭 시 모달 열기 */}
+          {showSetting && <Setting onClose={toggleSetting} />}
           <h2>알람</h2>
           <CloseButton onClick={onClose}>
             <IconClose />
@@ -563,7 +559,6 @@ function Alarm({ onClose /*, isOpen*/ }) {
             );
           })}
         </ContainerMain>
-        {showSetting && <Setting onClose={toggleSetting} />}
       </ModalContainer>
     </Container>
   );

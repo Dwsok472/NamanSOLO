@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { IconPassword, IconUser } from '../Icons';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import LoginButton from '../Button/LoginButton';
-import RegisterButton from '../Button/RegisterButton';
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import { useRef, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import Couple from '../img/lover.png';
-import { UserLogin } from '../api';
+import React, { useEffect } from "react";
+import { IconPassword, IconUser } from "../Icons";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import LoginButton from "../Button/LoginButton";
+import RegisterButton from "../Button/RegisterButton";
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import { useRef, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
+import Couple from "../img/lover.png";
+import { UserLogin } from "../api";
 
 const CardWrap = styled.div`
   width: 550px;
@@ -19,7 +19,7 @@ const CardWrap = styled.div`
 const Card = styled.div`
   width: 550px;
   height: 600px;
-  background-color: #ffdcd6;
+  background-color: #ffe4e1;
   clip-path: polygon(
     10% 0%,
     90% 0%,
@@ -152,25 +152,25 @@ export const useUserStore = create(
       logout: () => set({ user: null, isLoggedIn: false }), // 로그아웃 처리
     }),
     {
-      name: 'user-storage', // sessionStorage에 저장될 키 이름
+      name: "user-storage", // sessionStorage에 저장될 키 이름
       storage: createJSONStorage(() => sessionStorage), // sessionStorage에 저장
     }
   )
 );
 
 function Login() {
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const { login, user, isLoggedIn } = useUserStore();
 
   async function handleSubmit() {
     try {
       const userData = await UserLogin(username, password); // 로그인 API 호출
       login({ username: userData.username }); // Zustand 상태에 로그인 정보 저장
-      setUsername(''); // 입력 필드 초기화
-      setPassword(''); // 입력 필드 초기화
+      setUsername(""); // 입력 필드 초기화
+      setPassword(""); // 입력 필드 초기화
     } catch (error) {
-      alert('로그인 실패! 다시 시도해주세요.');
+      alert("로그인 실패! 다시 시도해주세요.");
     }
   }
 

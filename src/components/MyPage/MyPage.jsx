@@ -422,6 +422,7 @@ function MyPage() {
             <button className="button" onClick={toggleAlarm}>
               <IconBell />
             </button>
+            {showAlarm && <Alarm onClose={toggleAlarm} />}
           </BellWrapper>
         </TopSection>
         <BottomSection>
@@ -435,7 +436,6 @@ function MyPage() {
           </Routes>
         </BottomSection>
       </RightProfileCard>
-      {showAlarm && <Alarm onClose={toggleAlarm} />}
     </Container>
   );
 }
