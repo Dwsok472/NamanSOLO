@@ -156,11 +156,12 @@ const Block = styled.div`
 `;
 
 const BottomBox = styled.div`
-  border: 1px solid black;
   width: 100%;
   border-radius: 16px;
-  height: 150px;
   transition: margin-top 0.3s ease-out; /* 부드러운 애니메이션 추가 */
+  margin-top: 5px;
+
+
 `;
 
 function RightBox({ albumData }) {
