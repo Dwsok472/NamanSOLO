@@ -25,11 +25,13 @@ const Top = styled.div`
   margin: 0 auto;
   margin-bottom: 30px;
   gap: 15px;
+  user-select: none;
 `;
 
 const Image = styled.img`
   width: 50px;
   height: 50px;
+  user-select: none;
 `;
 
 const ContentBox = styled.div`
@@ -42,6 +44,7 @@ const ContentBox = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
+  cursor: pointer;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
   }
