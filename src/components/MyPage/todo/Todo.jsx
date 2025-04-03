@@ -52,32 +52,6 @@ const CalendarHeader = styled.h3`
   cursor: pointer;
 `;
 
-const AddTravelButton = styled.button`
-  position: absolute;
-  top: 0;
-  right: 0px;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background-color: #ff7f7f;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: none;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
 const YearPickerWrap = styled.div`
   margin-bottom: 20px;
   padding: 10px;
@@ -452,11 +426,6 @@ function Todo() {
           <CalendarSection>
             <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
               {currentYear}년 {currentMonth + 1}월 ⬇
-              <AddTravelButton
-                onClick={(e) => { e.stopPropagation(); setIsTravelModalOpen(true); }}
-              >
-                <AddButtonImage src={Plus} />
-              </AddTravelButton>
             </CalendarHeader>
 
             {isPickerOpen && (
@@ -559,13 +528,14 @@ function Todo() {
 
                   return (
                     <ListItem
+                      title={`${ event.type === 'anniversary'?
+                      (event.fixed ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
+                      : event.title + ' ' + event.start_date+' ~ '+event.end_date }`}
                       key={idx}
                       onMouseEnter={() => setHoveredItem(idx)}
                       onMouseLeave={() => setHoveredItem(null)}
                     >
-                      <div title={`${ event.type === 'anniversary'?
-                        (event.fixed ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
-                        : event.title + ' ' + event.start_date+' ~ '+event.end_date }`} className='eventTitle'>{event.title}</div>
+                      <div className='eventTitle'>{event.title}</div>
                       <div className='day'>
                         <div className='diff'>
                           {diffDays >= 0
