@@ -114,7 +114,8 @@ const AlbumBoard = () => {
   const [loading, setLoading] = useState(true);  // 로딩 상태
   const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태
   const itemsPerPage = 8;  // 한 페이지에 표시할 아이템 수
-  const navigate = useNavigate();
+  const [selectedAlbum, setSelectedAlbum] = useState(null); //선택된 앨범 저장소!
+
 
   // 데이터 로드 (임시용, 실제 API 사용 시 아래 주석 해제)
   useEffect(() => {
@@ -132,6 +133,7 @@ const AlbumBoard = () => {
     ]);
     setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
   }, []); // 최초 렌더링 시 데이터 불러오기
+
   // async function getAllAlbum() {
   //   try {
   //     let response = await GetAllAlbum();
@@ -152,6 +154,11 @@ const AlbumBoard = () => {
   //   getAllAlbum();
   // }, [])
 
+  function handleSelectedAlbum(album) {
+    setSelectedAlbum(album);
+  }
+
+  console.log(selectedAlbum);
   const generateItems = () => {
     const items = [];
     if (data) {
@@ -183,7 +190,7 @@ const AlbumBoard = () => {
             title={album.title}  // 제목
             colSpan={colSpan}    // colSpan 값
             rowSpan={rowSpan}    // rowSpan 값
-            onClick={() => navigate(`/album/${album.id}`)}
+            onClick={() => handleSelectedAlbum(album)}
           />
         );
       });
@@ -215,7 +222,7 @@ const AlbumBoard = () => {
         </BoardInner>
         <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
       </BoardFrame>
-      <RightBox albumData={data} />
+      <RightBox albumData={selectedAlbum} />
     </BoardWrapper>
   );
 };
