@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import LoginButton from "./Button/LoginButton";
 import RegisterButton from "./Button/RegisterButton";
+import { useNavigate } from 'react-router-dom';
 
 const GlobalStyle = createGlobalStyle`
   body.blur #main-content {
@@ -196,6 +197,7 @@ function Header({
   signupText = "회원가입",
   logoRef,
 }) {
+  const navigate = useNavigate();
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const subMenuRef = useRef(null);
@@ -233,7 +235,7 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-      <Logo ref={logoRef}>{logoText}</Logo>
+      <Logo onClick={() => navigate('/')}>{logoText}</Logo>
 
         <Nav>
           {menuItems.map(({ to, label }) => (

@@ -134,7 +134,7 @@ function MainPage() {
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
-  const fullTextRef = useRef('WE ARE... 우리의 이야기');
+  const fullTextRef = useRef('WE ARE...');
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
 
