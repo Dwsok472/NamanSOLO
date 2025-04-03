@@ -14,6 +14,7 @@ import RegisterStep2 from "../Register/RegisterStep2";
 import heartRate from "../img/heart-rate.png";
 import CoupleProfile from "./CoupleProfile";
 import Alarm from "./alarm/Alarm";
+import CommentPage from "./Comment/CommentPage";
 
 const Container = styled.div`
   display: flex;
@@ -427,7 +428,7 @@ function MyPage() {
           <Routes>
             <Route path="/info" element={<CoupleProfile />} />
             <Route path="/story" element={<RegisterStep2 />} />
-            <Route path="/comment" element={<Octagon />} />
+            <Route path="/comment" element={<CommentPage />} />
             <Route path="/todo" element={<Todo />} />
             <Route path="/other" element={<Other />} />
           </Routes>
