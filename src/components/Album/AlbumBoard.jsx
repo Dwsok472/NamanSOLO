@@ -17,7 +17,8 @@ import tape7 from '../img/tape7.png';
 import back from '../img/back111.png';
 import marker from '../img/marker.png';
 import eraser from '../img/eraser.png';
-import LeftBox from "./LeftBox";
+import RightBox from "./RightBox";
+import { useNavigate } from "react-router-dom";
 
 const BoardWrapper = styled.div`
   width: 100%;
@@ -113,20 +114,21 @@ const AlbumBoard = () => {
   const [loading, setLoading] = useState(true);  // 로딩 상태
   const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태
   const itemsPerPage = 8;  // 한 페이지에 표시할 아이템 수
+  const navigate = useNavigate();
 
   // 데이터 로드 (임시용, 실제 API 사용 시 아래 주석 해제)
   useEffect(() => {
     setData([
-      { id: 1, imgurl: [couple1, couple2, couple3, couple4], title: "첫 나들이" },
-      { id: 2, imgurl: [couple2, couple1, couple3, couple4], title: "첫 데이트" },
-      { id: 3, imgurl: [couple3, couple1, couple2, couple4], title: "평화로운 주말" },
-      { id: 4, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" },
-      { id: 5, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" },
-      { id: 6, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" },
-      { id: 7, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" },
-      { id: 8, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" },
-      { id: 9, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" },
-      { id: 10, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방" }
+      { id: 1, imgurl: [couple1, couple2, couple3, couple4], title: "첫 나들이", date: "2025-01-01", username: "user1", tag: ["맛집", "행복"] },
+      { id: 2, imgurl: [couple2, couple1, couple3, couple4], title: "첫 데이트", date: "2025-01-01", username: "user2", tag: ["맛집", "행복"] },
+      { id: 3, imgurl: [couple3, couple1, couple2, couple4], title: "평화로운 주말", date: "2025-01-01", username: "user3", tag: ["맛집", "행복"] },
+      { id: 4, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user4", tag: ["맛집", "행복"] },
+      { id: 5, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user5", tag: ["맛집", "행복"] },
+      { id: 6, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user6", tag: ["맛집", "행복"] },
+      { id: 7, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user7", tag: ["맛집", "행복"] },
+      { id: 8, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user8", tag: ["맛집", "행복"] },
+      { id: 9, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user9", tag: ["맛집", "행복"] },
+      { id: 10, imgurl: [couple4, couple1, couple3, couple4], title: "행복한 먹방", date: "2025-01-01", username: "user10", tag: ["맛집", "행복"] }
     ]);
     setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
   }, []); // 최초 렌더링 시 데이터 불러오기
@@ -181,6 +183,7 @@ const AlbumBoard = () => {
             title={album.title}  // 제목
             colSpan={colSpan}    // colSpan 값
             rowSpan={rowSpan}    // rowSpan 값
+            onClick={() => navigate(`/album/${album.id}`)}
           />
         );
       });
@@ -212,7 +215,7 @@ const AlbumBoard = () => {
         </BoardInner>
         <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
       </BoardFrame>
-      <LeftBox />
+      <RightBox albumData={data} />
     </BoardWrapper>
   );
 };

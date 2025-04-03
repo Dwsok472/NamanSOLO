@@ -7,9 +7,10 @@ import couple1 from '../img/couple1.png';
 import couple2 from '../img/couple2.png';
 import couple3 from '../img/couple3.png';
 import couple4 from '../img/couple4.png';
+import AlbumDetail from './AlbumDetail';
 
 const Container = styled.div`
-  border: 1px solid black;
+   border: 5px solid #363636;
   width: 100%;
   margin: 0 auto;
   padding: 10px;
@@ -45,20 +46,26 @@ const TopBox = styled.div`
     }
   }
 `;
+
+
 const MiddleBox = styled.div`
   width: 100%;
+  height: auto;
   border-radius: 16px;
+  display: flex;
+ flex-direction: column;
+  align-items: center;
+  gap: 3px;
 `;
 const SearchBox = styled.div`
-  position: relative;
   width: 90%;
   height: 50px;
   border: 1px solid #6d6d6d33;
   border-radius: 30px;
-  display: flex;
   align-items: center;
   margin: 0 auto;
   background-color: #bbbbbb;
+  padding-top : 3.5px;
 `;
 const InputBox = styled.div`
   width: 95%;
@@ -83,13 +90,10 @@ const Input = styled.input`
 `;
 
 const SearchResults = styled.div`
+  width: 90%;
   background-color: #ffffff;
   border: 1px solid #ccc;
   border-radius: 30px;
-  position: absolute;
-  top: 52px; /* 검색창 바로 아래 위치 */
-  left: 0;
-  right: 0;
   max-height: 200px;
   transform: translateY(-20px); /* 초기 위치 설정 */
   opacity: 0;
@@ -109,12 +113,12 @@ const Wrap = styled.div`
   overflow-x: hidden;
   margin: 8px;
   &::-webkit-scrollbar {
-    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+    width: 7px; 
     position: absolute;
     right: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #8a8a8a; /* 핸들의 색상 */
+    background-color: #8a8a8a; 
     border-radius: 10px;
   }
   hr {
@@ -156,9 +160,10 @@ const BottomBox = styled.div`
   width: 100%;
   border-radius: 16px;
   height: 150px;
+  transition: margin-top 0.3s ease-out; /* 부드러운 애니메이션 추가 */
 `;
 
-function LeftBox() {
+function RightBox({ albumData }) {
   const [inputKeyword, setInputKeyword] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
@@ -167,6 +172,9 @@ function LeftBox() {
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
   const urlKeyword = new URLSearchParams(location.search).get('username');
+
+  // 앨범 ID를 URL에서 받아오기
+  const albumId = new URLSearchParams(location.search).get('albumId');
 
   //임시용
   useEffect(() => {
@@ -186,7 +194,6 @@ function LeftBox() {
       if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
         setShowResults(false); // 검색바 외부 클릭 시 결과 숨기기
         setInputKeyword('');
-        setSearchResultsHeight(0);
       }
     };
     // 클릭 이벤트 등록
@@ -228,9 +235,10 @@ function LeftBox() {
 
     setSearchResults(filteredUsers); // 필터링된 결과를 상태에 저장
     setShowResults(filteredUsers.length > 0); // 결과가 있을 때만 보여주기
-    setSearchResultsHeight(filteredUsers.length > 0 ? 200 : 0); // 결과가 있으면 높이 설정
+    console.log(filteredUsers);
   }
   console.log(searchResults);
+
 
   return (
     <Container>
@@ -271,32 +279,34 @@ function LeftBox() {
               }}
             />
           </InputBox>
-          {/* 검색 결과 슬라이딩 */}
-          {showResults && (
-            <SearchResults className={showResults ? 'show' : ''}>
-              <Wrap>
-                <ul>
-                  {searchResults.map((user) => (
-                    <li
-                      key={user.username}
-                      onClick={() => navigate(`/user/story/${user.username}`)}
-                    >
-                      <Block>
-                        <img src={user.imgurl} alt="profile" />
-                        <div className="username">{user.username}</div>
-                        <button className="follow">팔로우하기</button>
-                      </Block>
-                    </li>
-                  ))}
-                </ul>
-              </Wrap>
-            </SearchResults>
-          )}
         </SearchBox>
+        {showResults && (
+          <SearchResults className={showResults ? 'show' : ''}>
+            <Wrap>
+              <ul>
+                {searchResults.map((user) => (
+                  <li
+                    key={user.username}
+                    onClick={() => navigate(`/user/story/${user.username}`)}
+                  >
+                    <Block>
+                      <img src={user.imgurl} alt="profile" />
+                      <div className="username">{user.username}</div>
+                      <button className="follow">팔로우하기</button>
+                    </Block>
+                  </li>
+                ))}
+              </ul>
+            </Wrap>
+          </SearchResults>
+        )}
       </MiddleBox>
-      <BottomBox></BottomBox>
+      <BottomBox>{albumId && albumData &&
+        <AlbumDetail albumId={albumId} albumData={albumData} />
+      }
+      </BottomBox>
     </Container>
   );
 }
 
-export default LeftBox;
+export default RightBox
