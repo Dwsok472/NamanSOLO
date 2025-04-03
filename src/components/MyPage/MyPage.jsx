@@ -252,6 +252,7 @@ function MyPage() {
   const [selectedOption, setSelectedOption] = useState("커플 정보");
   const navigate = useNavigate();
   const [showAlarm, setShowAlarm] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = (menu) => {
     setMenu(menu);

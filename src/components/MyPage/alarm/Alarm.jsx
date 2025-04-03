@@ -48,7 +48,7 @@ const cityTranslations = {
   Suwon: "수원",
   Sokcho: "속초",
   Yangyang: "양양",
-  Cheongjusi: "청주시",
+  Cheongjusi: "청주",
   Boryeong: "보령",
   Kimje: "김제",
 };
@@ -113,7 +113,7 @@ const DropdownWrapper = styled.div`
 const DropdownButton = styled.button`
   width: 50px;
   height: 30px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   padding: 8px;
   border: 1px solid #ccc;
@@ -233,7 +233,7 @@ const Image = styled.img`
   cursor: pointer;
 `;
 
-function Alarm({ onClose }) {
+function Alarm({ onClose /*, isOpen*/ }) {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [expandedId, setExpandedId] = useState(null); // 펼쳐진 알림 ID
   const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
@@ -248,6 +248,7 @@ function Alarm({ onClose }) {
   const textRefs = useRef({});
   const [isOpen, setIsOpen] = useState(false);
   // const [alarmList, setAlarmList] = useState([]);
+  // const userId = 1; // 실제 로그인 유저 ID 넣기
 
   // 날씨 정보를 가져오는 함수
   const fetchWeather = async (cityName) => {
@@ -317,12 +318,6 @@ function Alarm({ onClose }) {
     };
   }, [isDraggingAlarm, offset]);
 
-  // 마우스 클릭시 페이지 이동
-  const handleNavigate = (path) => {
-    navigate(path); // 페이지 이동
-    onClose(); // 모달 닫기
-  };
-
   // 설정 모달 열기/닫기 토글 함수
   const toggleSetting = () => {
     setShowSetting((prev) => !prev);
@@ -367,18 +362,53 @@ function Alarm({ onClose }) {
     },
   ];
 
+  // 일정 기반 알림 가져오기
   // useEffect(() => {
-  //   const fetchAlarms = async () => {
+  //   if (!isOpen) return;
+
+  //   const load = async () => {
   //     try {
-  //       const res = await fetch("/api/alarms");
-  //       const data = await res.json();
-  //       setAlarmList(data);
+  //       const calendarEvents = await fetchCalendarEvents(userId);
+  //       const calendarAlarms = getUpcomingAlarms(calendarEvents);
+
+  //       const eventItems = await fetchTodayEvents(userId);
+  //       const eventAlarms = getTodayEventAlarms(eventItems);
+
+  //       setAlarmList([...calendarAlarms, ...eventAlarms]);
   //     } catch (err) {
-  //       console.error("알림 데이터를 불러오는 데 실패했습니다", err);
+  //       console.error("알림 로딩 실패:", err);
   //     }
   //   };
 
-  //   fetchAlarms();
+  //   load();
+
+  //   const interval = setInterval(load, 1000 * 60 * 60 * 24);
+  //   return () => clearInterval(interval);
+  // }, [isOpen, userId]);
+
+  // WebSocket 실시간 알림 받기
+  // useEffect(() => {
+  //   const client = connectAlarmSocket(userId, (alarm) => {
+  //     setAlarmList((prev) => [alarm, ...prev]);
+  //   });
+
+  //   return () => client.deactivate(); // 언마운트 시 연결 해제
+  // }, [userId]);
+
+  // 며칠 지난 알림 자동 제거
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const now = new Date();
+  //     setAlarmList((prev) =>
+  //       prev.filter((alarm) => {
+  //         const created = new Date(alarm.createdAt);
+  //         const diff = (now - created) / (1000 * 60 * 60 * 24);
+  //         return diff <= 10; // 3일 이하만 유지
+  //       })
+  //     );
+  //   }, 1000 * 60 * 60); // 매시간마다 체크
+
+  //   return () => clearInterval(interval); // 언마운트 시 정리
   // }, []);
 
   useEffect(() => {
