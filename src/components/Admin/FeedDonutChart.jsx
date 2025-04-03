@@ -14,9 +14,13 @@ const Container = styled.div`
   background: white;
   padding: 20px;
   border-radius: 12px;
-  width: 80%;
-  height: 480px;
+  width: 600px;
+  height: 360px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Title = styled.h3`

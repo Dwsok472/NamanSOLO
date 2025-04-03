@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
   background: white;
   flex: 1;
-  padding: 20px;
+  padding: 30px;
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 `;
@@ -50,6 +50,9 @@ const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
 `;
 
 const ListItem = styled.li`
