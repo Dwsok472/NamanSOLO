@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
+import Header from './Header';
 
 const Wrapper = styled.div`
   padding: 120px 24px 40px;
@@ -78,98 +79,100 @@ const Banner = styled.div`
   margin-top: 80px;
 `;
 
-// --- 인트로 관련 스타일 ---
-const slideUp = keyframes`
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-100%);
-  }
-`;
-
-const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
+// 애니메이션
 const IntroWrapper = styled.div`
   position: fixed;
+  z-index: 9999;
+  background-color: #fff0f0;
   width: 100vw;
   height: 100vh;
-  background: #fff0f0;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  display: flex;
+  display: ${({ $show }) => ($show ? 'flex' : 'none')};
   align-items: center;
   justify-content: center;
-  animation: ${({ animateSlide }) => animateSlide && css`${slideUp} 1s ease forwards`};
+  top: 0;
+  left: 0;
+  transition: transform 1.5s ease-in-out, opacity 1s ease-in-out;
+
+  ${({ $slideOut }) =>
+    $slideOut &&
+    css`
+      transform: translateY(-100%);
+      opacity: 0;
+    `}
 `;
 
 const IntroText = styled.div`
   position: absolute;
-  font-size: 2.8rem;
+  font-size: 10rem;
   font-weight: 900;
   color: #222;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  transition: all 1.5s ease;
+  transition: all 1.5s ease-in-out;
 
-  ${({ animateToLogo }) =>
-    animateToLogo &&
+  ${({ $animateToLogo, $top, $left }) =>
+    $animateToLogo &&
     css`
-      top: 20px;
-      left: 40px;
-      transform: translate(0, 0) scale(0.4);
-      opacity: 0;
+      top: ${$top + 22}px;
+      left: ${$left + 68}px;
+      transform: translate(-50%, -50%) scale(0.4);
+      font-size: 2.4rem;
     `}
 `;
 
 const MainContent = styled.div`
-  opacity: 0;
-  animation: ${({ show }) =>
-    show &&
-    css`
-      ${fadeInUp} 1s ease forwards;
-    `};
+  opacity: ${({ $show }) => ($show ? 1 : 0)};
+  transform: ${({ $show }) => ($show ? "translateY(0)" : "translateY(20px)")};
+  transition: all 0.8s ease-in-out;
 `;
 
 function MainPage() {
   const [displayText, setDisplayText] = useState('');
   const [showIntro, setShowIntro] = useState(true);
   const [animateToLogo, setAnimateToLogo] = useState(false);
-  const [slideOutIntro, setSlideOutIntro] = useState(false);
   const [showMain, setShowMain] = useState(false);
+  const [slideOut, setSlideOut] = useState(false);
   const fullTextRef = useRef('WE ARE... 우리의 이야기');
+  const logoRef = useRef(null);
+  const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
     let index = 0;
-    const typing = () => {
-      if (index < fullTextRef.current.length) {
-        setDisplayText((prev) => prev + fullTextRef.current[index]);
+    const interval = setInterval(() => {
+      if (index <= fullTextRef.current.length) {
+        setDisplayText(fullTextRef.current.slice(0, index));
         index++;
-        setTimeout(typing, 100);
+      } else {
+        clearInterval(interval);
       }
-    };
-    typing();
+    }, 100);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setAnimateToLogo(true), 2000); // shrink & move
-    const t2 = setTimeout(() => setSlideOutIntro(true), 2800); // slide up
+    const getLogoPos = () => {
+      if (logoRef.current) {
+        const rect = logoRef.current.getBoundingClientRect();
+        setLogoPosition({
+          top: rect.top + window.scrollY,
+          left: rect.left + window.scrollX,
+        });
+      } else {
+        setTimeout(getLogoPos, 100);
+      }
+    };
+    getLogoPos();
+  }, []);
+
+  useEffect(() => {
+    const t1 = setTimeout(() => setAnimateToLogo(true), 2200);
+    const t2 = setTimeout(() => setSlideOut(true), 4000);
     const t3 = setTimeout(() => {
       setShowIntro(false);
       setShowMain(true);
-    }, 3800); // show main
+    }, 4500);
 
     return () => {
       clearTimeout(t1);
@@ -180,13 +183,37 @@ function MainPage() {
 
   return (
     <>
+      <Header
+        logoRef={logoRef}
+        menuItems={[
+          { to: '/story/all', label: '전체 스토리' },
+          { to: '/map', label: '맵' },
+          { to: '/events', label: '이벤트' },
+        ]}
+        subMenuItems={[
+          { to: '/mypage/info', label: '커플 정보' },
+          { to: '/mypage/story', label: '나의 스토리' },
+          { to: '/mypage/comment', label: '나의 댓글' },
+          { to: '/mypage/todo', label: '캘린더' },
+          { to: '/mypage/other', label: '그 외' },
+        ]}
+        loginText="로그인"
+        signupText="회원가입"
+      />
+
       {showIntro && (
-        <IntroWrapper animateSlide={slideOutIntro}>
-          <IntroText animateToLogo={animateToLogo}>{displayText}</IntroText>
+        <IntroWrapper $show={showIntro} $slideOut={slideOut}>
+          <IntroText
+            $animateToLogo={animateToLogo}
+            $top={logoPosition.top}
+            $left={logoPosition.left}
+          >
+            {displayText}
+          </IntroText>
         </IntroWrapper>
       )}
 
-      <MainContent show={showMain}>
+      <MainContent $show={showMain}>
         <Wrapper>
           <Section>
             <SubText>
@@ -197,9 +224,7 @@ function MainPage() {
             <GoButton>바로가기</GoButton>
           </Section>
 
-          <SliderSection>
-            슬라이드 or 팝업 자리 (여기에 Swiper 연결 가능)
-          </SliderSection>
+          <SliderSection>슬라이드 or 팝업 자리</SliderSection>
 
           <Section>
             <Title>나의 STORY</Title>

@@ -194,6 +194,7 @@ function Header({
   subMenuItems = [],
   loginText = "로그인",
   signupText = "회원가입",
+  logoRef,
 }) {
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -232,7 +233,7 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-        <Logo>{logoText}</Logo>
+      <Logo ref={logoRef}>{logoText}</Logo>
 
         <Nav>
           {menuItems.map(({ to, label }) => (
