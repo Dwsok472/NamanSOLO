@@ -187,6 +187,7 @@ const Overlay = styled.div`
   z-index: 999;
 `;
 
+
 function Header({
   logoText = "WeARE",
   menuItems = [],
