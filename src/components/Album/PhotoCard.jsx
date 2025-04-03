@@ -78,9 +78,9 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
     setImageIndex((prevIndex) => (prevIndex < src.length - 1 ? prevIndex + 1 : 0));
   };
   // imgurl이 배열인지, 비어있지 않은지 확인
-  if (!src || !Array.isArray(src) || src.length === 0) {
-    return <p>이미지가 없습니다.</p>;  // src가 없거나 배열이 아닐 때, 또는 비어있을 때 대체 UI
-  }
+  // if (!src || !Array.isArray(src) || src.length === 0) {
+  //   return <p>이미지가 없습니다.</p>;  // src가 없거나 배열이 아닐 때, 또는 비어있을 때 대체 UI
+  // }
 
 
   return (
