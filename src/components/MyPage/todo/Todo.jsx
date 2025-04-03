@@ -50,6 +50,10 @@ const CalendarHeader = styled.h3`
   align-items: baseline;
   gap: 6px;
   cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const YearPickerWrap = styled.div`
@@ -425,7 +429,7 @@ function Todo() {
         <Main>
           <CalendarSection>
             <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
-              {currentYear}년 {currentMonth + 1}월 ⬇
+              {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
             </CalendarHeader>
 
             {isPickerOpen && (
