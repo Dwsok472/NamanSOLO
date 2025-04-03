@@ -88,7 +88,7 @@ const AlarmItem = styled.div`
 const StyledWrapper = styled.div`
   /* The switch - the box around the slider */
   .switch {
-    font-size: 17px;
+    font-size: 13px;
     position: relative;
     display: inline-block;
     width: 3.5em;
@@ -162,6 +162,7 @@ function Setting({ onClose }) {
 
   // 마우스를 누를 때, 드래그 시작
   const handleMouseDownSetting = (e) => {
+    e.stopPropagation(); // 이벤트 버블링 막기
     setIsDraggingSetting(true);
     setOffset({
       x: e.clientX - position.x,
