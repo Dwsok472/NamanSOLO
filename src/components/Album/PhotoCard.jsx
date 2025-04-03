@@ -65,7 +65,7 @@ const Caption = styled.div`
   color: #555;
 `;
 
-const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan }) => {
+const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan, onClick }) => {
   const [imageIndex, setImageIndex] = useState(0);
 
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
@@ -78,7 +78,7 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
     setImageIndex((prevIndex) => (prevIndex < src.length - 1 ? prevIndex + 1 : 0));
   };
   return (
-    <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan}>
+    <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
       <Pin><img src={pinColor} className="pin" /></Pin>
       <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />
       <Image src={src[imageIndex]} alt="album" />
