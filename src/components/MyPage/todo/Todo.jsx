@@ -171,11 +171,12 @@ const StyledTd = styled.td`
   padding: 4px;
   height: 100px;
   vertical-align: top;
-  text-align: right;
+  text-align: center;
   background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
 `;
 
 const DayCell = styled.div`
+  text-align: right;
   font-weight: bold;
   font-size: 1rem;
 `;
@@ -191,17 +192,19 @@ const EventBox = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  
   div {
-    text-align: center;
-
-    &:hover {
-      color: #c900c9;
-      font-size: 0.8rem;
-      text-decoration: underline;
-      font-weight: 700;
-    }
+    ${({ $isHovered }) =>
+      $isHovered &&
+      `
+        color: #c900c9;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-decoration: underline;
+      `}
   }
 `;
+
 
 const AnniversarySection = styled.section`
   flex: 1 1 30%;
@@ -283,10 +286,23 @@ const ListItem = styled.li`
   display: flex;
   justify-content: space-between;
   position: relative;
+
+  div.day {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: -4px; // 🎯 위로 올리기
+    line-height: 1.2;
+    div.diff {
+      color: #333;
+      font-size: 0.85rem;
+    }
+  }
 `;
 
 const ListDate = styled.div`
-  font-size: 0.75rem;
+  text-align: right;
+  font-size: 0.65rem;
   color: #999;
 `;
 
@@ -353,6 +369,8 @@ function Todo() {
     }, []);
   };
 
+  const [hoveringEventId, setHoveringEventId] = useState(null);
+
   const getEventsForDay = (date) => {
     if (!date) return [];
 
@@ -367,10 +385,10 @@ function Todo() {
     }
 
       if (event.type === 'travel') {
-        const start = new Date(`${event.startDate}T00:00:00`);
-        const end = new Date(`${event.endDate}T00:00:00`);
-        return start <= cellDate && cellDate <= end;
-      }
+      const start = new Date(`${event.startDate}T00:00:00`);
+      const end = new Date(`${event.endDate}T00:00:00`);
+      return start <= cellDate && cellDate <= end;
+    }
 
       return false;
     });
@@ -381,6 +399,8 @@ function Todo() {
     eventDate.setHours(0, 0, 0, 0);
     return Math.floor((eventDate - today) / (1000 * 60 * 60 * 24));
   };
+
+  const [activeSection, setActiveSection] = useState('anniversary');
 
   return (
     <Wrapper>
@@ -449,6 +469,10 @@ function Todo() {
                           <EventBox
                             key={i}
                             color={event.color}
+                            className={`${event.type}${event.id}`}
+                            onMouseEnter={() => setHoveringEventId(event.id)}
+                            onMouseLeave={() => setHoveringEventId(null)}
+                            $isHovered={hoveringEventId === event.id}
                             onClick={() => event.type === 'anniversary' ? setEditingTodoEvent(event) : setViewingTravelEvent(event) }
                           >
                             <div title={event.type === 'travel' ? `여행 일정 ${event.startDate} ~ ${event.endDate}` : ` 기념일 일정 ${event.date}`}>{event.title}</div>
@@ -464,44 +488,80 @@ function Todo() {
         </CalendarSection>
 
         <AnniversarySection>
-          <AddButton onClick={() => setIsModalOpen(true)}><AddButtonImage src={Plus}/></AddButton>
-          <h3>우리의 기념일</h3>
-          <List>
-            {events.filter(e => e.type === 'anniversary').map((event, idx) => {
-              let isHovered = false;
-              if (hoveredItem === idx) {
-                isHovered = true;
-              }
-              
-              let isEditing = false;
-              if (editingTodoEvent === idx) {
-                isEditing = true;
-              }
+          <AddButton onClick={() => {
+            activeSection === 'anniversary'
+              ? setIsModalOpen(true)
+              : setIsTravelModalOpen(true)
+          }}>
+            <AddButtonImage src={Plus}/>
+          </AddButton>
 
-              return (
-              <ListItem
-                key={idx}
-                onMouseEnter={() => setHoveredItem(idx)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                <div>{event.title}</div>
-                <div>
-                  <div>{getDiffInDays(event.date) >= 0 ? getDiffInDays(event.date) == 0 ? `D - Day` :`D - ${getDiffInDays(event.date)}` : `D + ${Math.abs(getDiffInDays(event.date))}`}</div>
-                  <ListDate>{event.date}</ListDate>
-                </div>
-      
-                {isHovered && (
-                  <>
-                    <IconButton onClick={() => handleDelete(event)}>
-                      <IconClose />
-                    </IconButton>
-                    <EditButton onClick={() => setEditingTodoEvent({...event})}>
-                      <IconEdit />
-                    </EditButton>
-                  </>
-                )}
-              </ListItem>
-            )})}
+          <h3
+            style={{
+              cursor: 'pointer',
+              textAlign: 'center',
+              fontWeight: 'bold',
+              fontSize: '1.2rem',
+              marginBottom: '16px',
+              userSelect: 'none'
+            }}
+            onClick={() =>
+              setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary')
+            }
+            title="클릭해서 전환"
+          >
+            {activeSection === 'anniversary' ? '우리의 기념일' : '놀러간 일정'}
+          </h3>
+
+          <List>
+            {events
+              .filter(e => e.type === activeSection)
+              .map((event, idx) => {
+                const diffDays = getDiffInDays(
+                  event.type === 'anniversary' ? event.date : event.startDate
+                );
+
+                return (
+                  <ListItem
+                    key={idx}
+                    onMouseEnter={() => setHoveredItem(idx)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    <div>{event.title}</div>
+                    <div className='day'>
+                      <div className='diff'>
+                        {diffDays >= 0
+                          ? diffDays === 0
+                            ? 'Today'
+                            : `D -${diffDays}`
+                          : `D +${Math.abs(diffDays)}`}
+                      </div>
+                      <ListDate>
+                        {event.type === 'anniversary'
+                          ? event.date
+                          : <> {event.startDate} <br />~ {event.endDate} </> }
+                      </ListDate>
+                    </div>
+
+                    {hoveredItem === idx && (
+                      <>
+                        <IconButton onClick={() => handleDelete(event)}>
+                          <IconClose />
+                        </IconButton>
+                        <EditButton
+                          onClick={() =>
+                            event.type === 'anniversary'
+                              ? setEditingTodoEvent({ ...event })
+                              : setEditingTravelEvent({ ...event })
+                          }
+                        >
+                          <IconEdit />
+                        </EditButton>
+                      </>
+                    )}
+                  </ListItem>
+                );
+              })}
           </List>
         </AnniversarySection>
       </Main>
