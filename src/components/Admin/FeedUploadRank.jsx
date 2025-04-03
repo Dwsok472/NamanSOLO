@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
+const Wrapper = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
 const Container = styled.div`
   background: white;
   flex: 1;
@@ -108,7 +113,7 @@ function FeedUploadRank() {
   const users = dummyData[currentMonth] || [];
 
   const handlePrevMonth = () => {
-    setCurrentMonth('2024-12');
+    setCurrentMonth('2025-01');
   };
 
   const handleNextMonth = () => {
@@ -116,6 +121,7 @@ function FeedUploadRank() {
   };
 
   return (
+    <Wrapper>
     <Container>
       <TitleRow>
         <h3>기간별 피드 업로드 유저 통계</h3>
@@ -140,6 +146,7 @@ function FeedUploadRank() {
         ))}
       </List>
     </Container>
+    </Wrapper>
   );
 }
 

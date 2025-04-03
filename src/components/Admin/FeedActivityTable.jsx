@@ -1,3 +1,4 @@
+// 유저별 마지막 활동기록
 import React from 'react';
 import styled from 'styled-components';
 

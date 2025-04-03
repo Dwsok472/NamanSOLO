@@ -8,17 +8,15 @@ import {
 } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
-// ✅ Chart.js 모듈 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-// ✅ 스타일 컴포넌트
 const Container = styled.div`
   background: white;
   padding: 20px;
   border-radius: 12px;
-  width: 100%;
-  height: 240px;
-  position: relative; // 중앙 텍스트 위치 위해
+  width: 80%;
+  height: 480px;
+  position: relative;
 `;
 
 const Title = styled.h3`
@@ -26,7 +24,6 @@ const Title = styled.h3`
   margin-bottom: 12px;
 `;
 
-// ✅ 차트 컴포넌트
 const FeedDonutChart = ({ total }) => {
   const chartData = {
     labels: ['업로드된 피드 수', '잔여 비율'],
@@ -41,7 +38,7 @@ const FeedDonutChart = ({ total }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // ✅ 고정 크기 방지
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },

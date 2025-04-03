@@ -1,3 +1,5 @@
+// 유저 마지막 활동기록 평균
+
 import React from 'react';
 import styled from 'styled-components';
 

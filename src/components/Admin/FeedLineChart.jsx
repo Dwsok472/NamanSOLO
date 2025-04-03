@@ -1,3 +1,4 @@
+//일별 피드 그래프 점선
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -27,7 +28,7 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 12px;
   width: 100%;
-  height: 100%;
+  height: 30%;
 `;
 
 const Title = styled.h3`
