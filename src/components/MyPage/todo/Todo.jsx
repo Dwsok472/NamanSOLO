@@ -12,6 +12,13 @@ import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
 
+const Wrapper = styled.div`
+  font-family: sans-serif;
+  color: #333;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
 const Overlay = styled.div`
   position: fixed;
   top: 0;
@@ -21,13 +28,6 @@ const Overlay = styled.div`
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(4px);
   z-index: 1;
-`;
-
-const Wrapper = styled.div`
-  font-family: sans-serif;
-  color: #333;
-  max-width: 1200px;
-  margin: 0 auto;
 `;
 
 const Main = styled.main`
@@ -198,6 +198,7 @@ const EventBox = styled.div`
 
 const AnniversarySection = styled.section`
   flex: 1 1 30%;
+  min-width: 221px;
   background-color: #ffeef0;
   border-radius: 10px;
   padding: 20px;
@@ -214,7 +215,7 @@ const SectionH3 = styled.h3`
   cursor: pointer;
   text-align: center;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   margin-bottom: 16px;
   user-select: none;
 
@@ -333,7 +334,7 @@ function Todo() {
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
     { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { id:2, title: '100일', start_date: '2025-04-10', color: '#ffc0cb', type:'anniversary', fixed:true },
+    { id:2, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', fixed:true },
   ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
@@ -424,9 +425,9 @@ function Todo() {
 
   return (
     <>
-    {(isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewingTravelEvent) && <Overlay />}
       <Wrapper>
         <Main>
+    {(isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewingTravelEvent) && <Overlay />}
           <CalendarSection>
             <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
               {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
@@ -519,7 +520,7 @@ function Todo() {
               }
               title="클릭해서 전환"
             >
-              {activeSection === 'anniversary' ? '우리의 기념일' : '놀러간 일정'} <img src={Rotate} />
+              {activeSection === 'anniversary' ? '기념일' : '데이트'} <img src={Rotate} />
             </SectionH3>
 
             <List>
