@@ -10,6 +10,7 @@ import RightKey from '../../img/rightkey.png';
 import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
+import Rotate from '../../img/rotate.png';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -212,6 +213,25 @@ const AnniversarySection = styled.section`
   border-radius: 10px;
   padding: 20px;
   position: relative;
+
+  img {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+`;
+
+const SectionH3 = styled.h3`
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  user-select: none;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 const EditButton = styled.button`
@@ -226,7 +246,7 @@ const EditButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0; // 텍스트 크기 제거
+  font-size: 0; 
   cursor: pointer;
 
   svg {
@@ -281,6 +301,7 @@ const List = styled.ul`
 `;
 
 const ListItem = styled.li`
+  font-weight: 700;
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
   display: flex;
@@ -291,7 +312,7 @@ const ListItem = styled.li`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-top: -4px; // 🎯 위로 올리기
+    margin-top: -3%; // 🎯 위로 올리기
     line-height: 1.2;
     div.diff {
       color: #333;
@@ -374,24 +395,25 @@ function Todo() {
   const getEventsForDay = (date) => {
     if (!date) return [];
 
-    const cellDate = new Date(date);
+  const cellDate = new Date(date);
+  cellDate.setHours(0, 0, 0, 0);
 
-    cellDate.setHours(0, 0, 0, 0);
+  return events.filter((event) => {
+    if (event.type !== activeSection) return false; // <-- 이 라인 추가
 
-    return events.filter((event) => {
-      if (event.type === 'anniversary') {
+    if (event.type === 'anniversary') {
       const eventDate = new Date(`${event.date}T00:00:00`);
       return eventDate.getTime() === cellDate.getTime();
     }
 
-      if (event.type === 'travel') {
+    if (event.type === 'travel') {
       const start = new Date(`${event.startDate}T00:00:00`);
       const end = new Date(`${event.endDate}T00:00:00`);
       return start <= cellDate && cellDate <= end;
     }
 
-      return false;
-    });
+    return false;
+  });
   };
 
   const getDiffInDays = (dateStr) => {
@@ -496,22 +518,14 @@ function Todo() {
             <AddButtonImage src={Plus}/>
           </AddButton>
 
-          <h3
-            style={{
-              cursor: 'pointer',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              fontSize: '1.2rem',
-              marginBottom: '16px',
-              userSelect: 'none'
-            }}
+          <SectionH3
             onClick={() =>
               setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary')
             }
             title="클릭해서 전환"
           >
-            {activeSection === 'anniversary' ? '우리의 기념일' : '놀러간 일정'}
-          </h3>
+            {activeSection === 'anniversary' ? '우리의 기념일' : '놀러간 일정'} <img src={Rotate} />
+          </SectionH3>
 
           <List>
             {events
