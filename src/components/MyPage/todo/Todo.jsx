@@ -312,7 +312,7 @@ const ListItem = styled.li`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-top: -3%; // 🎯 위로 올리기
+    margin-top: -3%;
     line-height: 1.2;
     div.diff {
       color: #333;
