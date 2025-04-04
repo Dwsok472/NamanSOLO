@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import {
   IconBirthday,
   IconEmail,
@@ -6,22 +6,22 @@ import {
   IconModify,
   IconPhone,
   IconUser,
-} from '../Icons';
-import { useEffect, useState } from 'react';
-import Profile from '../img/people.png';
-import { ModifyUserInfo } from '../api';
+} from "../Icons";
+import { useEffect, useState } from "react";
+import Profile from "../img/people.png";
+import { ModifyUserInfo } from "../api";
 
 const CardWrap = styled.div`
-  width: ${(props) => props.width || '550px'};
+  width: ${(props) => props.width || "550px"};
   margin: 0 auto;
   margin-top: 50px;
 `;
 
 const Card = styled.div`
-  width: ${(props) => props.cardwidth || '500px'};
-  height: ${(props) => props.cardheight || '600px'};
-  background-color: ${(props) => props.cardbackground || '#ffdcd6'};
-  clip-path: polygon(
+  width: ${(props) => props.cardwidth || "500px"};
+  height: ${(props) => props.cardheight || "600px"};
+  /* background-color: ${(props) => props.cardbackground || "#ffdcd6"}; */
+  /* clip-path: polygon(
     10% 0%,
     90% 0%,
     120% 25%,
@@ -30,7 +30,7 @@ const Card = styled.div`
     10% 100%,
     0% 90%,
     0% 10%
-  );
+  ); */
   margin: 0 auto;
 `;
 const Top = styled.div`
@@ -50,8 +50,8 @@ const ModifyTop = styled.div`
   cursor: pointer;
 `;
 const Img = styled.img`
-  width: ${(props) => props.imgwidth || '150px'};
-  height: ${(props) => props.imgheight || '150px'};
+  width: ${(props) => props.imgwidth || "150px"};
+  height: ${(props) => props.imgheight || "150px"};
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #3333;
@@ -97,7 +97,7 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 30px;
-  ${(props) => props.readonly && 'background-color: #f0f0f0;'}
+  ${(props) => props.readonly && "background-color: #f0f0f0;"}
 `;
 
 const ImgInput = styled.input`
@@ -110,7 +110,7 @@ const FileButton = styled.button`
   background-color: transparent;
   position: absolute;
   bottom: 0px;
-  &:focus{
+  &:focus {
     outline: none;
   }
 `;
@@ -135,7 +135,7 @@ const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => props.buttoncolor || '#fda899'};
+    background-color: ${(props) => props.buttoncolor || "#fda899"};
     color: #eeeeee;
   }
 
@@ -159,7 +159,7 @@ function Octagon({
   isProfilePage,
   isSignUpPage,
   data,
-  onChange
+  onChange,
 }) {
   const [image, setImage] = useState(Profile);
   const [name, setName] = useState(data.name);
@@ -191,7 +191,11 @@ function Octagon({
 
   return (
     <CardWrap width={width}>
-      <Card cardwidth={cardwidth} cardheight={cardheight} cardbackground={cardbackground}>
+      <Card
+        cardwidth={cardwidth}
+        cardheight={cardheight}
+        cardbackground={cardbackground}
+      >
         <Top>
           {isProfilePage && (
             <ModifyTop onClick={() => setIsEditable(true)}>

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  margin-top: 100px;
+  margin-top: 50px;
   margin-bottom: 170px;
   & hr {
     width: 90%;
@@ -20,6 +20,7 @@ const H1 = styled.h1`
   font-weight: 700;
   text-align: center;
   color: #202020;
+  user-select: none;
 `;
 const CardWrap = styled.div`
   width: 550px;
@@ -28,15 +29,15 @@ const CardWrap = styled.div`
 `;
 const Top = styled.div`
   width: 80%;
-  padding-top: 40px;
+  /* padding-top: 40px; */
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   margin-left: 55px;
 `;
 const Card = styled.div`
   width: 550px;
-  padding-bottom: 50px;
-  background-color: #ffdcd6;
+  padding-bottom: 10px;
+  /* background-color: #ffdcd6;
   clip-path: polygon(
     10% 0%,
     90% 0%,
@@ -46,9 +47,9 @@ const Card = styled.div`
     10% 100%,
     0% 90%,
     0% 10%
-  );
+  ); */
   margin: 0 auto;
-  padding-top: 50px;
+  /* padding-top: 50px; */
 `;
 const SmallBox = styled.div`
   width: 85%;
@@ -114,7 +115,7 @@ const ButtomWrap = styled.div`
 `;
 const Buttom = styled.div`
   width: 100%;
-  border: 1px solid #1a1a1a33;
+  /* border: 1px solid #1a1a1a33; */
   background-color: white;
   border-radius: 50px;
   margin: 0 auto;
@@ -132,7 +133,7 @@ const Buttom = styled.div`
 const Box = styled.div`
   width: 150px;
   height: 50px;
-  background-color: #ebebeb;
+  /* background-color: #ebebeb;
   clip-path: polygon(
     10% 0%,
     90% 0%,
@@ -142,9 +143,9 @@ const Box = styled.div`
     0% 100%,
     0% 90%,
     0% 25%
-  );
+  ); */
   margin: 0 auto;
-  border-right: 1px solid #e4e4e4;
+  /* border-right: 1px solid #e4e4e4; */
   text-align: center;
   display: flex;
   justify-content: center;
@@ -152,6 +153,7 @@ const Box = styled.div`
   font-size: 1rem;
   font-weight: 700;
   transition: all 0.3s ease;
+  cursor: pointer;
   &.selected {
     background-color: #747474;
     color: white;
