@@ -47,6 +47,7 @@ const CalendarHeader = styled.h3`
   align-items: baseline;
   gap: 6px;
   cursor: pointer;
+  transition: 0.2s ease;
 
   &:hover {
     transform: scale(1.1);
@@ -215,7 +216,7 @@ const SectionH3 = styled.h3`
   font-size: 1.0rem;
   margin-bottom: 16px;
   user-select: none;
-
+  transition: 0.2s;
   &:hover {
     transform: scale(1.1);
   }
