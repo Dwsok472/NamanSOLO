@@ -28,9 +28,19 @@ const Box = styled.div`
     padding-left: 10px;
     color: #999999;
   }
+  .wrap{
+    display: flex;
+  }
+  .show-more{
+    font-size: 0.4rem;
+    background-color: white;
+    &:hover{
+     font-weight :700 ;
+    }
+  }
 `;
 const Text = styled.div`
-  width: 100%;
+  width: 85%;
   padding-left: 10px;
 `;
 
@@ -172,11 +182,14 @@ function Comment({ albumData, addComment }) {
           data.slice(0, visibleCommentsCount).map((comment) => (
             <Box
               key={comment.id}
-              onClick={() => toggleCommentVisibility(comment.id)}
+
             >
               <span className="username">{comment.username}</span>
               <span className="date">{comment.date}</span>
-              <Text>{comment.text}</Text>
+              <div className='wrap'>
+                <Text>{comment.text}</Text>
+                <button className='show-more' onClick={() => toggleCommentVisibility(comment.id)}>답글 보기</button>
+              </div>
               {isCommentVisible[comment.id] && (
                 <ReComment commentId={comment.id} />
               )}

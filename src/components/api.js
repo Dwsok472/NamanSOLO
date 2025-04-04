@@ -109,7 +109,7 @@ export async function AddCommentByAlbumId(albumId) {
     });
     return response.data; // 서버에서 반환한 데이터
   } catch (error) {
-    alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+    alert('댓글을 불러오는 과정에서 에러가 발생하였습니다! ');
     throw error; // 에러 처리
   }
 }
@@ -122,7 +122,7 @@ export async function ReCommentByCommentId(commentId) {
     });
     return response.data; // 서버에서 반환한 데이터
   } catch (error) {
-    alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+    alert('답글을 불러오는 과정에서 에러가 발생하였습니다! ');
     throw error; // 에러 처리
   }
 }

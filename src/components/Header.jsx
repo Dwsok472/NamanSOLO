@@ -7,17 +7,17 @@ import { useNavigate } from 'react-router-dom';
 
 const GlobalStyle = createGlobalStyle`
   body.blur #main-content {
-    filter: blur(4px);
     transition: filter 0.3s ease;
     pointer-events: none;
     user-select: none;
+    filter: blur(4px);
   }
 `;
 
 const Container = styled.header`
   width: 100%;
-  height: 100px;
-  background-color: #ffcbc2;
+  height: 78px;
+  background-color: #8c0d17;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,7 +26,8 @@ const Container = styled.header`
   top: 0;
   left: 0;
   z-index: 999;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+  /* border-bottom:1px solid #a8a8a8; */
+  /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5); */
 `;
 
 const Logo = styled.h1`
@@ -40,12 +41,11 @@ const Nav = styled.nav`
   align-items: center;
   gap: 2.5rem;
   margin-left: 3rem;
-
   a,
   div {
     font-size: 1.3rem;
     color: white;
-    font-weight: 500;
+    font-weight: 700;
     text-decoration: none;
     padding: 0.4rem 0.6rem;
     border-radius: 8px;
@@ -54,12 +54,6 @@ const Nav = styled.nav`
     transform-origin: center;
     display: inline-block;
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-    }
   }
 
   @media (max-width: 768px) {
@@ -76,16 +70,15 @@ const SubMenu = styled.ul`
   top: 100%;
   left: 0;
   margin-top: 0.5rem;
-  background-color: #ffc1b4;
-  border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.07);
+  background-color: #8c0d17;
   padding: 1rem 1.5rem;
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   z-index: 999;
-  min-width: 160px;
+  width: 100%;
+
 
   li a {
     color: white;
@@ -97,12 +90,6 @@ const SubMenu = styled.ul`
     transform-origin: center;
     display: inline-block;
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-    }
   }
 `;
 
@@ -235,7 +222,7 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-      <Logo onClick={() => navigate('/')}>{logoText}</Logo>
+        <Logo onClick={() => navigate('/')}>{logoText}</Logo>
 
         <Nav>
           {menuItems.map(({ to, label }) => (

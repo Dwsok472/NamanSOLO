@@ -5,18 +5,14 @@ import { useNavigate } from 'react-router-dom';
 const Button = styled.button`
   width: 90px;
   border-radius: 10px;
-  background-color: white;
-  border: 1px solid white;
+  background-color: #8c0d17;
   font-size: 1rem;
   font-weight: 700;
-  border: 1px solid #3333;
-  color: #1b1b1b;
-
+  color: white;
   cursor: pointer;
   &:hover {
-    background-color: #ff9987;
-    color: white;
-    border: 1px solid #3333;
+    color: #d1d1d1;
+
   }
   &:focus {
     outline: none;

@@ -19,24 +19,20 @@ import marker from '../img/marker.png';
 import eraser from '../img/eraser.png';
 import RightBox from "./RightBox";
 import { useNavigate } from "react-router-dom";
+import AddAlbum from "./AddAlbum";
 
 const BoardWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: center;
   gap: 10px;
   padding: 40px 30px;
   height: 860px;
 `;
 
 const BoardFrame = styled.div`
-background-image: url(${back}); /* back2.jpg 이미지 적용 */
-  background-size: cover;  /* 배경 이미지가 전체 영역을 덮도록 설정 */
-  background-position: center;  /* 이미지가 중앙에 오도록 설정 */
-  background-repeat: no-repeat; /* 배경 이미지가 반복되지 않도록 설정 */
-  border: 20px solid #deb887;
   border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+
   width: 75%;
   max-width: 1900px;
   min-height: 750px;
@@ -105,6 +101,21 @@ const BoardInner = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+const AddButton = styled.button`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  border-radius: 15px;
+  background-color: #ff7a7a;
+  color: white;
+  &:hover{
+    font-weight: 700;
+  }
+`
 
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
@@ -220,8 +231,9 @@ const AlbumBoard = () => {
           </PhotoArea>
         </BoardInner>
         <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
+        <AddButton>앨범 추가하기</AddButton>
       </BoardFrame>
-      <RightBox albumData={selectedAlbum} />
+      {/* <RightBox albumData={selectedAlbum} /> */}
     </BoardWrapper>
   );
 };

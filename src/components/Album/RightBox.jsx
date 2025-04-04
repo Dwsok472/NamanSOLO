@@ -10,7 +10,7 @@ import couple4 from '../img/couple4.png';
 import AlbumDetail from './AlbumDetail';
 
 const Container = styled.div`
-   border: 5px solid #363636;
+
   width: 100%;
   margin: 0 auto;
   padding: 10px;
