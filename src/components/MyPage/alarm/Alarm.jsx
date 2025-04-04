@@ -229,6 +229,16 @@ const Image = styled.img`
   cursor: pointer;
 `;
 
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 150;
+`;
+
 function Alarm({ onClose /*, isOpen*/ }) {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [expandedId, setExpandedId] = useState(null); // 펼쳐진 알림 ID
@@ -471,96 +481,99 @@ function Alarm({ onClose /*, isOpen*/ }) {
   };
 
   return (
-    <Container>
-      <ModalContainer
-        className="alarm-modal-container"
-        onMouseDown={handleMouseDownAlarm} // 마우스 다운 시 드래그 시작
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-        }} // 모달 위치 설정
-      >
-        <Top>
-          <Image src={settings} alt="Settings" onClick={toggleSetting} />{" "}
-          {showSetting && <Setting onClose={toggleSetting} />}
-          <h2>알람</h2>
-          <CloseButton onClick={onClose}>
-            <IconClose />
-          </CloseButton>
-        </Top>
+    <>
+      <Backdrop onClick={onClose} />
+      <Container>
+        <ModalContainer
+          className="alarm-modal-container"
+          onMouseDown={handleMouseDownAlarm} // 마우스 다운 시 드래그 시작
+          style={{
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+          }} // 모달 위치 설정
+        >
+          <Top>
+            <Image src={settings} alt="Settings" onClick={toggleSetting} />{" "}
+            <h2>알람</h2>
+            <CloseButton onClick={onClose}>
+              <IconClose />
+            </CloseButton>
+          </Top>
 
-        <ContainerMain>
-          {/* 날씨 정보 표시 */}
-          <Content>
-            {loading ? (
-              <span>날씨 정보를 불러오는 중...</span>
-            ) : weather ? (
-              <>
-                <Img
-                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
-                  alt={weather.description}
-                />
-                <Show>
-                  {cityTranslations[city] || city} 날씨: {weather.temperature}
-                  °C, {weather.description}
-                </Show>
-              </>
-            ) : (
-              <span>날씨 정보를 불러오는 데 실패했습니다.</span>
-            )}
-            {/* 도시 선택 드롭다운 */}
-            <DropdownWrapper>
-              <DropdownButton onClick={() => setIsOpen((prev) => !prev)}>
-                {cityTranslations[city] || city}
-              </DropdownButton>
-
-              {isOpen && (
-                <DropdownList>
-                  {cities.map((cityName) => (
-                    <DropdownItem
-                      key={cityName}
-                      onClick={() => {
-                        setCity(cityName);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {cityTranslations[cityName] || cityName}
-                    </DropdownItem>
-                  ))}
-                </DropdownList>
+          <ContainerMain>
+            {/* 날씨 정보 표시 */}
+            <Content>
+              {loading ? (
+                <span>날씨 정보를 불러오는 중...</span>
+              ) : weather ? (
+                <>
+                  <Img
+                    src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                    alt={weather.description}
+                  />
+                  <Show>
+                    {cityTranslations[city] || city} 날씨: {weather.temperature}
+                    °C, {weather.description}
+                  </Show>
+                </>
+              ) : (
+                <span>날씨 정보를 불러오는 데 실패했습니다.</span>
               )}
-            </DropdownWrapper>
-          </Content>
+              {/* 도시 선택 드롭다운 */}
+              <DropdownWrapper>
+                <DropdownButton onClick={() => setIsOpen((prev) => !prev)}>
+                  {cityTranslations[city] || city}
+                </DropdownButton>
 
-          {/* 알람 항목들 */}
-          {alarmList.map((alarm) => {
-            const isExpanded = expandedId === alarm.id;
-            const shouldShowToggle = isExpanded || overflowingItems[alarm.id];
-            return (
-              <AlarmItem
-                key={alarm.id}
-                onClick={() => handleAlarmClick(alarm)}
-                isExpanded={isExpanded}
-              >
-                <Img src={alarm.img} alt={alarm.alt} />
-                <TextWrapper
-                  isExpanded={isExpanded}
-                  ref={(el) => (textRefs.current[alarm.id] = el)} // ref 설정
-                >
-                  {alarm.text}
-                </TextWrapper>
-
-                {shouldShowToggle && (
-                  <ToggleIcon isExpanded={isExpanded}>
-                    {isExpanded ? "▲" : "▼"}
-                  </ToggleIcon>
+                {isOpen && (
+                  <DropdownList>
+                    {cities.map((cityName) => (
+                      <DropdownItem
+                        key={cityName}
+                        onClick={() => {
+                          setCity(cityName);
+                          setIsOpen(false);
+                        }}
+                      >
+                        {cityTranslations[cityName] || cityName}
+                      </DropdownItem>
+                    ))}
+                  </DropdownList>
                 )}
-              </AlarmItem>
-            );
-          })}
-        </ContainerMain>
-      </ModalContainer>
-    </Container>
+              </DropdownWrapper>
+            </Content>
+
+            {/* 알람 항목들 */}
+            {alarmList.map((alarm) => {
+              const isExpanded = expandedId === alarm.id;
+              const shouldShowToggle = isExpanded || overflowingItems[alarm.id];
+              return (
+                <AlarmItem
+                  key={alarm.id}
+                  onClick={() => handleAlarmClick(alarm)}
+                  isExpanded={isExpanded}
+                >
+                  <Img src={alarm.img} alt={alarm.alt} />
+                  <TextWrapper
+                    isExpanded={isExpanded}
+                    ref={(el) => (textRefs.current[alarm.id] = el)} // ref 설정
+                  >
+                    {alarm.text}
+                  </TextWrapper>
+
+                  {shouldShowToggle && (
+                    <ToggleIcon isExpanded={isExpanded}>
+                      {isExpanded ? "▲" : "▼"}
+                    </ToggleIcon>
+                  )}
+                </AlarmItem>
+              );
+            })}
+          </ContainerMain>
+        </ModalContainer>
+      </Container>
+      {showSetting && <Setting onClose={toggleSetting} />}
+    </>
   );
 }
 
