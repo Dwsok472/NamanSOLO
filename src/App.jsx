@@ -7,7 +7,7 @@ import Find from "./components/FindIdAndPwd/Find";
 import Event from "./components/Event";
 import RegisterMain from "./components/Register/RegisterMain";
 import AllStories from "./components/Story/AllStories";
-import MainPage from "./components/MainPage";
+import MainPage from "./components/Mainpage/Mainpage";
 import MyPage from "./components/MyPage/MyPage";
 import MainMap from "./components/Map/MainMap";
 import AlbumBoard from "./components/Album/AlbumBoard";
