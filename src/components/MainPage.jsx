@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from './Header';
+import couple1 from './img/couple1.png';
 
 const PageContainer = styled.div`
   position: relative;
@@ -45,7 +46,7 @@ const MainContent = styled.div.attrs(() => ({
 `;
 
 const Wrapper = styled.div`
-  padding: 20px 24px 40px;
+  padding: 0;
   font-family: 'Poppins', sans-serif;
   color: #333;
   text-align: center;
@@ -179,6 +180,69 @@ const Title = styled.h2`
   margin-bottom: 16px;
 `;
 
+const BookWrapper = styled.div`
+  perspective: 1200px;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  position: relative;
+`;
+
+const FlipPage = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.8s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+`;
+
+const PageFront = styled(FlipPage)`
+  transform: rotateY(${({ $flipped }) => ($flipped ? '-180deg' : '0deg')});
+  z-index: ${({ $flipped }) => ($flipped ? 1 : 2)};
+`;
+
+const PageBack = styled(FlipPage)`
+  transform: rotateY(${({ $flipped }) => ($flipped ? '0deg' : '180deg')});
+  z-index: ${({ $flipped }) => ($flipped ? 2 : 1)};
+`;
+
+const BookPageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease-in-out;
+  transform: ${({ $flipped }) => ($flipped ? 'rotateY(180deg)' : 'rotateY(0deg)')};
+`;
+
+const NavButton = styled.button`
+  position: absolute;
+  top: 50%;
+  ${({ $left }) => ($left ? 'left: 16px;' : 'right: 16px;')}
+  transform: translateY(-50%);
+  padding: 8px 16px;
+  background: #ff9a9a;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  z-index: 10;
+  cursor: pointer;
+
+  &:hover {
+    background: #ff6d6d;
+  }
+`;
+
+
 const ButtonGroup = styled.div`
   margin-top: 20px;
   display: flex;
@@ -203,12 +267,17 @@ const ButtonGroup = styled.div`
 
 const BookSection = styled.section`
   display: flex;
-  width: 100%;
-  padding: 60px 5%;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 80px 60px;
   background: #fff8f8;
-  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
+  border-radius: 0; /* 코너 라운드 제거해도 깔끔해요 */
+  box-shadow: none;
   gap: 40px;
+  width: 100vw;      // 💥 전체화면
+  max-width: 100vw;
+  margin: 0;
+  flex-wrap: wrap;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -327,17 +396,32 @@ const Banner = styled.div`
   margin-top: 80px;
 `;
 
+const BookFlip = ({ flipped, togglePage }) => {
+  return (
+    <BookWrapper>
+      <BookPageContainer $flipped={flipped}>
+        <PageFront flipped={flipped}>👩‍❤️‍👨 나의 이야기</PageFront>
+        <PageBack flipped={flipped}>📖 우리의 추억들</PageBack>
+      </BookPageContainer>
+      <NavButton $left onClick={togglePage}>◀</NavButton>
+      <NavButton onClick={togglePage}>▶</NavButton>
+    </BookWrapper>
+  );
+};
+
 function MainPage() {
   const [displayText, setDisplayText] = useState('');
   const [showIntro, setShowIntro] = useState(true);
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
+  const [flipped, setFlipped] = useState(false);
   const fullTextRef = useRef('WeARE');
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
   const [showLogo, setShowLogo] = useState(false);
   const didSetRef = useRef(false);
+  const bookRef = useRef(null);
 
   useEffect(() => {
     let index = 0;
@@ -373,11 +457,11 @@ function MainPage() {
     const t2 = setTimeout(() => setShowLogo(true), 3200);
     const t3 = setTimeout(() => setSlideOut(true), 3600);
     const t4 = setTimeout(() => {
-      setShowIntro(false); 
       setShowMain(true);
-      document.body.classList.remove("blur");
-    }, 4800); 
-  
+      document.body.classList.remove('blur');
+      window.scrollTo({ top: 0 });
+    }, 4400);
+
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -385,13 +469,15 @@ function MainPage() {
       clearTimeout(t4);
     };
   }, []);
-  
+
   const scrollToStory = () => {
-    const element = document.getElementById('main-content');
+    const element = bookRef.current;
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const togglePage = () => setFlipped((prev) => !prev);
 
   return (
     <>
@@ -414,7 +500,7 @@ function MainPage() {
         loginText="로그인"
         signupText="회원가입"
       />
-  
+
       <PageContainer>
         {showIntro && (
           <>
@@ -428,7 +514,7 @@ function MainPage() {
             <IntroWrapper $slideOut={slideOut} />
           </>
         )}
-  
+
         <MainContent $slideOut={slideOut} $show={showMain}>
           <HeroSection>
             <HeroText>
@@ -438,42 +524,21 @@ function MainPage() {
             </HeroText>
             <CTAButton onClick={scrollToStory}>바로가기</CTAButton>
           </HeroSection>
-  
-          <Wrapper>
-          <BookSection>
+
+          <BookSection ref={bookRef}>
             <LeftPanel>
               <h2>나의 STORY</h2>
-              <img src="../img/couple1.png" alt="커플 일러스트" />
-              <p>로그인 전: 인기 story</p>
-              <p>로그인 후: 나의 story</p>
+              <img src={couple1} alt="커플 일러스트" />
+              <p>로그인 전: 인기 story<br />로그인 후: 나의 story</p>
             </LeftPanel>
-
             <RightPanel>
-              <Page>👦 나의 이야기</Page>
-              <Page>👧 너의 이야기</Page>
+              <BookFlip $flipped={flipped} togglePage={togglePage} />
             </RightPanel>
           </BookSection>
-           
-            <Section>
-              <Title>나의 STORY</Title>
-              <ButtonGroup>
-                <button>전체 STORY</button>
-                <button>나만의 STORY</button>
-                <button>너와의 기념</button>
-              </ButtonGroup>
-            </Section>
-  
-            <Section>
-              <Title>데이트 장소 추천</Title>
-              <SubText>추천 장소 카드 or 간단한 썸네일 들어올 자리</SubText>
-            </Section>
-  
-            <Banner>LOVE TOGETHER</Banner>
-          </Wrapper>
         </MainContent>
       </PageContainer>
     </>
-  );  
+  );
 }
 
 export default MainPage;

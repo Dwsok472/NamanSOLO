@@ -80,7 +80,7 @@ const FixedBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${(props) => (props.show ? 1 : 0)};
+  opacity: ${($props) => ($props.show ? 1 : 0)};
   transition: opacity 0.8s ease;
 
   &:focus {
@@ -145,7 +145,7 @@ const Footer = () => {
       </FooterWrapper>
 
       {showTopBtn && (
-        <FixedBtn onClick={scrollToTop} show={showTopBtn}>
+        <FixedBtn onClick={scrollToTop} $show={showTopBtn}>
           <img src={topImg} alt="Top" />
         </FixedBtn>
       )}
