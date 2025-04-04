@@ -27,13 +27,15 @@ const Overlay = styled.div`
   height: 100vh;
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(4px);
-  z-index: 1;
 `;
 
 const Main = styled.main`
   display: flex;
   padding: 20px;
   gap: 20px;
+
+  filter: ${({ $blur }) => ($blur ? 'blur(3px)' : 'none')};
+  pointer-events: ${({ $blur }) => ($blur ? 'none' : 'auto')};
 `;
 
 const CalendarSection = styled.section`
@@ -426,8 +428,7 @@ function Todo() {
   return (
     <>
       <Wrapper>
-        <Main>
-    {(isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewingTravelEvent) && <Overlay />}
+        <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewingTravelEvent } >
           <CalendarSection>
             <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
               {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
