@@ -98,13 +98,13 @@ const IntroWrapper = styled.div`
   justify-content: center;
   top: 0;
   left: 0;
-  transition: transform 1.5s ease-in-out, opacity 1s ease-in-out;
+  transition: opacity 1s ease-in-out;
 
-  ${({ $slideOut }) =>
-    $slideOut &&
+  ${({ $fadeOut }) =>
+    $fadeOut &&
     css`
-      transform: translateY(-100%);
       opacity: 0;
+      pointer-events: none;
     `}
 `;
 
@@ -112,31 +112,29 @@ const IntroText = styled.div`
   position: absolute;
   font-size: 10rem;
   font-weight: 900;
+  z-index: 99999;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1.2);
-  opacity: 1;
-  animation: ${colorCycle} 3s infinite;
+  transform: translate(-50%, -50%) scale(1);
   transition: all 1.5s ease-in-out;
 
   ${({ $animateToLogo, $top, $left }) =>
     $animateToLogo &&
     css`
-      top: ${$top + 22}px;
-      left: ${$left + 68}px;
-      transform: translate(-50%, -50%) scale(0.7);
+      top: ${$top}px;
+      left: ${$left}px;
+      transform: translate(-50%, -50%) scale(0.6);
       font-size: 2.4rem;
-      animation: none;
     `}
 `;
 
-const MainContent = styled.div.attrs(() => ({
-  id: 'main-content',
-}))`
+const MainContent = styled.div`
   opacity: ${({ $show }) => ($show ? 1 : 0)};
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
   transition: all 0.8s ease-in-out;
+  padding-top: 100px;
 `;
+
 
 function MainPage() {
   const [displayText, setDisplayText] = useState('');
@@ -147,6 +145,7 @@ function MainPage() {
   const fullTextRef = useRef('WE ARE...');
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
+  const [showLogo, setShowLogo] = useState(false);
 
   useEffect(() => {
     let index = 0;
@@ -166,8 +165,8 @@ function MainPage() {
       if (logoRef.current) {
         const rect = logoRef.current.getBoundingClientRect();
         setLogoPosition({
-          top: rect.top + window.scrollY,
-          left: rect.left + window.scrollX,
+          top: rect.top + window.scrollY + rect.height / 2,
+          left: rect.left + window.scrollX + rect.width / 2,
         });
       } else {
         setTimeout(getLogoPos, 100);
@@ -177,17 +176,19 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setAnimateToLogo(true), 2200);
-    const t2 = setTimeout(() => setSlideOut(true), 4000);
-    const t3 = setTimeout(() => {
+    const t1 = setTimeout(() => setAnimateToLogo(true), 1500);
+    const t2 = setTimeout(() => setShowLogo(true), 3000);
+    const t3 = setTimeout(() => setFadeOutIntro(true), 3300);
+    const t4 = setTimeout(() => {
       setShowIntro(false);
       setShowMain(true);
-    }, 4500);
+    }, 4000);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
     };
   }, []);
 
@@ -195,7 +196,9 @@ function MainPage() {
     <>
       <Header
         logoRef={logoRef}
+        showLogo={showLogo}
         $visible={showMain}
+        logoText="WeARE"
         menuItems={[
           { to: '/story/all', label: '전체 스토리' },
           { to: '/map', label: '맵' },
