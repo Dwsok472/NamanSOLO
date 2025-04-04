@@ -325,7 +325,6 @@ function Edittravel({
               required
             />
 
-            <Label>날짜</Label>
             <Row>
               <Input
                 type="date"
