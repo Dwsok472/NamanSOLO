@@ -1,40 +1,223 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { getAllUsername, searchUsernameByKeyword } from '../api';
+import leftkey from '../img/leftkey.png';
+import rightkey from '../img/rightkey.png';
+import StarButton from './StarButton';
+import HeartButton from './HeartButton';
+import CommentButton from './CommentButton';
+import comment from '../img/comment.png';
+import Comment from './Comment';
 
-import AlbumDetail from './AlbumDetail';
-
+// 스타일 정의
 const Container = styled.div`
-
   width: 100%;
   margin: 0 auto;
-  padding: 10px;
-  border-radius: 16px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  margin-top: 30px;
+  align-items: center;
+  position: absolute;
+  height: 100%;
 `;
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 150;
+`;
+
 const BottomBox = styled.div`
-  width: 100%;
+  width: 25%;
   border-radius: 16px;
-  transition: margin-top 0.3s ease-out; /* 부드러운 애니메이션 추가 */
-  margin-top: 5px;
-
-
+  transition: margin-top 0.3s ease-out;
+  background-color: #000000;
+  padding-bottom: 10px;
+  padding-top: 30px;
+  z-index: 210;
+  /* border: 1px solid white; */
 `;
 
-function RightBox({ albumData }) {
+const CommentBox = styled.div`
+width : 100%;
+`;
+const Box = styled.div`
+  width: 100%;
+  position: relative;
+  .image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+  .leftkey {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 5px;
+    top: 35%;
+  }
+  .rightkey {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 5px;
+    top: 35%;
+  }
+  .boxwrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .box {
+    font-size: 0.8rem;
+    color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+  }
+  .username {
+    padding-left: 10px;
+    font-weight: 700;
+  }
+  .button {
+    display: flex;
+    justify-content: end;
+    padding-right: 5px;
+    .like {
+      color: white;
+      font-size: 0.6rem;
+    }
+  }
+  .comment {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+    margin-left: 3px;
+    cursor: pointer;
+  }
+  .tags {
+    font-size: 0.8rem;
+    color: #ffffff;
+    padding-top: 10px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid white;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+`;
 
 
+
+function RightBox({ albumData, onClose }) {
+
+  const [imageIndex, setImageIndex] = useState(0);
+  const [isCommentVisible, setIsCommentVisible] = useState(false);
+  const [selectedAlbumId, setSelectedAlbumId] = useState(null);
+  const [likeCount, setLikeCount] = useState(0);
+  const [userLikes, setUserLikes] = useState({}); // 유저별 좋아요 상태 관리
+
+
+
+  // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
+  const prevImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : albumData.imgurl.length - 1
+    );
+  };
+
+  // 이미지 변경 함수 (오른쪽 화살표 클릭 시)
+  const nextImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex < albumData.imgurl.length - 1 ? prevIndex + 1 : 0
+    );
+  };
+
+  // 댓글 모음 토글 함수
+  const toggleCommentVisibility = (albumId) => {
+    if (selectedAlbumId !== albumId) {
+      setIsCommentVisible(false);
+      setSelectedAlbumId(albumId);
+    }
+    setIsCommentVisible((prevVisibility) => !prevVisibility);
+  };
+
+  // 좋아요 클릭 시 처리 함수
+  const handleLike = (userId) => {
+    setUserLikes((prevLikes) => {
+      const currentUserLike = prevLikes[userId] || 0;
+      const newLike = currentUserLike === 0 ? 1 : 0;
+      const updatedLikes = { ...prevLikes, [userId]: newLike };
+
+      // 총 좋아요 수 계산 (유저의 상태에 따라 +1 또는 -1 반영)
+      const totalLikes = Object.values(updatedLikes).reduce((acc, like) => acc + like, 0);
+      setLikeCount(totalLikes); // 총 좋아요 수 업데이트
+
+      return updatedLikes; // 유저별 좋아요 상태 업데이트
+    });
+  };
 
   return (
-    <Container>
-      {albumData &&
+    <>
+      <Backdrop onClick={onClose} />
+      <Container>
         <BottomBox>
-          <AlbumDetail albumData={albumData} />
-        </BottomBox>}
-    </Container>
-  );
+          <Box id={albumData.id}>
+            <img
+              src={leftkey}
+              alt="leftkey"
+              className="leftkey"
+              onClick={prevImage}
+            />
+            <img
+              src={albumData.imgurl[imageIndex]}
+              alt="image"
+              className="image"
+            />
+            <img
+              src={rightkey}
+              alt="rightkey"
+              className="rightkey"
+              onClick={nextImage}
+            />
+
+            <div className="boxwrap">
+              <div className="box">
+                <div className="username">{albumData.username}</div>
+                <div className="title">{albumData.title}</div>
+              </div>
+              <div className="button">
+                <HeartButton onLike={() => handleLike(albumData.username)} />
+                <span className="like">{likeCount}</span>
+                <img
+                  src={comment}
+                  alt="comment"
+                  className="comment"
+                  onClick={() => toggleCommentVisibility(albumData.id)}
+                />
+              </div>
+            </div>
+            <div className="tags">
+              {albumData.tag && albumData.tag.length > 0 ? (
+                albumData.tag.map((tag, i) => <span key={i}>#{tag} </span>)
+              ) : (
+                <span> </span>
+              )}
+            </div>
+          </Box>
+
+          {isCommentVisible && selectedAlbumId === albumData.id && (
+            <CommentBox>
+              <Comment albumData={albumData} />
+            </CommentBox>
+          )}
+        </BottomBox>
+      </Container>
+    </>
+  )
 }
-export default RightBox
+
+export default RightBox;

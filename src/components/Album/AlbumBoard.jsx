@@ -23,13 +23,14 @@ import AddAlbum from "./AddAlbum";
 import Top from "./Top";
 
 const BoardWrapper = styled.div`
+padding-top: 10px;
   width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  height: 860px;
+  height: auto;
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
   /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
   background: linear-gradient(to bottom, #b85c79, #fdecec);
@@ -37,7 +38,7 @@ const BoardWrapper = styled.div`
 
 const BoardFrame = styled.div`
   border-radius: 16px;
-  width: 75%;
+  width: 70%;
   max-width: 1900px;
   min-height: 750px;
   display: flex;
@@ -110,7 +111,7 @@ const AlbumBoard = () => {
   const [currentPage, setCurrentPage] = useState(1);  // 현재 페이지 상태
   const itemsPerPage = 8;  // 한 페이지에 표시할 아이템 수
   const [selectedAlbum, setSelectedAlbum] = useState(null); //선택된 앨범 저장소!
-
+  const [showDetail, setShowDetail] = useState(false);  // 모달 창 열림/닫힘 상태
 
   // 데이터 로드 (임시용, 실제 API 사용 시 아래 주석 해제)
   useEffect(() => {
@@ -131,7 +132,12 @@ const AlbumBoard = () => {
 
   function handleSelectedAlbum(album) {
     setSelectedAlbum(album);
+    setShowDetail(true); // 앨범 클릭 시 모달을 엽니다.
   }
+
+  const toggleBack = () => {
+    setShowDetail(false); // 모달을 닫는 함수
+  };
 
   console.log(selectedAlbum);
   const generateItems = () => {
@@ -184,14 +190,14 @@ const AlbumBoard = () => {
   };
 
 
+
   return (
+
     <BoardWrapper>
       <Top />
       <BoardFrame>
         <img src={marker} alt="marker" className="marker" onClick={handlePrevPage} />
         <BoardInner>
-          {/* <EmojiTopLeft src={imo2} alt="left emoji" />
-          <EmojiBottomRight src={imo1} alt="right emoji" /> */}
           <PhotoArea>
             {loading ? <p>LOADING...</p> : generateItems()}  {/* 로딩 중일 때 메시지 */}
           </PhotoArea>
@@ -199,8 +205,10 @@ const AlbumBoard = () => {
         <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
         {/* <AddButton>앨범 추가하기</AddButton> */}
       </BoardFrame>
-      <RightBox albumData={selectedAlbum} />
+      {showDetail && <RightBox albumData={selectedAlbum} onClose={toggleBack} />}
     </BoardWrapper>
+
+
   );
 };
 

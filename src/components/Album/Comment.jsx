@@ -8,10 +8,15 @@ const Container = styled.div`
   color: white;
 `;
 const CommentList = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  .more {
+  max-height: 300px; /* 최대 높이를 설정하여 스크롤이 생기도록 함 */
+  overflow-y: auto;  /* 스크롤 기능 활성화 */
+  margin-bottom: 20px;
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 핸들의 색상 */
+    border-radius: 10px;
   }
 `;
 const Box = styled.div`
@@ -34,6 +39,7 @@ const Box = styled.div`
   .show-more{
     font-size: 0.4rem;
     background-color: white;
+    border-radius: 5px;
     &:hover{
      font-weight :700 ;
     }
@@ -46,7 +52,7 @@ const Text = styled.div`
 
 const InputWrap = styled.div`
   display: flex;
-  margin-top: 12px;
+  margin-top: 5px;
   margin-left: auto;
   margin-right: auto;
   width: 90%;
@@ -55,28 +61,35 @@ const InputWrap = styled.div`
 const Input = styled.input`
   flex: 1;
   padding: 10px 12px;
-  /* border: 1px solid #ccc; */
   border: none;
-  font-size: 14px;
+  font-size: 0.7rem;
   outline: none;
+  background-color: black;
+  color: white;
+  &::placeholder{
+    color: #cfcfcf;
+  }
 `;
 
 const SubmitButton = styled.button`
   border: none;
-  background-color: #fda899;
+  background-color: black;
   color: white;
   font-weight: 700;
   cursor: pointer;
   font-size: 0.8rem;
-  border-radius: 0;
+  border-radius: 10px;
+  &:hover{
+    color: #cccccc;
+  }
 `;
 
-function Comment({ albumData, addComment }) {
+function Comment({ albumData }) {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true); // 로딩 상태
-  const [isCommentVisible, setIsCommentVisible] = useState({});
-  const [visibleCommentsCount, setVisibleCommentsCount] = useState(5); // 보이는 댓글의 갯수
+  const [isCommentVisible, setIsCommentVisible] = useState({}); // 각 댓글의 답글 표시 여부 상태 관리
+
 
   console.log(albumData.id);
 
@@ -160,18 +173,13 @@ function Comment({ albumData, addComment }) {
     setValue('');
   };
 
-  // 리댓글 표시 여부를 각 댓글별로 토글
   const toggleCommentVisibility = (commentId) => {
     setIsCommentVisible((prevVisibility) => ({
       ...prevVisibility,
-      [commentId]: !prevVisibility[commentId], // 기존 값 반전
+      [commentId]: !prevVisibility[commentId],
     }));
   };
 
-  // 더보기 버튼 클릭 시 댓글 5개씩 추가
-  const loadMoreComments = () => {
-    setVisibleCommentsCount((prevCount) => prevCount + 5); // 5개씩 증가
-  };
 
   return (
     <Container>
@@ -179,7 +187,7 @@ function Comment({ albumData, addComment }) {
         {loading ? (
           <p>LOADING...</p>
         ) : (
-          data.slice(0, visibleCommentsCount).map((comment) => (
+          data.map((comment) => (
             <Box
               key={comment.id}
 
@@ -188,18 +196,15 @@ function Comment({ albumData, addComment }) {
               <span className="date">{comment.date}</span>
               <div className='wrap'>
                 <Text>{comment.text}</Text>
-                <button className='show-more' onClick={() => toggleCommentVisibility(comment.id)}>답글 보기</button>
+                <button
+                  className="show-more"
+                  onClick={() => toggleCommentVisibility(comment.id)}
+                > 답글 보기
+                </button>
               </div>
-              {isCommentVisible[comment.id] && (
-                <ReComment commentId={comment.id} />
-              )}
+              {isCommentVisible[comment.id] && <ReComment commentId={comment.id} />} {/* 답글 표시 */}
             </Box>
           ))
-        )}
-        {data.length > visibleCommentsCount && (
-          <div onClick={loadMoreComments} className="more">
-            더보기
-          </div>
         )}
       </CommentList>
       <InputWrap>

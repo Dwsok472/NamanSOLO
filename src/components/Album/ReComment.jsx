@@ -41,20 +41,27 @@ const InputWrap = styled.div`
 const Input = styled.input`
   flex: 1;
   padding: 10px 12px;
-  /* border: 1px solid #ccc; */
   border: none;
-  font-size: 14px;
+  font-size: 0.6rem;
   outline: none;
+  color: white;
+  background-color: black;
+  &::placeholder{
+    color: #cfcfcf;
+  }
 `;
 
 const SubmitButton = styled.button`
   border: none;
-  background-color: #fda899;
+  background-color: black;
   color: white;
   font-weight: 700;
   cursor: pointer;
   font-size: 0.7rem;
   border-radius: 0;
+  &:hover{
+    color: #cccccc;
+  }
 `;
 
 function ReComment({ commentId }) {
