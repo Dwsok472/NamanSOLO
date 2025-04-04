@@ -2,19 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Card = styled.div`
-  width: 220px;
+  width: 240px;
   height: 260px;
   background: #ff8a9b;
   border-radius: 16px;
   color: #fff;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  margin-left: 60px;
 
   &:hover div:nth-child(1) {
     opacity: 0;
