@@ -1,13 +1,47 @@
+// MainPage.jsx
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
-import styled, { css, keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Header from './Header';
 
-const colorCycle = keyframes`
-  0% { color: #222; }
-  25% { color: #ff7f7f; }
-  50% { color: #ff5252; }
-  75% { color: #ffb6b6; }
-  100% { color: #222; }
+const PageContainer = styled.div`
+  position: relative;
+  overflow: visible;
+`;
+
+const IntroWrapper = styled.div`
+  height: 100vh;
+  background: #fff0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  transform: ${({ $slideOut }) => ($slideOut ? 'translateY(-100vh)' : 'translateY(0)')};
+  transition: transform 1.2s ease-in-out;
+`;
+const IntroText = styled.div`
+  position: fixed;
+  z-index: 10001;
+  font-weight: bold;
+  font-family: 'inherit';
+  color: white;
+  font-size: ${({ $animateToLogo }) => ($animateToLogo ? '2.5rem' : '10rem')};
+  top: ${({ $top }) => ($top !== undefined ? `${$top}px` : '50%')};
+  left: ${({ $left }) => ($left !== undefined ? `${$left}px` : '50%')};
+  transform: translate(-50%, -50%);
+  transition: all 1.5s ease-in-out;
+`;
+
+const MainContent = styled.div`
+  position: relative;
+  z-index: 5;
+  padding-top: 100px;
+  opacity: ${({ $show }) => ($show ? 1 : 0)};
+  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(40px)')};
+  transition: all 1s ease-in-out;
 `;
 
 const Wrapper = styled.div`
@@ -87,57 +121,6 @@ const Banner = styled.div`
   margin-top: 80px;
 `;
 
-const IntroWrapper = styled.div`
-  position: fixed;
-  z-index: 1000;
-  background-color: #fff0f0;
-  width: 100vw;
-  height: 100vh;
-  display: ${({ $show }) => ($show ? 'flex' : 'none')};
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  left: 0;
-  transition: opacity 1s ease-in-out;
-
-  ${({ $fadeOut }) =>
-    $fadeOut &&
-    css`
-      opacity: 0;
-      pointer-events: none;
-    `}
-`;
-
-const IntroText = styled.div`
-  position: fixed;
-  z-index: 10001;
-  font-weight: bold;
-  font-family: 'inherit';
-  color: white;
-
-  font-size: ${({ $animateToLogo }) => ($animateToLogo ? '2.5rem' : '10rem')};
-
-  top: ${({ $top }) => ($top !== undefined ? `${$top}px` : '50%')};
-  left: ${({ $left }) => ($left !== undefined ? `${$left}px` : '50%')};
-
-  transform: ${({ $animateToLogo }) =>
-    $animateToLogo
-      ? 'translate(-50%, -48%) scale(1)' 
-      : 'translate(-50%, -50%) scale(1)'};
-
-  transition: all 1.5s ease-in-out;
-`;
-
-const MainContent = styled.div.attrs(() => ({
-  id: 'main-content'
-}))`
-  opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
-  transition: all 0.8s ease-in-out;
-  padding-top: 100px;
-`;
-
-
 function MainPage() {
   const [displayText, setDisplayText] = useState('');
   const [showIntro, setShowIntro] = useState(true);
@@ -148,7 +131,6 @@ function MainPage() {
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
   const [showLogo, setShowLogo] = useState(false);
-  const [fadeOutIntro, setFadeOutIntro] = useState(false);
   const didSetRef = useRef(false);
 
   useEffect(() => {
@@ -168,17 +150,14 @@ function MainPage() {
     const getLogoPos = () => {
       if (logoRef.current && !didSetRef.current) {
         const rect = logoRef.current.getBoundingClientRect();
-        const top = rect.top + 23;
+        const top = rect.top + rect.height / 2;
         const left = rect.left + rect.width / 2;
-  
         setLogoPosition({ top, left });
         didSetRef.current = true;
-        console.log(`고정 좌표: top=${top}, left=${left}`);
       } else if (!logoRef.current) {
         setTimeout(getLogoPos, 50);
       }
     };
-  
     setTimeout(getLogoPos, 0);
     setTimeout(getLogoPos, 100);
   }, []);
@@ -186,13 +165,12 @@ function MainPage() {
   useEffect(() => {
     const t1 = setTimeout(() => setAnimateToLogo(true), 2000);
     const t2 = setTimeout(() => setShowLogo(true), 3200);
-    const t3 = setTimeout(() => setFadeOutIntro(true), 3600);
+    const t3 = setTimeout(() => setSlideOut(true), 3600); // 인트로 위로 올라감
     const t4 = setTimeout(() => {
-      setShowIntro(false);
-      setShowMain(true);
-      document.body.classList.remove("blur");
-    }, 4200);
-
+      setShowMain(true); // 메인 본문 등장
+      document.body.classList.remove('blur');
+    }, 4400);
+  
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -200,10 +178,11 @@ function MainPage() {
       clearTimeout(t4);
     };
   }, []);
+  
 
   return (
     <>
-    <Header
+      <Header
         logoRef={logoRef}
         showLogo={showLogo}
         logoText="WeARE"
@@ -222,51 +201,52 @@ function MainPage() {
         loginText="로그인"
         signupText="회원가입"
       />
-    
-    {showIntro && (
-  <>
-    <IntroText
-      $animateToLogo={showIntro && animateToLogo}
-      $top={showIntro && animateToLogo ? logoPosition.top : undefined}
-      $left={showIntro && animateToLogo ? logoPosition.left : undefined}
-    >
-      {displayText}
-    </IntroText>
 
-    <IntroWrapper $show={showIntro} $slideOut={slideOut} />
-  </>
-)}
+      <PageContainer>
+        {showIntro && (
+          <>
+            <IntroText
+              $animateToLogo={animateToLogo}
+              $top={animateToLogo ? logoPosition.top : undefined}
+              $left={animateToLogo ? logoPosition.left : undefined}
+            >
+              {displayText}
+            </IntroText>
+            <IntroWrapper $slideOut={slideOut} />
+          </>
+        )}
 
-      <MainContent $show={showMain}>
-        <Wrapper style={{ visibility: showIntro ? 'hidden' : 'visible' }}>
-          <Section>
-            <SubText>
-              <strong>(WE ARE..)</strong> 우리의 이야기<br />
-              너와 나, 두 사람이 한 권의 책을 써가는 중이에요.<br />
-              우리의 이야기는 계속 된다...
-            </SubText>
-            <GoButton>바로가기</GoButton>
-          </Section>
+        <MainContent $slideOut={slideOut} $show={showMain}>
+          <Wrapper>
+            <Section>
+              <SubText>
+                <strong>(WE ARE..)</strong> 우리의 이야기<br />
+                너와 나, 두 사람이 한 권의 책을 써가는 중이에요.<br />
+                우리의 이야기는 계속 된다...
+              </SubText>
+              <GoButton>바로가기</GoButton>
+            </Section>
 
-          <SliderSection>슬라이드 or 팝업 자리</SliderSection>
+            <SliderSection>슬라이드 or 팝업 자리</SliderSection>
 
-          <Section>
-            <Title>나의 STORY</Title>
-            <ButtonGroup>
-              <button>전체 STORY</button>
-              <button>나만의 STORY</button>
-              <button>너와의 기념</button>
-            </ButtonGroup>
-          </Section>
+            <Section>
+              <Title>나의 STORY</Title>
+              <ButtonGroup>
+                <button>전체 STORY</button>
+                <button>나만의 STORY</button>
+                <button>너와의 기념</button>
+              </ButtonGroup>
+            </Section>
 
-          <Section>
-            <Title>데이트 장소 추천</Title>
-            <SubText>추천 장소 카드 or 간단한 썸네일 들어올 자리</SubText>
-          </Section>
+            <Section>
+              <Title>데이트 장소 추천</Title>
+              <SubText>추천 장소 카드 or 간단한 썸네일 들어올 자리</SubText>
+            </Section>
 
-          <Banner>LOVE TOGETHER</Banner>
-        </Wrapper>
-      </MainContent>
+            <Banner>LOVE TOGETHER</Banner>
+          </Wrapper>
+        </MainContent>
+      </PageContainer>
     </>
   );
 }
