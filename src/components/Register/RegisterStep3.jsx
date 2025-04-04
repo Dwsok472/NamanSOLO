@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import heartswithrate from "../img/heartswithrate.png";
 import NextButton from "../Button/NextButton";
+import { IconBehind } from "../Icons";
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  margin-top: 100px;
-  margin-bottom: 170px;
+  margin-top: 50px;
+  margin-bottom: 50px;
 
   .heartswithrate {
     display: block;
@@ -39,13 +40,17 @@ const H1 = styled.h1`
   font-weight: 700;
   text-align: center;
   color: #202020;
+  user-select: none;
 `;
 
 const Input = styled.input`
   border: none;
   outline: none;
-  height: 80px;
-  width: 170px;
+  height: 100px;
+  width: 400px;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  font-size: 35px;
   font-weight: 700;
 
   &::placeholder {
@@ -63,7 +68,16 @@ const ButtonWrap = styled.div`
   align-items: center;
 `;
 
-function RegisterStep3({ onNext }) {
+const Icon = styled.div`
+  position: absolute;
+  bottom: 40px;
+  right: 50px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+`;
+
+function RegisterStep3({ onNext, onBack }) {
   const [dday, setDday] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
 
@@ -77,7 +91,7 @@ function RegisterStep3({ onNext }) {
       const timeDiff = today.getTime() - selectedDate.getTime();
       const diffInDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
-      setDaysDiff(diffInDays > 0 ? diffInDays : (diffInDays < 0 ? null : 0)); // 0일 미만이면 0일로 고정
+      setDaysDiff(diffInDays > 0 ? diffInDays : diffInDays < 0 ? null : 0); // 0일 미만이면 0일로 고정
     } else {
       setDaysDiff(null);
     }
@@ -86,9 +100,15 @@ function RegisterStep3({ onNext }) {
   return (
     <Container>
       <H1>회원가입</H1>
-      <img src={heartswithrate} className="heartswithrate" alt="하트와 레이트" />
+      <img
+        src={heartswithrate}
+        className="heartswithrate"
+        alt="하트와 레이트"
+      />
       <h1 className="dday">
-        {daysDiff !== null ? `D-${daysDiff == 0 ? 'DAY' : daysDiff}` : 'D-DAY를 계산해줍니다.'}
+        {daysDiff !== null
+          ? `D-${daysDiff == 0 ? "DAY" : daysDiff}`
+          : "D-DAY를 계산해줍니다."}
       </h1>
       <div className="inputbox">
         <Input
@@ -103,17 +123,20 @@ function RegisterStep3({ onNext }) {
       <ButtonWrap>
         <NextButton onClick={onNext} />
       </ButtonWrap>
+      <Icon onClick={onBack}>
+        <IconBehind />
+      </Icon>
     </Container>
   );
 }
 
 export default RegisterStep3;
 
-  // async function onNext() {
-  //   try {
-  //     await registerCoupleDday(userId, dday);
-  //     onNext(); // 회원가입 완료 or 메인 페이지 이동 등
-  //   } catch (error) {
-  //     alert("D-DAY 등록에 실패했습니다.");
-  //   }
-  // }
+// async function onNext() {
+//   try {
+//     await registerCoupleDday(userId, dday);
+//     onNext(); // 회원가입 완료 or 메인 페이지 이동 등
+//   } catch (error) {
+//     alert("D-DAY 등록에 실패했습니다.");
+//   }
+// }

@@ -4,11 +4,12 @@ import heartRate from "../img/heart-rate.png";
 import styled from "styled-components";
 import NextButton from "../Button/NextButton";
 import iconUser from "../img/people.png";
+import { IconBehind } from "../Icons";
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  margin-top: 100px;
+  margin-top: 50px;
   margin-bottom: 170px;
 `;
 const H1 = styled.h1`
@@ -16,6 +17,7 @@ const H1 = styled.h1`
   font-weight: 700;
   text-align: center;
   color: #202020;
+  user-select: none;
 `;
 
 const Content = styled.div`
@@ -39,7 +41,16 @@ const ButtonWrap = styled.div`
   align-items: center;
 `;
 
-function RegisterStep2({ onNext }) {
+const Icon = styled.div`
+  position: absolute;
+  bottom: 40px;
+  right: 50px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+`;
+
+function RegisterStep2({ onNext, onBack }) {
   const [profileF, setProfileF] = useState({
     image: iconUser,
     name: "",
@@ -102,6 +113,9 @@ function RegisterStep2({ onNext }) {
       <ButtonWrap>
         <NextButton onClick={onNext} />
       </ButtonWrap>
+      <Icon onClick={onBack}>
+        <IconBehind />
+      </Icon>
     </Container>
   );
 }

@@ -49,6 +49,7 @@ const Top = styled.div`
 const H1 = styled.h1`
   font-size: 5rem;
   font-weight: 700;
+  user-select: none;
 `;
 const ButtomWrap = styled.div`
   width: 85%;

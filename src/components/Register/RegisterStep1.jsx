@@ -3,18 +3,21 @@ import styled from "styled-components";
 import { useState } from "react";
 import { IconPassword, IconUser } from "../Icons";
 import NextButton from "../Button/NextButton";
+import { useNavigate } from "react-router-dom";
+import { IconBehind } from "../Icons";
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  margin-top: 100px;
-  margin-bottom: 170px;
+  margin-top: 50px;
+  /* margin-bottom: 170px; */
 `;
 const H1 = styled.h1`
   font-size: 5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
+  user-select: none;
 `;
 
 const CardWrap = styled.div`
@@ -24,8 +27,8 @@ const CardWrap = styled.div`
 `;
 const Card = styled.div`
   width: 550px;
-  height: 650px;
-  background-color: #ffdcd6;
+  height: 620px;
+  /* background-color: #ffdcd6;
   clip-path: polygon(
     10% 0%,
     90% 0%,
@@ -35,13 +38,13 @@ const Card = styled.div`
     10% 100%,
     0% 90%,
     0% 10%
-  );
+  ); */
   margin: 0 auto;
 `;
 
 const Top = styled.div`
   width: 100%;
-  padding-top: 40px;
+  /* padding-top: 40px; */
   .agree_box {
     width: 450px;
     height: 150px;
@@ -51,6 +54,7 @@ const Top = styled.div`
     padding: 10px;
     overflow: scroll;
     overflow-x: hidden;
+    border: 1px solid #1a1a1a33;
   }
   .agree_box_text {
     width: 100%;
@@ -144,7 +148,7 @@ const ButtomWrap = styled.div`
 `;
 const Buttom = styled.div`
   width: 100%;
-  border: 1px solid #1a1a1a33;
+  /* border: 1px solid #1a1a1a33; */
   background-color: white;
   border-radius: 50px;
   margin: 0 auto;
@@ -160,6 +164,15 @@ const Buttom = styled.div`
   text-align: center;
 `;
 
+const Icon = styled.div`
+  position: absolute;
+  bottom: 40px;
+  right: 50px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+`;
+
 function RegisterStep1({ onNext }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -170,6 +183,7 @@ function RegisterStep1({ onNext }) {
   const handleChange = () => {
     setIsChecked(!isChecked); // 체크된 상태를 반전
   };
+  const navigate = useNavigate();
 
   async function handleCheckUsername() {
     try {
@@ -326,6 +340,9 @@ function RegisterStep1({ onNext }) {
           </ButtomWrap>
         </Card>
       </CardWrap>
+      <Icon onClick={() => navigate(-1)}>
+        <IconBehind />
+      </Icon>
     </Container>
   );
 }
