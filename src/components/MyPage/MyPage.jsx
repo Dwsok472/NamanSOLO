@@ -330,7 +330,7 @@ function MyPage() {
     }
   };
   const FileInput = () => {
-    document.getElementById("file-upload").click();
+    document.getElementById("file-upload-c").click();
   };
   // 알람 모달 열기/닫기 함수
   const toggleAlarm = () => {
@@ -343,7 +343,7 @@ function MyPage() {
           <Img src={image} onClick={FileInput} />
           <ImgInput
             type="file"
-            id="file-upload"
+            id="file-upload-c"
             accept="image"
             onChange={handleImageChange}
           />

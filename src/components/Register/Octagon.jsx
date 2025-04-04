@@ -138,6 +138,7 @@ const Button = styled.button`
 
 // 회원가입 유저 정보 입력 및 마이프로필 커플 정보 조회 및 수정에서 사용
 function Octagon({
+  id,
   width,
   cardwidth,
   cardheight,
@@ -146,73 +147,39 @@ function Octagon({
   imgheight,
   buttoncolor,
   isProfilePage,
-  isSignUpPage
+  isSignUpPage,
+  data,
+  onChange
 }) {
-  const [image, setImage] = useState(Profile);
-  const [name, setName] = useState('');
-  const [birthday, setBirthday] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [isEditable, setIsEditable] = useState(false);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const FileInput = () => {
+    document.getElementById(`${id}-file`).click();
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file)); // 이미지 미리보기 URL 생성
+      onChange('image', URL.createObjectURL(file));
     }
   };
 
-  const FileInput = () => {
-    document.getElementById('file-upload').click();
-  };
-  const handleIconClick = () => {
-    setIsEditable(true);   // 클릭 시 수정 가능하게(readonly false로 만들기)
-  };
-  // useEffect(() => {
-  //   ModifyInfo();
-  // }, [])
-  // async function ModifyInfo() {
-  //   try {
-  //     let response = await ModifyUserInfo(sendData);
-  //     if (!response || response.length === 0) {
-  //       console.log('데이터를 가져오지 못했습니다.');
-  //       return;
-  //     }
-  //     console.log(response);
-  //     setData(response);
-  //     setLoading(false);
-  //   }
-  //   catch (error) {
-  //     console.log(error);
-  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-  //   }
-  // }
-
   return (
     <CardWrap width={width}>
-      <Card
-        cardwidth={cardwidth}
-        cardheight={cardheight}
-        cardbackground={cardbackground}
-      >
+      <Card cardwidth={cardwidth} cardheight={cardheight} cardbackground={cardbackground}>
         <Top>
           {isProfilePage && (
-            <ModifyTop onClick={handleIconClick}>
+            <ModifyTop onClick={() => onChange('editable', true)}>
               <IconModify />
             </ModifyTop>
           )}
-
           <Img
-            src={image}
+            src={data.image}
             onClick={FileInput}
             imgwidth={imgwidth}
             imgheight={imgheight}
           />
           <ImgInput
             type="file"
-            id="file-upload"
+            id={`${id}-file`}
             accept="image/*"
             onChange={handleImageChange}
           />
@@ -226,53 +193,39 @@ function Octagon({
               <IconUser />
               <Input
                 type="text"
+                value={data.name}
+                onChange={(e) => onChange('name', e.target.value)}
                 placeholder="이름을 입력해주세요"
-                autoComplete="off" // 자동완성 기능 끄기
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
               />
             </SmallBox>
             <SmallBox>
               <IconBirthday />
               <Input
                 type="text"
-                placeholder="생년월일 입력주세요"
-                autoComplete="off" // 자동완성 기능 끄기
-                value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
-                readOnly={isProfilePage || !isSignUpPage} // 회원가입때만 활성화
+                value={data.birthday}
+                onChange={(e) => onChange('birthday', e.target.value)}
+                placeholder="생년월일을 입력해주세요"
               />
             </SmallBox>
             <SmallBox>
               <IconEmail />
               <Input
                 type="text"
-                placeholder="이메일을 입력주세요"
-                autoComplete="off" // 자동완성 기능 끄기
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
+                value={data.email}
+                onChange={(e) => onChange('email', e.target.value)}
+                placeholder="이메일을 입력해주세요"
               />
             </SmallBox>
             <SmallBox>
               <IconPhone />
               <Input
                 type="text"
-                placeholder="전화번호를 입력주세요"
-                autoComplete="off" // 자동완성 기능 끄기
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
+                value={data.phone}
+                onChange={(e) => onChange('phone', e.target.value)}
+                placeholder="전화번호를 입력해주세요"
               />
             </SmallBox>
           </Buttom>
-          {isProfilePage && (
-            <ButtonWrap>
-              <Button buttoncolor={buttoncolor} >수정하기</Button>
-            </ButtonWrap>
-          )}
-
         </ButtomWrap>
       </Card>
     </CardWrap>

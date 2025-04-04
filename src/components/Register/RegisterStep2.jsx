@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Octagon from './Octagon'
 import heartRate from '../img/heart-rate.png'
 import styled from 'styled-components'
 import NextButton from '../Button/NextButton';
+import iconUser from '../img/people.png';
 
 const Container = styled.div`
   margin: 0 auto;
@@ -38,35 +39,60 @@ const ButtonWrap = styled.div`
     align-items: center;
 `
 
-function RegisterStep2({ onNext }) {
-    return (
-        <Container>
-            <H1>회원가입</H1>
-            <Content>
-                <Octagon width="450px"
-                    cardwidth="400px"
-                    cardheight="500px"
-                    cardbackground="#e0f7fa"
-                    imgwidth="120px"
-                    imgheight="120px"
-                    isProfilePage={false}
-                    isSignUpPage={true} />
-                <img src={heartRate} className='heartRate' />
-                <Octagon
-                    width="450px"
-                    cardwidth="400px"
-                    cardheight="500px"
-                    cardbackground="#ffdcd6"
-                    imgwidth="120px"
-                    imgheight="120px"
-                    isProfilePage={false}
-                    isSignUpPage={true} />
-            </Content>
-            <ButtonWrap>
-                <NextButton onClick={onNext} />
-            </ButtonWrap>
-        </Container>
-    )
-}
 
-export default RegisterStep2
+
+function RegisterStep2({ onNext }) {
+    const [profileF, setProfileF] = useState({
+        image: iconUser,
+        name: "",
+        birthday: "",
+        email: "",
+        phone: ""
+    });
+    const [profileM, setProfileM] = useState({
+        image: iconUser,
+        name: "",
+        birthday: "",
+        email: "",
+        phone: ""
+    });
+return (
+    <Container>
+        <H1>회원가입</H1>
+        <Content>
+            <Octagon
+                id="profileF"
+                data={profileF}
+                onChange={(field, value) => setProfileF(prev => ({ ...prev, [field]: value }))}
+                width="450px"
+                cardwidth="400px"
+                cardheight="500px"
+                cardbackground="#e0f7fa"
+                imgwidth="120px"
+                imgheight="120px"
+                isProfilePage={false}
+                isSignUpPage={true}
+            />
+            <img src={heartRate} className="heartRate" />
+            <Octagon
+                id="profileM"
+                data={profileM}
+                onChange={(field, value) => setProfileM(prev => ({ ...prev, [field]: value }))}
+                width="450px"
+                cardwidth="400px"
+                cardheight="500px"
+                cardbackground="#ffdcd6"
+                imgwidth="120px"
+                imgheight="120px"
+                isProfilePage={false}
+                isSignUpPage={true}
+            />
+        </Content>
+        <ButtonWrap>
+            <NextButton onClick={onNext} />
+        </ButtonWrap>
+    </Container>
+    );
+}
+    
+export default RegisterStep2;
