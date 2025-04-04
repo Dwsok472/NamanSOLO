@@ -80,10 +80,9 @@ const NavButton = styled.button`
   width: 42px;
   height: 42px;
   background: white;
-  border-radius: 50%;
+  border-radius: 12%;
   border: none;
   display: flex;
-  align-items: center;
   justify-content: center;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease-in-out;

@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import Header from '../Header';
 import Intro from './Intro';
 import BookSection from './BookSection';
-import Hero from '../MainPage/Hero';
+import Hero from './Hero';
+import StoryMenuBubbles from './StoryMenuBubbles';
 
 const PageContainer = styled.div`
   position: relative;
@@ -17,47 +18,7 @@ const MainContent = styled.div`
   padding-top: 0;
 `;
 
-const HeroSection = styled.section`
-  background: linear-gradient(to bottom, #fff0f0, #ffeaea);
-  min-height: 520px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 20px;
-  border-bottom: 1px solid #f5dcdc;
-`;
 
-const HeroText = styled.h1`
-  font-size: 2.4rem;
-  color: #444;
-  line-height: 1.6;
-  margin-bottom: 16px;
-
-  strong {
-    font-size: 2.6rem;
-    font-weight: 700;
-    color: #b22222;
-  }
-`;
-
-const CTAButton = styled.button`
-  padding: 14px 28px;
-  font-size: 1rem;
-  background-color: #ff7b7b;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: #ff5252;
-    transform: translateY(-2px);
-  }
-`;
 
 function MainPage() {
   const [displayText, setDisplayText] = useState('');
@@ -165,6 +126,8 @@ function MainPage() {
             togglePage={togglePage}
             bookRef={bookRef}
           />
+
+          <StoryMenuBubbles />
         </MainContent>
       </PageContainer>
     </>
