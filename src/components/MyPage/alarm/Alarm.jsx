@@ -57,7 +57,7 @@ const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
   top: 70px; /* 버튼 아래 여백 */
   right: 0; /* 오른쪽 정렬 */
-  z-index: 200;
+  z-index: 210;
 `;
 
 const ModalContainer = styled.div`
@@ -81,7 +81,8 @@ const Top = styled.div`
   align-items: center;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
-  background-color: #ffdcd6;
+  background-color: #8c0d17;
+  color: white;
   padding: 15px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -150,7 +151,7 @@ const DropdownItem = styled.li`
 
 const ContainerMain = styled.div`
   width: 90%;
-  height: 330px;
+  height: 340px;
   margin: 0 auto;
   font-size: 16px;
   overflow: scroll;
