@@ -358,7 +358,7 @@ function MyPage() {
           )}
           {meetingDate && (
             <MeetingDate>
-              {new Date(meetingDate).getDate.toString}
+              {new Date(meetingDate).toLocaleDateString('ko-KR')}
             </MeetingDate>
           )}
         </DateInfo>
