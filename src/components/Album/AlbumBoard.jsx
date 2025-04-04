@@ -15,8 +15,8 @@ import tape5 from '../img/tape5.png';
 import tape6 from '../img/tape6.png';
 import tape7 from '../img/tape7.png';
 import back from '../img/back111.png';
-import marker from '../img/marker.png';
-import eraser from '../img/eraser.png';
+import marker from '../img/arrow-left.png';
+import eraser from '../img/arrow-right.png';
 import RightBox from "./RightBox";
 import { useNavigate } from "react-router-dom";
 import AddAlbum from "./AddAlbum";
@@ -51,8 +51,8 @@ const BoardFrame = styled.div`
     object-fit: cover;
     cursor: pointer;
     position: absolute;
-    top: 50%;
-    left: -30px;
+    top: 2%;
+    left: -150px;
   }
   .eraser{
     width: 40px;
@@ -60,8 +60,8 @@ const BoardFrame = styled.div`
     object-fit: cover;
     cursor: pointer;
     position: absolute;
-    top: 50%;
-    right: -30px;
+    top: 2%;
+    right: -150px;
   }
 `;
 
@@ -71,7 +71,7 @@ const PhotoArea = styled.div`
   grid-template-rows: repeat(2, 1fr);
   gap: 24px; /* 아이템 간 간격 */
   width: 70%;
-  height: 100%;
+  height:750px;
   justify-content: center;
   align-items: center;
 `;
@@ -156,7 +156,7 @@ const AlbumBoard = () => {
         // pinColor 배열에서 무작위로 선택
         const pinColor = pin[i % pin.length];
         // 수직 오프셋 값
-        const offsetY = Math.floor(Math.random() * 61) - 30;
+        const offsetY = Math.floor(Math.random() * 30) - 14;
         // 랜덤 colSpan, rowSpan 값
         const colSpan = Math.floor(Math.random() * 1) + 1;  // 1~2
         const rowSpan = Math.floor(Math.random() * 3) + 1;  // 1~3

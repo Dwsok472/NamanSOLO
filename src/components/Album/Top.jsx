@@ -27,7 +27,6 @@ const TopBox = styled.div`
     background-color: #ffffff;
     border-radius: 20px;
     width: 80px;
-    height: 30px;
     color: #2b2b2b;
     margin: 5px;
     &:hover {

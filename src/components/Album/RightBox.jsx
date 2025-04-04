@@ -18,6 +18,7 @@ const Container = styled.div`
   /* align-items: center; */
   position: absolute;
   height: 100%;
+
 `;
 const Backdrop = styled.div`
   position: fixed;
@@ -41,9 +42,12 @@ const BottomBox = styled.div`
   position: fixed;
   top: 150px;
   left: 280px;
+ 
 `;
 const CommentBox = styled.div`
 width : 100%;
+/* background-color: white; */
+
 `;
 const Box = styled.div`
   width: 100%;
