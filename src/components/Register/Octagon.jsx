@@ -57,7 +57,6 @@ const Img = styled.img`
   border: 1px solid #3333;
   align-items: center;
   cursor: pointer;
-
 `;
 
 const ButtomWrap = styled.div`
@@ -79,6 +78,7 @@ const Buttom = styled.div`
   padding-bottom: 15px;
   height: 80%;
 `;
+
 const SmallBox = styled.div`
   width: 85%;
   margin: 0 auto;
@@ -91,6 +91,7 @@ const SmallBox = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
 const Input = styled.input`
   width: 80%;
   border: none;
@@ -102,6 +103,7 @@ const Input = styled.input`
 const ImgInput = styled.input`
   display: none;
 `;
+
 const FileButton = styled.button`
   border: none;
   cursor: pointer;
@@ -112,6 +114,7 @@ const FileButton = styled.button`
     outline: none;
   }
 `;
+
 const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
@@ -195,6 +198,7 @@ function Octagon({
                 type="text"
                 value={data.name}
                 onChange={(e) => onChange('name', e.target.value)}
+                readOnly={isProfilePage && !data.isEditable}
                 placeholder="이름을 입력해주세요"
               />
             </SmallBox>
@@ -204,6 +208,7 @@ function Octagon({
                 type="text"
                 value={data.birthday}
                 onChange={(e) => onChange('birthday', e.target.value)}
+                readOnly={isProfilePage && !data.isEditable}
                 placeholder="생년월일을 입력해주세요"
               />
             </SmallBox>
@@ -213,6 +218,7 @@ function Octagon({
                 type="text"
                 value={data.email}
                 onChange={(e) => onChange('email', e.target.value)}
+                readOnly={isProfilePage && !data.isEditable}
                 placeholder="이메일을 입력해주세요"
               />
             </SmallBox>
@@ -222,10 +228,21 @@ function Octagon({
                 type="text"
                 value={data.phone}
                 onChange={(e) => onChange('phone', e.target.value)}
+                readOnly={isProfilePage && !data.isEditable}
                 placeholder="전화번호를 입력해주세요"
               />
             </SmallBox>
           </Buttom>
+          {isProfilePage && (
+            <ButtonWrap>
+              <Button
+                buttoncolor={buttoncolor}
+                onClick={() => onChange('isEditable', !data.isEditable)}
+              >
+                {data.isEditable ? '저장' : '수정하기'}
+              </Button>
+            </ButtonWrap>
+          )}
         </ButtomWrap>
       </Card>
     </CardWrap>

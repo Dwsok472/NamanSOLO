@@ -27,6 +27,7 @@ function CoupleProfile() {
     birthday: '1996.01.01',
     email: 'girl@email.com',
     phone: '010-1111-2222',
+    isEditable: false,
   });
 
   const [profileM, setProfileM] = useState({
@@ -35,6 +36,7 @@ function CoupleProfile() {
     birthday: '1996.05.03',
     email: 'boy@email.com',
     phone: '010-2222-3333',
+    isEditable: false,
   });
 
   return (
