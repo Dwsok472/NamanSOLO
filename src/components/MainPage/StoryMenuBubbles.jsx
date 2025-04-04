@@ -1,60 +1,56 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import BubbleCard from './BubbleCard';
 
-const StoryMenuWrapper = styled.section`
+const BubbleSectionWrapper = styled.section`
   width: 100%;
-  padding: 80px 20px;
-  background: linear-gradient(to bottom, #fff0f0, #fff9f9);
+  padding: 120px 40px;
+  background: linear-gradient(to bottom, #fff0f0, #ffffff);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
 `;
 
-const MenuContainer = styled.div`
-  display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 1000px;
+const TextGroup = styled.div`
+  text-align: center;
+  margin-bottom: 60px;
 `;
 
-const BubbleButton = styled.button`
-  padding: 16px 28px;
-  font-size: 1.05rem;
+const Subtitle = styled.p`
+  font-size: 0.95rem;
+  color: #d54056;
   font-weight: 600;
-  color: #c24040;
-  background-color: transparent;
-  border: 2px solid #ffc2c2;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  margin-bottom: 8px;
+`;
 
-  &:hover {
-    background-color: #ffc2c2;
-    color: white;
-    transform: translateY(-3px);
-  }
+const Title = styled.h2`
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #222;
+`;
 
-  @media (max-width: 768px) {
-    font-size: 0.95rem;
-    padding: 12px 20px;
-  }
+const CardGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
 `;
 
 const StoryMenuBubbles = () => {
-  const navigate = useNavigate();
-
   return (
-    <StoryMenuWrapper>
-      <MenuContainer>
-        <BubbleButton onClick={() => navigate('/story/all')}>전체 스토리</BubbleButton>
-        <BubbleButton onClick={() => navigate('/mypage/story')}>나만의 스토리</BubbleButton>
-        <BubbleButton onClick={() => navigate('/mypage/todo')}>기념 캘린더</BubbleButton>
-        <BubbleButton onClick={() => navigate('/map')}>데이트 장소</BubbleButton>
-      </MenuContainer>
-    </StoryMenuWrapper>
+    <BubbleSectionWrapper>
+      <TextGroup>
+        <Subtitle>우리와의 페이지를 채워줄</Subtitle>
+        <Title>어떤 이야기들이 필요할까요?</Title>
+      </TextGroup>
+
+      <CardGrid>
+        <BubbleCard frontText="전체 Story" backText="모든 커플의 이야기" />
+        <BubbleCard frontText="나만의 Story" backText="나의 인기글 정리" />
+        <BubbleCard frontText="너와의 기념" backText="함께한 날들을 저장" />
+        <BubbleCard frontText="데이트 장소 추천" backText="우리가 갔던 그곳" />
+      </CardGrid>
+    </BubbleSectionWrapper>
   );
 };
 
