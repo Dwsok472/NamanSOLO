@@ -1,4 +1,6 @@
 import styled from 'styled-components';
+import topImg from './img/top.png';
+import { useEffect, useState } from 'react';
 
 const FooterWrapper = styled.footer`
   width: 100%;
@@ -67,24 +69,40 @@ const FixedBtn = styled.button`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #fff;
-  border: 2px solid #f4dfda;
-  border-radius: 50%;
-  padding: 10px;
-  font-size: 1.2rem;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: all 0.2s ease;
+  transition: all 0.5s ease;
   &:hover {
-    font-weight: 700;
+    transform: 1.1;
   }
   &:focus{
       outline: none;
     }
-
+  img {
+    height: 30px;
+    width: 30px;
+    &:hover {
+    transform: 1.1;
+  }
+  }
 `;
 
+
 const Footer = () => {
+  const [showTopBtn, setShowTopBtn] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTopBtn(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
       <FooterWrapper>
@@ -113,7 +131,7 @@ const Footer = () => {
         </FooterInner>
       </FooterWrapper>
 
-      <FixedBtn>TOP</FixedBtn>
+      <FixedBtn><img src={topImg}/></FixedBtn>
     </>
   );
 };
