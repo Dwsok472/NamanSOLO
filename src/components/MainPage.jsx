@@ -89,7 +89,7 @@ const Banner = styled.div`
 
 const IntroWrapper = styled.div`
   position: fixed;
-  z-index: 9999;
+  z-index: 1000;
   background-color: #fff0f0;
   width: 100vw;
   height: 100vh;
@@ -109,10 +109,11 @@ const IntroWrapper = styled.div`
 `;
 
 const IntroText = styled.div`
-  position: absolute;
+  position: fixed;
   font-size: 10rem;
   font-weight: 900;
-  z-index: 99999;
+  z-index: 10001;
+  color: white;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
@@ -124,7 +125,7 @@ const IntroText = styled.div`
       top: ${$top}px;
       left: ${$left}px;
       transform: translate(-50%, -50%) scale(0.6);
-      font-size: 2.4rem;
+      font-size: 2.5rem;
     `}
 `;
 
@@ -146,6 +147,7 @@ function MainPage() {
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
   const [showLogo, setShowLogo] = useState(false);
+  const [fadeOutIntro, setFadeOutIntro] = useState(false);
 
   useEffect(() => {
     let index = 0;
@@ -160,29 +162,31 @@ function MainPage() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const getLogoPos = () => {
-      if (logoRef.current) {
-        const rect = logoRef.current.getBoundingClientRect();
-        setLogoPosition({
-          top: rect.top + window.scrollY + rect.height / 2,
-          left: rect.left + window.scrollX + rect.width / 2,
-        });
-      } else {
-        setTimeout(getLogoPos, 100);
-      }
-    };
-    getLogoPos();
-  }, []);
+  const getLogoPos = () => {
+    if (logoRef.current) {
+      const rect = logoRef.current.getBoundingClientRect();
+      const headerHeight = 78;
+  
+      const top = rect.top + window.scrollY - headerHeight + rect.height / 2;
+      const left = rect.left + window.scrollX + rect.width / 2;
+  
+      setLogoPosition({ top, left });
+  
+      console.log(`로고 좌표 → top: ${top}, left: ${left}`);
+    } else {
+      setTimeout(getLogoPos, 100);
+    }
+  };
+
 
   useEffect(() => {
-    const t1 = setTimeout(() => setAnimateToLogo(true), 1500);
-    const t2 = setTimeout(() => setShowLogo(true), 3000);
-    const t3 = setTimeout(() => setFadeOutIntro(true), 3300);
+    const t1 = setTimeout(() => setAnimateToLogo(true), 2000);
+    const t2 = setTimeout(() => setShowLogo(true), 3200);
+    const t3 = setTimeout(() => setFadeOutIntro(true), 3600);
     const t4 = setTimeout(() => {
       setShowIntro(false);
       setShowMain(true);
-    }, 4000);
+    }, 4200);
 
     return () => {
       clearTimeout(t1);
@@ -194,10 +198,22 @@ function MainPage() {
 
   return (
     <>
+
+    
+      {showIntro && (
+              <IntroWrapper $show={showIntro} $slideOut={slideOut}>
+                <IntroText
+                  $animateToLogo={animateToLogo}
+                  $top={logoPosition.top}
+                  $left={logoPosition.left}
+                >
+                  {displayText}
+                </IntroText>
+              </IntroWrapper>
+            )}
       <Header
         logoRef={logoRef}
         showLogo={showLogo}
-        $visible={showMain}
         logoText="WeARE"
         menuItems={[
           { to: '/story/all', label: '전체 스토리' },
@@ -214,18 +230,6 @@ function MainPage() {
         loginText="로그인"
         signupText="회원가입"
       />
-
-      {showIntro && (
-        <IntroWrapper $show={showIntro} $slideOut={slideOut}>
-          <IntroText
-            $animateToLogo={animateToLogo}
-            $top={logoPosition.top}
-            $left={logoPosition.left}
-          >
-            {displayText}
-          </IntroText>
-        </IntroWrapper>
-      )}
 
       <MainContent $show={showMain}>
         <Wrapper style={{ visibility: showIntro ? 'hidden' : 'visible' }}>

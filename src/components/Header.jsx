@@ -25,21 +25,18 @@ const Container = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 999;
-  /* border-bottom:1px solid #a8a8a8; */
-  /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5); */
+  z-index: 1001;
 `;
 
 const Logo = styled.h1`
   font-size: 2.5rem;
   color: white;
   margin: 0;
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  opacity: ${({ $visible }) => ($visible === false ? 0 : 1)};
   transition: opacity 0.8s ease-in-out;
-  pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
   z-index: 2;
+  position: relative;
 `;
-
 
 const Nav = styled.nav`
   display: flex;
@@ -228,7 +225,7 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-      <Logo ref={logoRef} $visible={showLogo}>
+      <Logo ref={logoRef} $visible={showLogo !== false}>
         {logoText}
       </Logo>
 
