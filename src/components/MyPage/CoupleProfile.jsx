@@ -42,10 +42,10 @@ function CoupleProfile() {
   return (
     <Content>
       <Octagon
-        id="profileF"
-        data={profileF}
+        id="profileM"
+        data={profileM}
         onChange={(field, value) =>
-          setProfileF((prev) => ({ ...prev, [field]: value }))
+          setProfileM((prev) => ({ ...prev, [field]: value }))
         }
         width="450px"
         cardwidth="400px"
@@ -59,10 +59,10 @@ function CoupleProfile() {
       />
       <img src={heartRate} className="heartRate" />
       <Octagon
-        id="profileM"
-        data={profileM}
+        id="profileF"
+        data={profileF}
         onChange={(field, value) =>
-          setProfileM((prev) => ({ ...prev, [field]: value }))
+          setProfileF((prev) => ({ ...prev, [field]: value }))
         }
         width="450px"
         cardwidth="400px"

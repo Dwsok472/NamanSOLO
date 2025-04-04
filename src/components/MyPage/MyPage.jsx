@@ -364,12 +364,12 @@ function MyPage() {
         </DateInfo>
 
         <NameHeartSection>
-          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
-            {girlname || "박서진"}
+          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
+            {boyname || "박서진"}
           </div>
           <img src={heart} className="heart" />
-          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
-            {boyname || "김동인"}
+          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
+            {girlname || "김동인"}
           </div>
         </NameHeartSection>
       </ProfileCard>
