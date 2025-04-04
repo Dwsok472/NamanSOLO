@@ -15,7 +15,7 @@ const ContainerMain = styled.div`
   border-radius: 30px;
   padding-top: 10px;
   background-color: #c0c0c09e;
-  height: 480px;
+  height: 540px;
 `;
 
 const Top = styled.div`
@@ -35,7 +35,7 @@ const Image = styled.img`
 `;
 
 const ContentBox = styled.div`
-  width: 90%;
+  width: 95%;
   height: 95%;
   margin: 0 auto;
   margin-top: 10px;

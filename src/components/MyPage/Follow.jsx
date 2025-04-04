@@ -20,7 +20,7 @@ const ContainerMain = styled.div`
   border-radius: 30px;
   padding-top: 10px;
   background-color: #c0c0c09e;
-  height: 480px;
+  height: 540px;
 `;
 
 const Top = styled.div`
@@ -65,7 +65,7 @@ const Input = styled.input`
 `;
 const ContentBox = styled.div`
   width: 90%;
-  height: 400px;
+  height: 85%;
   margin: 0 auto;
   margin-top: 10px;
   overflow: scroll;
@@ -89,14 +89,14 @@ const SmallBox = styled.div`
   background-color: white;
 `;
 const Left = styled.div`
-  width: 60%;
-  padding-left: 10px;
+  width: 75%;
+  padding-left: 5px;
   display: flex;
   align-items: center;
   .userName {
     font-size: 1rem;
     font-weight: 700;
-    padding-left: 10px;
+    padding-left: 5px;
   }
 `;
 const Img = styled.img`
@@ -108,7 +108,7 @@ const Img = styled.img`
   height: 60px;
 `;
 const Right = styled.div`
-  width: 40%;
+  width: 43%;
   display: flex;
   flex-direction: column;
   justify-content: center; // 수직 중앙
@@ -181,6 +181,24 @@ function Follow({ type }) {
       },
       {
         id: 4,
+        imgurl:
+          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234",
+      },
+      {
+        id: 5,
+        imgurl:
+          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234",
+      },
+      {
+        id: 6,
+        imgurl:
+          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
+        username: "sangsu1234",
+      },
+      {
+        id: 7,
         imgurl:
           "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
         username: "sangsu1234",
