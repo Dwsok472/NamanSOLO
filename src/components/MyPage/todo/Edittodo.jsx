@@ -75,6 +75,7 @@ const SelectedColorPreview = styled.div`
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  padding-bottom: 6px;
   background-color: ${(props) => props.color || '#eee'};
   border: 2px solid #ccc;
 `;
@@ -85,6 +86,7 @@ const ColorPalette = styled.div`
   gap: 10px;
   margin-top: 8px;
   flex-wrap: wrap;
+  padding-bottom: 6px;
 `;
 
 const ColorDot = styled.div`

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Addtodo from './Addtodo';
 import Addtravel from './Addtravel';
 import { IconEdit, IconClose } from '../../Icons';
+import DetailTodo from './Detailtodo';
 import leftThought from '../../img/leftThought.png';
 import Plus from '../../img/add.png';
 import LeftKey from '../../img/leftkey.png';
@@ -11,22 +12,16 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
+// import useUserStore from '../../stores/useUserStore'; 
+
+// const { user, setEvents } = useUserStore();
+// const events = user.events;
 
 const Wrapper = styled.div`
   font-family: sans-serif;
   color: #333;
   max-width: 1200px;
   margin: 0 auto;
-`;
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(4px);
 `;
 
 const Main = styled.main`
@@ -329,6 +324,21 @@ const ListDate = styled.div`
 `;
 
 function Todo() {
+  // const { user, setEvents } = useUserStore();
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const annivs = await api2.fetchAnniversaries();
+  //       const travels = await api2.fetchTravels();
+  //       setEvents([...annivs, ...travels]);
+  //     } catch (e) {
+  //       console.error('초기 데이터 로딩 실패:', e);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []); // 빈 배열이면 최초 로드 시 한 번 실행됨
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -343,7 +353,8 @@ function Todo() {
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
   const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary' });
   const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [] });
-  const [viewingTravelEvent, setViewingTravelEvent] = useState(null);
+  const [viewTodoEvent, setViewTodoEvent] = useState(null);
+  const [viewTravelEvent, setViewTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
   const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
@@ -351,7 +362,17 @@ function Todo() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [yearRangeStart, setYearRangeStart] = useState(currentYear - 2);
 
-  const handleUpdate = (updatedEvent) => {
+  const handleUpdate = 
+  // async
+  (updatedEvent) => {
+    // try {
+    //   await api2.updateEvent(updatedEvent);
+    //   setEvents(events.map(event =>
+    //     event.id === updatedEvent.id ? updatedEvent : event
+    //   ));
+    // } catch (err) {
+    //   console.error('수정 실패:', err);
+    // }
     setEvents(events.map(event =>
       event.id === updatedEvent.id
       ? updatedEvent
@@ -360,10 +381,18 @@ function Todo() {
     setEditingTodoEvent(null);
   };
 
-  const handleDelete = (eventToDelete) => {
+  const handleDelete = 
+  // async
+  (eventToDelete) => {
     const confirmDelete = window.confirm(`${eventToDelete.title}, 이 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
 
+    // try {
+    //   await api2.deleteEvent(eventToDelete.id);
+    //   setEvents(events.filter(event => event !== eventToDelete));
+    // } catch (err) {
+    //   console.error('삭제 실패:', err);
+    // }
     setEvents(events.filter(event => event !== eventToDelete));
   };
 
@@ -428,7 +457,7 @@ function Todo() {
   return (
     <>
       <Wrapper>
-        <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewingTravelEvent } >
+        <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewTravelEvent } >
           <CalendarSection>
             <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
               {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
@@ -492,7 +521,7 @@ function Todo() {
                               onMouseEnter={() => setHoveringEventId(event.id)}
                               onMouseLeave={() => setHoveringEventId(null)}
                               $isHovered={hoveringEventId === event.id}
-                              onClick={() => event.type === 'anniversary' ? (!event.fixed ?setEditingTodoEvent(event):null) : setViewingTravelEvent(event) }
+                              onClick={() => event.type === 'anniversary' ? (!event.fixed ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
                             >
                               <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (event.fixed?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
                             </EventBox>
@@ -580,6 +609,17 @@ function Todo() {
           </AnniversarySection>
         </Main>
 
+        {viewTodoEvent && (
+          <DetailTodo
+            event={viewTodoEvent}
+            onClose={() => setViewTodoEvent(null)}
+            onEdit={() => {
+              setEditingTodoEvent(viewTodoEvent);
+              setViewTodoEvent(null);
+            }}
+          />
+        )}
+
         {isModalOpen && (
           <Addtodo
             name="기념일 일정 추가"
@@ -592,8 +632,29 @@ function Todo() {
             paletteOpen={anniversaryPaletteOpen}
             setPaletteOpen={setAnniversaryPaletteOpen}
             colorSamples={colorSamples}
-            onSubmit={(e) => {
+            onSubmit={
+              // async
+              (e) => {
               e.preventDefault();
+
+              
+              // const eventToAdd = {
+              //   title: newAnniversaryEvent.title,
+              //   start_date: newAnniversaryEvent.start_date,
+              //   color: newAnniversaryEvent.color,
+              //   type: 'anniversary',
+              // };
+            
+              // try {
+              //   const created = await api2.createAnniversary(eventToAdd);
+              //   setEvents([...events, created]);
+              // } catch (err) {
+              //   console.error('기념일 추가 실패', err);
+              // }
+            
+              // setIsModalOpen(false);
+              // setAnniversaryPaletteOpen(false);
+              
               
               const eventToAdd = {
                 id: events.length + 1,
@@ -627,13 +688,13 @@ function Todo() {
           />
         )}
 
-        {viewingTravelEvent && (
+        {viewTravelEvent && (
           <DetailTravel
-            event={viewingTravelEvent}
-            onClose={() => setViewingTravelEvent(null)}
+            event={viewTravelEvent}
+            onClose={() => setViewTravelEvent(null)}
             onEdit={() => {
-              setEditingTravelEvent(viewingTravelEvent);
-              setViewingTravelEvent(null);
+              setEditingTravelEvent(viewTravelEvent);
+              setViewTravelEvent(null);
             }}
           />
         )}
@@ -643,7 +704,9 @@ function Todo() {
             event={editingTravelEvent}
             setEvent={setEditingTravelEvent}
             onClose={() => setEditingTravelEvent(null)}
-            onSubmit={(e) => {
+            onSubmit={
+              // async
+              (e) => {
               e.preventDefault();
 
               const start = new Date(editingTravelEvent.start_date);
@@ -653,7 +716,15 @@ function Todo() {
                 alert('종료일은 시작일보다 빠를 수 없습니다!');
                 return;
               }
-            
+
+              // try {
+              //   await api2.updateEvent(editingTravelEvent); // 서버로 PUT 요청
+              //   setEvents((prev) =>
+              //     prev.map((ev) =>
+              //       ev.id === editingTravelEvent.id ? editingTravelEvent : ev
+              //     )
+              //   );
+
               setEvents(events.map(ev => (
                 ev.id === editingTravelEvent.id ? editingTravelEvent : ev
               )));
@@ -676,7 +747,9 @@ function Todo() {
             setPaletteOpen={setTravelPaletteOpen}
             colorSamples={colorSamples}
             
-            onSubmit={(e) => {
+            onSubmit={
+              // async
+              (e) => {
               e.preventDefault();
             
               const start = new Date(newTravelEvent.start_date);
@@ -697,7 +770,15 @@ function Todo() {
                 type: 'travel'
               };
 
+              // try {
+              //   const created = await api2.createTravel(travelEvent);
+              //   setEvents([...events, created]);
+              // } catch (err) {
+              //   console.error('여행 일정 추가 실패', err);
+              // }
+
               setEvents([...events, travelEvent]);
+
               setNewTravelEvent({ title: '', start_date: '', end_date: '', color: '#ffc0cb', images: [], type: 'travel' });
               setIsTravelModalOpen(false);
               setTravelPaletteOpen(false);

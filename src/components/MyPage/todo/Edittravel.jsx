@@ -200,6 +200,7 @@ const ColorPalette = styled.div`
   gap: 10px;
   margin-top: 8px;
   flex-wrap: wrap;
+  padding-bottom: 6px;
 `;
 
 const ColorDot = styled.div`

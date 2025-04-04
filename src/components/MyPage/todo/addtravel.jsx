@@ -200,6 +200,7 @@ const ColorPalette = styled.div`
   gap: 10px;
   margin-top: 8px;
   flex-wrap: wrap;
+  padding-bottom: 6px;
 `;
 
 const ColorDot = styled.div`
@@ -316,7 +317,6 @@ function AddTravel({
               onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               required
             />
-            <Label>날짜</Label>
             <Row>
               <Input
                 type="date"
