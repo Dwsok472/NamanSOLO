@@ -57,7 +57,7 @@ const HeroDesc = styled.p`
   }
 `;
 
-const CTAButton = styled.button`
+const CTAButton = styled.button` // 나중에 login 안된유저는 로그인창 , login 된 유저는 앨범 작성화면 으로 이동동
   background: #ff6b6b;
   color: white;
   border: none;

@@ -8,7 +8,7 @@ const BookSectionWrapper = styled.section`
   justify-content: center;
   align-items: flex-start;
   padding: 100px 60px;
-  background: linear-gradient(to bottom right, #fff0f0, #fff8f8);
+  background: linear-gradient(to bottom, #ececec, #fff0f0);
   border-radius: 0;
   width: 100vw;
   min-height: 680px;
@@ -32,7 +32,7 @@ const BookSectionContent = styled.div`
   gap: 40px;
 
   @media (max-width: 1024px) {
-    flex-wrap: wrap; // ✅ 이건 태블릿 이하에서만 쌓이도록
+    flex-wrap: wrap; 
     justify-content: center;
   }
 `;
