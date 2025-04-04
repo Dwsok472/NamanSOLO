@@ -5,6 +5,7 @@ const Wrapper = styled.div`
   display: flex;
   gap: 20px;
   padding: 24px;
+  overflow: hidden;
 `;
 
 const Column = styled.div`
@@ -13,19 +14,26 @@ const Column = styled.div`
   padding: 20px;
   border-radius: 16px;
   border: 1px solid #ccc;
-  height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const TopFixed = styled.div`
+  flex: 0 0 auto;
 `;
 
 const SectionTitle = styled.h3`
-  margin-bottom: 16px;
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 8px;
 `;
 
 const CountBox = styled.div`
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 16px;
+  margin: 0 0 12px;
 
   span {
     background: #333;
@@ -120,6 +128,23 @@ const CloseBtn = styled.button`
   cursor: pointer;
 `;
 
+const ScrollSection = styled.div`
+  flex: 1;
+  max-height: 475px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 4px;
+  }
+`;
+
+
 const CommentPage = () => {
   const [editingId, setEditingId] = useState(null);
   const [editValue, setEditValue] = useState('');
@@ -140,6 +165,24 @@ const CommentPage = () => {
     },
     {
       id: 3,
+      feedTitle: '맛집 투어 🍜',
+      content: '배터지게 먹은 날 😆',
+      date: '2025-04-03',
+    },
+    {
+      id: 4,
+      feedTitle: '첫 여행 ✈️',
+      content: '진짜 행복한 순간이었어요!',
+      date: '2025-04-01',
+    },
+    {
+      id: 5,
+      feedTitle: '우리의 첫 기념일 💖',
+      content: '이날은 정말 평생 못 잊을 듯!',
+      date: '2025-04-02',
+    },
+    {
+      id: 6,
       feedTitle: '맛집 투어 🍜',
       content: '배터지게 먹은 날 😆',
       date: '2025-04-03',
@@ -229,19 +272,27 @@ const CommentPage = () => {
   return (
     <Wrapper>
       <Column>
-        <SectionTitle>내가 단 댓글</SectionTitle>
-        <CountBox>
-          <span>총 댓글 수 3</span>
-        </CountBox>
-        {renderList(comments)}
+        <TopFixed>
+          <SectionTitle>내가 단 댓글</SectionTitle>
+          <CountBox>
+            <span>총 댓글 수 {comments.length}</span>
+          </CountBox>
+        </TopFixed>
+        <ScrollSection>
+          {renderList(comments)}
+        </ScrollSection>
       </Column>
-
+    
       <Column>
-        <SectionTitle>내가 단 대댓글</SectionTitle>
-        <CountBox>
-          <span>총 답글 수 2</span>
-        </CountBox>
-        {renderList(replies, true)}
+        <TopFixed>
+          <SectionTitle>내가 단 대댓글</SectionTitle>
+          <CountBox>
+            <span>총 답글 수 {replies.length}</span>
+          </CountBox>
+        </TopFixed>
+        <ScrollSection>
+          {renderList(replies, true)}
+        </ScrollSection>
       </Column>
     </Wrapper>
   );
