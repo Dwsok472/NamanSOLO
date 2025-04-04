@@ -1,25 +1,24 @@
-// MainPage.jsx
 import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from './Header';
 
 const PageContainer = styled.div`
   position: relative;
-  overflow: visible;
+  overflow: hidden;
 `;
 
 const IntroWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
   background: #8c0d17;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  transform: ${({ $slideOut }) => ($slideOut ? 'translateY(-100vh)' : 'translateY(0)')};
+  z-index: 1000;
+  transform: ${({ $slideOut }) => ($slideOut ? 'translateY(-100%)' : 'translateY(0)')};
   transition: transform 1.2s ease-in-out;
 `;
 
@@ -36,13 +35,13 @@ const IntroText = styled.div`
   transition: all 1.5s ease-in-out;
 `;
 
-const MainContent = styled.div`
-  position: relative;
-  z-index: 5;
-  padding-top: 100px;
+const MainContent = styled.div.attrs(() => ({
+  id: 'main-content',
+}))`
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(40px)')};
-  transition: all 1s ease-in-out;
+  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
+  transition: all 0.8s ease-in-out;
+  padding-top: 100px;
 `;
 
 const Wrapper = styled.div`
@@ -56,10 +55,47 @@ const Section = styled.section`
   margin-bottom: 50px;
 `;
 
+const HeroSection = styled.section`
+  background: linear-gradient(to bottom, #fff0f0, #ffeaea);
+  padding: 100px 20px 80px;
+  text-align: center;
+`;
+
+const HeroText = styled.h1`
+  font-family: 'GmarketSansMedium', sans-serif;
+  font-size: 2.2rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 20px;
+
+  strong {
+    font-family: 'GmarketSansBold';
+    font-weight: 700;
+    color: #222;
+  }
+`;
+
+const CTAButton = styled.button`
+  margin-top: 24px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  background-color: #ff8a8a;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #ff4d4d;
+  }
+`;
+
 const SubText = styled.p`
   color: #666;
   line-height: 1.6;
-  font-size: 1.05rem;
+  font-size: 2.5rem;
 `;
 
 const Title = styled.h2`
@@ -166,12 +202,14 @@ function MainPage() {
   useEffect(() => {
     const t1 = setTimeout(() => setAnimateToLogo(true), 2000);
     const t2 = setTimeout(() => setShowLogo(true), 3200);
-    const t3 = setTimeout(() => setSlideOut(true), 3600); 
+    const t3 = setTimeout(() => setSlideOut(true), 3600);
     const t4 = setTimeout(() => {
-      setShowMain(true); 
+      setShowIntro(false);
+      setShowMain(true);
       document.body.classList.remove('blur');
-    }, 4400);
-  
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }, 4800);
+
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -179,7 +217,13 @@ function MainPage() {
       clearTimeout(t4);
     };
   }, []);
-  
+
+  const scrollToStory = () => {
+    const element = document.getElementById('main-content');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <>
@@ -217,16 +261,16 @@ function MainPage() {
           </>
         )}
 
-        <MainContent $slideOut={slideOut} $show={showMain}>
+        <MainContent $show={showMain}>
           <Wrapper>
-            <Section>
-              <SubText>
+            <HeroSection>
+              <HeroText>
                 <strong>(WE ARE..)</strong> 우리의 이야기<br />
                 너와 나, 두 사람이 한 권의 책을 써가는 중이에요.<br />
                 우리의 이야기는 계속 된다...
-              </SubText>
-              <GoButton>바로가기</GoButton>
-            </Section>
+              </HeroText>
+              <CTAButton onClick={scrollToStory}>바로가기</CTAButton>
+            </HeroSection>
 
             <SliderSection>슬라이드 or 팝업 자리</SliderSection>
 
