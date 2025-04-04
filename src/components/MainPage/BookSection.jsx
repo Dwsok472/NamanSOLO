@@ -6,8 +6,11 @@ import couple1 from '../img/couple1.png'; // 경로는 프로젝트 구조에 �
 const BookSectionWrapper = styled.section`
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 80px 60px;
+  align-items: center; 
+
+
+  padding: 120px 60px;
+
   background: #fff8f8;
   border-radius: 0;
   box-shadow: none;
@@ -19,9 +22,10 @@ const BookSectionWrapper = styled.section`
 
   @media (max-width: 768px) {
     flex-direction: column;
-    padding: 40px 20px;
+    padding: 60px 20px; 
   }
 `;
+
 
 const LeftPanel = styled.div`
   flex: 1;

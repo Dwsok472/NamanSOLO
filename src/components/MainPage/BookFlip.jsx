@@ -1,40 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import PhotoCard from '../Album/PhotoCard';
+import couple1 from '../img/couple1.png';
+import couple2 from '../img/couple2.png';
+import couple3 from '../img/couple3.png';
+import couple4 from '../img/couple4.jpg';
+import couple5 from '../img/couple5.png';
 
 const BookWrapper = styled.div`
   position: relative;
-  width: 280px;
-  height: 380px;
+  max-width: calc(100% - 40px); 
+  width: 100%;
+  max-width: 900px; 
+  height: 520px;  
   perspective: 1500px;
+  margin: 0 auto;
 `;
 
-const BookPageContainer = styled.div`
+const FlipCard = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s ease-in-out;
+  transform: ${({ $flipped }) => ($flipped ? 'rotateY(180deg)' : 'rotateY(0)')};
 `;
 
-const PageFront = styled.div`
+const PageSet = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: #fff0f0;
+  background: #fff;
   border-radius: 16px;
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  overflow: hidden;
   backface-visibility: hidden;
+
+  &.back {
+    transform: rotateY(180deg);
+  }
+`;
+
+const BookPage = styled.div`
+  flex: 1;
+  padding: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.4rem;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #fff9f9;
   color: #333;
-  transition: transform 0.8s ease;
-  transform: ${({ $flipped }) => ($flipped ? 'rotateY(180deg)' : 'rotateY(0deg)')};
+
+  &.left {
+    border-right: 1px solid #f3caca;
+  }
+
+  &.right {
+    border-left: 1px solid #f3caca;
+  }
 `;
 
-const PageBack = styled(PageFront)`
-  background: #ffeaea;
-  transform: ${({ $flipped }) => ($flipped ? 'rotateY(0deg)' : 'rotateY(180deg)')};
+const BookSpine = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: #f3caca;
+  z-index: 2;
 `;
 
 const NavButton = styled.button`
@@ -55,25 +90,63 @@ const NavButton = styled.button`
 
   &:hover {
     background: #ff6b6b;
-    svg {
-      stroke: #fff;
-    }
+    color: white;
   }
 
   &:active {
     transform: translateY(-50%) scale(0.96);
   }
-  `;
+`;
 
+const BookFlip = () => {
+  const [flipped, setFlipped] = useState(false);
 
+  const togglePage = () => setFlipped((prev) => !prev);
 
-const BookFlip = ({ flipped, togglePage }) => {
   return (
     <BookWrapper>
-      <BookPageContainer>
-        <PageFront $flipped={flipped}>📖 나의 이야기</PageFront>
-        <PageBack $flipped={flipped}>📘 우리의 추억들</PageBack>
-      </BookPageContainer>
+      <FlipCard $flipped={flipped}>
+        <PageSet className="front">
+          <BookPage className="left">
+            <PhotoCard
+              src={[couple1 , couple2]}
+              title="첫 나들이"
+              rotate={-3}
+              offsetY={-8}
+            />
+          </BookPage>
+          <BookPage className="right">
+            <PhotoCard
+              src={[couple3]}
+              title="벚꽃 데이트"
+              rotate={2}
+              offsetY={0}
+            />
+          </BookPage>
+        </PageSet>
+
+        <PageSet className="back">
+          <BookPage className="left">
+            <PhotoCard
+              src={[couple4]}
+              title="비 오는 날의 카페"
+              rotate={1}
+              offsetY={-6}
+            />
+          </BookPage>
+          <BookPage className="right">
+            <PhotoCard
+              src={[couple5]}
+              title="둘만의 여행"
+              rotate={-2}
+              offsetY={4}
+            />
+          </BookPage>
+        </PageSet>
+      </FlipCard>
+
+      <BookSpine />
+
       <NavButton $left onClick={togglePage}>◀</NavButton>
       <NavButton onClick={togglePage}>▶</NavButton>
     </BookWrapper>
