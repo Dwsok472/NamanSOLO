@@ -304,7 +304,7 @@ function MyPage() {
   } */
   //임시용
   useEffect(() => {
-    setMeetingDate("2025.03.30");
+    setMeetingDate("2025-03-30");
   }, []);
 
   useEffect(() => {
@@ -358,7 +358,7 @@ function MyPage() {
           )}
           {meetingDate && (
             <MeetingDate>
-              {new Date(meetingDate).toLocaleDateString()}
+              {new Date(meetingDate).getDate.toString}
             </MeetingDate>
           )}
         </DateInfo>

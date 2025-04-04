@@ -24,7 +24,7 @@ function CoupleProfile() {
   const [profileF, setProfileF] = useState({
     image: iconUser,
     name: '박서진',
-    birthday: '1996.01.01',
+    birthday: '1996-01-01',
     email: 'girl@email.com',
     phone: '010-1111-2222',
     isEditable: false,
@@ -33,7 +33,7 @@ function CoupleProfile() {
   const [profileM, setProfileM] = useState({
     image: iconUser,
     name: '김동인',
-    birthday: '1996.05.03',
+    birthday: '1996-05-03',
     email: 'boy@email.com',
     phone: '010-2222-3333',
     isEditable: false,
