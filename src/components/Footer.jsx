@@ -69,18 +69,19 @@ const FixedBtn = styled.button`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 999;
+  z-index: 9999;
   border: none;
   background: none;
   cursor: pointer;
   padding: 0;
-  width: 45px;
-  height: 45px;
+  width: 55px;
+  height: 55px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${($props) => ($props.show ? 1 : 0)};
+  opacity: ${( props ) => ( props.$show ? 1 : 0)};
+  pointer-events: ${( props ) => ( props.$show ? 'auto' : 'none')};
   transition: opacity 0.8s ease;
 
   &:focus {
@@ -112,7 +113,7 @@ const Footer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToTop = () => {
+    function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

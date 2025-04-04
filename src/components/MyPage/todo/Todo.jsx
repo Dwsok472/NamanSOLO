@@ -36,6 +36,7 @@ const Main = styled.main`
 const CalendarSection = styled.section`
   flex: 2 1 100%;
   background-color: #fff;
+  max-height: 650px;
   border-radius: 10px;
   position: relative;
 `;

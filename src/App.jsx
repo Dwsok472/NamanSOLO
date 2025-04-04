@@ -25,7 +25,7 @@ const MainContent = styled.main.attrs(() => ({
   id: "main-content",
 }))`
   flex: 1;
-  padding-top: ${(props) => (props.noPadding ? "0" : "75px")};
+  padding-top: ${(props) => (props.$noPadding ? "0" : "75px")};
 `;
 
 const GlobalStyle = createGlobalStyle`
@@ -90,7 +90,7 @@ function AppRoutes() {
         />
       )}
 
-      <MainContent noPadding={isMainPage}>
+      <MainContent $noPadding={isMainPage}>
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<Login />} />
