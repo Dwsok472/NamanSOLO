@@ -6,12 +6,11 @@ import rightkey from '../img/rightkey.png';
 
 
 const CardWrapper = styled.div`
-  width: 250px;
-  height: 280px;
+  width: 280px;
+  height: 300px;
   padding: 10px;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
   transform: ${({ rotate, offsetY }) => `rotate(${rotate}deg) translateY(${offsetY}px)`}; /* rotate와 translateY 적용 */
   transition: transform 0.3s;
   position: relative;
@@ -24,16 +23,18 @@ const CardWrapper = styled.div`
     width:20px;
     height:20px;
     position:absolute;
-    left:5px;
-    top:35%
+    left:10px;
+    top:40%;
+    opacity: 0.3;
   }
   .rightkey{
     object-fit:cover;
     width:20px;
     height:20px;
     position:absolute;
-    right:5px;
-    top:35%
+    right:10px;
+    top:40%;
+    opacity: 0.3;
   }
 `;
 
@@ -51,10 +52,9 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: 230px;
-  height: 200px;
+  width: 250px;
+  height: 230px;
   object-fit: cover;
-  border-radius: 4px;
   pointer-events: none;
 `;
 

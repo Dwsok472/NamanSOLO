@@ -4,14 +4,15 @@ import { IconSearch } from '../Icons';
 import couple1 from '../img/couple1.png';
 import couple2 from '../img/couple2.png';
 import couple3 from '../img/couple3.png';
-import couple4 from '../img/couple4.png';
+import couple4 from '../img/couple4.jpg';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  padding: 10px;
   display: flex;
-justify-content: space-between;
+  justify-content: space-between;
+  padding-top: 10px;
 
 `;
 const TopBox = styled.div`
@@ -19,10 +20,11 @@ const TopBox = styled.div`
   border-radius: 16px;
   display: flex;
   align-items: center;
+  padding-left: 30px;
   .button {
     font-weight: 700;
     font-size: 0.7rem;
-    background-color: white;
+    background-color: #ffffff;
     border-radius: 20px;
     width: 80px;
     height: 30px;
@@ -44,18 +46,20 @@ const MiddleBox = styled.div`
   flex-direction: column;
   align-items: end;
   gap: 3px;
+  padding-right: 30px;
+  position: relative;
 `;
 const SearchBox = styled.div`
   width: 300px;
   height: 50px;
   /* border: 1px solid #6d6d6d33; */
   border-radius: 10px;
-  background-color: #bbbbbb;
+  /* background-color: #bbbbbb; */
   padding-top : 3.5px;
 `;
 const InputBox = styled.div`
   width: 95%;
-  height: 40px;
+  height: 30px;
   display: flex;
   align-items: center;
 `;
@@ -63,29 +67,33 @@ const Input = styled.input`
   outline: none;
   border: none;
   width: 100%;
-  border: 1px solid #3333;
-  border-radius: 10px;
+  /* border: 1px solid #3333; */
+  border-radius: 5px;
   height: 100%;
   margin-left: 10px;
   padding-left: 10px;
   margin-right: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
   &::placeholder {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     font-weight: 700;
   }
 `;
 
 const SearchResults = styled.div`
-  width: 90%;
+  width: 35%;
   background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 30px;
+  border-radius: 10px;
   max-height: 200px;
   transform: translateY(-20px); /* 초기 위치 설정 */
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   display: flex;
   justify-content: center;
+  position: absolute;
+  bottom: -190px;
+z-index: 1;
   &.show {
     transform: translateY(0); /* 결과가 보일 때 슬라이딩 */
     opacity: 1; /* 결과의 투명도 */
@@ -103,8 +111,8 @@ const Wrap = styled.div`
     right: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #8a8a8a; 
-    border-radius: 10px;
+    background-color: #8c0d17; 
+    border-radius: 5px;
   }
   hr {
     width: 310px;
@@ -117,7 +125,7 @@ const Block = styled.div`
   align-items: center;
   justify-content: center;
   border-bottom: 1px solid #b1b1b133;
-  padding-bottom: 3px;
+  padding-bottom: 5px;
   img {
     width: 30px;
     height: 30px;
@@ -126,7 +134,7 @@ const Block = styled.div`
     margin-right: 5px;
   }
   .username {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 500;
     width: 55%;
     color: #1a1a1a;
@@ -134,8 +142,8 @@ const Block = styled.div`
   .follow {
     color: #ffffff;
     background-color: #1a1a1a;
-    width: 90px;
-    font-size: 0.7rem;
+    width: 80px;
+    font-size: 0.6rem;
     font-weight: 700;
   }
 `;
@@ -147,6 +155,12 @@ function Top() {
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 담기
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const urlKeyword = new URLSearchParams(location.search).get('username');
+
 
   //임시용
   useEffect(() => {
@@ -177,19 +191,7 @@ function Top() {
   }, []);
 
 
-  //   useEffect(() => {
-  //     const allUser = async () => {
-  //       try {
-  //         const response = await getAllUsername();
-  //         if (response && response.length > 0) {
-  //           setAllUsers(response); // 전체 유저 목록을 상태에 저장
-  //         }
-  //       } catch (error) {
-  //         console.log('전체 유저를 가져오는 중 오류 발생', error);
-  //       }
-  //     };
-  //     allUser();
-  //   }, []);
+
   useEffect(() => {
     searchUsername(inputKeyword);
   }, [inputKeyword]); // 상태변수가 아닌 일반 변수도 사용 가능!!!
@@ -278,3 +280,17 @@ function Top() {
 }
 
 export default Top
+
+//   useEffect(() => {
+//     const allUser = async () => {
+//       try {
+//         const response = await getAllUsername();
+//         if (response && response.length > 0) {
+//           setAllUsers(response); // 전체 유저 목록을 상태에 저장
+//         }
+//       } catch (error) {
+//         console.log('전체 유저를 가져오는 중 오류 발생', error);
+//       }
+//     };
+//     allUser();
+//   }, []);

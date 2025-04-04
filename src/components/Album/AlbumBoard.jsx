@@ -4,7 +4,7 @@ import PhotoCard from "./PhotoCard";
 import couple1 from "../img/couple1.png";
 import couple2 from "../img/couple2.png";
 import couple3 from "../img/couple3.png";
-import couple4 from "../img/couple4.png";
+import couple4 from "../img/couple4.jpg";
 import imo1 from "../img/imo1.png";
 import imo2 from "../img/imo2.png";
 import tape1 from '../img/tape1.png';
@@ -28,9 +28,11 @@ const BoardWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   gap: 10px;
-  /* padding: 40px 30px; */
+  align-items: center;
   height: 860px;
-  background-image: radial-gradient(circle, #ffffff, #f2ebdc);
+  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
+  /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
+  background: linear-gradient(to bottom, #b85c79, #fdecec);
 `;
 
 const BoardFrame = styled.div`
@@ -72,25 +74,6 @@ const PhotoArea = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-// const EmojiTopLeft = styled.img`
-//   position: absolute;
-//   top: 20px;
-//   left: 20px;
-//   width: 180px;
-//   height: auto;
-//   pointer-events: none;
-// `;
-
-// const EmojiBottomRight = styled.img`
-//   position: absolute;
-//   top: 0px;
-//   right: 20px;
-//   width: 200px;
-//   height: auto;
-//   pointer-events: none;
-//   filter: brightness(0) invert(40%) sepia(90%) saturate(800%) hue-rotate(20deg);
-// `;
 
 const BoardInner = styled.div`
   position: relative;
@@ -145,26 +128,6 @@ const AlbumBoard = () => {
     ]);
     setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
   }, []); // 최초 렌더링 시 데이터 불러오기
-
-  // async function getAllAlbum() {
-  //   try {
-  //     let response = await GetAllAlbum();
-  //     if (!response || response.length === 0) {
-  //       console.log('데이터를 가져오지 못했습니다.');
-  //       return;
-  //     }
-  //     console.log(response);
-  //     setData(response);
-  //      setLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getAllAlbum();
-  // }, [])
 
   function handleSelectedAlbum(album) {
     setSelectedAlbum(album);
@@ -242,3 +205,25 @@ const AlbumBoard = () => {
 };
 
 export default AlbumBoard;
+
+
+
+// async function getAllAlbum() {
+//   try {
+//     let response = await GetAllAlbum();
+//     if (!response || response.length === 0) {
+//       console.log('데이터를 가져오지 못했습니다.');
+//       return;
+//     }
+//     console.log(response);
+//     setData(response);
+//      setLoading(false);
+//   } catch (error) {
+//     console.log(error);
+//     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
+//   }
+// }
+
+// useEffect(() => {
+//   getAllAlbum();
+// }, [])
