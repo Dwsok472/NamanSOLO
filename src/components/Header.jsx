@@ -252,7 +252,7 @@ function Header({
             {isSubOpen && (
               <SubMenu>
                 {subMenuItems.map(({ to, label }) => (
-                  <li key={to}>
+                  <li key={to} onClick={toggleSubMenu}>
                     <Link to={to}>{label}</Link>
                   </li>
                 ))}
