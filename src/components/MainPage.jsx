@@ -10,7 +10,7 @@ const PageContainer = styled.div`
 
 const IntroWrapper = styled.div`
   height: 100vh;
-  background: #fff0f0;
+  background: #8c0d17;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,6 +22,7 @@ const IntroWrapper = styled.div`
   transform: ${({ $slideOut }) => ($slideOut ? 'translateY(-100vh)' : 'translateY(0)')};
   transition: transform 1.2s ease-in-out;
 `;
+
 const IntroText = styled.div`
   position: fixed;
   z-index: 10001;
@@ -165,9 +166,9 @@ function MainPage() {
   useEffect(() => {
     const t1 = setTimeout(() => setAnimateToLogo(true), 2000);
     const t2 = setTimeout(() => setShowLogo(true), 3200);
-    const t3 = setTimeout(() => setSlideOut(true), 3600); // 인트로 위로 올라감
+    const t3 = setTimeout(() => setSlideOut(true), 3600); 
     const t4 = setTimeout(() => {
-      setShowMain(true); // 메인 본문 등장
+      setShowMain(true); 
       document.body.classList.remove('blur');
     }, 4400);
   
