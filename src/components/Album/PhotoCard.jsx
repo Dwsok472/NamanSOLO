@@ -6,8 +6,8 @@ import rightkey from '../img/rightkey.png';
 
 
 const CardWrapper = styled.div`
-  width: 230px;
-  height: 270px;
+  width: 250px;
+  height: 280px;
   padding: 10px;
   background: white;
   border-radius: 8px;
@@ -51,8 +51,8 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: 210px;
-  height: 180px;
+  width: 230px;
+  height: 200px;
   object-fit: cover;
   border-radius: 4px;
   pointer-events: none;

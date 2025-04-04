@@ -4,9 +4,8 @@ import { IconClose } from "../../Icons";
 
 const Container = styled.div`
   position: absolute;
-  top: 0; /* 설정 아이콘과 같은 높이 */
-  right: 100%; /* 부모 요소의 왼쪽에 딱 붙음 */
-  margin-right: 10px; /* 아이콘과의 간격 (원하는 만큼 조절 가능) */
+  top: 70px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
+  right: 400px; // 화면 오른쪽에서 적당히 띄움
   z-index: 200;
 `;
 

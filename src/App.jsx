@@ -22,10 +22,10 @@ const AppWrapper = styled.div`
 `;
 
 const MainContent = styled.main.attrs(() => ({
-  id: 'main-content', 
+  id: 'main-content',
 }))`
   flex: 1;
-  padding-top: 100px;
+  padding-top: 75px;
 `;
 
 const GlobalStyle = createGlobalStyle`

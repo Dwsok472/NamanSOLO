@@ -20,19 +20,21 @@ import eraser from '../img/eraser.png';
 import RightBox from "./RightBox";
 import { useNavigate } from "react-router-dom";
 import AddAlbum from "./AddAlbum";
+import Top from "./Top";
 
 const BoardWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   gap: 10px;
-  padding: 40px 30px;
+  /* padding: 40px 30px; */
   height: 860px;
+  background-image: radial-gradient(circle, #ffffff, #f2ebdc);
 `;
 
 const BoardFrame = styled.div`
   border-radius: 16px;
-
   width: 75%;
   max-width: 1900px;
   min-height: 750px;
@@ -71,24 +73,24 @@ const PhotoArea = styled.div`
   align-items: center;
 `;
 
-const EmojiTopLeft = styled.img`
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 180px;
-  height: auto;
-  pointer-events: none;
-`;
+// const EmojiTopLeft = styled.img`
+//   position: absolute;
+//   top: 20px;
+//   left: 20px;
+//   width: 180px;
+//   height: auto;
+//   pointer-events: none;
+// `;
 
-const EmojiBottomRight = styled.img`
-  position: absolute;
-  top: 0px;
-  right: 20px;
-  width: 200px;
-  height: auto;
-  pointer-events: none;
-  filter: brightness(0) invert(40%) sepia(90%) saturate(800%) hue-rotate(20deg);
-`;
+// const EmojiBottomRight = styled.img`
+//   position: absolute;
+//   top: 0px;
+//   right: 20px;
+//   width: 200px;
+//   height: auto;
+//   pointer-events: none;
+//   filter: brightness(0) invert(40%) sepia(90%) saturate(800%) hue-rotate(20deg);
+// `;
 
 const BoardInner = styled.div`
   position: relative;
@@ -221,19 +223,20 @@ const AlbumBoard = () => {
 
   return (
     <BoardWrapper>
+      <Top />
       <BoardFrame>
         <img src={marker} alt="marker" className="marker" onClick={handlePrevPage} />
         <BoardInner>
-          <EmojiTopLeft src={imo2} alt="left emoji" />
-          <EmojiBottomRight src={imo1} alt="right emoji" />
+          {/* <EmojiTopLeft src={imo2} alt="left emoji" />
+          <EmojiBottomRight src={imo1} alt="right emoji" /> */}
           <PhotoArea>
             {loading ? <p>LOADING...</p> : generateItems()}  {/* 로딩 중일 때 메시지 */}
           </PhotoArea>
         </BoardInner>
         <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
-        <AddButton>앨범 추가하기</AddButton>
+        {/* <AddButton>앨범 추가하기</AddButton> */}
       </BoardFrame>
-      {/* <RightBox albumData={selectedAlbum} /> */}
+      <RightBox albumData={selectedAlbum} />
     </BoardWrapper>
   );
 };

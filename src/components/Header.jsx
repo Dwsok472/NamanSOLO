@@ -34,7 +34,12 @@ const Logo = styled.h1`
   font-size: 2.5rem;
   color: white;
   margin: 0;
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transition: opacity 0.8s ease-in-out;
+  pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
+  z-index: 2;
 `;
+
 
 const Nav = styled.nav`
   display: flex;
@@ -183,6 +188,7 @@ function Header({
   loginText = "로그인",
   signupText = "회원가입",
   logoRef,
+  showLogo,
 }) {
   const navigate = useNavigate();
   const [isSubOpen, setSubOpen] = useState(false);
@@ -222,7 +228,9 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-        <Logo onClick={() => navigate('/')}>{logoText}</Logo>
+      <Logo ref={logoRef} $visible={showLogo}>
+        {logoText}
+      </Logo>
 
         <Nav>
           {menuItems.map(({ to, label }) => (
