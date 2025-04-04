@@ -119,7 +119,8 @@ const ButtonWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 20%;
+  height: auto;
+  padding: 20px 0;
 `;
 
 const Button = styled.button`

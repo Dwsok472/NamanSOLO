@@ -110,3 +110,16 @@ export async function fetchReplyAlarms(userId) {
     return [];
   }
 }
+
+// 로그인
+export const UserLogin = async (username, password) => {
+  try {
+    const { data } = await axios.post("/api/login", { username, password });
+    return data;
+  } catch (error) {
+    const msg =
+      error.response?.data?.message ||
+      "서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.";
+    throw new Error(msg);
+  }
+};

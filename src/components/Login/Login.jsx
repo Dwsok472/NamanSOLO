@@ -16,6 +16,7 @@ const CardWrap = styled.div`
   margin: 0 auto;
   margin-top: 50px;
 `;
+
 const Card = styled.div`
   width: 550px;
   height: 600px;
@@ -141,6 +142,11 @@ const Container = styled.div`
   align-items: center;
   height: 90vh;
   padding: 0 400px; /* 전체 컨테이너에 좌우 간격을 추가 (옵션) */
+  /* background-image: radial-gradient(circle, #ffffff, #f2ebdc); */
+  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
+  /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
+  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
+  /* background: linear-gradient(to right, #7b1e3c, #ffb3b3, #ffe3e3); */
 `;
 
 export const useUserStore = create(
