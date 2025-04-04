@@ -201,6 +201,92 @@ const ButtonGroup = styled.div`
   }
 `;
 
+const BookSection = styled.section`
+  display: flex;
+  width: 100%;
+  padding: 60px 5%;
+  background: #fff8f8;
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  gap: 40px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 40px 20px;
+  }
+`;
+
+const LeftPanel = styled.div`
+  flex: 1;
+  max-width: 30%;
+  text-align: left;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+
+  img {
+    width: 100%;
+    max-width: 220px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: #555;
+    margin: 4px 0;
+  }
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    text-align: center;
+
+    h2 {
+      text-align: center;
+    }
+
+    img {
+      margin: 0 auto 16px;
+    }
+  }
+`;
+
+const RightPanel = styled.div`
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 20px;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+
+const Page = styled.div`
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+  aspect-ratio: 3 / 4;
+  background-color: white;
+  margin: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+`;
+
 const GoButton = styled.button`
   background-color: #ff7f7f;
   color: white;
@@ -218,14 +304,21 @@ const GoButton = styled.button`
 `;
 
 const SliderSection = styled.section`
-  margin: 40px auto;
+  margin: 80px auto;
   width: 90%;
-  height: 200px;
+  height: 500px;
   background-color: #f3f3f3;
-  border-radius: 16px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px;
+
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 20px;
+    flex-direction: column;
+  }
 `;
 
 const Banner = styled.div`
@@ -321,7 +414,7 @@ function MainPage() {
         loginText="로그인"
         signupText="회원가입"
       />
-
+  
       <PageContainer>
         {showIntro && (
           <>
@@ -335,7 +428,7 @@ function MainPage() {
             <IntroWrapper $slideOut={slideOut} />
           </>
         )}
-
+  
         <MainContent $slideOut={slideOut} $show={showMain}>
           <HeroSection>
             <HeroText>
@@ -345,26 +438,22 @@ function MainPage() {
             </HeroText>
             <CTAButton onClick={scrollToStory}>바로가기</CTAButton>
           </HeroSection>
-
+  
           <Wrapper>
-          <StorySection>
-          <StoryIntro>
+          <BookSection>
+            <LeftPanel>
               <h2>나의 STORY</h2>
-              <img src="/assets/couple_illustration.png" alt="커플 일러스트" />
-              <p>로그인 전: 인기 story<br />로그인 후: 나의 story</p>
-            </StoryIntro>
-          
-            <StoryBookPreview>
-              책처럼 보이는 프리뷰 or 슬라이드 들어올 자리
-            </StoryBookPreview>
-          </StorySection>
-          
-          <StoryButtons>
-            <button>전체 STORY</button>
-            <button>나만의 STORY</button>
-            <button>너와의 기념</button>
-          </StoryButtons>
+              <img src="../img/couple1.png" alt="커플 일러스트" />
+              <p>로그인 전: 인기 story</p>
+              <p>로그인 후: 나의 story</p>
+            </LeftPanel>
 
+            <RightPanel>
+              <Page>👦 나의 이야기</Page>
+              <Page>👧 너의 이야기</Page>
+            </RightPanel>
+          </BookSection>
+           
             <Section>
               <Title>나의 STORY</Title>
               <ButtonGroup>
@@ -373,18 +462,18 @@ function MainPage() {
                 <button>너와의 기념</button>
               </ButtonGroup>
             </Section>
-
+  
             <Section>
               <Title>데이트 장소 추천</Title>
               <SubText>추천 장소 카드 or 간단한 썸네일 들어올 자리</SubText>
             </Section>
-
+  
             <Banner>LOVE TOGETHER</Banner>
           </Wrapper>
         </MainContent>
       </PageContainer>
     </>
-  );
+  );  
 }
 
 export default MainPage;
