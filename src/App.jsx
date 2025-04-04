@@ -25,7 +25,7 @@ const MainContent = styled.main.attrs(() => ({
   id: 'main-content',
 }))`
   flex: 1;
-  /* padding-top: 100px; */
+  padding-top: 75px;
 `;
 
 const GlobalStyle = createGlobalStyle`
