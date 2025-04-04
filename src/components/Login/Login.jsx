@@ -206,7 +206,7 @@ function Login() {
   return (
     <Container>
       <ImgWrap onClick={handleGoMain}>
-        <img src={WeARE} alt="로고" />
+        <img src={WeARE} />
       </ImgWrap>
       <CardWrap>
         <Card>
