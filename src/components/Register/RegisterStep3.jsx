@@ -72,7 +72,7 @@ function RegisterStep3({ onNext }) {
     <Container>
       <H1>회원가입</H1>
       <img src={heartswithrate} className="heartswithrate" />
-      <h1 className="dday">D-DAY</h1>
+      <h1 className="dday">D-{}</h1>
       <div className="inputbox">
         <Input
           type="date"
