@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import heartswithrate from "../img/heartswithrate.png";
 import NextButton from "../Button/NextButton";
@@ -8,11 +8,13 @@ const Container = styled.div`
   width: 100%;
   margin-top: 100px;
   margin-bottom: 170px;
+
   .heartswithrate {
     display: block;
     margin: 0 auto;
     width: 500px;
   }
+
   .dday {
     margin: 0 auto;
     display: flex;
@@ -22,6 +24,7 @@ const Container = styled.div`
     font-weight: 700;
     color: #1f1f1f;
   }
+
   .inputbox {
     width: 100%;
     margin: 0 auto;
@@ -30,24 +33,28 @@ const Container = styled.div`
     align-items: center;
   }
 `;
+
 const H1 = styled.h1`
   font-size: 5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
 `;
+
 const Input = styled.input`
   border: none;
   outline: none;
   height: 80px;
   width: 170px;
   font-weight: 700;
+
   &::placeholder {
     font-size: 1rem;
     font-weight: 700;
     color: #c2c2c2;
   }
 `;
+
 const ButtonWrap = styled.div`
   width: 100%;
   margin: 0 auto;
@@ -58,28 +65,39 @@ const ButtonWrap = styled.div`
 
 function RegisterStep3({ onNext }) {
   const [dday, setDday] = useState("");
+  const [daysDiff, setDaysDiff] = useState(null);
 
-  // async function onNext() {
-  //   try {
-  //     await registerCoupleDday(userId, dday);
-  //     onNext(); // 회원가입 완료 or 메인 페이지 이동 등
-  //   } catch (error) {
-  //     alert("D-DAY 등록에 실패했습니다.");
-  //   }
-  // }
+  useEffect(() => {
+    if (dday) {
+      const selectedDate = new Date(dday);
+      const today = new Date();
+      selectedDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      const timeDiff = today.getTime() - selectedDate.getTime();
+      const diffInDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+      setDaysDiff(diffInDays > 0 ? diffInDays : (diffInDays < 0 ? null : 0)); // 0일 미만이면 0일로 고정
+    } else {
+      setDaysDiff(null);
+    }
+  }, [dday]);
 
   return (
     <Container>
       <H1>회원가입</H1>
-      <img src={heartswithrate} className="heartswithrate" />
-      <h1 className="dday">D-{}</h1>
+      <img src={heartswithrate} className="heartswithrate" alt="하트와 레이트" />
+      <h1 className="dday">
+        {daysDiff !== null ? `D-${daysDiff == 0 ? 'DAY' : daysDiff}` : 'D-DAY를 계산해줍니다.'}
+      </h1>
       <div className="inputbox">
         <Input
           type="date"
           placeholder="사귀기 시작한 날짜를 입력해주세요"
-          autoComplete="off" // 자동완성 기능 끄기
+          autoComplete="off"
           value={dday}
           onChange={(e) => setDday(e.target.value)}
+          max={new Date().toISOString().split("T")[0]}
         />
       </div>
       <ButtonWrap>
@@ -90,3 +108,12 @@ function RegisterStep3({ onNext }) {
 }
 
 export default RegisterStep3;
+
+  // async function onNext() {
+  //   try {
+  //     await registerCoupleDday(userId, dday);
+  //     onNext(); // 회원가입 완료 or 메인 페이지 이동 등
+  //   } catch (error) {
+  //     alert("D-DAY 등록에 실패했습니다.");
+  //   }
+  // }

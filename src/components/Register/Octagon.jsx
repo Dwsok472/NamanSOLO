@@ -234,6 +234,7 @@ function Octagon({
                 onChange={(e) => setBirthday(e.target.value)}
                 readOnly={isProfilePage && !isEditable}
                 placeholder="생년월일을 입력해주세요"
+                max={new Date().toISOString().split("T")[0]}
               />
             </SmallBox>
             <SmallBox>
