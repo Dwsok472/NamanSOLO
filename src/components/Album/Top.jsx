@@ -210,8 +210,6 @@ function Top({ filter, onFilterChange }) {
     setShowResults(filteredUsers.length > 0); // 결과가 있을 때만 보여주기
     console.log(filteredUsers);
   }
-  console.log(searchResults);
-
   return (
     <Container>
       <TopBox>
