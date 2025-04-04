@@ -3,6 +3,7 @@ import styled from "styled-components";
 import defaultcouple from "../img/couple.png";
 import { IconBell, IconImage } from "../Icons";
 import heart from "../img/heart.png";
+import { useLocation } from "react-router-dom";
 import { getDdayByUsername } from "../api";
 import Octagon from "../Register/Octagon";
 import RegisterMain from "../Register/RegisterMain";
@@ -243,6 +244,9 @@ const BottomSection = styled.div`
   }
 `;
 function MyPage() {
+  const location = useLocation();
+  const pathname = location.pathname;
+  
   const [image, setImage] = useState(defaultcouple);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
@@ -377,8 +381,8 @@ function MyPage() {
                 handleButtonClick("커플 정보");
                 handleBoxClick("커플 정보");
               }}
-              className={selectedOption === "커플 정보" ? "selected" : ""}
-            >
+              className={pathname.includes("/mypage/info") ? "selected" : ""}
+              >
               커플 정보
             </Button>
             <Button
@@ -386,8 +390,8 @@ function MyPage() {
                 handleButtonClick("나의 스토리");
                 handleBoxClick("나의 스토리");
               }}
-              className={selectedOption === "나의 스토리" ? "selected" : ""}
-            >
+              className={pathname.includes("/mypage/story") ? "selected" : ""}
+              >
               나의 스토리
             </Button>
             <Button
@@ -395,8 +399,8 @@ function MyPage() {
                 handleButtonClick("나의 댓글");
                 handleBoxClick("나의 댓글");
               }}
-              className={selectedOption === "나의 댓글" ? "selected" : ""}
-            >
+              className={pathname.includes("/mypage/comment") ? "selected" : ""}
+              >
               나의 댓글
             </Button>
             <Button
@@ -404,8 +408,8 @@ function MyPage() {
                 handleButtonClick("캘린더");
                 handleBoxClick("캘린더");
               }}
-              className={selectedOption === "캘린더" ? "selected" : ""}
-            >
+              className={pathname.includes("/mypage/todo") ? "selected" : ""}
+              >
               캘린더
             </Button>
             <Button
@@ -413,8 +417,8 @@ function MyPage() {
                 handleButtonClick("그 외");
                 handleBoxClick("그 외");
               }}
-              className={selectedOption === "그 외" ? "selected" : ""}
-            >
+              className={pathname.includes("/mypage/other") ? "selected" : ""}
+              >
               그 외
             </Button>
           </Left>
