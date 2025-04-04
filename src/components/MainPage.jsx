@@ -45,7 +45,7 @@ const MainContent = styled.div.attrs(() => ({
 `;
 
 const Wrapper = styled.div`
-  padding: 120px 24px 40px;
+  padding: 20px 24px 40px;
   font-family: 'Poppins', sans-serif;
   color: #333;
   text-align: center;
@@ -57,44 +57,113 @@ const Section = styled.section`
 
 const HeroSection = styled.section`
   background: linear-gradient(to bottom, #fff0f0, #ffeaea);
-  padding: 100px 20px 80px;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  padding: 20px;
+  border-bottom: 1px solid #f5dcdc;
 `;
 
 const HeroText = styled.h1`
-  font-family: 'GmarketSansMedium', sans-serif;
-  font-size: 2.2rem;
-  color: #555;
+  font-size: 2.4rem;
+  color: #444;
   line-height: 1.6;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
   strong {
-    font-family: 'GmarketSansBold';
+    font-size: 2.6rem;
     font-weight: 700;
-    color: #222;
+    color: #b22222; 
   }
 `;
 
-const HeroSubText = styled.p`
-  font-size: 1.1rem;
-  color: #777;
-  line-height: 1.8;
-`;
-
 const CTAButton = styled.button`
-  margin-top: 24px;
   padding: 14px 28px;
   font-size: 1rem;
-  background-color: #ff8a8a;
+  background-color: #ff7b7b;
   color: white;
   font-weight: bold;
   border: none;
   border-radius: 30px;
+  box-shadow: 0px 4px 12px rgba(255, 102, 102, 0.2); // 추가
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: #ff4d4d;
+    background-color: #ff5252;
+    transform: translateY(-2px);
+  }
+`;
+const StorySection = styled.section`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  background-color: #fff8f8;
+  padding: 60px 40px;
+  flex-wrap: wrap;
+`;
+
+const StoryIntro = styled.div`
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+
+  h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    font-family: 'GmarketSansBold', sans-serif;
+  }
+
+  img {
+    max-width: 200px;
+    height: auto;
+  }
+
+  p {
+    margin-top: 12px;
+    font-size: 1rem;
+    color: #555;
+  }
+`;
+
+const StoryBookPreview = styled.div`
+  flex: 1;
+  min-width: 300px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0px 4px 16px rgba(0,0,0,0.05);
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #999;
+`;
+
+const StoryButtons = styled.div`
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  button {
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 2px solid #ffa1a1;
+    background: white;
+    font-weight: bold;
+    color: #ff4d4d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #fff0f0;
+    }
   }
 `;
 
@@ -278,7 +347,23 @@ function MainPage() {
           </HeroSection>
 
           <Wrapper>
-            <SliderSection>슬라이드 or 팝업 자리</SliderSection>
+          <StorySection>
+          <StoryIntro>
+              <h2>나의 STORY</h2>
+              <img src="/assets/couple_illustration.png" alt="커플 일러스트" />
+              <p>로그인 전: 인기 story<br />로그인 후: 나의 story</p>
+            </StoryIntro>
+          
+            <StoryBookPreview>
+              책처럼 보이는 프리뷰 or 슬라이드 들어올 자리
+            </StoryBookPreview>
+          </StorySection>
+          
+          <StoryButtons>
+            <button>전체 STORY</button>
+            <button>나만의 STORY</button>
+            <button>너와의 기념</button>
+          </StoryButtons>
 
             <Section>
               <Title>나의 STORY</Title>
