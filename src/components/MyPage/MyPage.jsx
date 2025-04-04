@@ -228,8 +228,8 @@ const BellWrapper = styled.div`
 
 const BottomSection = styled.div`
   width: 100%;
-  overflow: scroll;
-  overflow-x: hidden;
+  /* overflow: scroll;
+  overflow-x: hidden; */
   .heartRate {
     width: 50px;
     height: 50px;
@@ -246,7 +246,7 @@ const BottomSection = styled.div`
 function MyPage() {
   const location = useLocation();
   const pathname = location.pathname;
-  
+
   const [image, setImage] = useState(defaultcouple);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
@@ -382,7 +382,7 @@ function MyPage() {
                 handleBoxClick("커플 정보");
               }}
               className={pathname.includes("/mypage/info") ? "selected" : ""}
-              >
+            >
               커플 정보
             </Button>
             <Button
@@ -391,7 +391,7 @@ function MyPage() {
                 handleBoxClick("나의 스토리");
               }}
               className={pathname.includes("/mypage/story") ? "selected" : ""}
-              >
+            >
               나의 스토리
             </Button>
             <Button
@@ -400,7 +400,7 @@ function MyPage() {
                 handleBoxClick("나의 댓글");
               }}
               className={pathname.includes("/mypage/comment") ? "selected" : ""}
-              >
+            >
               나의 댓글
             </Button>
             <Button
@@ -409,7 +409,7 @@ function MyPage() {
                 handleBoxClick("캘린더");
               }}
               className={pathname.includes("/mypage/todo") ? "selected" : ""}
-              >
+            >
               캘린더
             </Button>
             <Button
@@ -418,7 +418,7 @@ function MyPage() {
                 handleBoxClick("그 외");
               }}
               className={pathname.includes("/mypage/other") ? "selected" : ""}
-              >
+            >
               그 외
             </Button>
           </Left>
