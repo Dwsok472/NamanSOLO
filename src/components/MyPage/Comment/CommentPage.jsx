@@ -52,7 +52,7 @@ const Thumbnail = styled.div`
   background: #ddd;
   border-radius: 12px;
   margin-right: 16px;
-  background-image: url('https://via.placeholder.com/60');
+  background-image: url('https://placeholderjs.com/60x60');
   background-size: cover;
   background-position: center;
 `;
