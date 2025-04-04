@@ -22,7 +22,7 @@ const AppWrapper = styled.div`
 `;
 
 const MainContent = styled.main.attrs(() => ({
-  id: 'main-content',
+  id: 'main-content', 
 }))`
   flex: 1;
   padding-top: 100px;
@@ -30,48 +30,58 @@ const MainContent = styled.main.attrs(() => ({
 
 const GlobalStyle = createGlobalStyle`
   * {
-    margin: 0 ;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Poppins;
   }
+
   a {
     text-decoration: none;
     color: inherit;
   }
+
   button {
     &:focus {
       outline: none;
     }
   }
+
+  body.blur #main-content {
+    filter: blur(4px);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  body.blur header {
+    filter: none !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+  }
 `;
 
 function AppRoutes() {
-  const location = useLocation();
-  const isMainPage = location.pathname === '/';
-
   return (
     <AppWrapper>
       <GlobalStyle />
-      {!isMainPage && (
-        <Header
-          logoText="WeARE"
-          menuItems={[
-            { to: '/story/all', label: '전체 스토리' },
-            { to: '/map', label: '맵' },
-            { to: '/events', label: '이벤트' },
-          ]}
-          subMenuItems={[
-            { to: '/mypage/info', label: '커플 정보' },
-            { to: '/mypage/story', label: '나의 스토리' },
-            { to: '/mypage/comment', label: '나의 댓글' },
-            { to: '/mypage/todo', label: '캘린더' },
-            { to: '/mypage/other', label: '그 외' },
-          ]}
-          loginText="로그인"
-          signupText="회원가입"
-        />
-      )}
+
+      <Header
+        logoText="WeARE"
+        menuItems={[
+          { to: '/story/all', label: '전체 스토리' },
+          { to: '/map', label: '맵' },
+          { to: '/events', label: '이벤트' },
+        ]}
+        subMenuItems={[
+          { to: '/mypage/info', label: '커플 정보' },
+          { to: '/mypage/story', label: '나의 스토리' },
+          { to: '/mypage/comment', label: '나의 댓글' },
+          { to: '/mypage/todo', label: '캘린더' },
+          { to: '/mypage/other', label: '그 외' },
+        ]}
+        loginText="로그인"
+        signupText="회원가입"
+      />
 
       <MainContent>
         <Routes>

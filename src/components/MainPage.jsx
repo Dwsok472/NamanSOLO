@@ -2,6 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import Header from './Header';
 
+const colorCycle = keyframes`
+  0% { color: #222; }
+  25% { color: #ff7f7f; }
+  50% { color: #ff5252; }
+  75% { color: #ffb6b6; }
+  100% { color: #222; }
+`;
+
 const Wrapper = styled.div`
   padding: 120px 24px 40px;
   font-family: 'Poppins', sans-serif;
@@ -79,7 +87,6 @@ const Banner = styled.div`
   margin-top: 80px;
 `;
 
-// 애니메이션
 const IntroWrapper = styled.div`
   position: fixed;
   z-index: 9999;
@@ -105,11 +112,11 @@ const IntroText = styled.div`
   position: absolute;
   font-size: 10rem;
   font-weight: 900;
-  color: #222;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1.2);
   opacity: 1;
+  animation: ${colorCycle} 3s infinite;
   transition: all 1.5s ease-in-out;
 
   ${({ $animateToLogo, $top, $left }) =>
@@ -117,14 +124,17 @@ const IntroText = styled.div`
     css`
       top: ${$top + 22}px;
       left: ${$left + 68}px;
-      transform: translate(-50%, -50%) scale(0.4);
+      transform: translate(-50%, -50%) scale(0.7);
       font-size: 2.4rem;
+      animation: none;
     `}
 `;
 
-const MainContent = styled.div`
+const MainContent = styled.div.attrs(() => ({
+  id: 'main-content',
+}))`
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transform: ${({ $show }) => ($show ? "translateY(0)" : "translateY(20px)")};
+  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
   transition: all 0.8s ease-in-out;
 `;
 
@@ -185,6 +195,7 @@ function MainPage() {
     <>
       <Header
         logoRef={logoRef}
+        $visible={showMain}
         menuItems={[
           { to: '/story/all', label: '전체 스토리' },
           { to: '/map', label: '맵' },
@@ -214,7 +225,7 @@ function MainPage() {
       )}
 
       <MainContent $show={showMain}>
-        <Wrapper>
+        <Wrapper style={{ visibility: showIntro ? 'hidden' : 'visible' }}>
           <Section>
             <SubText>
               <strong>(WE ARE..)</strong> 우리의 이야기<br />
