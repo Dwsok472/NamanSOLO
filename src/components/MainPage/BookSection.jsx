@@ -1,98 +1,103 @@
 import React from 'react';
 import styled from 'styled-components';
 import BookFlip from './BookFlip';
-import couple1 from '../img/couple1.png'; // 경로는 프로젝트 구조에 따라 조정
+import { useNavigate } from 'react-router-dom';
 
 const BookSectionWrapper = styled.section`
   display: flex;
   justify-content: center;
-  align-items: center; 
-
-
-  padding: 120px 60px;
-
-  background: #fff8f8;
+  align-items: flex-start;
+  padding: 100px 60px;
+  background: linear-gradient(to bottom right, #fff0f0, #fff8f8);
   border-radius: 0;
-  box-shadow: none;
-  gap: 40px;
   width: 100vw;
-  max-width: 100vw;
-  margin: 0;
+  min-height: 680px;
+  gap: 60px;
   flex-wrap: wrap;
+  position: relative;
 
   @media (max-width: 768px) {
     flex-direction: column;
-    padding: 60px 20px; 
+    padding: 60px 20px;
   }
 `;
 
-
-const LeftPanel = styled.div`
-  flex: 1;
-  max-width: 30%;
-  text-align: left;
-
-  h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-
-  img {
-    width: 100%;
-    max-width: 220px;
-    margin-bottom: 16px;
-  }
-
-  p {
-    font-size: 0.95rem;
-    color: #555;
-    margin: 4px 0;
-  }
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    text-align: center;
-
-    h2 {
-      text-align: center;
-    }
-
-    img {
-      margin: 0 auto 16px;
-    }
-  }
-`;
-
-const RightPanel = styled.div`
-  flex: 2;
+const BookSectionContent = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  padding: 20px;
-  border-radius: 24px;
-  background: white;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 1200px;
+  gap: 40px;
+
+  @media (max-width: 1024px) {
+    flex-wrap: wrap; // ✅ 이건 태블릿 이하에서만 쌓이도록
+    justify-content: center;
+  }
+`;
+
+const BookIntroBox = styled.div`
+  max-width: 500px;
+  padding: 60px 40px;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  background: transparent;
+  color: #333;
+  flex-shrink: 0;
+
+  strong {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 1rem;
+  }
+
+  .cta-link {
+    display: inline-block;
+    margin-top: 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: #ff6b6b;
+    }
+  }
 
   @media (max-width: 768px) {
-    flex-direction: column;
+    font-size: 1rem;
+
+    strong {
+      font-size: 1.1rem;
+    }
   }
 `;
 
 const BookSection = ({ flipped, togglePage, bookRef }) => {
+  const navigate = useNavigate();
+
   return (
     <BookSectionWrapper ref={bookRef}>
-      <LeftPanel>
-        <h2>나의 STORY</h2>
-        <img src={couple1} alt="커플 일러스트" />
-        <p>로그인 전: 인기 story</p>
-        <p>로그인 후: 나의 story</p>
-      </LeftPanel>
-      <RightPanel>
+      <BookSectionContent>
+        <BookIntroBox>
+          <p>
+            우리의 이야기를 함께 나누고,<br />
+            다른 커플들과 따뜻한 추억을 공유해보세요.
+          </p>
+          <p>
+            사랑의 순간들을 <strong>책처럼 남기고</strong><br />
+            <strong>함께 공감하는 공간</strong>이 여기에 있어요.
+          </p>
+          <div className="cta-link" onClick={() => navigate('/story/all')}>
+            전체 스토리 둘러보기 →
+          </div>
+        </BookIntroBox>
+
         <BookFlip flipped={flipped} togglePage={togglePage} />
-      </RightPanel>
+      </BookSectionContent>
     </BookSectionWrapper>
   );
 };

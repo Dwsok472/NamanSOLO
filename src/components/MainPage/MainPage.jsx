@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Header from '../Header';
 import Intro from './Intro';
 import BookSection from './BookSection';
+import Hero from '../MainPage/Hero';
 
 const PageContainer = styled.div`
   position: relative;
@@ -157,14 +158,7 @@ function MainPage() {
         />
 
         <MainContent $slideOut={slideOut} $show={showMain}>
-          <HeroSection>
-            <HeroText>
-              <strong>(WE ARE..)</strong> 우리의 이야기<br />
-              너와 나, 두 사람이 한 권의 책을 써가는 중이에요.<br />
-              우리의 이야기는 계속 된다...
-            </HeroText>
-            <CTAButton onClick={scrollToStory}>바로가기</CTAButton>
-          </HeroSection>
+          <Hero />
 
           <BookSection
             flipped={flipped}
