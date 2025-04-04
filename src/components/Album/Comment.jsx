@@ -6,11 +6,10 @@ import { AddCommentByAlbumId, getAllCommentByAlbumId } from '../api';
 const Container = styled.div`
   width: 100%;
   color: white;
-
 `;
 const CommentList = styled.div`
   height: 600px; /* 최대 높이를 설정하여 스크롤이 생기도록 함 */
-  overflow-y: auto;  /* 스크롤 기능 활성화 */
+  overflow-y: auto; /* 스크롤 기능 활성화 */
   margin-bottom: 1px;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
@@ -40,15 +39,15 @@ const Box = styled.div`
     color: #999999;
     font-size: 0.8rem;
   }
-  .wrap{
+  .wrap {
     display: flex;
   }
-  .show-more{
+  .show-more {
     font-size: 0.8rem;
     background-color: black;
     border-radius: 5px;
     color: white;
-    &:hover{
+    &:hover {
       color: #cccccc;
     }
   }
@@ -76,7 +75,7 @@ const Input = styled.input`
   outline: none;
   background-color: black;
   color: white;
-  &::placeholder{
+  &::placeholder {
     color: #cfcfcf;
   }
 `;
@@ -89,7 +88,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
   font-size: 0.9rem;
   border-radius: 10px;
-  &:hover{
+  &:hover {
     color: #cccccc;
   }
 `;
@@ -100,14 +99,11 @@ function Comment({ albumData }) {
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isCommentVisible, setIsCommentVisible] = useState({}); // 각 댓글의 답글 표시 여부 상태 관리
 
-
-  console.log(albumData.id);
-
   useEffect(() => {
     const sendData = [
       {
         id: 1,
-        albumId: 2,
+        albumId: 1,
         text: '행복해 보이세요',
         username: 'user1',
         date: '2025-01-01',
@@ -135,7 +131,7 @@ function Comment({ albumData }) {
       },
       {
         id: 5,
-        albumId: 2,
+        albumId: 3,
         text: '커플 프로필 찍으신건가요',
         username: 'user5',
         date: '2025-01-05',
@@ -190,7 +186,6 @@ function Comment({ albumData }) {
     }));
   };
 
-
   return (
     <Container>
       <CommentList>
@@ -198,21 +193,23 @@ function Comment({ albumData }) {
           <p>LOADING...</p>
         ) : (
           data.map((comment) => (
-            <Box
-              key={comment.id}
-
-            >
+            <Box key={comment.id}>
               <span className="username">{comment.username}</span>
               <span className="date">{comment.date}</span>
-              <div className='wrap'>
+              <div className="wrap">
                 <Text>{comment.text}</Text>
                 <button
                   className="show-more"
                   onClick={() => toggleCommentVisibility(comment.id)}
-                > 답글 보기
+                >
+                  {' '}
+                  답글 보기
                 </button>
               </div>
-              {isCommentVisible[comment.id] && <ReComment commentId={comment.id} />} {/* 답글 표시 */}
+              {isCommentVisible[comment.id] && (
+                <ReComment commentId={comment.id} />
+              )}{' '}
+              {/* 답글 표시 */}
             </Box>
           ))
         )}

@@ -13,7 +13,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   padding-top: 10px;
-
 `;
 const TopBox = styled.div`
   width: 100%;
@@ -21,21 +20,26 @@ const TopBox = styled.div`
   display: flex;
   align-items: center;
   padding-left: 30px;
-  .button {
+  button {
     font-weight: 700;
     font-size: 0.7rem;
-    background-color: #ffffff;
+    background-color: '#ffffff';
+    color: '#2b2b2b';
     border-radius: 20px;
     width: 80px;
-    color: #2b2b2b;
     margin: 5px;
+    transition: all 0.2s;
+    cursor: pointer;
     &:hover {
       background-color: #f2a0a0;
       color: white;
     }
   }
+  .selected {
+    background-color: #f2a0a0;
+    color: white;
+  }
 `;
-
 
 const MiddleBox = styled.div`
   width: 100%;
@@ -54,7 +58,7 @@ const SearchBox = styled.div`
   /* border: 1px solid #6d6d6d33; */
   border-radius: 10px;
   /* background-color: #bbbbbb; */
-  padding-top : 3.5px;
+  padding-top: 3.5px;
 `;
 const InputBox = styled.div`
   width: 95%;
@@ -84,14 +88,14 @@ const SearchResults = styled.div`
   width: 35%;
   background-color: #ffffff;
   border-radius: 10px;
-  max-height: 200px;
+  height: 200px;
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   display: flex;
   justify-content: center;
   position: absolute;
   bottom: -190px;
-z-index: 1;
+  z-index: 1;
   &.show {
     transform: translateY(0); /* 결과가 보일 때 슬라이딩 */
     opacity: 1; /* 결과의 투명도 */
@@ -104,12 +108,12 @@ const Wrap = styled.div`
   overflow-x: hidden;
   margin: 8px;
   &::-webkit-scrollbar {
-    width: 7px; 
+    width: 7px;
     position: absolute;
     right: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #8c0d17; 
+    background-color: #8c0d17;
     border-radius: 5px;
   }
   hr {
@@ -146,27 +150,17 @@ const Block = styled.div`
   }
 `;
 
-
-function Top() {
+function Top({ filter, onFilterChange }) {
   const [inputKeyword, setInputKeyword] = useState('');
   const [allUsers, setAllUsers] = useState([]); // db상에 전체 유저 조회
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 담기
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
-  const [filter, setFilter] = useState("최신순");
-
+  const [selected, setSelected] = useState('최신순');
   const navigate = useNavigate();
   const location = useLocation();
 
   const urlKeyword = new URLSearchParams(location.search).get('username');
-
-  const setChooseFilter = (option) => {
-    setFilter(option);
-  }
-  const getButtonStyle = (option) => {
-    return option === filter ? { backgroundColor: '#f2a0a0', color: 'white' } : {};
-  }
-
 
   //임시용
   useEffect(() => {
@@ -196,8 +190,6 @@ function Top() {
     };
   }, []);
 
-
-
   useEffect(() => {
     searchUsername(inputKeyword);
   }, [inputKeyword]); // 상태변수가 아닌 일반 변수도 사용 가능!!!
@@ -220,17 +212,39 @@ function Top() {
   }
   console.log(searchResults);
 
-
   return (
     <Container>
       <TopBox>
-        <button className="button" id="newest" onClick={() => setChooseFilter("최신순")} style={getButtonStyle("최신순")}>
+        <button
+          className={selected === '최신순' ? 'selected' : ''}
+          id="newest"
+          onClick={() => {
+            onFilterChange('최신순');
+            setSelected('최신순');
+          }}
+        >
           최신순
         </button>
-        <button className="button" id="like" onClick={() => setChooseFilter("좋아요순")} style={getButtonStyle("좋아요순")}>
+        <button
+          className={selected === '좋아요순' ? 'selected' : ''}
+          id="like"
+          active={filter === '좋아요순'}
+          onClick={() => {
+            onFilterChange('좋아요순');
+            setSelected('좋아요순');
+          }}
+        >
           좋아요순
         </button>
-        <button className="button" id="comment" onClick={() => setChooseFilter("댓글순")} style={getButtonStyle("댓글순")}>
+        <button
+          className={selected === '댓글순' ? 'selected' : ''}
+          id="comment"
+          active={filter === '댓글순'}
+          onClick={() => {
+            onFilterChange('댓글순');
+            setSelected('댓글순');
+          }}
+        >
           댓글순
         </button>
       </TopBox>
@@ -282,10 +296,10 @@ function Top() {
         )}
       </MiddleBox>
     </Container>
-  )
+  );
 }
 
-export default Top
+export default Top;
 
 //   useEffect(() => {
 //     const allUser = async () => {

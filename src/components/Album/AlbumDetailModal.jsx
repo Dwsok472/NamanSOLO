@@ -18,7 +18,6 @@ const Container = styled.div`
   /* align-items: center; */
   position: absolute;
   height: 100%;
-
 `;
 const Backdrop = styled.div`
   position: fixed;
@@ -36,22 +35,25 @@ const BottomBox = styled.div`
   transition: margin-top 0.3s ease-out;
   background-color: #000000;
   padding-bottom: 10px;
-  padding-top: 30px;
+  padding-top: 20px;
   z-index: 210;
   display: flex;
   position: fixed;
   top: 150px;
   left: 280px;
- 
 `;
 const CommentBox = styled.div`
-width : 100%;
-/* background-color: white; */
-
+  width: 100%;
+  /* background-color: white; */
 `;
 const Box = styled.div`
   width: 100%;
   position: relative;
+  .date {
+    color: #a3a3a3;
+    font-size: 0.7rem;
+    padding-left: 10px;
+  }
   .image {
     width: 100%;
     height: 550px;
@@ -92,7 +94,8 @@ const Box = styled.div`
     display: flex;
     justify-content: end;
     padding-right: 5px;
-    .like {
+    .like,
+    .commentCount {
       color: white;
       font-size: 0.6rem;
     }
@@ -116,16 +119,14 @@ const Box = styled.div`
   }
 `;
 
-
-
-function RightBox({ albumData, onClose }) {
-
+function AlbumDetailModal({ albumData, onClose }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
   const [likeCount, setLikeCount] = useState(albumData.likes.length); // 앨범의 초기 좋아요 수 설정
   const [userLikes, setUserLikes] = useState({}); // 유저별 좋아요 상태 관리
-  const currentUser = "user2"; // 현재 로그인한 사용자 예시
+  const currentUser = 'user2'; // 현재 로그인한 사용자 예시
+  const [commentCount, setCommentCount] = useState(albumData.comments.length);
 
   useEffect(() => {
     // 초기 좋아요 상태 설정 (기존 좋아요 배열에 포함된 사용자 확인)
@@ -135,6 +136,12 @@ function RightBox({ albumData, onClose }) {
     }, {});
     setUserLikes(initialLikes);
   }, [albumData.likes]);
+
+  useEffect(() => {
+    // 댓글 개수 업데이트
+    const fetchCommentCount = albumData.comments.length; // albumData에 댓글 수가 들어있다고 가정
+    setCommentCount(fetchCommentCount);
+  }, [albumData]);
 
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
   const prevImage = () => {
@@ -176,13 +183,13 @@ function RightBox({ albumData, onClose }) {
     });
   };
 
-
   return (
     <>
       <Backdrop onClick={onClose} />
       <Container>
         <BottomBox isCommentVisible={isCommentVisible}>
           <Box id={albumData.id}>
+            <div className="date">{albumData.date}</div>
             <img
               src={leftkey}
               alt="leftkey"
@@ -220,6 +227,7 @@ function RightBox({ albumData, onClose }) {
                   className="comment"
                   onClick={() => toggleCommentVisibility(albumData.id)}
                 />
+                <span className="commentCount">{commentCount}</span>
               </div>
             </div>
             <div className="tags">
@@ -239,7 +247,7 @@ function RightBox({ albumData, onClose }) {
         </BottomBox>
       </Container>
     </>
-  )
+  );
 }
 
-export default RightBox;
+export default AlbumDetailModal;

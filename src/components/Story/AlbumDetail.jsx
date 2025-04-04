@@ -1,14 +1,14 @@
 import React from 'react';
-import PhotoCard from './PhotoCard';
+import PhotoCard from '../Album/PhotoCard';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
-import StarButton from './StarButton';
-import HeartButton from './HeartButton';
-import CommentButton from './CommentButton';
+import StarButton from '../Album/StarButton';
+import HeartButton from '../Album/HeartButton';
+import CommentButton from '../Album/CommentButton';
 import comment from '../img/comment.png';
-import Comment from './Comment';
+import Comment from '../Album/Comment';
 const Container = styled.div`
   width: 100%;
   background-color: #0e0e0e;
@@ -141,7 +141,7 @@ function AlbumDetail({ albumData }) {
   // 좋아요 클릭 시 처리 함수
   const handleLike = () => {
     setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
-    console.log(prevCount)
+    console.log(prevCount);
   };
 
   return (
@@ -176,8 +176,10 @@ function AlbumDetail({ albumData }) {
               <div className="title">{albumDetail.title}</div>
             </div>
             <div className="button">
-              <HeartButton onLike={handleLike} /> {/* 좋아요 클릭 시 핸들러 호출 */}
-              <span className="like">{likeCount.length}</span> {/* 좋아요 수 표시 */}
+              <HeartButton onLike={handleLike} />{' '}
+              {/* 좋아요 클릭 시 핸들러 호출 */}
+              <span className="like">{likeCount.length}</span>{' '}
+              {/* 좋아요 수 표시 */}
               <img
                 src={comment}
                 alt="comment"
