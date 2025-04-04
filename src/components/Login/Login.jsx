@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { IconPassword, IconUser } from "../Icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginButton from "../Button/LoginButton";
 import RegisterButton from "../Button/RegisterButton";
@@ -21,7 +21,7 @@ const CardWrap = styled.div`
 
 const Card = styled.div`
   width: 550px;
-  height: 600px;
+  height: 550px;
   /* background-color: #ffe4e1;
   clip-path: polygon(
     10% 0%,
@@ -128,6 +128,7 @@ const ImgWrap = styled.div`
   justify-content: center;
   align-items: center;
   /* padding-right: 30px; */
+  cursor: pointer;
 
   & img {
     max-height: 100vh;
@@ -149,7 +150,7 @@ const Icon = styled.div`
 
 const Container = styled.div`
   width: 100vw; /* ← 화면 너비 기준으로 꽉 채움 */
-  height: 100vh;
+  height: 92vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -185,6 +186,11 @@ function Login() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const { login, user, isLoggedIn } = useUserStore();
+  const navigate = useNavigate();
+
+  const handleGoMain = () => {
+    navigate("/ "); // MainPage 이동
+  };
 
   async function handleSubmit() {
     try {
@@ -199,8 +205,8 @@ function Login() {
 
   return (
     <Container>
-      <ImgWrap>
-        <img src={WeARE} />
+      <ImgWrap onClick={handleGoMain}>
+        <img src={WeARE} alt="로고" />
       </ImgWrap>
       <CardWrap>
         <Card>
@@ -243,7 +249,7 @@ function Login() {
           </ButtomWrap>
         </Card>
       </CardWrap>
-      <Icon>
+      <Icon onClick={() => navigate(-1)}>
         <IconBehind />
       </Icon>
     </Container>
