@@ -25,7 +25,7 @@ const MainContent = styled.main.attrs(() => ({
   id: "main-content",
 }))`
   flex: 1;
-  padding-top: ${(props) => (props.$noPadding ? "0" : "75px")};
+  padding-top: 75px;
 `;
 
 const GlobalStyle = createGlobalStyle`
@@ -62,9 +62,7 @@ const GlobalStyle = createGlobalStyle`
 
 function AppRoutes() {
   const location = useLocation();
-  const hiddenHeaderFooterRoutes = ["/", "/login"]; // 여기에 제외할 경로 추가
-
-  const isMainPage = hiddenHeaderFooterRoutes.includes(location.pathname);
+  const isMainPage = location.pathname === "/";
 
   return (
     <AppWrapper>
@@ -90,7 +88,7 @@ function AppRoutes() {
         />
       )}
 
-      <MainContent $noPadding={isMainPage}>
+      <MainContent>
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<Login />} />
@@ -105,7 +103,7 @@ function AppRoutes() {
           <Route path="/find-pwd" element={<Find isFindId={false} />} />
         </Routes>
       </MainContent>
-      {!isMainPage && <Footer />}
+      <Footer />
     </AppWrapper>
   );
 }
