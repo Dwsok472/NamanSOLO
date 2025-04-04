@@ -128,7 +128,9 @@ const IntroText = styled.div`
   transition: all 1.5s ease-in-out;
 `;
 
-const MainContent = styled.div`
+const MainContent = styled.div.attrs(() => ({
+  id: 'main-content'
+}))`
   opacity: ${({ $show }) => ($show ? 1 : 0)};
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
   transition: all 0.8s ease-in-out;
@@ -142,11 +144,12 @@ function MainPage() {
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
-  const fullTextRef = useRef('WE ARE');
+  const fullTextRef = useRef('WeARE');
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
   const [showLogo, setShowLogo] = useState(false);
   const [fadeOutIntro, setFadeOutIntro] = useState(false);
+  const didSetRef = useRef(false);
 
   useEffect(() => {
     let index = 0;
@@ -161,25 +164,23 @@ function MainPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const didSetRef = useRef(false);
-
   useLayoutEffect(() => {
-    const waitForLogo = () => {
-      if (logoRef.current) {
-        requestAnimationFrame(() => {
-          const rect = logoRef.current.getBoundingClientRect();
-          const top = rect.top + window.scrollY + 6;
-          const left = rect.left + window.scrollX + rect.width / 2;
+    const getLogoPos = () => {
+      if (logoRef.current && !didSetRef.current) {
+        const rect = logoRef.current.getBoundingClientRect();
+        const top = rect.top + 23;
+        const left = rect.left + rect.width / 2;
   
-          console.log('✅ 고정 좌표 →', { top, left });
-          setLogoPosition({ top, left });
-        });
-      } else {
-        setTimeout(waitForLogo, 50); // ✅ 로고가 없으면 다시 시도
+        setLogoPosition({ top, left });
+        didSetRef.current = true;
+        console.log(`고정 좌표: top=${top}, left=${left}`);
+      } else if (!logoRef.current) {
+        setTimeout(getLogoPos, 50);
       }
     };
   
-    waitForLogo();
+    setTimeout(getLogoPos, 0);
+    setTimeout(getLogoPos, 100);
   }, []);
 
   useEffect(() => {
@@ -189,6 +190,7 @@ function MainPage() {
     const t4 = setTimeout(() => {
       setShowIntro(false);
       setShowMain(true);
+      document.body.classList.remove("blur");
     }, 4200);
 
     return () => {
@@ -222,18 +224,18 @@ function MainPage() {
       />
     
     {showIntro && (
-        <>
-          <IntroText
-            $animateToLogo={animateToLogo}
-            $top={animateToLogo ? logoPosition.top : undefined}
-            $left={animateToLogo ? logoPosition.left : undefined}
-          >
-            {displayText}
-          </IntroText>
+  <>
+    <IntroText
+      $animateToLogo={showIntro && animateToLogo}
+      $top={showIntro && animateToLogo ? logoPosition.top : undefined}
+      $left={showIntro && animateToLogo ? logoPosition.left : undefined}
+    >
+      {displayText}
+    </IntroText>
 
-          <IntroWrapper $show={showIntro} $slideOut={slideOut} />
-        </>
-      )}
+    <IntroWrapper $show={showIntro} $slideOut={slideOut} />
+  </>
+)}
 
       <MainContent $show={showMain}>
         <Wrapper style={{ visibility: showIntro ? 'hidden' : 'visible' }}>
