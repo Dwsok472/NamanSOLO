@@ -6,11 +6,12 @@ import { AddCommentByAlbumId, getAllCommentByAlbumId } from '../api';
 const Container = styled.div`
   width: 100%;
   color: white;
+
 `;
 const CommentList = styled.div`
-  max-height: 300px; /* 최대 높이를 설정하여 스크롤이 생기도록 함 */
+  height: 600px; /* 최대 높이를 설정하여 스크롤이 생기도록 함 */
   overflow-y: auto;  /* 스크롤 기능 활성화 */
-  margin-bottom: 20px;
+  margin-bottom: 1px;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
   }
@@ -18,36 +19,45 @@ const CommentList = styled.div`
     background-color: #727272; /* 핸들의 색상 */
     border-radius: 10px;
   }
+  width: 90%;
+  margin: 0 auto;
 `;
 const Box = styled.div`
   width: 100%;
   border-bottom: 1px solid #c0c0c033;
-  font-size: 0.8rem;
+  padding-bottom: 3px;
+  padding-top: 3px;
+  font-size: 1rem;
   color: #ffffff;
-  padding: 3px;
   .username {
     padding-left: 10px;
     font-weight: 700;
+    text-align: center;
+    font-size: 0.8rem;
   }
   .date {
     padding-left: 10px;
     color: #999999;
+    font-size: 0.8rem;
   }
   .wrap{
     display: flex;
   }
   .show-more{
-    font-size: 0.4rem;
-    background-color: white;
+    font-size: 0.8rem;
+    background-color: black;
     border-radius: 5px;
+    color: white;
     &:hover{
-     font-weight :700 ;
+      color: #cccccc;
     }
   }
 `;
 const Text = styled.div`
   width: 85%;
   padding-left: 10px;
+  display: flex;
+  align-items: center;
 `;
 
 const InputWrap = styled.div`
@@ -62,7 +72,7 @@ const Input = styled.input`
   flex: 1;
   padding: 10px 12px;
   border: none;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   outline: none;
   background-color: black;
   color: white;
@@ -77,7 +87,7 @@ const SubmitButton = styled.button`
   color: white;
   font-weight: 700;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   border-radius: 10px;
   &:hover{
     color: #cccccc;
