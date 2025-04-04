@@ -80,6 +80,8 @@ const FixedBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  transition: opacity 0.8s ease;
 
   &:focus {
     outline: none;
@@ -89,7 +91,7 @@ const FixedBtn = styled.button`
     width: 45px;
     height: 45px;
     display: block;
-    transition: transform 0.3s ease;
+    transition: 0.3s ease;
   }
 
   &:hover img {
