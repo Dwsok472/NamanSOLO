@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import couple1 from '../img/couple10.png';
 import couple2 from '../img/couple11.png';
 import couple3 from '../img/couple12.png';
+import couple4 from '../img/couple13.png';
 import star from '../img/star.png'; 
 
 const float = keyframes`
@@ -143,8 +144,8 @@ const Hero = () => {
       <CTAButton>지금 바로 담아두기</CTAButton>
 
       <VisualRow>
-        <FloatImage src={couple1} alt="커플 이미지 1" />
-        <FloatImage src={couple2} alt="커플 이미지 2" />
+        <FloatImage src={couple2} alt="커플 이미지 1" />
+        <FloatImage src={couple4} alt="커플 이미지 2" />
       </VisualRow>
     </HeroWrapper>
   );
