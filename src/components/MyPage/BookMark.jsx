@@ -5,7 +5,7 @@ import star from "../img/star.png";
 import { IconClose } from "../Icons";
 
 const Container = styled.div`
-  width: 400px;
+  width: 330px;
   margin: 0 auto;
   margin-top: 30px;
 `;
