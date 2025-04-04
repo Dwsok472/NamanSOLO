@@ -4,7 +4,7 @@ import Header from './Header';
 
 const PageContainer = styled.div`
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 `;
 
 const IntroWrapper = styled.div`
@@ -41,7 +41,7 @@ const MainContent = styled.div.attrs(() => ({
   opacity: ${({ $show }) => ($show ? 1 : 0)};
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
   transition: all 0.8s ease-in-out;
-  padding-top: 100px;
+  padding-top: 20px;
 `;
 
 const Wrapper = styled.div`
@@ -75,6 +75,12 @@ const HeroText = styled.h1`
   }
 `;
 
+const HeroSubText = styled.p`
+  font-size: 1.1rem;
+  color: #777;
+  line-height: 1.8;
+`;
+
 const CTAButton = styled.button`
   margin-top: 24px;
   padding: 14px 28px;
@@ -91,6 +97,7 @@ const CTAButton = styled.button`
     background-color: #ff4d4d;
   }
 `;
+
 
 const SubText = styled.p`
   color: #666;
@@ -204,12 +211,11 @@ function MainPage() {
     const t2 = setTimeout(() => setShowLogo(true), 3200);
     const t3 = setTimeout(() => setSlideOut(true), 3600);
     const t4 = setTimeout(() => {
-      setShowIntro(false);
+      setShowIntro(false); 
       setShowMain(true);
-      document.body.classList.remove('blur');
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }, 4800);
-
+      document.body.classList.remove("blur");
+    }, 4800); 
+  
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -217,7 +223,7 @@ function MainPage() {
       clearTimeout(t4);
     };
   }, []);
-
+  
   const scrollToStory = () => {
     const element = document.getElementById('main-content');
     if (element) {
@@ -240,7 +246,7 @@ function MainPage() {
           { to: '/mypage/info', label: '커플 정보' },
           { to: '/mypage/story', label: '나의 스토리' },
           { to: '/mypage/comment', label: '나의 댓글' },
-          { to: '/mypage/todo', label: '캘린더' },
+          { to: '/mypage/todo', label: '커플 캘린더' },
           { to: '/mypage/other', label: '그 외' },
         ]}
         loginText="로그인"
@@ -261,17 +267,17 @@ function MainPage() {
           </>
         )}
 
-        <MainContent $show={showMain}>
-          <Wrapper>
-            <HeroSection>
-              <HeroText>
-                <strong>(WE ARE..)</strong> 우리의 이야기<br />
-                너와 나, 두 사람이 한 권의 책을 써가는 중이에요.<br />
-                우리의 이야기는 계속 된다...
-              </HeroText>
-              <CTAButton onClick={scrollToStory}>바로가기</CTAButton>
-            </HeroSection>
+        <MainContent $slideOut={slideOut} $show={showMain}>
+          <HeroSection>
+            <HeroText>
+              <strong>(WE ARE..)</strong> 우리의 이야기<br />
+              너와 나, 두 사람이 한 권의 책을 써가는 중이에요.<br />
+              우리의 이야기는 계속 된다...
+            </HeroText>
+            <CTAButton onClick={scrollToStory}>바로가기</CTAButton>
+          </HeroSection>
 
+          <Wrapper>
             <SliderSection>슬라이드 or 팝업 자리</SliderSection>
 
             <Section>
