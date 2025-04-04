@@ -8,8 +8,10 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { useRef, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
-import Couple from "../img/lover.png";
+//import Couple from "../img/lover.png";
 import { UserLogin } from "../api";
+import WeARE from "../img/weare.png";
+import { IconBehind } from "../Icons";
 
 const CardWrap = styled.div`
   width: 550px;
@@ -20,7 +22,7 @@ const CardWrap = styled.div`
 const Card = styled.div`
   width: 550px;
   height: 600px;
-  background-color: #ffe4e1;
+  /* background-color: #ffe4e1;
   clip-path: polygon(
     10% 0%,
     90% 0%,
@@ -30,13 +32,13 @@ const Card = styled.div`
     10% 100%,
     0% 90%,
     0% 10%
-  );
+  ); */
   margin: 0 auto;
 `;
 
 const Top = styled.div`
   width: 100%;
-  height: 30%;
+  height: 20%;
   text-align: center;
   /* padding-top: 10px; */
   display: flex;
@@ -55,12 +57,12 @@ const ButtomWrap = styled.div`
 `;
 const Buttom = styled.div`
   width: 100%;
-  border: 1px solid #1a1a1a33;
-  background-color: white;
+  /* border: 1px solid #1a1a1a33;
+  background-color: white; */
   border-radius: 50px;
   margin: 0 auto;
   gap: 10px;
-  padding-top: 15px;
+  /* padding-top: 15px; */
   padding-bottom: 15px;
   height: 80%;
   display: grid;
@@ -125,23 +127,38 @@ const ImgWrap = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 45%;
-  padding-right: 30px;
+  /* padding-right: 30px; */
 
   & img {
-    display: block;
+    max-height: 100vh;
+    width: auto;
+    object-fit: contain;
+    //display: block;
     max-width: 100%; /* 이미지가 카드 영역을 넘지 않게 함 */
-    height: auto;
   }
 `;
 
+const Icon = styled.div`
+  position: absolute;
+  bottom: 40px;
+  right: 50px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+`;
+
 const Container = styled.div`
+  width: 100vw; /* ← 화면 너비 기준으로 꽉 채움 */
+  height: 100vh;
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 90vh;
-  padding: 0 400px; /* 전체 컨테이너에 좌우 간격을 추가 (옵션) */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+
+  /* padding: 0 400px; 전체 컨테이너에 좌우 간격을 추가 (옵션) */
   /* background-image: radial-gradient(circle, #ffffff, #f2ebdc); */
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
   /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
@@ -183,7 +200,7 @@ function Login() {
   return (
     <Container>
       <ImgWrap>
-        <img src={Couple} />
+        <img src={WeARE} />
       </ImgWrap>
       <CardWrap>
         <Card>
@@ -226,6 +243,9 @@ function Login() {
           </ButtomWrap>
         </Card>
       </CardWrap>
+      <Icon>
+        <IconBehind />
+      </Icon>
     </Container>
   );
 }
