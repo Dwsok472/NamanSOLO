@@ -42,7 +42,7 @@ const Input = styled.input`
   flex: 1;
   padding: 10px 12px;
   border: none;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   outline: none;
   color: white;
   background-color: black;
@@ -57,7 +57,7 @@ const SubmitButton = styled.button`
   color: white;
   font-weight: 700;
   cursor: pointer;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   border-radius: 0;
   &:hover{
     color: #cccccc;

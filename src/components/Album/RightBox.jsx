@@ -12,10 +12,10 @@ import Comment from './Comment';
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  display: flex;
-  justify-content: center;
+  /* display: flex; */
+  /* justify-content: center; */
   margin-top: 30px;
-  align-items: center;
+  /* align-items: center; */
   position: absolute;
   height: 100%;
 `;
@@ -30,16 +30,18 @@ const Backdrop = styled.div`
 `;
 
 const BottomBox = styled.div`
-  width: 25%;
+  width: ${(props) => (props.isCommentVisible ? '70%' : '35%')};
   border-radius: 16px;
   transition: margin-top 0.3s ease-out;
   background-color: #000000;
   padding-bottom: 10px;
   padding-top: 30px;
   z-index: 210;
-  /* border: 1px solid white; */
+  display: flex;
+  position: fixed;
+  top: 150px;
+  left: 280px;
 `;
-
 const CommentBox = styled.div`
 width : 100%;
 `;
@@ -48,7 +50,7 @@ const Box = styled.div`
   position: relative;
   .image {
     width: 100%;
-    height: 300px;
+    height: 550px;
     object-fit: cover;
   }
   .leftkey {
@@ -56,14 +58,14 @@ const Box = styled.div`
     height: 30px;
     position: absolute;
     left: 5px;
-    top: 35%;
+    top: 40%;
   }
   .rightkey {
     width: 30px;
     height: 30px;
     position: absolute;
     right: 5px;
-    top: 35%;
+    top: 40%;
   }
   .boxwrap {
     display: grid;
@@ -164,7 +166,7 @@ function RightBox({ albumData, onClose }) {
     <>
       <Backdrop onClick={onClose} />
       <Container>
-        <BottomBox>
+        <BottomBox isCommentVisible={isCommentVisible}>
           <Box id={albumData.id}>
             <img
               src={leftkey}
