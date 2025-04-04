@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { IconEmail, IconPhone, IconUser } from '../Icons';
-import LoginButton from '../Button/LoginButton';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { IconEmail, IconPhone, IconUser } from "../Icons";
+import LoginButton from "../Button/LoginButton";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -166,30 +166,45 @@ const ButtonWrap = styled.div`
   margin-top: 10px;
 `;
 function Find({ isFindId }) {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [code, setCode] = useState();
-  const [id, setId] = useState('');
-  const [codeText, setCodeText] = useState('인증하기');
+  const [id, setId] = useState("");
+  const [codeText, setCodeText] = useState("인증하기");
   const [correctCode, setCorrectCode] = useState(null); // 실제로 발송된 인증번호 (예시로 '123456' 사용)
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [writeOneMorePassword, setWriteOneMorePassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [writeOneMorePassword, setWriteOneMorePassword] = useState("");
 
-  const [selectedOption, setSelectedOption] = useState('phone');
+  const [selectedOption, setSelectedOption] = useState("phone");
   const navigate = useNavigate(); // useNavigate 훅으로 페이지 이동 함수 생성
 
   const handleLoginRedirect = () => {
     if (newPassword === writeOneMorePassword) {
-      alert('변경이 완료되었습니다');
-      navigate('/login'); // 로그인 페이지로 이동
+      alert("변경이 완료되었습니다");
+      navigate("/login"); // 로그인 페이지로 이동
     } else {
-      alert('작성하신 비밀번호가 일치하지 않습니다. 다시 확인 부탁드립니다');
+      alert("작성하신 비밀번호가 일치하지 않습니다. 다시 확인 부탁드립니다");
       return;
     }
   };
+
+  // async function handleLoginRedirect() {
+  //   if (newPassword !== writeOneMorePassword) {
+  //     alert("작성하신 비밀번호가 일치하지 않습니다.");
+  //     return;
+  //   }
+
+  //   try {
+  //     await resetPassword({ username, email, newPassword });
+  //     alert("비밀번호가 변경되었습니다.");
+  //     navigate("/login");
+  //   } catch (error) {
+  //     alert("비밀번호 재설정에 실패했습니다.");
+  //   }
+  // }
 
   const handleBoxClick = (option) => {
     setSelectedOption(option);
@@ -197,44 +212,81 @@ function Find({ isFindId }) {
   // 인증번호 처리
   async function handleCode() {
     if (code === correctCode) {
-      setCodeText('인증완료');
+      setCodeText("인증완료");
     } else {
-      alert('입력하신 인증번호가 일치하지 않습니다');
+      alert("입력하신 인증번호가 일치하지 않습니다");
       return;
     }
   }
 
+  // async function handleCode() {
+  //   const target = selectedOption === "phone" ? phone : email;
+
+  //   try {
+  //     const isValid = await verifyAuthCode({ code, target });
+  //     if (isValid) {
+  //       setCodeText("인증완료");
+  //     } else {
+  //       alert("입력하신 인증번호가 일치하지 않습니다");
+  //     }
+  //   } catch (error) {
+  //     alert("인증 확인 중 오류가 발생했습니다");
+  //   }
+  // }
+
   // 인증번호 요청
   async function requestCode() {
     // 실제로는 서버에서 인증번호를 보내야 함
-    const generatedCode = '123456'; // 예시로 '123456' 사용
+    const generatedCode = "123456"; // 예시로 '123456' 사용
     setCorrectCode(generatedCode); // 서버에서 받은 인증번호로 설정
-    alert('인증번호가 전송되었습니다.');
+    alert("인증번호가 전송되었습니다.");
   }
+
+  // async function requestCode() {
+  //   const target = selectedOption === "phone" ? phone : email;
+  //   const type = selectedOption;
+
+  //   try {
+  //     await sendAuthCode({ type, target });
+  //     alert("인증번호가 전송되었습니다.");
+  //   } catch (error) {
+  //     alert("인증번호 전송에 실패했습니다.");
+  //   }
+  // }
 
   useEffect(() => {
     // 아이디 찾기 또는 비밀번호 찾기 페이지 제목 설정
     if (isFindId) {
-      document.title = '아이디 찾기'; // true
+      document.title = "아이디 찾기"; // true
     } else {
-      document.title = '비밀번호 찾기'; //false
+      document.title = "비밀번호 찾기"; //false
     }
   }, [isFindId]);
+
+  // async function handleFindId() {
+  //   try {
+  //     const target = selectedOption === "phone" ? phone : email;
+  //     const foundId = await findUserId({ name, type: selectedOption, target });
+  //     setId(foundId);
+  //   } catch (error) {
+  //     alert("아이디 찾기에 실패했습니다.");
+  //   }
+  // }
   return (
     <Container>
-      <H1>{isFindId ? '아이디 찾기' : '비밀번호 찾기'}</H1>
+      <H1>{isFindId ? "아이디 찾기" : "비밀번호 찾기"}</H1>
       {isFindId ? (
         <CardWrap>
           <Top>
             <Box
-              className={selectedOption === 'phone' ? 'selected' : ''}
-              onClick={() => handleBoxClick('phone')}
+              className={selectedOption === "phone" ? "selected" : ""}
+              onClick={() => handleBoxClick("phone")}
             >
               번호로 찾기
             </Box>
             <Box
-              className={selectedOption === 'email' ? 'selected' : ''}
-              onClick={() => handleBoxClick('email')}
+              className={selectedOption === "email" ? "selected" : ""}
+              onClick={() => handleBoxClick("email")}
             >
               EMAIL로 찾기
             </Box>
@@ -252,7 +304,7 @@ function Find({ isFindId }) {
                     onChange={(e) => setName(e.target.value)}
                   />
                 </SmallBox>
-                {selectedOption === 'phone' ? (
+                {selectedOption === "phone" ? (
                   <SmallBox>
                     <IconPhone />
                     <Input
@@ -289,6 +341,7 @@ function Find({ isFindId }) {
                   <button onClick={handleCode}>{codeText}</button>
                 </SmallBox>
                 <hr />
+                {/* <Button onClick={handleFindId}>아이디 조회</Button> */}
                 <SmallBox>
                   <label>나의 아이디</label>
                   <Input

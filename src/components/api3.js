@@ -123,3 +123,112 @@ export const UserLogin = async (username, password) => {
     throw new Error(msg);
   }
 };
+
+// 회원가입
+// 아이디 중복 확인
+export async function checkUsernameDuplicate(username) {
+  try {
+    const res = await axios.post("/api/user/check-username", { username });
+    return res.data.isAvailable; // true | false
+  } catch (error) {
+    console.error("[checkUsernameDuplicate ERROR]:", error);
+    throw error;
+  }
+}
+
+// 커플 프로필 등록
+export async function registerCoupleProfile(profileF, profileM) {
+  try {
+    const res = await axios.post("/api/couple/profile", {
+      female: profileF,
+      male: profileM,
+    });
+    return res.data;
+  } catch (error) {
+    console.error("[registerCoupleProfile ERROR]:", error);
+    throw error;
+  }
+}
+
+// D-DAY 등록 API
+export async function registerCoupleDday(userId, dday) {
+  try {
+    const res = await axios.post("/api/couple/dday", {
+      userId,
+      dday, // 예: "2024-02-14"
+    });
+    return res.data;
+  } catch (error) {
+    console.error("[registerCoupleDday ERROR]:", error);
+    throw error;
+  }
+}
+
+// 회원가입 정보 전송 (2단계에서 사용될 예정)
+export async function registerUser(data) {
+  try {
+    const res = await axios.post("/api/user/register", data);
+    return res.data;
+  } catch (error) {
+    console.error("[registerUser ERROR]:", error);
+    throw error;
+  }
+}
+
+// 인증번호 발송
+export async function sendAuthCode({ type, target }) {
+  try {
+    const res = await axios.post("/api/auth/send-code", {
+      type, // "email" or "phone"
+      target, // 이메일 주소 또는 전화번호
+    });
+    return res.data;
+  } catch (error) {
+    console.error("[sendAuthCode ERROR]:", error);
+    throw error;
+  }
+}
+
+// 인증번호 검증
+export async function verifyAuthCode({ code, target }) {
+  try {
+    const res = await axios.post("/api/auth/verify-code", {
+      code,
+      target,
+    });
+    return res.data.isVerified; // true or false
+  } catch (error) {
+    console.error("[verifyAuthCode ERROR]:", error);
+    throw error;
+  }
+}
+
+// 아이디 찾기
+export async function findUserId({ name, target, type }) {
+  try {
+    const res = await axios.post("/api/user/find-id", {
+      name,
+      type, // "email" or "phone"
+      target,
+    });
+    return res.data.userId; // 아이디 문자열
+  } catch (error) {
+    console.error("[findUserId ERROR]:", error);
+    throw error;
+  }
+}
+
+// 비밀번호 재설정
+export async function resetPassword({ username, email, newPassword }) {
+  try {
+    const res = await axios.post("/api/user/reset-password", {
+      username,
+      email,
+      newPassword,
+    });
+    return res.data;
+  } catch (error) {
+    console.error("[resetPassword ERROR]:", error);
+    throw error;
+  }
+}

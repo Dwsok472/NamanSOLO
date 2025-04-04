@@ -1,9 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useState } from 'react';
-import { IconPassword, IconUser } from '../Icons'
-import NextButton from '../Button/NextButton';
-
+import React from "react";
+import styled from "styled-components";
+import { useState } from "react";
+import { IconPassword, IconUser } from "../Icons";
+import NextButton from "../Button/NextButton";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -69,7 +68,7 @@ const Top = styled.div`
     font-size: 1rem;
   }
   .checkbox + label::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 50%;
@@ -83,7 +82,7 @@ const Top = styled.div`
   }
 
   .checkbox:checked + label::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 20.5%;
@@ -162,12 +161,12 @@ const Buttom = styled.div`
 `;
 
 function RegisterStep1({ onNext }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [matchpassword, setmatchpassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [matchpassword, setmatchpassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const [buttonText, setButtonText] = useState('중복확인');
-  const [matchText, setmatchText] = useState('확인');
+  const [buttonText, setButtonText] = useState("중복확인");
+  const [matchText, setmatchText] = useState("확인");
   const handleChange = () => {
     setIsChecked(!isChecked); // 체크된 상태를 반전
   };
@@ -176,21 +175,34 @@ function RegisterStep1({ onNext }) {
     try {
       const check = await UserLogin(username);
       if (check.data === true) {
-        setButtonText('사용 가능');
+        setButtonText("사용 가능");
       } else {
-        alert('이미 등록된 아이디입니다');
+        alert("이미 등록된 아이디입니다");
         return;
       }
     } catch (error) {
-      setButtonText('중복확인');
+      setButtonText("중복확인");
     }
   }
 
+  // async function handleCheckUsername() {
+  //   try {
+  //     const isAvailable = await checkUsernameDuplicate(username);
+  //     if (isAvailable) {
+  //       setButtonText("사용 가능");
+  //     } else {
+  //       alert("이미 등록된 아이디입니다");
+  //     }
+  //   } catch (error) {
+  //     alert("중복 확인 중 오류가 발생했습니다");
+  //   }
+  // }
+
   async function handleMatchPwd() {
     if (password === matchpassword) {
-      setmatchText('완료');
+      setmatchText("완료");
     } else {
-      alert('입력하신 비밀번호가 일치하지 않습니다');
+      alert("입력하신 비밀번호가 일치하지 않습니다");
       return;
     }
   }
