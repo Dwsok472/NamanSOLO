@@ -69,20 +69,31 @@ const FixedBtn = styled.button`
   position: fixed;
   bottom: 20px;
   right: 20px;
+  z-index: 999;
+  border: none;
+  background: none;
   cursor: pointer;
-  transition: all 0.5s ease;
-  &:hover {
-    transform: 1.1;
+  padding: 0;
+  width: 45px;
+  height: 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus {
+    outline: none;
   }
-  &:focus{
-      outline: none;
-    }
+
   img {
-    height: 30px;
-    width: 30px;
-    &:hover {
-    transform: 1.1;
+    width: 45px;
+    height: 45px;
+    display: block;
+    transition: transform 0.3s ease;
   }
+
+  &:hover img {
+    transform: scale(1.1);
   }
 `;
 
@@ -131,7 +142,11 @@ const Footer = () => {
         </FooterInner>
       </FooterWrapper>
 
-      <FixedBtn><img src={topImg}/></FixedBtn>
+      {showTopBtn && (
+        <FixedBtn onClick={scrollToTop} show={showTopBtn}>
+          <img src={topImg} alt="Top" />
+        </FixedBtn>
+      )}
     </>
   );
 };
