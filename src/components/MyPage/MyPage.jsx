@@ -127,6 +127,7 @@ const NameHeartSection = styled.div`
 
 const RightProfileCard = styled.div`
   width: 100%;
+  overflow: auto;
   max-width: 1100px;
   padding: 20px;
   border: 1px solid #ddd;
