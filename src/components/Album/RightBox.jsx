@@ -123,10 +123,18 @@ function RightBox({ albumData, onClose }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
-  const [likeCount, setLikeCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(albumData.likes.length); // 앨범의 초기 좋아요 수 설정
   const [userLikes, setUserLikes] = useState({}); // 유저별 좋아요 상태 관리
+  const currentUser = "user2"; // 현재 로그인한 사용자 예시
 
-
+  useEffect(() => {
+    // 초기 좋아요 상태 설정 (기존 좋아요 배열에 포함된 사용자 확인)
+    const initialLikes = albumData.likes.reduce((acc, user) => {
+      acc[user] = 1; // 좋아요를 누른 유저는 1로 설정
+      return acc;
+    }, {});
+    setUserLikes(initialLikes);
+  }, [albumData.likes]);
 
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
   const prevImage = () => {
@@ -154,17 +162,20 @@ function RightBox({ albumData, onClose }) {
   // 좋아요 클릭 시 처리 함수
   const handleLike = (userId) => {
     setUserLikes((prevLikes) => {
-      const currentUserLike = prevLikes[userId] || 0;
-      const newLike = currentUserLike === 0 ? 1 : 0;
-      const updatedLikes = { ...prevLikes, [userId]: newLike };
+      // 만약 현재 유저가 이미 좋아요를 눌렀다면, 해당 유저를 배열에서 제거
+      const updatedLikes = { ...prevLikes };
+      if (updatedLikes[userId]) {
+        delete updatedLikes[userId]; // 이미 좋아요를 눌렀으면 좋아요 해제
+      } else {
+        updatedLikes[userId] = true; // 좋아요를 누르지 않았다면 좋아요 추가
+      }
 
-      // 총 좋아요 수 계산 (유저의 상태에 따라 +1 또는 -1 반영)
-      const totalLikes = Object.values(updatedLikes).reduce((acc, like) => acc + like, 0);
+      const totalLikes = Object.keys(updatedLikes).length; // 새로운 좋아요 개수
       setLikeCount(totalLikes); // 총 좋아요 수 업데이트
-
-      return updatedLikes; // 유저별 좋아요 상태 업데이트
+      return updatedLikes; // 새로운 좋아요 상태 반환
     });
   };
+
 
   return (
     <>
@@ -196,7 +207,12 @@ function RightBox({ albumData, onClose }) {
                 <div className="title">{albumData.title}</div>
               </div>
               <div className="button">
-                <HeartButton onLike={() => handleLike(albumData.username)} />
+                <HeartButton
+                  albumId={albumData.id}
+                  onLike={() => handleLike(currentUser)}
+                  currentUser={currentUser}
+                  likes={Object.keys(userLikes)} // 좋아요를 누른 유저들의 목록을 전달
+                />
                 <span className="like">{likeCount}</span>
                 <img
                   src={comment}

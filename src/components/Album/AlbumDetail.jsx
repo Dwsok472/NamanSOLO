@@ -106,7 +106,7 @@ function AlbumDetail({ albumData }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null); // 선택된 앨범 ID
-  const [likeCount, setLikeCount] = useState(0); // 좋아요 수 상태 추가
+  const [likeCount, setLikeCount] = useState(albumData.likes); // 좋아요 수 상태 추가
 
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
   const prevImage = () => {
@@ -134,13 +134,16 @@ function AlbumDetail({ albumData }) {
     if (albumData) {
       setAlbumDetail(albumData);
       setImageIndex(0);
+      setLikeCount(albumData.likes);
     }
   }, [albumData]);
 
   // 좋아요 클릭 시 처리 함수
   const handleLike = () => {
-    setLikeCount((prevCount) => prevCount + 1);
+    setLikeCount((prevCount) => prevCount + 1); // 좋아요 수 증가
+    console.log(prevCount)
   };
+
   return (
     <Container>
       <Top>
@@ -173,8 +176,8 @@ function AlbumDetail({ albumData }) {
               <div className="title">{albumDetail.title}</div>
             </div>
             <div className="button">
-              <HeartButton onLike={handleLike} />
-              <span className="like">{likeCount}</span>
+              <HeartButton onLike={handleLike} /> {/* 좋아요 클릭 시 핸들러 호출 */}
+              <span className="like">{likeCount.length}</span> {/* 좋아요 수 표시 */}
               <img
                 src={comment}
                 alt="comment"

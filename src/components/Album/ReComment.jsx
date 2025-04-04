@@ -9,6 +9,7 @@ const ReCommentList = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  background-color: #333333;
 `;
 const Box = styled.div`
   width: 100%;

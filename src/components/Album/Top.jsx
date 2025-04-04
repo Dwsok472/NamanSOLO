@@ -85,7 +85,6 @@ const SearchResults = styled.div`
   background-color: #ffffff;
   border-radius: 10px;
   max-height: 200px;
-  transform: translateY(-20px); /* 초기 위치 설정 */
   opacity: 0;
   transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   display: flex;
@@ -154,11 +153,19 @@ function Top() {
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 담기
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
+  const [filter, setFilter] = useState("최신순");
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const urlKeyword = new URLSearchParams(location.search).get('username');
+
+  const setChooseFilter = (option) => {
+    setFilter(option);
+  }
+  const getButtonStyle = (option) => {
+    return option === filter ? { backgroundColor: '#f2a0a0', color: 'white' } : {};
+  }
 
 
   //임시용
@@ -217,13 +224,13 @@ function Top() {
   return (
     <Container>
       <TopBox>
-        <button className="button" id="newest">
+        <button className="button" id="newest" onClick={() => setChooseFilter("최신순")} style={getButtonStyle("최신순")}>
           최신순
         </button>
-        <button className="button" id="like">
+        <button className="button" id="like" onClick={() => setChooseFilter("좋아요순")} style={getButtonStyle("좋아요순")}>
           좋아요순
         </button>
-        <button className="button" id="comment">
+        <button className="button" id="comment" onClick={() => setChooseFilter("댓글순")} style={getButtonStyle("댓글순")}>
           댓글순
         </button>
       </TopBox>

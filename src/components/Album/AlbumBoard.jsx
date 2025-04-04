@@ -21,6 +21,7 @@ import RightBox from "./RightBox";
 import { useNavigate } from "react-router-dom";
 import AddAlbum from "./AddAlbum";
 import Top from "./Top";
+import HeartButton from "./HeartButton";
 
 const BoardWrapper = styled.div`
 padding-top: 10px;
@@ -113,19 +114,20 @@ const AlbumBoard = () => {
   const [selectedAlbum, setSelectedAlbum] = useState(null); //선택된 앨범 저장소!
   const [showDetail, setShowDetail] = useState(false);  // 모달 창 열림/닫힘 상태
 
+
   // 데이터 로드 (임시용, 실제 API 사용 시 아래 주석 해제)
   useEffect(() => {
     setData([
-      { id: 1, imgurl: [couple1, couple2, couple3, couple4], title: "첫 나들이", date: "2025-01-01", username: "user1", tag: ["맛집", "행복"] },
-      { id: 2, imgurl: [couple2, couple1, couple3, couple4], title: "첫 데이트", date: "2025-01-01", username: "user2", tag: ["사랑", "싸움"] },
-      { id: 3, imgurl: [couple3, couple1, couple2, couple4], title: "평화로운 주말", date: "2025-01-01", username: "user3", tag: ["힐링", "후회"] },
-      { id: 4, imgurl: [couple4, couple1, couple3, couple4], title: "사랑과 전쟁", date: "2025-01-01", username: "user4", tag: ["기타", "등등"] },
-      { id: 5, imgurl: [couple4, couple1, couple3, couple4], title: "왜 너는 나를 만나서", date: "2025-01-01", username: "user5", tag: ["맛집", "행복"] },
-      { id: 6, imgurl: [couple4, couple1, couple3, couple4], title: "나를 아프게 하니", date: "2025-01-01", username: "user6", tag: ["맛집", "행복"] },
-      { id: 7, imgurl: [couple4, couple1, couple3, couple4], title: "나만 솔로", date: "2025-01-01", username: "user7", tag: ["맛집", "행복"] },
-      { id: 8, imgurl: [couple4, couple1, couple3, couple4], title: "응 너만 솔로", date: "2025-01-01", username: "user8", tag: ["맛집", "행복"] },
-      { id: 9, imgurl: [couple4, couple1, couple3, couple4], title: "하핫", date: "2025-01-01", username: "user9", tag: ["맛집", "행복"] },
-      { id: 10, imgurl: [couple4, couple1, couple3, couple4], title: "자고 싶다", date: "2025-01-01", username: "user10", tag: ["맛집", "행복"] }
+      { id: 1, imgurl: [couple1, couple2, couple3, couple4], title: "첫 나들이", date: "2025-01-01", username: "user1", tag: ["맛집", "행복"], likes: ["user1", "user3"] },
+      { id: 2, imgurl: [couple2, couple1, couple3, couple4], title: "첫 데이트", date: "2025-01-04", username: "user2", tag: ["사랑", "싸움"], likes: ["user4", "user3", "user5"] },
+      { id: 3, imgurl: [couple3, couple1, couple2, couple4], title: "평화로운 주말", date: "2025-01-08", username: "user3", tag: ["힐링", "후회"], likes: ["user1", "user5", "user6"] },
+      { id: 4, imgurl: [couple4, couple1, couple3, couple4], title: "사랑과 전쟁", date: "2025-01-012", username: "user4", tag: ["기타", "등등"], likes: ["user1", "user3"] },
+      { id: 5, imgurl: [couple4, couple1, couple3, couple4], title: "왜 너는 나를 만나서", date: "2025-01-02", username: "user5", tag: ["맛집", "행복"], likes: ["user1", "user3"] },
+      { id: 6, imgurl: [couple4, couple1, couple3, couple4], title: "나를 아프게 하니", date: "2025-01-05", username: "user6", tag: ["맛집", "행복"], likes: ["user1", "user3"] },
+      { id: 7, imgurl: [couple4, couple1, couple3, couple4], title: "나만 솔로", date: "2025-01-06", username: "user7", tag: ["맛집", "행복"], likes: ["user1", "user3"] },
+      { id: 8, imgurl: [couple4, couple1, couple3, couple4], title: "응 너만 솔로", date: "2025-01-010", username: "user8", tag: ["맛집", "행복"], likes: ["user2", "user3"] },
+      { id: 9, imgurl: [couple4, couple1, couple3, couple4], title: "하핫", date: "2025-01-13", username: "user9", tag: ["맛집", "행복"], likes: ["user2", "user3"] },
+      { id: 10, imgurl: [couple4, couple1, couple3, couple4], title: "자고 싶다", date: "2025-01-03", username: "user10", tag: ["맛집", "행복"], likes: ["user2", "user3"] }
     ]);
     setLoading(false);  // 데이터 로드 후 로딩 상태를 false로 변경
   }, []); // 최초 렌더링 시 데이터 불러오기
@@ -138,7 +140,6 @@ const AlbumBoard = () => {
   const toggleBack = () => {
     setShowDetail(false); // 모달을 닫는 함수
   };
-
   console.log(selectedAlbum);
   const generateItems = () => {
     const items = [];
@@ -188,9 +189,6 @@ const AlbumBoard = () => {
     const totalPages = Math.ceil(data.length / itemsPerPage);
     setCurrentPage((prevPage) => (prevPage < totalPages ? prevPage + 1 : prevPage));
   };
-
-
-
   return (
 
     <BoardWrapper>
@@ -205,7 +203,11 @@ const AlbumBoard = () => {
         <img src={eraser} alt="eraser" className="eraser" onClick={handleNextPage} />
         {/* <AddButton>앨범 추가하기</AddButton> */}
       </BoardFrame>
-      {showDetail && <RightBox albumData={selectedAlbum} onClose={toggleBack} />}
+      {showDetail && <RightBox
+        albumData={selectedAlbum}
+        onClose={toggleBack}
+      />
+      }
     </BoardWrapper>
 
 
