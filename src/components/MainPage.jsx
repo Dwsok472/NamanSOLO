@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import Header from './Header';
 
@@ -110,23 +110,22 @@ const IntroWrapper = styled.div`
 
 const IntroText = styled.div`
   position: fixed;
-  font-size: 10rem;
-  font-weight: 900;
   z-index: 10001;
+  font-weight: bold;
+  font-family: 'inherit';
   color: white;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  transition: all 1.5s ease-in-out;
 
-  ${({ $animateToLogo, $top, $left }) =>
-    $animateToLogo &&
-    css`
-      top: ${$top}px;
-      left: ${$left}px;
-      transform: translate(-50%, -50%) scale(0.6);
-      font-size: 2.5rem;
-    `}
+  font-size: ${({ $animateToLogo }) => ($animateToLogo ? '2.5rem' : '10rem')};
+
+  top: ${({ $top }) => ($top !== undefined ? `${$top}px` : '50%')};
+  left: ${({ $left }) => ($left !== undefined ? `${$left}px` : '50%')};
+
+  transform: ${({ $animateToLogo }) =>
+    $animateToLogo
+      ? 'translate(-50%, -48%) scale(1)' 
+      : 'translate(-50%, -50%) scale(1)'};
+
+  transition: all 1.5s ease-in-out;
 `;
 
 const MainContent = styled.div`
@@ -143,7 +142,7 @@ function MainPage() {
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
-  const fullTextRef = useRef('WE ARE...');
+  const fullTextRef = useRef('WE ARE');
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
   const [showLogo, setShowLogo] = useState(false);
@@ -162,22 +161,26 @@ function MainPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const getLogoPos = () => {
-    if (logoRef.current) {
-      const rect = logoRef.current.getBoundingClientRect();
-      const headerHeight = 78;
-  
-      const top = rect.top + window.scrollY - headerHeight + rect.height / 2;
-      const left = rect.left + window.scrollX + rect.width / 2;
-  
-      setLogoPosition({ top, left });
-  
-      console.log(`로고 좌표 → top: ${top}, left: ${left}`);
-    } else {
-      setTimeout(getLogoPos, 100);
-    }
-  };
+  const didSetRef = useRef(false);
 
+  useLayoutEffect(() => {
+    const waitForLogo = () => {
+      if (logoRef.current) {
+        requestAnimationFrame(() => {
+          const rect = logoRef.current.getBoundingClientRect();
+          const top = rect.top + window.scrollY + 6;
+          const left = rect.left + window.scrollX + rect.width / 2;
+  
+          console.log('✅ 고정 좌표 →', { top, left });
+          setLogoPosition({ top, left });
+        });
+      } else {
+        setTimeout(waitForLogo, 50); // ✅ 로고가 없으면 다시 시도
+      }
+    };
+  
+    waitForLogo();
+  }, []);
 
   useEffect(() => {
     const t1 = setTimeout(() => setAnimateToLogo(true), 2000);
@@ -198,20 +201,7 @@ function MainPage() {
 
   return (
     <>
-
-    
-      {showIntro && (
-              <IntroWrapper $show={showIntro} $slideOut={slideOut}>
-                <IntroText
-                  $animateToLogo={animateToLogo}
-                  $top={logoPosition.top}
-                  $left={logoPosition.left}
-                >
-                  {displayText}
-                </IntroText>
-              </IntroWrapper>
-            )}
-      <Header
+    <Header
         logoRef={logoRef}
         showLogo={showLogo}
         logoText="WeARE"
@@ -230,6 +220,20 @@ function MainPage() {
         loginText="로그인"
         signupText="회원가입"
       />
+    
+    {showIntro && (
+        <>
+          <IntroText
+            $animateToLogo={animateToLogo}
+            $top={animateToLogo ? logoPosition.top : undefined}
+            $left={animateToLogo ? logoPosition.left : undefined}
+          >
+            {displayText}
+          </IntroText>
+
+          <IntroWrapper $show={showIntro} $slideOut={slideOut} />
+        </>
+      )}
 
       <MainContent $show={showMain}>
         <Wrapper style={{ visibility: showIntro ? 'hidden' : 'visible' }}>
