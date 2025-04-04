@@ -271,7 +271,7 @@ function MyPage() {
       case "나의 댓글":
         navigate("/mypage/comment");
         break;
-      case "캘린더":
+      case "커플 캘린더":
         navigate("/mypage/todo");
         break;
       case "그 외":
@@ -406,12 +406,12 @@ function MyPage() {
             </Button>
             <Button
               onClick={() => {
-                handleButtonClick("캘린더");
-                handleBoxClick("캘린더");
+                handleButtonClick("커플 캘린더");
+                handleBoxClick("커플 캘린더");
               }}
               className={pathname.includes("/mypage/todo") ? "selected" : ""}
             >
-              캘린더
+              커플 캘린더
             </Button>
             <Button
               onClick={() => {
