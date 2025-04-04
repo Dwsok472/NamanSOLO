@@ -50,7 +50,7 @@ const Input = styled.input`
 `;
 const ButtonWrap = styled.div`
   width: 100%;
-  margin: o auto;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,8 +75,8 @@ function RegisterStep3({ onNext }) {
       <h1 className="dday">D-DAY</h1>
       <div className="inputbox">
         <Input
-          type="text"
-          placeholder="D-DAY를 입력해주세요"
+          type="date"
+          placeholder="사귀기 시작한 날짜를 입력해주세요"
           autoComplete="off" // 자동완성 기능 끄기
           value={dday}
           onChange={(e) => setDday(e.target.value)}

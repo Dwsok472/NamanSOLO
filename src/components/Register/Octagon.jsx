@@ -136,7 +136,13 @@ const Button = styled.button`
 
   &:hover {
     background-color: ${(props) => props.buttoncolor || '#fda899'};
-    color: #ffffff;
+    color: #eeeeee;
+  }
+
+  &:disabled {
+    background-color: #cccccc;
+    color: #888;
+    cursor: not-allowed;
   }
 `;
 
@@ -155,6 +161,13 @@ function Octagon({
   data,
   onChange
 }) {
+  const [image, setImage] = useState(Profile);
+  const [name, setName] = useState(data.name);
+  const [birthday, setBirthday] = useState(data.birthday);
+  const [email, setEmail] = useState(data.email);
+  const [phone, setPhone] = useState(data.phone);
+  const [isEditable, setIsEditable] = useState(false);
+
   const FileInput = () => {
     document.getElementById(`${id}-file`).click();
   };
@@ -162,7 +175,17 @@ function Octagon({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      onChange('image', URL.createObjectURL(file));
+      setImage(URL.createObjectURL(file));
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      await ModifyUserInfo({ image, name, birthday, email, phone });
+      alert("저장 완료!");
+      setIsEditable(false);
+    } catch (err) {
+      alert("저장 실패");
     }
   };
 
@@ -171,12 +194,12 @@ function Octagon({
       <Card cardwidth={cardwidth} cardheight={cardheight} cardbackground={cardbackground}>
         <Top>
           {isProfilePage && (
-            <ModifyTop onClick={() => onChange('editable', true)}>
+            <ModifyTop onClick={() => setIsEditable(true)}>
               <IconModify />
             </ModifyTop>
           )}
           <Img
-            src={data.image}
+            src={image}
             onClick={FileInput}
             imgwidth={imgwidth}
             imgheight={imgheight}
@@ -197,19 +220,19 @@ function Octagon({
               <IconUser />
               <Input
                 type="text"
-                value={data.name}
-                onChange={(e) => onChange('name', e.target.value)}
-                readOnly={isProfilePage && !data.isEditable}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                readOnly={isProfilePage && !isEditable}
                 placeholder="이름을 입력해주세요"
               />
             </SmallBox>
             <SmallBox>
               <IconBirthday />
               <Input
-                type="text"
-                value={data.birthday}
-                onChange={(e) => onChange('birthday', e.target.value)}
-                readOnly={isProfilePage && !data.isEditable}
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+                readOnly={isProfilePage && !isEditable}
                 placeholder="생년월일을 입력해주세요"
               />
             </SmallBox>
@@ -217,9 +240,9 @@ function Octagon({
               <IconEmail />
               <Input
                 type="text"
-                value={data.email}
-                onChange={(e) => onChange('email', e.target.value)}
-                readOnly={isProfilePage && !data.isEditable}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                readOnly={isProfilePage && !isEditable}
                 placeholder="이메일을 입력해주세요"
               />
             </SmallBox>
@@ -227,9 +250,9 @@ function Octagon({
               <IconPhone />
               <Input
                 type="text"
-                value={data.phone}
-                onChange={(e) => onChange('phone', e.target.value)}
-                readOnly={isProfilePage && !data.isEditable}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                readOnly={isProfilePage && !isEditable}
                 placeholder="전화번호를 입력해주세요"
               />
             </SmallBox>
@@ -238,9 +261,10 @@ function Octagon({
             <ButtonWrap>
               <Button
                 buttoncolor={buttoncolor}
-                onClick={() => onChange('isEditable', !data.isEditable)}
+                onClick={handleSubmit}
+                disabled={!isEditable}
               >
-                {data.isEditable ? '저장' : '수정하기'}
+                저장
               </Button>
             </ButtonWrap>
           )}
