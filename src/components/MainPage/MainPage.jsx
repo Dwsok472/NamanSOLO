@@ -18,7 +18,24 @@ const MainContent = styled.div`
   padding-top: 0;
 `;
 
+const CallToLoveSection = styled.section`
+  background: #fff;
+  padding: 80px 20px 60px;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
+const LovePhrase = styled.h2`
+  font-size: clamp(2.5rem, 6vw, 4.5rem); 
+  font-family: 'Caveat', cursive;
+  font-weight: 800;
+  color: #000;
+  letter-spacing: 4px;
+  white-space: nowrap;
+`;
 
 function MainPage() {
   const [displayText, setDisplayText] = useState('');
@@ -126,9 +143,11 @@ function MainPage() {
             togglePage={togglePage}
             bookRef={bookRef}
           />
-
           <StoryMenuBubbles />
         </MainContent>
+        <CallToLoveSection>
+    <LovePhrase>LOVE TOGETHER</LovePhrase>
+  </CallToLoveSection>
       </PageContainer>
     </>
   );
