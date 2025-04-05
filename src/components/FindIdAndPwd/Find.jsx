@@ -57,7 +57,7 @@ const SmallBox = styled.div`
   width: 85%;
   margin: 0 auto;
   border: 1px solid #02020233;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: white;
   padding-left: 10px;
   display: flex;
@@ -109,6 +109,7 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 30px;
+  font-size: 15px;
 `;
 
 const ButtomWrap = styled.div`
