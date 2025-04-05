@@ -49,6 +49,7 @@ const Top = styled.div`
     width: 450px;
     height: 180px;
     border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     background: #ffffff;
     margin: auto;
     padding: 10px;
@@ -126,6 +127,7 @@ const SmallBox = styled.div`
   margin-top: 15px;
   height: 70px;
   position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   button {
     width: 95px;
     background-color: #a0a0a0;
@@ -188,9 +190,9 @@ const NextButtonWrapper = styled.div`
 `;
 
 const Icon = styled.div`
-  position: fixed; // ✅ 화면 기준 고정
-  bottom: 30px; // 화면 하단에서 30px 위
-  right: 70px; // 화면 오른쪽에서 50px 왼쪽
+  position: fixed; // 화면 기준 고정
+  bottom: 80px; // 화면 하단에서 30px 위
+  right: 30px; // 화면 오른쪽에서 50px 왼쪽
   width: 40px;
   height: 40px;
   cursor: pointer;

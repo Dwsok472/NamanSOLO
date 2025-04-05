@@ -7,6 +7,7 @@ import { IconBehind } from "../Icons";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
+  height: 82vh;
   margin-top: 50px;
   margin-bottom: 50px;
 
@@ -69,9 +70,9 @@ const ButtonWrap = styled.div`
 `;
 
 const Icon = styled.div`
-  position: absolute;
-  bottom: 40px;
-  right: 50px;
+  position: fixed; // 화면 기준 고정
+  bottom: 80px; // 화면 하단에서 30px 위
+  right: 30px; // 화면 오른쪽에서 50px 왼쪽
   width: 40px;
   height: 40px;
   cursor: pointer;
