@@ -86,7 +86,7 @@ const SmallBox = styled.div`
   margin: 0 auto;
   border: 1px solid #02020233;
   border-radius: 30px;
-  background-color: white;
+  background-color: ${(props) => props.readOnly ? "#e0e0e0" : "#fefefe" };
   padding-left: 10px;
   display: flex;
   flex-direction: row;
@@ -99,7 +99,7 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 30px;
-  ${(props) => props.readonly && "background-color: #f0f0f0;"}
+  background-color : ${(props) => props.readOnly? "#e0e0e0" : "#fefefe" };
 `;
 
 const ImgInput = styled.input`
@@ -227,7 +227,7 @@ function Octagon({
         </Top>
         <ButtomWrap>
           <Buttom>
-            <SmallBox>
+            <SmallBox readOnly={isProfilePage && !isEditable}>
               <IconUser />
               <Input
                 type="text"
@@ -237,7 +237,7 @@ function Octagon({
                 placeholder="이름을 입력해주세요"
               />
             </SmallBox>
-            <SmallBox>
+            <SmallBox readOnly={isProfilePage && !isEditable}>
               <IconBirthday />
               <Input
                 type="date"
@@ -248,7 +248,7 @@ function Octagon({
                 max={new Date().toISOString().split("T")[0]}
               />
             </SmallBox>
-            <SmallBox>
+            <SmallBox readOnly={isProfilePage && !isEditable}>
               <IconEmail />
               <Input
                 type="text"
@@ -258,7 +258,7 @@ function Octagon({
                 placeholder="이메일을 입력해주세요"
               />
             </SmallBox>
-            <SmallBox>
+            <SmallBox readOnly={isProfilePage && !isEditable}>
               <IconPhone />
               <Input
                 type="text"
