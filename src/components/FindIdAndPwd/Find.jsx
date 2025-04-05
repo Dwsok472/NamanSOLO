@@ -10,13 +10,13 @@ const Container = styled.div`
   margin-top: 50px;
   margin-bottom: 170px;
   & hr {
-    width: 90%;
+    //width: 90%;
     opacity: 0.5;
     margin: 0 auto;
   }
 `;
 const H1 = styled.h1`
-  font-size: 5rem;
+  font-size: 4.5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
@@ -25,14 +25,16 @@ const H1 = styled.h1`
 const CardWrap = styled.div`
   width: 550px;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 40px;
 `;
 const Top = styled.div`
-  width: 80%;
+  width: 100%;
   /* padding-top: 40px; */
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin-left: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* grid-template-columns: 1fr 1fr 1fr; */
+  /* margin-left: 55px; */
 `;
 const Card = styled.div`
   width: 550px;
@@ -86,7 +88,7 @@ const SmallBox = styled.div`
 `;
 const Button = styled.button`
   width: 120px;
-  background-color: #a0a0a0;
+  background-color: #8c0d17;
   font-size: 0.8rem;
   font-weight: 700;
   border-radius: 20px;
@@ -95,7 +97,7 @@ const Button = styled.button`
   margin-top: 5px;
   outline: none;
   &:hover {
-    color: #212121;
+    color: #b7b4b4;
   }
   &:focus {
     outline: none;
@@ -144,8 +146,9 @@ const Box = styled.div`
     0% 90%,
     0% 25%
   ); */
-  margin: 0 auto;
-  /* border-right: 1px solid #e4e4e4; */
+  /* margin: 0 auto; */
+  border: 1px solid #02020233;
+  border-radius: 3px;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -155,7 +158,7 @@ const Box = styled.div`
   transition: all 0.3s ease;
   cursor: pointer;
   &.selected {
-    background-color: #747474;
+    background-color: #35446d;
     color: white;
   }
 `;

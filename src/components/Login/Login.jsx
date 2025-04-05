@@ -73,7 +73,7 @@ const SmallBox = styled.div`
   width: 85%;
   margin: 0 auto;
   border: 1px solid #02020233;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: white;
   padding-left: 10px;
   display: flex;
@@ -82,11 +82,10 @@ const SmallBox = styled.div`
   align-items: center;
   margin-top: 10px;
   height: 70px;
-  .IconUser {
-    user-select: none;
-  }
+  .IconUser,
   .IconPassword {
     user-select: none;
+    pointer-events: none;
   }
 `;
 
@@ -95,6 +94,7 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 30px;
+  font-size: 17px;
 `;
 
 const FindBox = styled.div`
@@ -118,7 +118,7 @@ const StyledLink = styled(Link)`
   color: #3333;
   border-radius: 30px;
   color: #7b7b7b;
-  padding: 20px;
+  padding: 15px;
   font-size: 0.8rem;
   &:hover {
     color: #161616;
