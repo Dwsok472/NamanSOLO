@@ -36,6 +36,33 @@ const Top = styled.div`
   /* grid-template-columns: 1fr 1fr 1fr; */
   /* margin-left: 55px; */
 `;
+const Box = styled.div`
+  width: 150px;
+  height: 50px;
+  border: 1px solid #02020233;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+  &:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-left: none; /* 겹치는 border 제거 */
+  }
+  &.selected {
+    background-color: #8c0d17;
+    color: white;
+  }
+`;
+
 const Card = styled.div`
   width: 550px;
   padding-bottom: 10px;
@@ -132,36 +159,6 @@ const Buttom = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-`;
-const Box = styled.div`
-  width: 150px;
-  height: 50px;
-  /* background-color: #ebebeb;
-  clip-path: polygon(
-    10% 0%,
-    90% 0%,
-    100% 25%,
-    120% 75%,
-    100% 100%,
-    0% 100%,
-    0% 90%,
-    0% 25%
-  ); */
-  /* margin: 0 auto; */
-  border: 1px solid #02020233;
-  border-radius: 3px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1rem;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  &.selected {
-    background-color: #35446d;
-    color: white;
-  }
 `;
 
 const ButtonWrap = styled.div`

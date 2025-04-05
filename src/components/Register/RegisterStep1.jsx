@@ -9,11 +9,11 @@ import { IconBehind } from "../Icons";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
+  height: 95vh;
   margin-top: 50px;
-  /* margin-bottom: 170px; */
 `;
 const H1 = styled.h1`
-  font-size: 5rem;
+  font-size: 4.5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
@@ -23,7 +23,7 @@ const H1 = styled.h1`
 const CardWrap = styled.div`
   width: 550px;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 30px;
 `;
 const Card = styled.div`
   width: 550px;
@@ -47,7 +47,7 @@ const Top = styled.div`
   /* padding-top: 40px; */
   .agree_box {
     width: 450px;
-    height: 150px;
+    height: 180px;
     border-radius: 10px;
     background: #ffffff;
     margin: auto;
@@ -55,6 +55,13 @@ const Top = styled.div`
     overflow: scroll;
     overflow-x: hidden;
     border: 1px solid #1a1a1a33;
+  }
+  .agree_box_title {
+    width: 450px;
+    margin: 0 auto 10px auto;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #8c0d17; /* 또는 #8c0d17도 잘 어울림 */
   }
   .agree_box_text {
     width: 100%;
@@ -106,17 +113,17 @@ const Top = styled.div`
   }
 `;
 const SmallBox = styled.div`
-  width: 85%;
+  width: 95%;
   margin: 0 auto;
   border: 1px solid #02020233;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: white;
   padding-left: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 15px;
   height: 70px;
   position: relative;
   button {
@@ -136,6 +143,7 @@ const SmallBox = styled.div`
 `;
 const Input = styled.input`
   width: 80%;
+  height: 60px;
   border: none;
   outline: none;
   padding-left: 30px;
@@ -152,7 +160,7 @@ const Buttom = styled.div`
   background-color: white;
   border-radius: 50px;
   margin: 0 auto;
-  gap: 10px;
+  /* gap: 10px; */
   padding-top: 15px;
   padding-bottom: 15px;
   height: 80%;
@@ -164,10 +172,25 @@ const Buttom = styled.div`
   text-align: center;
 `;
 
+const GuideText = styled.div`
+  font-size: 0.75rem;
+  margin: 5px 0 10px 10px;
+  text-align: center;
+  color: ${({ isError }) =>
+    isError === true
+      ? "#d32f2f" // 에러 - 빨간색
+      : isError === false
+      ? "#2e7d32" // 성공 - 초록색
+      : "#888"}; // 기본 회색 or 안내 메시지용
+`;
+const NextButtonWrapper = styled.div`
+  margin-top: 30px;
+`;
+
 const Icon = styled.div`
-  position: absolute;
-  bottom: 40px;
-  right: 50px;
+  position: fixed; // ✅ 화면 기준 고정
+  bottom: 30px; // 화면 하단에서 30px 위
+  right: 70px; // 화면 오른쪽에서 50px 왼쪽
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -226,6 +249,7 @@ function RegisterStep1({ onNext }) {
       <CardWrap>
         <Card>
           <Top>
+            <div className="agree_box_title">이용약관</div>
             <div className="agree_box">
               <div className="agree_box_text">
                 <p>
@@ -313,6 +337,9 @@ function RegisterStep1({ onNext }) {
 
                 <button onClick={handleCheckUsername}>{buttonText}</button>
               </SmallBox>
+              <GuideText isError={username.length > 0 && username.length < 6}>
+                6~12자의 영문 또는 숫자를 입력해주세요.
+              </GuideText>
               <SmallBox>
                 <IconPassword />
                 <Input
@@ -323,6 +350,10 @@ function RegisterStep1({ onNext }) {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </SmallBox>
+              <GuideText isError={password.length > 0 && password.length < 8}>
+                영문, 숫자를 포함해 8자 이상 입력해주세요.
+              </GuideText>
+
               <SmallBox>
                 <IconPassword />
                 <Input
@@ -335,7 +366,18 @@ function RegisterStep1({ onNext }) {
 
                 <button onClick={handleMatchPwd}>{matchText}</button>
               </SmallBox>
-              <NextButton onClick={onNext} />
+              {password.length > 0 &&
+                matchpassword.length > 0 &&
+                (password !== matchpassword ? (
+                  <GuideText isError={true}>
+                    비밀번호가 일치하지 않습니다.
+                  </GuideText>
+                ) : (
+                  <GuideText isError={false}>비밀번호가 일치합니다.</GuideText>
+                ))}
+              <NextButtonWrapper>
+                <NextButton onClick={onNext} />
+              </NextButtonWrapper>
             </Buttom>
           </ButtomWrap>
         </Card>
