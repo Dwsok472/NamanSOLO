@@ -56,7 +56,9 @@ const Img = styled.img`
   object-fit: cover;
   border: 1px solid #3333;
   align-items: center;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
+  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
 `;
 
 const ButtomWrap = styled.div`
@@ -106,10 +108,12 @@ const ImgInput = styled.input`
 
 const FileButton = styled.button`
   border: none;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
   background-color: transparent;
   position: absolute;
   bottom: 0px;
+  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
+  opacity: ${(props) => (props.disabled ? 0 : 1)};
   &:focus {
     outline: none;
   }
@@ -204,7 +208,7 @@ function Octagon({
           )}
           <Img
             src={image}
-            onClick={FileInput}
+            onClick={isProfilePage && !isEditable? undefined :FileInput}
             imgwidth={imgwidth}
             imgheight={imgheight}
           />
@@ -212,9 +216,12 @@ function Octagon({
             type="file"
             id={`${id}-file`}
             accept="image/*"
+            readOnly={isProfilePage && !isEditable}
+            disabled={isProfilePage && !isEditable}
             onChange={handleImageChange}
           />
-          <FileButton onClick={FileInput}>
+          <FileButton onClick={isProfilePage && !isEditable ? undefined : FileInput}
+                      disabled={isProfilePage && !isEditable}>
             <IconImage />
           </FileButton>
         </Top>
