@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import BubbleCard from './BubbleCard';
+import mainmap from '../img/mainmap.png';
+import mystory from '../img/mystory.png';
+import storyall from '../img/storyall.png';
+import maincallender from '../img/maincallender.png';
 
 const BubbleSectionWrapper = styled.section`
   width: 100%;
@@ -45,10 +49,34 @@ const StoryMenuBubbles = () => {
       </TextGroup>
 
       <CardGrid>
-        <BubbleCard frontText="전체 Story" backText="모든 커플의 이야기" />
-        <BubbleCard frontText="나만의 Story" backText="나의 인기글 정리" />
-        <BubbleCard frontText="너와의 기념" backText="함께한 날들을 저장" />
-        <BubbleCard frontText="데이트 장소 추천" backText="우리가 갔던 그곳" />
+        <BubbleCard
+          icon={storyall}
+          title="다른 연인들의<br />사랑이야기가 궁금하다면?"
+          meta="전체 스토리"
+          bgColor="#bfa8f3"
+          backColor="#8c71d3"
+        />
+        <BubbleCard
+          icon={mystory}
+          title="우리의 추억,<br />하나하나 놓치지 마세요 !"
+          meta="나의 스토리"
+          bgColor="#90e0d5"
+          backColor="#5dbfaf"
+        />
+        <BubbleCard
+            icon={maincallender}
+            title="너와 나의 기념일,<br />꼭 기억해요 💌"
+            meta="캘린더"
+            bgColor="#ffd89e"
+            backColor="#faaa57"
+          />
+        <BubbleCard
+          icon={mainmap}
+          title="저희의 추천 명소를<br />구경해보실래요?"
+          meta="데이트 장소 추천"
+          bgColor="#7fc8ff"
+          backColor="#4d99cc"
+        />
       </CardGrid>
     </BubbleSectionWrapper>
   );
