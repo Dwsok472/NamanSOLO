@@ -7,6 +7,7 @@ import HeartButton from './HeartButton';
 import CommentButton from './CommentButton';
 import comment from '../img/comment.png';
 import Comment from './Comment';
+import location from '../img/location.png';
 
 // 스타일 정의
 const Container = styled.div`
@@ -116,6 +117,20 @@ const Box = styled.div`
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
+  }
+  .map {
+    width: 100%;
+    display: flex;
+    padding-left: 10px;
+    .locationimg {
+      width: 20px;
+      height: 20px;
+      object-fit: cover;
+    }
+    .location {
+      font-size: 0.8rem;
+      color: #ffffff;
+    }
   }
 `;
 
@@ -236,6 +251,10 @@ function AlbumDetailModal({ albumData, onClose }) {
               ) : (
                 <span> </span>
               )}
+            </div>
+            <div className="map">
+              <img src={location} className="locationimg" />
+              <div className="location">{albumData.location}</div>
             </div>
           </Box>
 

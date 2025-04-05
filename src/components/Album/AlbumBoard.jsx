@@ -18,8 +18,10 @@ import eraser from '../img/arrow-right.png';
 import AlbumDetailModal from './AlbumDetailModal';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
+import plus from '../img/plus.png';
 
 import Top from './Top';
+import AddAlbum from './AddAlbum';
 
 const BoardWrapper = styled.div`
   padding-top: 10px;
@@ -88,14 +90,15 @@ const BoardInner = styled.div`
 `;
 
 const AddButton = styled.button`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  position: fixed;
+  bottom: 100px;
+  right: 10px;
   font-size: 1rem;
-  border-radius: 15px;
-  background-color: #ff7a7a;
+  font-weight: 700;
+  border-radius: 50%;
+  background-color: #bf1f3c;
+  padding-top: 20px;
+  padding-bottom: 20px;
   color: white;
   &:hover {
     font-weight: 700;
@@ -111,7 +114,13 @@ const AlbumBoard = () => {
   const [selectedAlbum, setSelectedAlbum] = useState(null); //선택된 앨범 저장소!
   const [showDetail, setShowDetail] = useState(false); // 모달 창 열림/닫힘 상태
   const [filter, setFilter] = useState('최신순'); // 필터용
+  const [showAddAlbum, setShowAddAlbum] = useState(false);
   const itemsRef = useRef([]);
+
+  // 새 앨범을 추가하는 함수
+  const addNewAlbum = (newAlbum) => {
+    setData((prevData) => [newAlbum, ...prevData]);
+  };
 
   // 데이터 로드 (임시용, 실제 API 사용 시 아래 주석 해제)
   useEffect(() => {
@@ -122,6 +131,7 @@ const AlbumBoard = () => {
         title: '첫 나들이',
         date: '2025-01-01',
         username: 'user1',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user1', 'user3'],
         comments: [
@@ -133,6 +143,7 @@ const AlbumBoard = () => {
             date: '2025-01-01',
           },
         ],
+        isPublic: true,
       },
       {
         id: 2,
@@ -140,6 +151,7 @@ const AlbumBoard = () => {
         title: '첫 데이트',
         date: '2025-01-04',
         username: 'user2',
+        location: '대전 둔산로 221',
         tag: ['사랑', '싸움'],
         likes: ['user4', 'user3', 'user5'],
         comments: [
@@ -165,6 +177,7 @@ const AlbumBoard = () => {
             date: '2025-01-04',
           },
         ],
+        isPublic: true,
       },
       {
         id: 3,
@@ -172,6 +185,7 @@ const AlbumBoard = () => {
         title: '평화로운 주말',
         date: '2025-01-08',
         username: 'user3',
+        location: '대전 둔산로 221',
         tag: ['힐링', '후회'],
         likes: ['user1', 'user5', 'user6'],
         comments: [
@@ -183,6 +197,7 @@ const AlbumBoard = () => {
             date: '2025-01-05',
           },
         ],
+        isPublic: false,
       },
       {
         id: 4,
@@ -190,9 +205,11 @@ const AlbumBoard = () => {
         title: '사랑과 전쟁',
         date: '2025-01-12',
         username: 'user4',
+        location: '대전 둔산로 221',
         tag: ['기타', '등등'],
         likes: ['user1', 'user3'],
         comments: [],
+        isPublic: true,
       },
       {
         id: 5,
@@ -200,9 +217,11 @@ const AlbumBoard = () => {
         title: '왜 너는 나를 만나서',
         date: '2025-01-02',
         username: 'user5',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user1', 'user3'],
         comments: [],
+        isPublic: true,
       },
       {
         id: 6,
@@ -210,6 +229,7 @@ const AlbumBoard = () => {
         title: '나를 아프게 하니',
         date: '2025-01-05',
         username: 'user6',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user1', 'user3'],
         comments: [
@@ -221,6 +241,7 @@ const AlbumBoard = () => {
             date: '2025-01-05',
           },
         ],
+        isPublic: false,
       },
       {
         id: 7,
@@ -228,9 +249,11 @@ const AlbumBoard = () => {
         title: '나만 솔로',
         date: '2025-01-06',
         username: 'user7',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user1', 'user3'],
         comments: [],
+        isPublic: true,
       },
       {
         id: 8,
@@ -238,6 +261,7 @@ const AlbumBoard = () => {
         title: '응 너만 솔로',
         date: '2025-01-01',
         username: 'user8',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user2', 'user3'],
         comments: [
@@ -249,6 +273,7 @@ const AlbumBoard = () => {
             date: '2025-01-05',
           },
         ],
+        isPublic: false,
       },
       {
         id: 9,
@@ -256,9 +281,11 @@ const AlbumBoard = () => {
         title: '하핫',
         date: '2025-01-13',
         username: 'user9',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user2', 'user3'],
         comments: [],
+        isPublic: true,
       },
       {
         id: 10,
@@ -266,9 +293,11 @@ const AlbumBoard = () => {
         title: '자고 싶다',
         date: '2025-01-03',
         username: 'user10',
+        location: '대전 둔산로 221',
         tag: ['맛집', '행복'],
         likes: ['user2', 'user3'],
         comments: [],
+        isPublic: true,
       },
     ]);
     setLoading(false); // 데이터 로드 후 로딩 상태를 false로 변경
@@ -295,21 +324,29 @@ const AlbumBoard = () => {
   const toggleBack = () => {
     setShowDetail(false); // 모달을 닫는 함수
   };
+  const handleOpenAddAlbum = () => {
+    setShowAddAlbum(true); // AddAlbum 모달 열기
+  };
+  const handleCloseAddAlbum = () => {
+    setShowAddAlbum(false); // AddAlbum 모달 열기
+  };
+
   useEffect(() => {
     itemsRef.current = []; // 페이지 변경 시 캐시된 아이템 초기화
   }, [currentPage, filter]); // currentPage가 변경될 때마다 실행
 
   // generateItems 함수에서 itemsRef를 사용하여 캐시된 아이템을 관리합니다.
+  const filteredData = sortedData.filter((album) => album.isPublic);
   const generateItems = () => {
     if (itemsRef.current.length === 0) {
       const items = [];
-      if (sortedData) {
+      if (filteredData) {
         // 현재 페이지에서 마지막 아이템의 index 계산
         const indexOfLastItem = currentPage * itemsPerPage;
         //현재 페이지에서 첫번째 아이템의 index 계산
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         // 정렬된 데이터 자르기
-        const currentItems = sortedData.slice(
+        const currentItems = filteredData.slice(
           indexOfFirstItem,
           indexOfLastItem
         );
@@ -380,7 +417,10 @@ const AlbumBoard = () => {
           className="eraser"
           onClick={handleNextPage}
         />
-        {/* <AddButton>앨범 추가하기</AddButton> */}
+        <AddButton onClick={handleOpenAddAlbum}>추가</AddButton>
+        {showAddAlbum && (
+          <AddAlbum onClose={handleCloseAddAlbum} onAddAlbum={addNewAlbum} />
+        )}
       </BoardFrame>
       {showDetail && (
         <AlbumDetailModal albumData={selectedAlbum} onClose={toggleBack} />

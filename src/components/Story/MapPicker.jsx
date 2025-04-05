@@ -9,10 +9,13 @@ const MapComponent = () => {
   useEffect(() => {
     const initializeMap = () => {
       const mapOptions = {
-        center: new window.google.maps.LatLng(37.5665, 126.9780), // 서울 좌표
+        center: new window.google.maps.LatLng(37.5665, 126.978), // 서울 좌표
         zoom: 13,
       };
-      const mapInstance = new window.google.maps.Map(document.getElementById('map'), mapOptions);
+      const mapInstance = new window.google.maps.Map(
+        document.getElementById('map'),
+        mapOptions
+      );
       setMap(mapInstance);
 
       mapInstance.addListener('click', (event) => {
