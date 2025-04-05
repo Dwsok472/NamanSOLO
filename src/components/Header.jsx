@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 import LoginButton from "./Button/LoginButton";
 import RegisterButton from "./Button/RegisterButton";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const GlobalStyle = createGlobalStyle`
   body.blur #main-content {
@@ -55,7 +55,6 @@ const Nav = styled.nav`
     transition: all 0.25s ease-in-out;
     transform-origin: center;
     display: inline-block;
-
   }
 
   @media (max-width: 768px) {
@@ -81,7 +80,6 @@ const SubMenu = styled.ul`
   z-index: 999;
   width: 100%;
 
-
   li a {
     color: white;
     text-decoration: none;
@@ -91,7 +89,6 @@ const SubMenu = styled.ul`
     transition: all 0.25s ease-in-out;
     transform-origin: center;
     display: inline-block;
-
   }
 `;
 
@@ -177,7 +174,6 @@ const Overlay = styled.div`
   z-index: 999;
 `;
 
-
 function Header({
   logoText = "WeARE",
   menuItems = [],
@@ -191,6 +187,9 @@ function Header({
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const subMenuRef = useRef(null);
+  const location = useLocation();
+  const isLoginPage =
+    location.pathname === "/login" || location.pathname === "/register";
 
   const toggleSubMenu = () => setSubOpen(!isSubOpen);
   const closeSidebar = () => {
@@ -225,9 +224,9 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-      <Logo ref={logoRef} $visible={showLogo !== false}>
-        {logoText}
-      </Logo>
+        <Logo ref={logoRef} $visible={showLogo !== false}>
+          {logoText}
+        </Logo>
 
         <Nav>
           {menuItems.map(({ to, label }) => (
@@ -262,8 +261,12 @@ function Header({
         </Nav>
 
         <ButtonGroup>
-          <LoginButton type="navigate" />
-          <RegisterButton />
+          {!isLoginPage && (
+            <>
+              <LoginButton type="navigate" />
+              <RegisterButton />
+            </>
+          )}
         </ButtonGroup>
 
         <Hamburger onClick={() => setSidebarOpen(true)}>☰</Hamburger>
@@ -290,16 +293,20 @@ function Header({
                 </Link>
               </li>
             ))}
-          <li>
-            <Link to="/login" onClick={closeSidebar}>
-              {loginText}
-            </Link>
-          </li>
-          <li>
-            <Link to="/signup" onClick={closeSidebar}>
-              {signupText}
-            </Link>
-          </li>
+          {!isLoginPage && (
+            <>
+              <li>
+                <Link to="/login" onClick={closeSidebar}>
+                  {loginText}
+                </Link>
+              </li>
+              <li>
+                <Link to="/register" onClick={closeSidebar}>
+                  {signupText}
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </Sidebar>
     </>

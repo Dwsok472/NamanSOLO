@@ -62,9 +62,9 @@ const Buttom = styled.div`
   background-color: white; */
   border-radius: 50px;
   margin: 0 auto;
-  gap: 10px;
+  /* gap: 10px; */
   /* padding-top: 15px; */
-  padding-bottom: 15px;
+  /* padding-bottom: 15px; */
   height: 80%;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr;
@@ -82,7 +82,14 @@ const SmallBox = styled.div`
   align-items: center;
   margin-top: 10px;
   height: 70px;
+  .IconUser {
+    user-select: none;
+  }
+  .IconPassword {
+    user-select: none;
+  }
 `;
+
 const Input = styled.input`
   width: 80%;
   border: none;
@@ -93,9 +100,10 @@ const Input = styled.input`
 const FindBox = styled.div`
   width: 100%;
   height: 60px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
+  justify-content: center;
 `;
 const ButtonWrap = styled.div`
   width: 100%;
@@ -239,13 +247,14 @@ function Login() {
               <FindBox>
                 <StyledLink to="/find-id">아이디 찾기</StyledLink>
                 <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
+                <StyledLink to="/register">회원가입</StyledLink>
               </FindBox>
               <ButtonWrap>
                 <LoginButton onClick={handleSubmit} />
               </ButtonWrap>
-              <ButtonWrap>
+              {/* <ButtonWrap>
                 <RegisterButton />
-              </ButtonWrap>
+              </ButtonWrap> */}
             </Buttom>
           </ButtomWrap>
         </Card>
