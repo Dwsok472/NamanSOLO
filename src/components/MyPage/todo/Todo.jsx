@@ -211,7 +211,7 @@ const AnniversarySection = styled.section`
   padding: 20px;
   position: relative;
   overflow: auto;
-  max-height: 620px;
+  max-height: 610px;
 
   img {
     width: 16px;
