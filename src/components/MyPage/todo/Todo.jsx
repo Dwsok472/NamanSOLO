@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Addtodo from './Addtodo';
 import Addtravel from './Addtravel';
@@ -56,10 +56,12 @@ const CalendarHeader = styled.h3`
   align-items: baseline;
   gap: 6px;
   cursor: pointer;
+  font-size: 22px;
+  transform: scale(0.9);
   transition: 0.2s ease;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.0);
   }
 `;
 
@@ -229,7 +231,7 @@ const SectionH3 = styled.h3`
   user-select: none;
   transition: 0.2s;
   &:hover {
-    transform: scale(1.1);
+    font-size: 1.1rem;
   }
 `;
 
@@ -469,8 +471,10 @@ function Todo() {
 
   return (
     <>
-      <Wrapper>
-        <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewTravelEvent } >
+      <Wrapper onClick={() => {
+          if (isModalOpen) {setIsModalOpen(false);} if (isTravelModalOpen) {setIsTravelModalOpen(false);} if (viewTravelEvent) {setViewTravelEvent(false);}
+          if (editingTodoEvent) {setEditingTodoEvent(false);} if (viewTodoEvent) {setViewTodoEvent(false);} if (editingTravelEvent) {setEditingTravelEvent(false);}}}>
+        <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewTodoEvent || viewTravelEvent } >
           <LeftPanel>
             <CalendarSection>
               <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>

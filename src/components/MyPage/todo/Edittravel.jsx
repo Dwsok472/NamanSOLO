@@ -280,7 +280,8 @@ function Edittravel({
   const fileInputRef = useRef(null);
 
   return (
-    <CardWrap>
+    <CardWrap
+      onClick={(e) => e.stopPropagation()}>
       <Card>
         <Top>
           <TopX onClick={onClose}><IconClose /></TopX>

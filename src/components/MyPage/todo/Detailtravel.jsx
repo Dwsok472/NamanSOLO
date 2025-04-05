@@ -127,7 +127,8 @@ function DetailTravel({ event, onClose, onEdit }) {
   const currentImage = images[currentImageIndex];
 
   return (
-    <CardWrap>
+    <CardWrap 
+      onClick={(e) => e.stopPropagation()}>
       <Card>
         <Top>
           <IconWrap $right="50px" onClick={onEdit}>

@@ -76,7 +76,8 @@ function DetailTodo({ event, onClose, onEdit }) {
   if (!event) return null;
 
   return (
-    <CardWrap>
+    <CardWrap 
+      onClick={(e) => e.stopPropagation()}>
       <Card>
         <Top>
           <IconWrap $right="50px" onClick={onEdit}>
