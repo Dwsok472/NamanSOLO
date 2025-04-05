@@ -33,6 +33,14 @@ const Main = styled.main`
   pointer-events: ${({ $blur }) => ($blur ? 'none' : 'auto')};
 `;
 
+const LeftPanel = styled.div`
+  max-height: 610px; 
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
 const CalendarSection = styled.section`
   flex: 2 1 100%;
   background-color: #fff;
@@ -202,6 +210,8 @@ const AnniversarySection = styled.section`
   border-radius: 10px;
   padding: 20px;
   position: relative;
+  overflow: auto;
+  max-height: 620px;
 
   img {
     width: 16px;
@@ -268,6 +278,7 @@ const AddButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 5;
 
   &:hover {
     box-shadow: none;
@@ -347,8 +358,8 @@ function Todo() {
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [events, setEvents] = useState([
-    { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { id:2, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', fixed:true },
+    { id:2, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
+    { id:3, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', fixed:true },
   ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
@@ -386,7 +397,7 @@ function Todo() {
   const handleDelete = 
   // async
   (eventToDelete) => {
-    const confirmDelete = window.confirm(`${eventToDelete.title}, 이 일정을 정말 삭제하시겠어요?`);
+    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type=='anniversary'? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
 
     // try {
@@ -460,82 +471,82 @@ function Todo() {
     <>
       <Wrapper>
         <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewTravelEvent } >
-          <CalendarSection>
-            <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
-              {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
-            </CalendarHeader>
-
-            {isPickerOpen && (
-              <YearPickerWrap>
-                <YearButtons>
-                  <YearArrow src={LeftKey} onClick={() => setYearRangeStart(yearRangeStart - 5)}/>
-                  {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map(year => (
-                    <YearButton
-                      key={year}
-                      $active={year === selectedYear}
-                      onClick={() => setSelectedYear(year)}
-                    >
-                      {year}
-                    </YearButton>
-                  ))}
-                  <YearArrow src={RightKey} onClick={() => setYearRangeStart(yearRangeStart + 5)}/>
-                </YearButtons>
-                <MonthGrid>
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <MonthBox
-                      key={i}
-                      onClick={() => {
-                        setCurrentYear(selectedYear);
-                        setCurrentMonth(i);
-                        setIsPickerOpen(false);
-                      }}
-                    >
-                      {i + 1}월
-                    </MonthBox>
-                  ))}
-                </MonthGrid>
-              </YearPickerWrap>
-            )}
-
-            <StyledTable>
-              <thead>
-                <tr>
-                  {['일', '월', '화', '수', '목', '금', '토'].map(day => (
-                    <StyledTh key={day}>{day}</StyledTh>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {generateCalendar().map((week, wIdx) => (
-                  <tr key={wIdx}>
-                    {week.map((date, dIdx) => {
-                      if (!date) {return <StyledTd key={dIdx} />};
-                      const dateStr = date.toISOString().split('T')[0];
-                      const isToday = dateStr === today.toISOString().split('T')[0];
-                      return (
-                        <StyledTd key={dIdx} $isToday={isToday}>
-                          <DayCell>{date.getDate()}</DayCell>
-                          {getEventsForDay(date).map((event, i) => (
-                            <EventBox
-                              key={i}
-                              color={event.color}
-                              className={`${event.type}${event.id}`}
-                              onMouseEnter={() => setHoveringEventId(event.id)}
-                              onMouseLeave={() => setHoveringEventId(null)}
-                              $isHovered={hoveringEventId === event.id}
-                              onClick={() => event.type === 'anniversary' ? (!event.fixed ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
-                            >
-                              <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (event.fixed?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
-                            </EventBox>
-                          ))}
-                        </StyledTd>
-                      );
-                    })}
+          <LeftPanel>
+            <CalendarSection>
+              <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
+                {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
+              </CalendarHeader>
+              {isPickerOpen && (
+                <YearPickerWrap>
+                  <YearButtons>
+                    <YearArrow src={LeftKey} onClick={() => setYearRangeStart(yearRangeStart - 5)}/>
+                    {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map(year => (
+                      <YearButton
+                        key={year}
+                        $active={year === selectedYear}
+                        onClick={() => setSelectedYear(year)}
+                      >
+                        {year}
+                      </YearButton>
+                    ))}
+                    <YearArrow src={RightKey} onClick={() => setYearRangeStart(yearRangeStart + 5)}/>
+                  </YearButtons>
+                  <MonthGrid>
+                    {Array.from({ length: 12 }, (_, i) => (
+                      <MonthBox
+                        key={i}
+                        onClick={() => {
+                          setCurrentYear(selectedYear);
+                          setCurrentMonth(i);
+                          setIsPickerOpen(false);
+                        }}
+                      >
+                        {i + 1}월
+                      </MonthBox>
+                    ))}
+                  </MonthGrid>
+                </YearPickerWrap>
+              )}
+              <StyledTable>
+                <thead>
+                  <tr>
+                    {['일', '월', '화', '수', '목', '금', '토'].map(day => (
+                      <StyledTh key={day}>{day}</StyledTh>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </StyledTable>
-          </CalendarSection>
+                </thead>
+                <tbody>
+                  {generateCalendar().map((week, wIdx) => (
+                    <tr key={wIdx}>
+                      {week.map((date, dIdx) => {
+                        if (!date) {return <StyledTd key={dIdx} />};
+                        const dateStr = date.toISOString().split('T')[0];
+                        const isToday = dateStr === today.toISOString().split('T')[0];
+                        return (
+                          <StyledTd key={dIdx} $isToday={isToday}>
+                            <DayCell>{date.getDate()}</DayCell>
+                            {getEventsForDay(date).map((event, i) => (
+                              <EventBox
+                                key={i}
+                                color={event.color}
+                                className={`${event.type}${event.id}`}
+                                onMouseEnter={() => setHoveringEventId(event.id)}
+                                onMouseLeave={() => setHoveringEventId(null)}
+                                $isHovered={hoveringEventId === event.id}
+                                onClick={() => event.type === 'anniversary' ? (!event.fixed ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
+                              >
+                                <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (event.fixed?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
+                              </EventBox>
+                            ))}
+                          </StyledTd>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </StyledTable>
+            </CalendarSection>
+          </LeftPanel>
 
           <AnniversarySection>
             <AddButton onClick={() => {
