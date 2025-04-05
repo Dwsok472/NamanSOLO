@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import styled, { createGlobalStyle } from "styled-components";
+import styled from "styled-components";
 import LoginButton from "./Button/LoginButton";
 import RegisterButton from "./Button/RegisterButton";
 import { useNavigate } from "react-router-dom";
 
-const GlobalStyle = createGlobalStyle`
-  body.blur #main-content {
-    transition: filter 0.3s ease;
-    pointer-events: none;
-    user-select: none;
-    filter: blur(4px);
-  }
-`;
 
 const Container = styled.header`
   width: 100%;
@@ -77,7 +69,7 @@ const SubMenu = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  z-index: 999;
+  z-index: 9999;
   width: 100%;
 
   li a {
@@ -182,6 +174,7 @@ function Header({
   signupText = "회원가입",
   logoRef,
   showLogo,
+  onSubMenuToggle
 }) {
   const navigate = useNavigate();
   const [isSubOpen, setSubOpen] = useState(false);
@@ -190,6 +183,13 @@ function Header({
   const location = useLocation();
   const isLoginPage =
     location.pathname === "/login" || location.pathname === "/register";
+
+
+  useEffect(() => {
+    if (onSubMenuToggle) {
+      onSubMenuToggle(isSubOpen);
+    }
+  }, [isSubOpen]);
 
   const toggleSubMenu = () => setSubOpen(!isSubOpen);
   const closeSidebar = () => {
@@ -222,7 +222,6 @@ function Header({
 
   return (
     <>
-      <GlobalStyle />
       <Container>
         <Link to="/">
           <Logo ref={logoRef} $visible={showLogo !== false}>

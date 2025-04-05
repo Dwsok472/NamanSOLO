@@ -21,9 +21,7 @@ const AppWrapper = styled.div`
   min-height: 100vh;
 `;
 
-const MainContent = styled.main.attrs(() => ({
-  id: "main-content",
-}))`
+const MainContent = styled.main`
   flex: 1;
   padding-top: 75px;
 `;

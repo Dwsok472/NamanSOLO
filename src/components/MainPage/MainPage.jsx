@@ -12,11 +12,16 @@ const PageContainer = styled.div`
 `;
 
 const MainContent = styled.div`
+  filter: ${({ $blur }) => ($blur ? 'blur(4px)' : 'none')};
+  transition: filter 0.3s ease;
+  pointer-events: ${({ $blur }) => ($blur ? 'none' : 'auto')};
+  user-select: ${({ $blur }) => ($blur ? 'none' : 'auto')};
+
   opacity: ${({ $show }) => ($show ? 1 : 0)};
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
   transition: all 0.8s ease-in-out;
-  padding-top: 0;
 `;
+
 
 const CallToLoveSection = styled.section`
   background: #fff;
@@ -56,6 +61,7 @@ function MainPage() {
   const [showLogo, setShowLogo] = useState(false);
   const didSetRef = useRef(false);
   const bookRef = useRef(null);
+  const [blurred, setBlurred] = useState(false);
 
   useEffect(() => {
     let index = 0;
@@ -109,7 +115,6 @@ function MainPage() {
   };
 
   const togglePage = () => setFlipped((prev) => !prev);
-  
 
   return (
     <>
@@ -117,6 +122,7 @@ function MainPage() {
         logoRef={logoRef}
         showLogo={showLogo}
         logoText="WeARE"
+        onSubMenuToggle={(v) => setBlurred(v)}
         menuItems={[
           { to: '/story/all', label: '전체 스토리' },
           { to: '/map', label: '맵' },
@@ -142,9 +148,8 @@ function MainPage() {
           slideOut={slideOut}
         />
 
-        <MainContent $slideOut={slideOut} $show={showMain}>
+      <MainContent id="main-content" $slideOut={slideOut} $show={showMain} $blur={blurred}>
           <Hero />
-
           <BookSection
             flipped={flipped}
             togglePage={togglePage}
