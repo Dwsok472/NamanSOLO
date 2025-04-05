@@ -12,14 +12,14 @@ import Profile from "../img/people.png";
 import { ModifyUserInfo } from "../api";
 
 const CardWrap = styled.div`
-  width: ${(props) => props.width || "550px"};
+  width: ${(props) => props.$width || "550px"};
   margin: 0 auto;
   margin-top: 50px;
 `;
 
 const Card = styled.div`
-  width: ${(props) => props.cardwidth || "500px"};
-  height: ${(props) => props.cardheight || "600px"};
+  width: ${(props) => props.$cardwidth || "500px"};
+  height: ${(props) => props.$cardheight || "600px"};
   /* background-color: ${(props) => props.cardbackground || "#ffdcd6"}; */
   /* clip-path: polygon(
     10% 0%,
@@ -49,16 +49,16 @@ const ModifyTop = styled.div`
   right: 20px;
   cursor: pointer;
 `;
+
 const Img = styled.img`
-  width: ${(props) => props.imgwidth || "150px"};
-  height: ${(props) => props.imgheight || "150px"};
+  width: ${(props) => props.$imgwidth || "150px"};
+  height: ${(props) => props.$imgheight || "150px"};
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #3333;
   align-items: center;
-  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
-  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
-  opacity: ${(props) => (props.disabled ? 0.6 : 1)};
+  cursor: ${(props) => (props.$editable ? "none" : "pointer")};
+  pointer-events: ${(props) => (props.$editable ? "none" : "auto")};
 `;
 
 const ButtomWrap = styled.div`
@@ -99,7 +99,7 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 30px;
-  background-color : ${(props) => props.readOnly? "#e0e0e0" : "#fefefe" };
+  background-color : ${(props) => props.$readOnly? "#e0e0e0" : "#fefefe" };
 `;
 
 const ImgInput = styled.input`
@@ -108,12 +108,12 @@ const ImgInput = styled.input`
 
 const FileButton = styled.button`
   border: none;
-  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  cursor: ${(props) => (props.$editable ? "default" : "pointer")};
   background-color: transparent;
   position: absolute;
   bottom: 0px;
-  pointer-events: ${(props) => (props.disabled ? "none" : "auto")};
-  opacity: ${(props) => (props.disabled ? 0 : 1)};
+  pointer-events: ${(props) => (props.$editable ? "none" : "auto")};
+  opacity: ${(props) => (props.$editable ? 0 : 1)};
   &:focus {
     outline: none;
   }
@@ -139,7 +139,7 @@ const Button = styled.button`
   cursor: pointer;
 
   &:hover {
-    background-color: ${(props) => props.buttoncolor || "#fda899"};
+    background-color: ${(props) => props.$buttoncolor || "#fda899"};
     color: #eeeeee;
   }
 
@@ -196,9 +196,9 @@ function Octagon({
   return (
     <CardWrap width={width}>
       <Card
-        cardwidth={cardwidth}
-        cardheight={cardheight}
-        cardbackground={cardbackground}
+        $cardwidth={cardwidth}
+        $cardheight={cardheight}
+        $cardbackground={cardbackground}
       >
         <Top>
           {isProfilePage && (
@@ -209,19 +209,20 @@ function Octagon({
           <Img
             src={image}
             onClick={isProfilePage && !isEditable? undefined :FileInput}
-            imgwidth={imgwidth}
-            imgheight={imgheight}
+            $imgwidth={imgwidth}
+            $imgheight={imgheight}
+            $editable={isProfilePage && !isEditable}
           />
           <ImgInput
             type="file"
             id={`${id}-file`}
             accept="image/*"
-            readOnly={isProfilePage && !isEditable}
-            disabled={isProfilePage && !isEditable}
-            onChange={handleImageChange}
+            $readOnly={isProfilePage && !isEditable}
+            $disabled={isProfilePage && !isEditable}
+            $onChange={handleImageChange}
           />
           <FileButton onClick={isProfilePage && !isEditable ? undefined : FileInput}
-                      disabled={isProfilePage && !isEditable}>
+                      $editable={isProfilePage && !isEditable}>
             <IconImage />
           </FileButton>
         </Top>
@@ -233,7 +234,7 @@ function Octagon({
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
+                $readOnly={isProfilePage && !isEditable}
                 placeholder="이름을 입력해주세요"
               />
             </SmallBox>
@@ -243,7 +244,7 @@ function Octagon({
                 type="date"
                 value={birthday}
                 onChange={(e) => setBirthday(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
+                $readOnly={isProfilePage && !isEditable}
                 placeholder="생년월일을 입력해주세요"
                 max={new Date().toISOString().split("T")[0]}
               />
@@ -254,7 +255,7 @@ function Octagon({
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
+                $readOnly={isProfilePage && !isEditable}
                 placeholder="이메일을 입력해주세요"
               />
             </SmallBox>
@@ -264,7 +265,7 @@ function Octagon({
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                readOnly={isProfilePage && !isEditable}
+                $readOnly={isProfilePage && !isEditable}
                 placeholder="전화번호를 입력해주세요"
               />
             </SmallBox>
@@ -272,7 +273,7 @@ function Octagon({
           {isProfilePage && (
             <ButtonWrap>
               <Button
-                buttoncolor={buttoncolor}
+                $buttoncolor={buttoncolor}
                 onClick={handleSubmit}
                 disabled={!isEditable}
               >
