@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Header from '../Header';
 import Intro from './Intro';
 import BookSection from './BookSection';
@@ -28,13 +28,19 @@ const CallToLoveSection = styled.section`
   align-items: center;
 `;
 
+const floatUpDown = keyframes`
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+`;
+
 const LovePhrase = styled.h2`
-  font-size: clamp(2.5rem, 6vw, 4.5rem); 
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-family: 'Caveat', cursive;
   font-weight: 800;
   color: #000;
   letter-spacing: 4px;
-  white-space: nowrap;
+  animation: ${floatUpDown} 3s ease-in-out infinite;
 `;
 
 function MainPage() {
@@ -103,6 +109,7 @@ function MainPage() {
   };
 
   const togglePage = () => setFlipped((prev) => !prev);
+  
 
   return (
     <>

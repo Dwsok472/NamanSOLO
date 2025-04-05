@@ -9,7 +9,7 @@ import maincallender from '../img/maincallender.png';
 const BubbleSectionWrapper = styled.section`
   width: 100%;
   padding: 120px 40px;
-  background: linear-gradient(to bottom, #fff0f0, #ffffff);
+  background: linear-gradient(to bottom, #f5e4c3, #ffffff);
   display: flex;
   flex-direction: column;
   align-items: center;

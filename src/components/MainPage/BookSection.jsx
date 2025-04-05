@@ -8,7 +8,7 @@ const BookSectionWrapper = styled.section`
   justify-content: center;
   align-items: flex-start;
   padding: 100px 60px;
-  background: linear-gradient(to bottom, #ececec, #fff0f0);
+  background: linear-gradient(to bottom, #ececec, #f5e4c3);
   border-radius: 0;
   width: 100%;
   min-height: 640px;

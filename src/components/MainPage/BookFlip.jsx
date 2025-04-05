@@ -50,7 +50,7 @@ const BookPage = styled.div`
   align-items: center;
   font-size: 1rem;
   font-weight: 500;
-  background: #fff9f9;
+  background: #fffcfc;
   color: #333;
 
   &.left {
@@ -68,7 +68,7 @@ const BookSpine = styled.div`
   bottom: 0;
   left: 50%;
   width: 2px;
-  background: #f3caca;
+  background: #f5e4c3;
   z-index: 2;
 `;
 
