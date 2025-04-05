@@ -32,7 +32,7 @@ const ProfileCard = styled.div`
   padding: 20px;
   border-radius: 30px;
   text-align: center;
-  background-color: ${({ bgColor }) => bgColor || "#ffdcd6"};
+  background-color: ${({ bgColor }) => bgColor || "#ec9c9c"};
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -85,14 +85,14 @@ const DateInfo = styled.div`
 
 const DaysSince = styled.p`
   font-size: 4.5rem;
-  color: ${({ color }) => color || "#ff7979e3"};
+  color: ${({ color }) => color || "#e24747e2"};
   font-weight: 700;
   margin: 0 auto;
 `;
 
 const MeetingDate = styled.p`
   font-size: 1.2rem;
-  color: ${({ color }) => color || "#808080"};
+  color: ${({ color }) => color || "#423b3b"};
 `;
 
 const NameHeartSection = styled.div`
@@ -132,7 +132,7 @@ const RightProfileCard = styled.div`
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 30px;
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
+  background-color: ${({ bgColor }) => bgColor || "#daeffd"};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

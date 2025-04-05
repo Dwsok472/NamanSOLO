@@ -224,9 +224,11 @@ function Header({
     <>
       <GlobalStyle />
       <Container>
-        <Logo ref={logoRef} $visible={showLogo !== false}>
-          {logoText}
-        </Logo>
+        <Link to="/">
+          <Logo ref={logoRef} $visible={showLogo !== false}>
+            {logoText}
+          </Logo>
+        </Link>
 
         <Nav>
           {menuItems.map(({ to, label }) => (
