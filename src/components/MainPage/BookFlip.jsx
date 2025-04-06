@@ -6,15 +6,18 @@ import couple2 from '../img/couple2.png';
 import couple3 from '../img/couple3.png';
 import couple4 from '../img/couple4.jpg';
 import couple5 from '../img/couple5.png';
+import leftkey from '../img/leftkey.png';
+import rightkey from '../img/rightkey.png';
 
 const BookWrapper = styled.div`
   position: relative;
-  max-width: calc(100% - 40px); 
+  max-width: calc(100% - 40px);
   width: 100%;
-  max-width: 900px; 
-  height: 520px;  
+  max-width: 900px;
+  height: 520px;
   perspective: 1500px;
   margin: 0 auto;
+  margin-right: 50px;
 `;
 
 const FlipCard = styled.div`
@@ -52,7 +55,6 @@ const BookPage = styled.div`
   font-weight: 500;
   background: #fffcfc;
   color: #333;
-
   &.left {
     border-right: 1px solid #f3caca;
   }
@@ -80,18 +82,16 @@ const NavButton = styled.button`
   width: 42px;
   height: 42px;
   background: white;
-  border-radius: 12%;
+  border-radius: 50%;
   border: none;
   display: flex;
   justify-content: center;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   transition: all 0.25s ease-in-out;
-
   &:hover {
-    background: #ff6b6b;
+    background: #dddddd;
     color: white;
   }
-
   &:active {
     transform: translateY(-50%) scale(0.96);
   }
@@ -108,7 +108,7 @@ const BookFlip = () => {
         <PageSet className="front">
           <BookPage className="left">
             <PhotoCard
-              src={[couple1 , couple2]}
+              src={[couple1, couple2]}
               title="첫 나들이"
               $rotate={-3}
               $offsetY={-8}
@@ -146,8 +146,12 @@ const BookFlip = () => {
 
       <BookSpine />
 
-      <NavButton $left onClick={togglePage}>◀</NavButton>
-      <NavButton onClick={togglePage}>▶</NavButton>
+      <NavButton $left onClick={togglePage}>
+        <img src={leftkey} className="leftkey" />
+      </NavButton>
+      <NavButton onClick={togglePage}>
+        <img src={rightkey} className="rightkey" />
+      </NavButton>
     </BookWrapper>
   );
 };

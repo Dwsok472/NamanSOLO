@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 const BookSectionWrapper = styled.section`
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: flex-start;
   padding: 100px 60px;
-  background: linear-gradient(to bottom, #ececec, #f5e4c3);
+  /* background: linear-gradient(to bottom, #ececec, #f5e4c3); */
+  background: linear-gradient(to bottom, #fff, #ffe2e2, #f2ebdc);
   border-radius: 0;
   width: 100%;
+  height: 900px;
   min-height: 640px;
   gap: 60px;
   flex-wrap: wrap;
@@ -31,8 +33,6 @@ const BookSectionContent = styled.div`
   align-items: stretch;
   flex-wrap: nowrap;
   width: 100%;
-  max-width: 1440px; 
-  gap: 40px; 
 
   @media (max-width: 1024px) {
     flex-wrap: wrap;
@@ -40,33 +40,40 @@ const BookSectionContent = styled.div`
   }
 `;
 
-
 const BookIntroBox = styled.div`
-  max-width: 700px;
-  padding: 60px 50px;
+  width: 100%;
+  padding: 60px 30px;
   font-size: 1.15rem;
   line-height: 2;
-  color: #333;
+  color: #1d1d1d;
   text-align: left;
-
+  margin-left: 50px;
   h3 {
-    font-size: 1.7rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    color: #c24040;
+    color: #0f0f0f;
     margin-bottom: 1.5rem;
   }
-
+  .other {
+    color: #bf1f3c;
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #a10000, #ffd271, #bf1f3c);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
   p {
     margin-bottom: 2rem;
+    font-weight: 700;
   }
 
   .highlight {
     display: inline-block;
     font-weight: 600;
-    color: #c24040;
-    background: #ffd7d7;
+    color: #ffffff;
+    background: #ffbebe;
     padding: 3px 8px;
-    border-radius: 6px;
+    border-radius: 10px;
     margin: 0 2px;
   }
 
@@ -78,9 +85,8 @@ const BookIntroBox = styled.div`
     color: #333;
     text-decoration: underline;
     cursor: pointer;
-
     &:hover {
-      color: #ff6b6b;
+      font-weight: 700;
     }
   }
 
@@ -101,11 +107,15 @@ const BookSection = ({ flipped, togglePage, bookRef }) => {
     <BookSectionWrapper ref={bookRef}>
       <BookSectionContent>
         <BookIntroBox>
-          <h3>우리의 이야기, 오늘도 한 페이지</h3>
+          <h3>
+            우리의 이야기, <br />
+            <span className="other">오늘도 한 페이지</span>
+          </h3>
           <p>
             하루의 소소한 기쁨부터 가슴 깊이 남은 순간까지, 당신의 사랑 이야기를{' '}
-            <span className="highlight">책처럼 남기고</span>,{' '}
-            <span className="highlight">함께 공감하는 공간</span>에 기록해보세요.
+            <br /> <span className="highlight">책처럼 남기고</span>,{' '}
+            <span className="highlight">함께 공감하는 공간</span>에
+            기록해보세요.
           </p>
           <div className="cta-link" onClick={() => navigate('/story/all')}>
             전체 스토리 둘러보기 →
