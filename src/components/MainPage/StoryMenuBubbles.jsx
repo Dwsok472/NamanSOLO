@@ -10,10 +10,13 @@ import { Link } from 'react-router-dom';
 const BubbleSectionWrapper = styled.section`
   width: 100%;
   padding: 120px 40px;
-  background: linear-gradient(to bottom, #f5e4c3, #ffffff);
+  background: linear-gradient(to bottom, #f2ebdc, #fff, #f2bdbd);
+  /* background: linear-gradient(to bottom, #fff, #ffe2e2, #f2ebdc); */
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 30px;
+  height: 900px;
 `;
 
 const TextGroup = styled.div`
@@ -22,16 +25,16 @@ const TextGroup = styled.div`
 `;
 
 const Subtitle = styled.p`
-  font-size: 0.95rem;
-  color: #d54056;
+  font-size: 2rem;
+  color: #222;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
 `;
 
 const Title = styled.h2`
-  font-size: 1.9rem;
+  font-size: 3.5rem;
   font-weight: 800;
-  color: #222;
+  color: #8c0d17;
 `;
 
 const CardGrid = styled.div`
@@ -53,18 +56,18 @@ const StoryMenuBubbles = () => {
         <Link to="/story/all">
           <BubbleCard
             icon={storyall}
-            title="다른 연인들의<br />사랑이야기가 궁금하다면?"
+            title="다른 연인들의<br />이야기가 궁금하다면?"
             meta="전체 스토리"
-            $bgColor="#bfa8f3"
-            $backColor="#8c71d3"
+            $bgColor="#7235ff"
+            $backColor="#744ed3"
           />
         </Link>
         <Link to="/mypage/story">
           <BubbleCard
             icon={mystory}
-            title="우리의 추억,<br />하나하나 놓치지 마세요 !"
+            title="우리의 추억,<br />하나 하나 놓치지 마세요!"
             meta="나의 스토리"
-            bgColor="#90e0d5"
+            bgColor="#67d3c4"
             backColor="#5dbfaf"
           />
         </Link>
@@ -73,8 +76,8 @@ const StoryMenuBubbles = () => {
             icon={maincallender}
             title="너와 나의 기념일,<br />꼭 기억해요 💌"
             meta="캘린더"
-            $bgColor="#ffd89e"
-            $backColor="#faaa57"
+            $bgColor="#ffa51d"
+            $backColor="#fa9427"
           />
         </Link>
         <Link to="/map">
@@ -82,8 +85,8 @@ const StoryMenuBubbles = () => {
             icon={mainmap}
             title="저희의 추천 명소를<br />구경해보실래요?"
             meta="데이트 장소 추천"
-            $bgColor="#7fc8ff"
-            $backColor="#4d99cc"
+            $bgColor="#26a0fd"
+            $backColor="#43a4e6"
           />
         </Link>
       </CardGrid>

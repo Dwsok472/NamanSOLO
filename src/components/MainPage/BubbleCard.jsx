@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Card = styled.div`
-  width: 240px;
-  height: 260px;
+  width: 280px;
+  height: 280px;
   background: transparent;
   border-radius: 16px;
   cursor: pointer;
@@ -44,7 +44,7 @@ const Front = styled.div`
 `;
 
 const CardTitle = styled.h3`
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 800;
   color: white;
   line-height: 1.6;
@@ -58,9 +58,9 @@ const CardImage = styled.img`
 `;
 
 const CardMeta = styled.div`
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 500;
-  color: white;
+  color: #ffffff;
   opacity: 0.9;
 `;
 
