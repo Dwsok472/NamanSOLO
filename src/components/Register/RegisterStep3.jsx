@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import heartswithrate from "../img/heartswithrate.png";
+import heartswithrate from "../img/heartswithrate1.png";
 import NextButton from "../Button/NextButton";
 import { IconBehind } from "../Icons";
 
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 82vh;
+  height: 90vh;
   margin-top: 50px;
   margin-bottom: 50px;
 

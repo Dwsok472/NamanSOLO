@@ -1,5 +1,5 @@
 import React from "react";
-import heartswithrate from "../img/heartswithrate.png";
+import heartswithrate from "../img/heartswithrate1.png";
 import leftcloud from "../img/leftThought.png";
 import rightcloud from "../img/rightThought.png";
 import LoginButton from "../Button/LoginButton";
@@ -13,7 +13,7 @@ const Container = styled.div`
   height: 95vh;
   margin-top: 50px;
   margin-bottom: 50px;
-  height: 1000px;
+  height: 95vh;
   position: relative;
   .heartswithrate {
     display: block;
@@ -32,44 +32,44 @@ const Box = styled.div`
   width: 100%;
   .cloudleft {
     position: absolute;
-    left: 250px;
-    top: 250px;
+    left: 50px;
+    top: 50px;
   }
   .cloudright {
     position: absolute;
-    right: 400px;
-    bottom: 0px;
+    right: 60px;
+    top: 150px;
   }
   .textleft {
     position: absolute;
-    left: 410px;
-    top: 400px;
+    left: 220px;
+    top: 200px;
     z-index: 5;
     font-size: 2rem;
     font-weight: 700;
-    color: #fda899;
+    color: #8c0d17;
   }
   .textright {
     position: absolute;
-    right: 530px;
-    bottom: 250px;
+    right: 210px;
+    top: 300px;
     z-index: 5;
     font-size: 2rem;
     font-weight: 700;
-    color: #fda899;
+    color: #8c0d17;
   }
 `;
 const Button = styled.button`
   width: 110px;
   border-radius: 20px;
-  background-color: #ff9987;
+  background-color: #8c0d17;
   font-size: 1rem;
   font-weight: 700;
   color: white;
   transition: all 0.3s ease;
   position: absolute;
-  right: 930px;
-  bottom: 0px;
+  right: 800px;
+  top: 700px;
   cursor: pointer;
   &:hover {
     background-color: #ffffff;

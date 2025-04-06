@@ -14,7 +14,11 @@ import { ModifyUserInfo } from "../api";
 const CardWrap = styled.div`
   width: ${(props) => props.$width || "550px"};
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 25px;
+  /* border: 1px solid #3333; */
+  border-radius: 3px;
+  /* background-color: #e6d3c1; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); */
 `;
 
 const Card = styled.div`
@@ -37,7 +41,7 @@ const Top = styled.div`
   width: 100%;
   height: 30%;
   text-align: center;
-  padding-top: 10px;
+  /* padding-top: 40px; */
   position: relative;
 `;
 
@@ -51,11 +55,11 @@ const ModifyTop = styled.div`
 `;
 
 const Img = styled.img`
-  width: ${(props) => props.$imgwidth || "150px"};
-  height: ${(props) => props.$imgheight || "150px"};
+  width: ${(props) => props.$imgwidth || "130px"};
+  height: ${(props) => props.$imgheight || "130px"};
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #3333;
+  /* border: 1px solid #3333; */
   align-items: center;
   cursor: ${(props) => (props.$editable ? "none" : "pointer")};
   pointer-events: ${(props) => (props.$editable ? "none" : "auto")};
@@ -71,7 +75,7 @@ const Buttom = styled.div`
   width: 100%;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr;
-  border: 1px solid #1a1a1a33;
+  /* border: 1px solid #1a1a1a33; */
   background-color: white;
   border-radius: 50px;
   margin: 0 auto;
@@ -86,12 +90,13 @@ const SmallBox = styled.div`
   margin: 0 auto;
   border: 1px solid #02020233;
   border-radius: 30px;
-  background-color: ${(props) => props.$readOnly ? "#e0e0e0" : "#fefefe" };
+  background-color: ${(props) => (props.$readOnly ? "#e0e0e0" : "#fefefe")};
   padding-left: 10px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 `;
 
 const Input = styled.input`
@@ -99,7 +104,7 @@ const Input = styled.input`
   border: none;
   outline: none;
   padding-left: 30px;
-  background-color : ${(props) => props.$readOnly? "#e0e0e0" : "#fefefe" };
+  background-color: ${(props) => (props.$readOnly ? "#e0e0e0" : "#fefefe")};
 `;
 
 const ImgInput = styled.input`
@@ -208,7 +213,7 @@ function Octagon({
           )}
           <Img
             src={image}
-            onClick={isProfilePage && !isEditable? undefined :FileInput}
+            onClick={isProfilePage && !isEditable ? undefined : FileInput}
             $imgwidth={imgwidth}
             $imgheight={imgheight}
             $editable={isProfilePage && !isEditable}
@@ -221,8 +226,10 @@ function Octagon({
             $disabled={isProfilePage && !isEditable}
             $onChange={handleImageChange}
           />
-          <FileButton onClick={isProfilePage && !isEditable ? undefined : FileInput}
-                      $editable={isProfilePage && !isEditable}>
+          <FileButton
+            onClick={isProfilePage && !isEditable ? undefined : FileInput}
+            $editable={isProfilePage && !isEditable}
+          >
             <IconImage />
           </FileButton>
         </Top>
