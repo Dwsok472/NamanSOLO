@@ -5,6 +5,8 @@ import couple2 from '../img/couple11.png';
 import couple3 from '../img/couple12.png';
 import couple4 from '../img/couple13.png';
 import star from '../img/star.png'; 
+import { Link } from 'react-router-dom';
+import BookSection from './BookSection';
 
 const float = keyframes`
   0%, 100% { transform: translateY(0); }
@@ -125,7 +127,7 @@ const Star = styled.img`
   `}
 `;
 
-const Hero = () => {
+function Hero({scrollToStory}) {
   return (
     <HeroWrapper>
       <FloatingTopLeft src={couple3} alt="커플풍선" />
@@ -141,7 +143,9 @@ const Hero = () => {
         잊지못할 그날을 기억하고 기념해요,<br />
         <strong>WeARE가 함께할게요.</strong>
       </HeroDesc>
-      <CTAButton>지금 바로 담아두기</CTAButton>
+      <Link to={BookSection}>
+        <CTAButton onClick={scrollToStory}>지금 바로 담아두기</CTAButton>
+      </Link>
 
       <VisualRow>
         <FloatImage src={couple2} alt="커플 이미지 1" />

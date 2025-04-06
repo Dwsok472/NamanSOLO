@@ -152,7 +152,7 @@ function MainPage() {
         />
 
       <MainContent id="main-content" $slideOut={slideOut} $show={showMain} $blur={blurred}>
-          <Hero />
+          <Hero scrollToStory={scrollToStory}/>
           <BookSection
             flipped={flipped}
             togglePage={togglePage}
