@@ -66,7 +66,7 @@ const MyAlbum = () => {
     {
       id: 1,
       username: 'my_user',
-      title: '🎈 첫 데이트 장소',
+      title: '첫 데이트 장소',
       imgurl: [couple1],
       date: '2025-01-05',
       location: '서울 연남동',
@@ -78,7 +78,7 @@ const MyAlbum = () => {
     {
       id: 2,
       username: 'my_user',
-      title: '🌉 한강 야경',
+      title: '한강 야경',
       imgurl: [couple2],
       date: '2025-01-12',
       location: '한강 반포지구',
@@ -90,7 +90,7 @@ const MyAlbum = () => {
     {
       id: 3,
       username: 'my_user',
-      title: '🍰 성수동 카페 데이트',
+      title: '성수동 카페 데이트',
       imgurl: [couple3],
       date: '2025-01-15',
       location: '성수동 카페거리',
