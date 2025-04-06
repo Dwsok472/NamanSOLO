@@ -333,7 +333,7 @@ const AlbumBoard = () => {
 
   useEffect(() => {
     itemsRef.current = []; // 페이지 변경 시 캐시된 아이템 초기화
-  }, [currentPage, filter]); // currentPage가 변경될 때마다 실행
+  }, [currentPage, filter, showAddAlbum]); // currentPage가 변경될 때마다 실행
 
   // generateItems 함수에서 itemsRef를 사용하여 캐시된 아이템을 관리합니다.
   const filteredData = sortedData.filter((album) => album.isPublic);
