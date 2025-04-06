@@ -6,6 +6,7 @@ import heart from '../img/heart.png';
 import { useLocation } from 'react-router-dom';
 import Todo from './todo/Todo';
 import Other from './Other/Other';
+import MyAlbum from './MyAlbum/MyAlbum';
 import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import RegisterStep2 from '../Register/RegisterStep2';
 import CoupleProfile from './CoupleProfile';
@@ -269,7 +270,9 @@ function MyPage() {
         navigate('/mypage/info');
         break;
       case '나의 스토리':
-        navigate('/mypage/story');
+        setTimeout(() => {
+        navigate('/mypage/story', { replace: true });
+          }, 0);
         break;
       case '나의 댓글':
         navigate('/mypage/comment');
@@ -394,7 +397,7 @@ function MyPage() {
                 handleButtonClick('나의 스토리');
                 handleBoxClick('나의 스토리');
               }}
-              className={pathname.includes('/mypage/story') ? 'selected' : ''}
+              className={pathname.includes('/mypage/myalbum') ? 'selected' : ''}
             >
               나의 스토리
             </Button>
@@ -437,7 +440,7 @@ function MyPage() {
           {' '}
           <Routes>
             <Route path="/info" element={<CoupleProfile />} />
-            <Route path="/story" element={<RegisterStep2 />} />
+            <Route path="/myalbum" element={<MyAlbum />} />
             <Route path="/comment" element={<CommentPage />} />
             <Route path="/todo" element={<Todo />} />
             <Route path="/other" element={<Other />} />

@@ -9,6 +9,7 @@ import RegisterMain from "./components/Register/RegisterMain";
 import AllStories from "./components/Story/AllStories";
 import MainPage from "./components/MainPage/MainPage";
 import MyPage from "./components/MyPage/MyPage";
+import MyAlbum from "./components/MyPage/MyAlbum/MyAlbum";
 import MainMap from "./components/Map/MainMap";
 import AlbumBoard from "./components/Album/AlbumBoard";
 import AdminFeedPage from "./components/Admin/AdminFeedPage";
@@ -94,7 +95,10 @@ function AppRoutes() {
           <Route path="/events" element={<Event />} />
           <Route path="/admin/users" element={<AdminUserPage />} />
           <Route path="/admin/feeds" element={<AdminFeedPage />} />
+
+          <Route path="/mypage/story" element={<MyAlbum />} />
           <Route path="/mypage/*" element={<MyPage />} />
+
           <Route path="/find-id" element={<Find isFindId={true} />} />
           <Route path="/find-pwd" element={<Find isFindId={false} />} />
         </Routes>
