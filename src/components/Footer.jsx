@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 const FooterWrapper = styled.footer`
   width: 100%;
-  background: rgba(177, 177, 177, 0.85);
+  background: rgba(31, 31, 31, 0.85);
   color: #333;
   padding: 12px 0;
   font-size: 0.9rem;
@@ -58,10 +58,7 @@ const Column = styled.div`
     color: white;
     font-size: 0.8rem;
     text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    user-select: none;
   }
 `;
 
@@ -80,8 +77,8 @@ const FixedBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${( props ) => ( props.$show ? 1 : 0)};
-  pointer-events: ${( props ) => ( props.$show ? 'auto' : 'none')};
+  opacity: ${(props) => (props.$show ? 1 : 0)};
+  pointer-events: ${(props) => (props.$show ? 'auto' : 'none')};
   transition: opacity 0.8s ease;
 
   &:focus {
@@ -100,7 +97,6 @@ const FixedBtn = styled.button`
   }
 `;
 
-
 const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
 
@@ -113,9 +109,9 @@ const Footer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-    function scrollToTop() {
+  function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }
 
   return (
     <>
@@ -138,8 +134,8 @@ const Footer = () => {
 
             <Column>
               <h5>정책</h5>
-              <a href="/terms">이용약관</a>
-              <a href="/privacy">개인정보처리방침</a>
+              <p>이용약관</p>
+              <p>개인정보처리방침</p>
             </Column>
           </FooterGrid>
         </FooterInner>

@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import styled from "styled-components";
-import LoginButton from "./Button/LoginButton";
-import RegisterButton from "./Button/RegisterButton";
-import { useNavigate } from "react-router-dom";
-
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import LoginButton from './Button/LoginButton';
+import RegisterButton from './Button/RegisterButton';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.header`
   width: 100%;
@@ -127,10 +126,10 @@ const Hamburger = styled.button`
 const Sidebar = styled.div`
   position: fixed;
   top: 0;
-  left: ${({ $open }) => ($open ? "0" : "-300px")};
+  left: ${({ $open }) => ($open ? '0' : '-300px')};
   width: 280px;
   height: 100%;
-  background-color: #fff0eb;
+  background-color: #bf1f3c;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
   transition: left 0.3s ease;
   z-index: 1000;
@@ -139,16 +138,14 @@ const Sidebar = styled.div`
     list-style: none;
     padding: 100px 20px 0;
     margin: 0;
-
     li {
       padding: 12px 0;
-
       a,
       span {
-        color: #6a2b1b;
+        color: #fff;
         text-decoration: none;
-        font-size: 1.2rem;
-        font-weight: bold;
+        font-size: 1.5rem;
+        font-weight: 700;
         cursor: pointer;
       }
     }
@@ -156,7 +153,7 @@ const Sidebar = styled.div`
 `;
 
 const Overlay = styled.div`
-  display: ${({ $open }) => ($open ? "block" : "none")};
+  display: ${({ $open }) => ($open ? 'block' : 'none')};
   position: fixed;
   top: 0;
   left: 0;
@@ -167,14 +164,14 @@ const Overlay = styled.div`
 `;
 
 function Header({
-  logoText = "WeARE",
+  logoText = 'WeARE',
   menuItems = [],
   subMenuItems = [],
-  loginText = "로그인",
-  signupText = "회원가입",
+  loginText = '로그인',
+  signupText = '회원가입',
   logoRef,
   showLogo,
-  onSubMenuToggle
+  onSubMenuToggle,
 }) {
   const navigate = useNavigate();
   const [isSubOpen, setSubOpen] = useState(false);
@@ -182,8 +179,7 @@ function Header({
   const subMenuRef = useRef(null);
   const location = useLocation();
   const isLoginPage =
-    location.pathname === "/login" || location.pathname === "/register";
-
+    location.pathname === '/login' || location.pathname === '/register';
 
   useEffect(() => {
     if (onSubMenuToggle) {
@@ -199,9 +195,9 @@ function Header({
 
   useEffect(() => {
     if (isSubOpen) {
-      document.body.classList.add("blur");
+      document.body.classList.add('blur');
     } else {
-      document.body.classList.remove("blur");
+      document.body.classList.remove('blur');
     }
   }, [isSubOpen]);
 
@@ -216,8 +212,8 @@ function Header({
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isSubOpen]);
 
   return (
@@ -238,12 +234,12 @@ function Header({
 
           <MenuWrapper ref={subMenuRef}>
             <div onClick={toggleSubMenu}>
-              마이페이지{" "}
+              마이페이지{' '}
               <span
                 style={{
-                  transform: isSubOpen ? "rotate(180deg)" : "none",
-                  display: "inline-block",
-                  transition: "0.2s",
+                  transform: isSubOpen ? 'rotate(180deg)' : 'none',
+                  display: 'inline-block',
+                  transition: '0.2s',
                 }}
               >
                 ▼
@@ -284,7 +280,7 @@ function Header({
             </li>
           ))}
           <li onClick={toggleSubMenu}>
-            <span>마이페이지 {isSubOpen ? "▲" : "▼"}</span>
+            <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
           </li>
           {isSubOpen &&
             subMenuItems.map(({ to, label }) => (

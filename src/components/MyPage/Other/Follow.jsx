@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { IconFollowing, IconSearch, IconUsers } from "../Icons";
-import styled from "styled-components";
+import React, { useEffect, useState } from 'react';
+import { IconFollowing, IconSearch, IconUsers } from '../../Icons';
+import styled from 'styled-components';
 // import {
 //   getAllFollower,
 //   getAllFollowing,
 //   getFollowerByUsername,
 //   getFollowingByUsername,
 // } from './api';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 350px;
@@ -150,13 +150,13 @@ const ButtomButton = styled.button`
 `;
 
 function Follow({ type }) {
-  const [inputKeyword, setInputKeyword] = useState("");
+  const [inputKeyword, setInputKeyword] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
-  const urlKeyword = new URLSearchParams(location.search).get("username");
+  const urlKeyword = new URLSearchParams(location.search).get('username');
 
   //임시용
   useEffect(() => {
@@ -164,44 +164,44 @@ function Follow({ type }) {
       {
         id: 1,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
       {
         id: 2,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
       {
         id: 3,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
       {
         id: 4,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
       {
         id: 5,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
       {
         id: 6,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
       {
         id: 7,
         imgurl:
-          "https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg",
-        username: "sangsu1234",
+          'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
+        username: 'sangsu1234',
       },
     ]);
     setLoading(false); // 데이터가 로드된 후 로딩 상태를 false로 설정
@@ -297,7 +297,7 @@ function Follow({ type }) {
     <Container>
       <Top>
         <IconUsers />
-        <h1>{type === "follower" ? "팔로워" : "팔로윙"}</h1>
+        <h1>{type === 'follower' ? '팔로워' : '팔로윙'}</h1>
       </Top>
       <ContainerMain>
         <SearchBox>
@@ -312,7 +312,7 @@ function Follow({ type }) {
               onClick={() => {
                 inputKeyword
                   ? navigate(`/search?username=${inputKeyword}`)
-                  : alert("검색어를 입력해주세요");
+                  : alert('검색어를 입력해주세요');
               }}
             />
           </InputBox>
@@ -329,12 +329,12 @@ function Follow({ type }) {
                 </Left>
                 <Right>
                   <TopButton>
-                    {" "}
-                    {type === "follower" ? "차단" : "피드 구경가기"}
+                    {' '}
+                    {type === 'follower' ? '차단' : '피드 구경가기'}
                   </TopButton>
                   <ButtomButton>
-                    {" "}
-                    {type === "follower" ? "팔로우 하기" : "팔로우 취소"}
+                    {' '}
+                    {type === 'follower' ? '팔로우 하기' : '팔로우 취소'}
                   </ButtomButton>
                 </Right>
               </SmallBox>
