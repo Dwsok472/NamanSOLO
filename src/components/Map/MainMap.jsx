@@ -49,7 +49,7 @@ const SlideImage = styled.div`
     height: 350px;
     object-fit: cover;
     opacity: 0.8;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);   
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
   }
 `;
 
@@ -64,7 +64,7 @@ const Focus = styled.button`
   color: white;
   background-color: #ff9996;
   border-radius: 30px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);   
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   &:focus {
     outline: none;
   }
@@ -116,7 +116,7 @@ const LeftBox = styled.div`
   height: 100%;
   background-color: #fff0f0;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   border-right: 2px dashed #ffa8a8;
 
@@ -162,16 +162,14 @@ const Wrap = styled.div`
   width: 100%;
   height: 100%;
   padding: 10px;
-  margin-left: 50px;
+  margin-left: 130px;
   display: flex;
   flex-direction: column;
-  align-items: center; 
-  justify-content: center;
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    text-align: center;
+    /* text-align: start; */
   }
 
   .hash {
@@ -180,6 +178,7 @@ const Wrap = styled.div`
     text-decoration: underline;
     text-decoration-color: #ffa8a8;
     text-decoration-thickness: 2px;
+    /* text-align: start; */
   }
 
   .highlight {
@@ -193,9 +192,8 @@ const HashWrap = styled.div`
   gap: 12px;
   margin-top: 10px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: start;
 `;
-
 
 const BoxWrap = styled.div`
   padding: 10px;
@@ -227,7 +225,7 @@ const Text = styled.div`
 `;
 
 const ScrollWrapper = styled.div`
-  max-height: 600px; 
+  max-height: 600px;
   overflow-y: auto;
   padding-right: 10px;
 `;
@@ -236,7 +234,7 @@ function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [regionPlaces, setRegionPlaces] = useState({
-    '충청남도': [
+    충청남도: [
       {
         id: 1,
         name: '로보쿡 둔산점',
@@ -261,7 +259,7 @@ function MainMap() {
         description: '감성 포토존',
         thumbnail: course3,
       },
-    ]
+    ],
   });
 
   const slides = [
@@ -294,7 +292,11 @@ function MainMap() {
           <Focus onClick={scrollToContent}>보러가기▶</Focus>
           <NavButton
             $left
-            onClick={() => setSlideIndex((prev) => (prev === 0 ? slides.length - 1 : prev - 1))}
+            onClick={() =>
+              setSlideIndex((prev) =>
+                prev === 0 ? slides.length - 1 : prev - 1
+              )
+            }
           >
             <img src={leftkey} alt="prev" />
           </NavButton>
@@ -315,48 +317,51 @@ function MainMap() {
       <ContentBox id="contentBox">
         <LeftBox>
           <InnerBox>
-          {!selectedRegion ? (
-            <>
-              <Wrap>
-                <h1><span className="highlight">가장 행복한 하루</span>를 <br />보낼 오늘</h1>
+            {!selectedRegion ? (
+              <>
+                <Wrap>
+                  <h1>
+                    <span className="highlight">가장 행복한 하루</span>를 <br />
+                    보낼 오늘
+                  </h1>
 
-                <HashWrap>
-                  <span className='hash'>#데이트</span>
-                  <span className='hash'>#이색체험</span>
-                  <span className='hash'>#핫플</span>
-                  <span className='hash'>#힐링</span>
-                </HashWrap>
-              </Wrap>
-              <BoxWrap>
-                <Box>
-                  <img src={place} className='place' alt="place" />
-                  <Text>데이트할 장소에 대한 추천이 필요하시나요 ?</Text>
-                </Box>
-                <Box>
-                  <img src={question} className='question' alt="question" />
-                  <Text>데이트할 장소가 마땅치 않나요?</Text>
-                </Box>
-                <Box>
-                  <img src={heart} className='heart' alt="heart" />
-                  <Text>연인과의 추억을 쌓으세요</Text>
-                </Box>
-              </BoxWrap>
-            </>
-          ) : (
-            <ScrollWrapper>
-              <PlaceListPart
-                selectedRegion={selectedRegion}
-                regionPlaces={regionPlaces}
-                setRegionPlaces={setRegionPlaces}
-              />
-            </ScrollWrapper>
-          )}
+                  <HashWrap>
+                    <span className="hash">#데이트</span>
+                    <span className="hash">#이색체험</span>
+                    <span className="hash">#핫플</span>
+                    <span className="hash">#힐링</span>
+                  </HashWrap>
+                </Wrap>
+                <BoxWrap>
+                  <Box>
+                    <img src={place} className="place" alt="place" />
+                    <Text>데이트할 장소에 대한 추천이 필요하시나요 ?</Text>
+                  </Box>
+                  <Box>
+                    <img src={question} className="question" alt="question" />
+                    <Text>데이트할 장소가 마땅치 않나요?</Text>
+                  </Box>
+                  <Box>
+                    <img src={heart} className="heart" alt="heart" />
+                    <Text>연인과의 추억을 쌓으세요</Text>
+                  </Box>
+                </BoxWrap>
+              </>
+            ) : (
+              <ScrollWrapper>
+                <PlaceListPart
+                  selectedRegion={selectedRegion}
+                  regionPlaces={regionPlaces}
+                  setRegionPlaces={setRegionPlaces}
+                />
+              </ScrollWrapper>
+            )}
           </InnerBox>
         </LeftBox>
 
         <RightBox>
-           <InnerBox>
-          <ImageMapMapPart onRegionClick={setSelectedRegion} />
+          <InnerBox>
+            <ImageMapMapPart onRegionClick={setSelectedRegion} />
           </InnerBox>
         </RightBox>
       </ContentBox>
