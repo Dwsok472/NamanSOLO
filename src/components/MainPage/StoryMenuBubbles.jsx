@@ -5,6 +5,7 @@ import mainmap from '../img/mainmap.png';
 import mystory from '../img/mystory.png';
 import storyall from '../img/storyall.png';
 import maincallender from '../img/maincallender.png';
+import { Link } from 'react-router-dom';
 
 const BubbleSectionWrapper = styled.section`
   width: 100%;
@@ -49,34 +50,42 @@ const StoryMenuBubbles = () => {
       </TextGroup>
 
       <CardGrid>
-        <BubbleCard
-          icon={storyall}
-          title="다른 연인들의<br />사랑이야기가 궁금하다면?"
-          meta="전체 스토리"
-          bgColor="#bfa8f3"
-          backColor="#8c71d3"
-        />
-        <BubbleCard
-          icon={mystory}
-          title="우리의 추억,<br />하나하나 놓치지 마세요 !"
-          meta="나의 스토리"
-          bgColor="#90e0d5"
-          backColor="#5dbfaf"
-        />
-        <BubbleCard
+        <Link to="/story/all">
+          <BubbleCard
+            icon={storyall}
+            title="다른 연인들의<br />사랑이야기가 궁금하다면?"
+            meta="전체 스토리"
+            bgColor="#bfa8f3"
+            backColor="#8c71d3"
+          />
+        </Link>
+        <Link to="/mypage/story">
+          <BubbleCard
+            icon={mystory}
+            title="우리의 추억,<br />하나하나 놓치지 마세요 !"
+            meta="나의 스토리"
+            bgColor="#90e0d5"
+            backColor="#5dbfaf"
+          />
+        </Link>
+        <Link to="/mypage/todo">
+          <BubbleCard
             icon={maincallender}
             title="너와 나의 기념일,<br />꼭 기억해요 💌"
             meta="캘린더"
             bgColor="#ffd89e"
             backColor="#faaa57"
           />
-        <BubbleCard
-          icon={mainmap}
-          title="저희의 추천 명소를<br />구경해보실래요?"
-          meta="데이트 장소 추천"
-          bgColor="#7fc8ff"
-          backColor="#4d99cc"
-        />
+        </Link>
+        <Link to="/map">
+          <BubbleCard
+            icon={mainmap}
+            title="저희의 추천 명소를<br />구경해보실래요?"
+            meta="데이트 장소 추천"
+            bgColor="#7fc8ff"
+            backColor="#4d99cc"
+          />
+        </Link>
       </CardGrid>
     </BubbleSectionWrapper>
   );

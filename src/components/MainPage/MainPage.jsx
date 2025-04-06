@@ -71,6 +71,9 @@ function MainPage() {
         index++;
       } else {
         clearInterval(interval);
+        setTimeout(() => {
+          setDisplayText('');
+        }, 3000);
       }
     }, 100);
     return () => clearInterval(interval);
