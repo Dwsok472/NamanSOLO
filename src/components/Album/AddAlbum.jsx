@@ -4,6 +4,8 @@ import SwitchButton from './SwitchButton';
 import location from '../img/location.png';
 import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
+import Modal from './Modal';
+import MapPicker from '../Story/MapPicker';
 import { IconClose, IconClose1, IconImage } from '../Icons';
 
 const Container = styled.div`
@@ -176,6 +178,16 @@ function AddAlbum({ onClose, onAddAlbum }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [tags, setTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
+  const [showMap, setShowMap] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+
+  const handleOpenMap = () => setShowMap(true);
+  const handleCloseMap = () => setShowMap(false);
+
+  const handleLocationSelect = (location) => {
+    setSelectedPlace(location);
+    setShowMap(false);
+  };
 
   const submitAlbum = () => {
     const newAlbum = {
@@ -328,13 +340,21 @@ function AddAlbum({ onClose, onAddAlbum }) {
                   </div>
                 ))}
               </div>
-              <div className="map">
-                <img src={location} alt="" className="locationimg" />
-                <div className="location">위치 추가</div>
-              </div>
-              <div className="address">
-                위치 추가 눌러서 나온 위치 난 못해..
-              </div>
+              {showMap && (
+  <Modal onClose={handleCloseMap}>
+    <MapPicker onSelect={handleLocationSelect} />
+  </Modal>
+)}
+              <div className="map" onClick={handleOpenMap}>
+                  <img src={location} alt="" className="locationimg" />
+                  <div className="location">위치 추가</div>
+                </div>
+
+                {selectedPlace && (
+                  <div className="address">
+                    선택된 위치: <strong>{selectedPlace.address}</strong>
+                  </div>
+                )}
             </div>
             <div className="buttonBox" onClick={submitAlbum}>
               <button>등록</button>

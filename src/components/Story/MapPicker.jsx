@@ -1,97 +1,225 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
 
-const MapComponent = () => {
+const MapContainer = styled.div`
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+`;
+
+const Title = styled.h3`
+color: black;
+  margin-bottom: 10px;
+`;
+
+const Controls = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+`;
+
+const Button = styled.button`
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007aff;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #005fcc;
+  }
+`;
+
+const PredictionList = styled.ul`
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 10px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: #fff;
+`;
+
+const PredictionItem = styled.li`
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  color: #333;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+const MapView = styled.div`
+  width: 100%;
+  height: 400px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-top: 10px;
+`;
+
+const AddressText = styled.p`
+  margin-top: 10px;
+  font-weight: 500;
+`;
+
+const MapPicker = ({ onSelect }) => {
+  const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
-  const [infoWindow, setInfoWindow] = useState(null);
   const [searchInput, setSearchInput] = useState('');
+  const [predictions, setPredictions] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState('');
 
   useEffect(() => {
-    const initializeMap = () => {
-      const mapOptions = {
-        center: new window.google.maps.LatLng(37.5665, 126.978), // 서울 좌표
-        zoom: 13,
-      };
-      const mapInstance = new window.google.maps.Map(
-        document.getElementById('map'),
-        mapOptions
-      );
-      setMap(mapInstance);
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
+    script.async = true;
+    script.onload = () => initMap();
+    document.head.appendChild(script);
+  }, []);
 
-      mapInstance.addListener('click', (event) => {
-        const clickedLocation = event.latLng;
-        if (marker) {
-          marker.setPosition(clickedLocation);
-        } else {
-          const newMarker = new window.google.maps.Marker({
-            position: clickedLocation,
-            map: mapInstance,
-          });
-          setMarker(newMarker);
-
-          const newInfoWindow = new window.google.maps.InfoWindow({
-            content: document.getElementById('infoWindowContent'),
-          });
-          setInfoWindow(newInfoWindow);
-
-          newMarker.addListener('click', () => {
-            newInfoWindow.open(mapInstance, newMarker);
-          });
-        }
-      });
-    };
-
-    if (!window.google) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      script.onload = initializeMap;
-      document.head.appendChild(script);
-    } else {
-      initializeMap();
-    }
-  }, [marker]);
-
-  const handleSearchChange = (event) => {
-    setSearchInput(event.target.value);
+  const initMap = () => {
+    const seoul = { lat: 37.5665, lng: 126.9780 };
+    const mapInstance = new window.google.maps.Map(mapRef.current, {
+      center: seoul,
+      zoom: 13,
+    });
+    setMap(mapInstance);
   };
 
-  const handleSearchSubmit = () => {
+  const handleSearchInput = async (e) => {
+    const input = e.target.value;
+    setSearchInput(input);
+
+    if (!input || !window.google?.maps?.places) {
+      setPredictions([]);
+      return;
+    }
+
+    const service = new window.google.maps.places.AutocompleteService();
+    service.getPlacePredictions({ input }, (preds) => {
+      setPredictions(preds || []);
+    });
+  };
+
+  const handleSelectPlace = (placeId, description) => {
     const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: searchInput }, (results, status) => {
+    geocoder.geocode({ placeId }, (results, status) => {
       if (status === 'OK' && results[0]) {
-        const newLocation = results[0].geometry.location;
-        map.setCenter(newLocation);
-        if (marker) {
-          marker.setPosition(newLocation);
-        } else {
-          const newMarker = new window.google.maps.Marker({
-            position: newLocation,
-            map: map,
-          });
-          setMarker(newMarker);
-        }
-      } else {
-        alert('주소를 찾을 수 없습니다.');
+        const location = results[0].geometry.location;
+        placeMarker(location, results[0].formatted_address);
+        setSearchInput(description);
+        setPredictions([]);
       }
     });
   };
 
+  const placeMarker = (location, address = '') => {
+    if (!map) return;
+
+    if (marker) marker.setMap(null);
+
+    const newMarker = new window.google.maps.Marker({
+      position: location,
+      map,
+      icon: {
+        url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        scaledSize: new window.google.maps.Size(40, 40),
+      },
+    });
+
+    newMarker.addListener('click', () => {
+      if (address) {
+        setSelectedAddress(address);
+      }
+    });
+
+    setMarker(newMarker);
+    map.panTo(location);
+
+    if (address) setSelectedAddress(address);
+
+    if (onSelect) {
+      onSelect({
+        address,
+        lat: location.lat(),
+        lng: location.lng(),
+      });
+    }
+  };
+
+  const handleCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert('위치 권한을 확인해주세요!');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        const loc = new window.google.maps.LatLng(latitude, longitude);
+
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ location: loc }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const address = results[0].formatted_address;
+            placeMarker(loc, address);
+          }
+        });
+      },
+      () => alert('현재 위치를 가져올 수 없습니다.')
+    );
+  };
+
   return (
-    <div>
-      <div id="map" style={{ height: '500px', width: '100%' }}></div>
-      <div id="infoWindowContent" style={{ display: 'none' }}>
-        <input
+    <MapContainer>
+      <Title> 위치 검색</Title>
+      <Controls>
+        <Input
           type="text"
           value={searchInput}
-          onChange={handleSearchChange}
-          placeholder="주소를 입력하세요"
+          onChange={handleSearchInput}
+          placeholder="장소를 입력하세요"
         />
-        <button onClick={handleSearchSubmit}>검색</button>
-      </div>
-    </div>
+        <Button onClick={handleCurrentLocation}>현재 위치</Button>
+      </Controls>
+
+      {predictions.length > 0 && (
+        <PredictionList>
+          {predictions.map((prediction) => (
+            <PredictionItem
+              key={prediction.place_id}
+              onClick={() =>
+                handleSelectPlace(prediction.place_id, prediction.description)
+              }
+            >
+              {prediction.description}
+            </PredictionItem>
+          ))}
+        </PredictionList>
+      )}
+
+      <MapView ref={mapRef} />
+
+      {selectedAddress && (
+        <AddressText>
+          📌 선택된 주소: <strong>{selectedAddress}</strong>
+        </AddressText>
+      )}
+    </MapContainer>
   );
 };
 
-export default MapComponent;
+export default MapPicker;
