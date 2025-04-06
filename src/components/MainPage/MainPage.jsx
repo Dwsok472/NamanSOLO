@@ -57,7 +57,7 @@ function MainPage() {
   const [flipped, setFlipped] = useState(false);
   const fullTextRef = useRef('WeARE');
   const logoRef = useRef(null);
-  const [logoPosition, setLogoPosition] = useState({ top: 0, left: 0 });
+  const [logoPosition, setLogoPosition] = useState(null);
   const [showLogo, setShowLogo] = useState(false);
   const didSetRef = useRef(false);
   const bookRef = useRef(null);
@@ -82,9 +82,9 @@ function MainPage() {
   useLayoutEffect(() => {
     const getLogoPos = () => {
       if (logoRef.current && !didSetRef.current) {
-        const rect = logoRef.current.getBoundingClientRect();
-        const top = rect.top + rect.height / 2;
-        const left = rect.left + rect.width / 2;
+        const $rect = logoRef.current.getBoundingClientRect();
+        const top = $rect.top + $rect.height / 2;
+        const left = $rect.left + $rect.width / 2;
         setLogoPosition({ top, left });
         didSetRef.current = true;
       } else if (!logoRef.current) {

@@ -84,7 +84,7 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
 
 
   return (
-    <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
+    <CardWrapper rotate={rotate} $offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
       <Pin><img src={pinColor} className="pin" /></Pin>
       <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />
       <Image src={src[imageIndex]} alt="album" />

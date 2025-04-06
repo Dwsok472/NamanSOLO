@@ -121,9 +121,9 @@ const Star = styled.img`
   animation: ${float} 3s ease-in-out infinite;
   opacity: 0.6;
 
-  ${({ top, left }) => `
-    top: ${top};
-    left: ${left};
+  ${({ $top, $left }) => `
+    top: ${$top};
+    left: ${$left};
   `}
 `;
 
@@ -131,9 +131,9 @@ function Hero({scrollToStory}) {
   return (
     <HeroWrapper>
       <FloatingTopLeft src={couple3} alt="커플풍선" />
-      <Star src={star} alt="star" top="30%" left="80%" />
-      <Star src={star} alt="star" top="70%" left="20%" />
-      <Star src={star} alt="star" top="85%" left="75%" />
+      <Star src={star} alt="star" $top="30%" $left="80%" />
+      <Star src={star} alt="star" $top="70%" $left="20%" />
+      <Star src={star} alt="star" $top="85%" $left="75%" />
 
       <HeroText>
         연인과 함께하는 오늘을, 

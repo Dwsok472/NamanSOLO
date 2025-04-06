@@ -87,12 +87,12 @@ const Back = styled.div`
 const BubbleCard = ({ icon, title, meta, bgColor, backColor }) => {
   return (
     <Card>
-      <Front className="front" bgColor={bgColor}>
+      <Front className="front" $bgColor={bgColor}>
         <CardTitle dangerouslySetInnerHTML={{ __html: title }} />
         <CardImage src={icon} alt="icon" />
         <CardMeta>{meta}</CardMeta>
       </Front>
-      <Back className="back" backColor={backColor}>
+      <Back className="back" $backColor={backColor}>
         {meta}
       </Back>
     </Card>

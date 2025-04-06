@@ -34,14 +34,16 @@ const Intro = ({ showIntro, animateToLogo, logoPosition, displayText, slideOut }
 
   return (
     <>
-      <IntroText
-        $animateToLogo={animateToLogo}
-        $top={animateToLogo ? logoPosition.top : undefined}
-        $left={animateToLogo ? logoPosition.left : undefined}
-      >
-        {displayText}
-      </IntroText>
-      <IntroWrapper $slideOut={slideOut} />
+      {logoPosition && (
+        <IntroText
+          $animateToLogo={animateToLogo}
+          $top={animateToLogo ? logoPosition.top : undefined}
+          $left={animateToLogo ? logoPosition.left : undefined}
+        >
+          {displayText}
+        </IntroText>
+      )}
+      <IntroWrapper $slideOut={slideOut} />     
     </>
   );
 };

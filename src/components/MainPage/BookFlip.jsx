@@ -110,16 +110,16 @@ const BookFlip = () => {
             <PhotoCard
               src={[couple1 , couple2]}
               title="첫 나들이"
-              rotate={-3}
-              offsetY={-8}
+              $rotate={-3}
+              $offsetY={-8}
             />
           </BookPage>
           <BookPage className="right">
             <PhotoCard
               src={[couple3]}
               title="벚꽃 데이트"
-              rotate={2}
-              offsetY={0}
+              $rotate={2}
+              $offsetY={0}
             />
           </BookPage>
         </PageSet>
@@ -129,16 +129,16 @@ const BookFlip = () => {
             <PhotoCard
               src={[couple4]}
               title="비 오는 날의 카페"
-              rotate={1}
-              offsetY={-6}
+              $rotate={1}
+              $offsetY={-6}
             />
           </BookPage>
           <BookPage className="right">
             <PhotoCard
               src={[couple5]}
               title="둘만의 여행"
-              rotate={-2}
-              offsetY={4}
+              $rotate={-2}
+              $offsetY={4}
             />
           </BookPage>
         </PageSet>
