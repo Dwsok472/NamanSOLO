@@ -55,8 +55,8 @@ const StoryMenuBubbles = () => {
             icon={storyall}
             title="다른 연인들의<br />사랑이야기가 궁금하다면?"
             meta="전체 스토리"
-            bgColor="#bfa8f3"
-            backColor="#8c71d3"
+            $bgColor="#bfa8f3"
+            $backColor="#8c71d3"
           />
         </Link>
         <Link to="/mypage/story">
@@ -73,8 +73,8 @@ const StoryMenuBubbles = () => {
             icon={maincallender}
             title="너와 나의 기념일,<br />꼭 기억해요 💌"
             meta="캘린더"
-            bgColor="#ffd89e"
-            backColor="#faaa57"
+            $bgColor="#ffd89e"
+            $backColor="#faaa57"
           />
         </Link>
         <Link to="/map">
@@ -82,8 +82,8 @@ const StoryMenuBubbles = () => {
             icon={mainmap}
             title="저희의 추천 명소를<br />구경해보실래요?"
             meta="데이트 장소 추천"
-            bgColor="#7fc8ff"
-            backColor="#4d99cc"
+            $bgColor="#7fc8ff"
+            $backColor="#4d99cc"
           />
         </Link>
       </CardGrid>

@@ -31,7 +31,7 @@ const Front = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: ${({ bgColor }) => bgColor || '#ff798d'};
+  background: ${({ $bgColor }) => $bgColor || '#ff798d'};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -68,7 +68,7 @@ const Back = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: ${({ backColor }) => backColor || '#d54056'};
+  background: ${({ $backColor }) => $backColor || '#d54056'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,15 +84,15 @@ const Back = styled.div`
   padding: 20px;
 `;
 
-const BubbleCard = ({ icon, title, meta, bgColor, backColor }) => {
+const BubbleCard = ({ icon, title, meta, $bgColor, $backColor }) => {
   return (
     <Card>
-      <Front className="front" $bgColor={bgColor}>
+      <Front className="front" $bgColor={$bgColor}>
         <CardTitle dangerouslySetInnerHTML={{ __html: title }} />
         <CardImage src={icon} alt="icon" />
         <CardMeta>{meta}</CardMeta>
       </Front>
-      <Back className="back" $backColor={backColor}>
+      <Back className="back" $backColor={$backColor}>
         {meta}
       </Back>
     </Card>

@@ -81,16 +81,28 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
   // if (!src || !Array.isArray(src) || src.length === 0) {
   //   return <p>이미지가 없습니다.</p>;  // src가 없거나 배열이 아닐 때, 또는 비어있을 때 대체 UI
   // }
+  const currentImg = src?.[imageIndex];
+  const multipleImages = src?.length > 1;
 
 
   return (
     <CardWrapper rotate={rotate} $offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
       <Pin><img src={pinColor} className="pin" /></Pin>
-      <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />
-      <Image src={src[imageIndex]} alt="album" />
-      <img src={rightkey} alt="rightkey" className="rightkey" onClick={nextImage} />
+
+      {multipleImages && (
+        <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />
+      )}
+
+      {currentImg && (
+        <Image src={currentImg} alt="album" />
+      )}
+
+      {multipleImages && (
+        <img src={rightkey} alt="rightkey" className="rightkey" onClick={nextImage} />
+      )}
+
       {title && <Caption>{title}</Caption>}
-    </CardWrapper>
+  </CardWrapper>
   );
 };
 
