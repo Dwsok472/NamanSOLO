@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Follow from './Follow';
 import BookMark from './BookMark';
-
 const Container = styled.div`
   width: 100%;
   display: grid;

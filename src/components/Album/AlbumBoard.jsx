@@ -92,7 +92,7 @@ const BoardInner = styled.div`
 const AddButton = styled.button`
   position: fixed;
   bottom: 100px;
-  right: 10px;
+  right: 50px;
   font-size: 1rem;
   font-weight: 700;
   border-radius: 50%;
@@ -328,7 +328,7 @@ const AlbumBoard = () => {
     setShowAddAlbum(true); // AddAlbum 모달 열기
   };
   const handleCloseAddAlbum = () => {
-    setShowAddAlbum(false); // AddAlbum 모달 열기
+    setShowAddAlbum(false); // AddAlbum 모달 닫기
   };
 
   useEffect(() => {

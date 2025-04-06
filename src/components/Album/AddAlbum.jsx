@@ -7,14 +7,15 @@ import rightkey from '../img/rightkey.png';
 import { IconClose, IconClose1, IconImage } from '../Icons';
 
 const Container = styled.div`
-  width: 100%;
+  width: 25%;
   margin: 0 auto;
   margin-top: 30px;
   position: absolute;
   height: 100%;
   top: 0;
   left: 0;
-  z-index: 200;
+  /* z-index: 200; */
+  /* border: 1px solid black; */
 `;
 const Back = styled.div`
   position: fixed;
