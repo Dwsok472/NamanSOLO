@@ -177,6 +177,10 @@ function Octagon({
   const [phone, setPhone] = useState(data.phone);
   const [isEditable, setIsEditable] = useState(false);
 
+  useEffect(()=>{
+    setImage(data.image || Profile);
+  }, [data.image]);
+
   const FileInput = () => {
     document.getElementById(`${id}-file`).click();
   };
@@ -184,7 +188,9 @@ function Octagon({
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
+      const imageURL = URL.createObjectURL(file);
+      setImage(imageURL);
+      if (onChange) onChange("image", imageURL);
     }
   };
 
@@ -224,7 +230,7 @@ function Octagon({
             accept="image/*"
             $readOnly={isProfilePage && !isEditable}
             $disabled={isProfilePage && !isEditable}
-            $onChange={handleImageChange}
+            onChange={handleImageChange}
           />
           <FileButton
             onClick={isProfilePage && !isEditable ? undefined : FileInput}
