@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { IconPassword, IconUser } from "../Icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginButton from "../Button/LoginButton";
 import RegisterButton from "../Button/RegisterButton";
@@ -8,11 +8,22 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { useRef, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import Find from '../FindIdAndPwd/Find';
 //import Couple from "../img/lover.png";
 import { UserLogin } from "../api";
 import WeARE from "../img/weare.png";
 import WeARE1 from "../img/weare1.png";
 import { IconBehind } from "../Icons";
+import RegisterStep1 from "../Register/RegisterStep1";
+
+const FindIdCardWrap = styled.div`
+  width: 550px;
+  height: 550px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const CardWrap = styled.div`
   width: 550px;
@@ -114,6 +125,19 @@ const ButtonWrap = styled.div`
   align-items: center;
 `;
 
+const StyledButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  color: #7b7b7b;
+  padding: 15px;
+  cursor: pointer;
+
+  &:hover {
+    color: #161616;
+  }
+`;
+
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: #3333;
@@ -194,14 +218,21 @@ export const useUserStore = create(
 
 const images = [WeARE, WeARE1];
 
-function Login() {
-  const [password, setPassword] = useState("");
+function Login() {  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const { login, user, isLoggedIn } = useUserStore();
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const view = searchParams.get("view") || "login";
+
+  const handleViewChange = (targetView) => {
+    navigate(`/login?view=${targetView}`);
+  };
+
   const handleGoMain = () => {
-    navigate("/ "); // MainPage 이동
+    navigate("/"); // MainPage 이동
   };
 
   useEffect(() => {
@@ -224,54 +255,69 @@ function Login() {
       alert("로그인 실패! 다시 시도해주세요.");
     }
   }
-
   return (
     <Container>
       <ImgWrap onClick={handleGoMain}>
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
-      <CardWrap>
-        <Card>
-          <Top>
-            <H1>LOGIN</H1>
-          </Top>
-          <ButtomWrap>
-            <Buttom>
-              <SmallBox>
-                <IconUser />
-                <Input
-                  type="text"
-                  placeholder="아이디를 입력해주세요"
-                  autoComplete="off" // 자동완성 기능 끄기
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </SmallBox>
-              <SmallBox>
-                <IconPassword />
-                <Input
-                  type="password"
-                  autoComplete="off"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요"
-                />
-              </SmallBox>
-              <FindBox>
-                <StyledLink to="/find-id">아이디 찾기</StyledLink>
-                <StyledLink to="/find-pwd">비밀번호 찾기</StyledLink>
-                <StyledLink to="/register">회원가입</StyledLink>
-              </FindBox>
-              <ButtonWrap>
-                <LoginButton onClick={handleSubmit} />
-              </ButtonWrap>
-              {/* <ButtonWrap>
-                <RegisterButton />
-              </ButtonWrap> */}
-            </Buttom>
-          </ButtomWrap>
-        </Card>
-      </CardWrap>
+        {view === "login" && (
+          <CardWrap>
+            <Card>
+              <Top><H1>LOGIN</H1></Top>
+              <ButtomWrap>
+                <Buttom>
+                  {/* 입력 필드들 */}
+                  <SmallBox>
+                    <IconUser />
+                    <Input
+                      type="text"
+                      placeholder="아이디를 입력해주세요"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </SmallBox>
+                  <SmallBox>
+                    <IconPassword />
+                    <Input
+                      type="password"
+                      placeholder="비밀번호를 입력해주세요"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </SmallBox>
+
+                  <FindBox>
+                    <StyledButton onClick={() => handleViewChange("find-id") }>아이디 찾기</StyledButton>
+                    <StyledButton onClick={() => handleViewChange("find-pwd")}>비밀번호 찾기</StyledButton>
+                    <StyledButton onClick={() => handleViewChange("register")}>회원가입</StyledButton>
+                  </FindBox>
+
+                  <ButtonWrap>
+                    <LoginButton onClick={handleSubmit} />
+                  </ButtonWrap>
+                </Buttom>
+              </ButtomWrap>
+            </Card>
+          </CardWrap>
+        )}
+
+        {view === "find-id" && (
+          <FindIdCardWrap>
+            <Find isFindId={true} />
+          </FindIdCardWrap>
+        )}
+
+        {view === "find-pwd" && (
+          <FindIdCardWrap>
+            <Find isFindId={false} />
+          </FindIdCardWrap>
+        )}
+
+        {view === "register" && (
+          <FindIdCardWrap>
+            <RegisterStep1 onNext={() => navigate('/register') } />
+          </FindIdCardWrap>
+        )}
       <Icon onClick={() => navigate(-1)}>
         <IconBehind />
       </Icon>

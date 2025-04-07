@@ -24,7 +24,7 @@ function RegisterButton() {
   const navigate = useNavigate();
   return (
     <div>
-      <Button onClick={() => navigate('/register')}>회원가입</Button>
+      <Button onClick={() => navigate('/login?view=register')}>회원가입</Button>
     </div>
   );
 }

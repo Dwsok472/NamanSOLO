@@ -298,7 +298,7 @@ function Header({
                 </Link>
               </li>
               <li>
-                <Link to="/register" onClick={closeSidebar}>
+                <Link to="/login?view=register" onClick={closeSidebar}>
                   {signupText}
                 </Link>
               </li>

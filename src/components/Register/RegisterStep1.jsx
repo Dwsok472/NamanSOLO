@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { IconPassword, IconUser } from "../Icons";
 import NextButton from "../Button/NextButton";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { IconBehind } from "../Icons";
 
 const Container = styled.div`
@@ -191,10 +191,9 @@ const NextButtonWrapper = styled.div`
 
 const Icon = styled.div`
   position: fixed; // 화면 기준 고정
-  bottom: 80px; // 화면 하단에서 30px 위
-  right: 30px; // 화면 오른쪽에서 50px 왼쪽
-  width: 40px;
-  height: 40px;
+  bottom: 145px;
+  right: 24px;
+  width: 50px;
   cursor: pointer;
 `;
 
