@@ -21,6 +21,9 @@ const Container = styled.div`
   align-items: center;
   height: 90vh;
   padding: 20px;
+  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
+  /* background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff); */
+  background: linear-gradient(to bottom, #ffb3ae, #ffe2e2, #f2ebdc);
   /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
 `;
@@ -29,10 +32,10 @@ const ProfileCard = styled.div`
   width: 100%;
   max-width: 380px;
   padding: 20px;
-  border: 1px solid #111;
+  border: 1px solid #d2d2d2;
   /* border-radius: 10px; */
   text-align: center;
-  /* background-color: ${({ bgColor }) => bgColor || "#f2bdbd"}; */
+  background-color: ${({ bgColor }) => bgColor || "white"};
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -135,7 +138,7 @@ const RightProfileCard = styled.div`
   overflow: auto;
   max-width: 1100px;
   padding: 20px;
-  border: 1px solid #111;
+  border: 1px solid #c9c9c9;
   /* border-radius: 10px; */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
   display: flex;
@@ -161,32 +164,35 @@ const TopSection = styled.div`
   /* border-bottom: 1px solid ${({ borderColor }) =>
     borderColor || "#ababa8"}; */
   top: 0;
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
+  /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
 `;
 const Left = styled.div`
+  display: flex;
   width: 100%;
 `;
 
 const Button = styled.button`
   ${({ isStory }) => isStory && "margin-left: auto;"}
-  background-color: ${({ bgColor }) => bgColor || "#fff9eb"};
+  background-color:transparent;
   padding: 10px 20px;
   font-size: 1.2rem;
   font-weight: 700;
-  border: 1px solid ${({ borderColor }) => borderColor || "#fefdf1"};
+  /* border: 1px solid ${({ borderColor }) => borderColor || "#fefdf1"}; */
   /* border-radius: 20px; */
   width: 145px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: ${({ hoverColor }) => hoverColor || "#ffe09e"};
+    background-color: #ffffff;
+    color: #9f142e;
+    border: 1px solid #3333;
   }
   &:focus {
     outline: none;
   }
   &.selected {
-    background-color: #ffe09e;
-    color: #181818;
+    background-color: #9f142e;
+    color: #ffffff;
   }
 `;
 

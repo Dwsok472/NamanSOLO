@@ -79,7 +79,6 @@ function AppRoutes() {
           { to: "/mypage/other", label: "즐겨찾기" },
           { to: "/mypage/comment", label: "나의 댓글" },
           { to: "/mypage/todo", label: "캘린더" },
-
           { to: "/mypage/story", label: "스토리" },
         ]}
         loginText="로그인"

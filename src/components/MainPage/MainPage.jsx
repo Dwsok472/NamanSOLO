@@ -1,10 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import styled, { keyframes } from 'styled-components';
-import Header from '../Header';
-import Intro from './Intro';
-import BookSection from './BookSection';
-import Hero from './Hero';
-import StoryMenuBubbles from './StoryMenuBubbles';
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import Header from "../Header";
+import Intro from "./Intro";
+import BookSection from "./BookSection";
+import Hero from "./Hero";
+import StoryMenuBubbles from "./StoryMenuBubbles";
 
 const PageContainer = styled.div`
   position: relative;
@@ -12,16 +12,15 @@ const PageContainer = styled.div`
 `;
 
 const MainContent = styled.div`
-  filter: ${({ $blur }) => ($blur ? 'blur(4px)' : 'none')};
+  filter: ${({ $blur }) => ($blur ? "blur(4px)" : "none")};
   transition: filter 0.3s ease;
-  pointer-events: ${({ $blur }) => ($blur ? 'none' : 'auto')};
-  user-select: ${({ $blur }) => ($blur ? 'none' : 'auto')};
+  pointer-events: ${({ $blur }) => ($blur ? "none" : "auto")};
+  user-select: ${({ $blur }) => ($blur ? "none" : "auto")};
 
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
+  transform: ${({ $show }) => ($show ? "translateY(0)" : "translateY(20px)")};
   transition: all 0.8s ease-in-out;
 `;
-
 
 const CallToLoveSection = styled.section`
   background: #fff;
@@ -41,7 +40,7 @@ const floatUpDown = keyframes`
 
 const LovePhrase = styled.h2`
   font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-family: 'Caveat', cursive;
+  font-family: "Caveat", cursive;
   font-weight: 800;
   color: #000;
   letter-spacing: 4px;
@@ -49,13 +48,13 @@ const LovePhrase = styled.h2`
 `;
 
 function MainPage() {
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [showIntro, setShowIntro] = useState(true);
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
   const [flipped, setFlipped] = useState(false);
-  const fullTextRef = useRef('WeARE');
+  const fullTextRef = useRef("WeARE");
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState(null);
   const [showLogo, setShowLogo] = useState(false);
@@ -72,7 +71,7 @@ function MainPage() {
       } else {
         clearInterval(interval);
         setTimeout(() => {
-          setDisplayText('');
+          setDisplayText("");
         }, 3000);
       }
     }, 100);
@@ -101,7 +100,7 @@ function MainPage() {
     const t3 = setTimeout(() => setSlideOut(true), 3600);
     const t4 = setTimeout(() => {
       setShowMain(true);
-      document.body.classList.remove('blur');
+      document.body.classList.remove("blur");
       window.scrollTo({ top: 0 });
     }, 4400);
 
@@ -123,16 +122,15 @@ function MainPage() {
         logoText="WeARE"
         onSubMenuToggle={(v) => setBlurred(v)}
         menuItems={[
-          { to: '/story/all', label: '전체 스토리' },
-          { to: '/map', label: '맵' },
-          { to: '/events', label: '이벤트' },
+          { to: "/story/all", label: "전체 스토리" },
+          { to: "/map", label: "맵" },
+          { to: "/events", label: "이벤트" },
         ]}
         subMenuItems={[
-          { to: '/mypage/info', label: '커플 정보' },
-          { to: '/mypage/story', label: '나의 스토리' },
-          { to: '/mypage/comment', label: '나의 댓글' },
-          { to: '/mypage/todo', label: '커플 캘린더' },
-          { to: '/mypage/other', label: '그 외' },
+          { to: "/mypage/other", label: "즐겨찾기" },
+          { to: "/mypage/comment", label: "나의 댓글" },
+          { to: "/mypage/todo", label: "캘린더" },
+          { to: "/mypage/story", label: "스토리" },
         ]}
         loginText="로그인"
         signupText="회원가입"
@@ -147,8 +145,13 @@ function MainPage() {
           slideOut={slideOut}
         />
 
-      <MainContent id="main-content" $slideOut={slideOut} $show={showMain} $blur={blurred}>
-          <Hero/>
+        <MainContent
+          id="main-content"
+          $slideOut={slideOut}
+          $show={showMain}
+          $blur={blurred}
+        >
+          <Hero />
           <BookSection
             flipped={flipped}
             togglePage={togglePage}
@@ -157,8 +160,8 @@ function MainPage() {
           <StoryMenuBubbles />
         </MainContent>
         <CallToLoveSection>
-    <LovePhrase>LOVE TOGETHER</LovePhrase>
-  </CallToLoveSection>
+          <LovePhrase>LOVE TOGETHER</LovePhrase>
+        </CallToLoveSection>
       </PageContainer>
     </>
   );
