@@ -8,7 +8,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { useRef, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
-import Find from '../FindIdAndPwd/Find';
+import Find from "../FindIdAndPwd/Find";
 //import Couple from "../img/lover.png";
 import { UserLogin } from "../api";
 import WeARE from "../img/weare.png";
@@ -18,7 +18,7 @@ import RegisterStep1 from "../Register/RegisterStep1";
 
 const FindIdCardWrap = styled.div`
   width: 550px;
-  height: 550px;
+  /* height: 550px; */
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -33,7 +33,7 @@ const CardWrap = styled.div`
 
 const Card = styled.div`
   width: 550px;
-  height: 550px;
+  /* height: 550px; */
   /* background-color: #ffe4e1;
   clip-path: polygon(
     10% 0%,
@@ -45,7 +45,7 @@ const Card = styled.div`
     0% 90%,
     0% 10%
   ); */
-  margin: 0 auto;
+  /* margin: 0 auto; */
 `;
 
 const Top = styled.div`
@@ -218,7 +218,8 @@ export const useUserStore = create(
 
 const images = [WeARE, WeARE1];
 
-function Login() {  const [password, setPassword] = useState("");
+function Login() {
+  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const { login, user, isLoggedIn } = useUserStore();
   const navigate = useNavigate();
@@ -237,7 +238,7 @@ function Login() {  const [password, setPassword] = useState("");
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1)% images.length);
+      setCurrentImage((prev) => (prev + 1) % images.length);
     }, 3000);
 
     return () => clearInterval(interval);
@@ -260,64 +261,72 @@ function Login() {  const [password, setPassword] = useState("");
       <ImgWrap onClick={handleGoMain}>
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
-        {view === "login" && (
-          <CardWrap>
-            <Card>
-              <Top><H1>LOGIN</H1></Top>
-              <ButtomWrap>
-                <Buttom>
-                  {/* 입력 필드들 */}
-                  <SmallBox>
-                    <IconUser />
-                    <Input
-                      type="text"
-                      placeholder="아이디를 입력해주세요"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                  </SmallBox>
-                  <SmallBox>
-                    <IconPassword />
-                    <Input
-                      type="password"
-                      placeholder="비밀번호를 입력해주세요"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </SmallBox>
+      {view === "login" && (
+        <CardWrap>
+          <Card>
+            <Top>
+              <H1>LOGIN</H1>
+            </Top>
+            <ButtomWrap>
+              <Buttom>
+                {/* 입력 필드들 */}
+                <SmallBox>
+                  <IconUser />
+                  <Input
+                    type="text"
+                    placeholder="아이디를 입력해주세요"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </SmallBox>
+                <SmallBox>
+                  <IconPassword />
+                  <Input
+                    type="password"
+                    placeholder="비밀번호를 입력해주세요"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </SmallBox>
 
-                  <FindBox>
-                    <StyledButton onClick={() => handleViewChange("find-id") }>아이디 찾기</StyledButton>
-                    <StyledButton onClick={() => handleViewChange("find-pwd")}>비밀번호 찾기</StyledButton>
-                    <StyledButton onClick={() => handleViewChange("register")}>회원가입</StyledButton>
-                  </FindBox>
+                <FindBox>
+                  <StyledButton onClick={() => handleViewChange("find-id")}>
+                    아이디 찾기
+                  </StyledButton>
+                  <StyledButton onClick={() => handleViewChange("find-pwd")}>
+                    비밀번호 찾기
+                  </StyledButton>
+                  <StyledButton onClick={() => handleViewChange("register")}>
+                    회원가입
+                  </StyledButton>
+                </FindBox>
 
-                  <ButtonWrap>
-                    <LoginButton onClick={handleSubmit} />
-                  </ButtonWrap>
-                </Buttom>
-              </ButtomWrap>
-            </Card>
-          </CardWrap>
-        )}
+                <ButtonWrap>
+                  <LoginButton onClick={handleSubmit} />
+                </ButtonWrap>
+              </Buttom>
+            </ButtomWrap>
+          </Card>
+        </CardWrap>
+      )}
 
-        {view === "find-id" && (
-          <FindIdCardWrap>
-            <Find isFindId={true} />
-          </FindIdCardWrap>
-        )}
+      {view === "find-id" && (
+        <FindIdCardWrap>
+          <Find isFindId={true} />
+        </FindIdCardWrap>
+      )}
 
-        {view === "find-pwd" && (
-          <FindIdCardWrap>
-            <Find isFindId={false} />
-          </FindIdCardWrap>
-        )}
+      {view === "find-pwd" && (
+        <FindIdCardWrap>
+          <Find isFindId={false} />
+        </FindIdCardWrap>
+      )}
 
-        {view === "register" && (
-          <FindIdCardWrap>
-            <RegisterStep1 onNext={() => navigate('/register') } />
-          </FindIdCardWrap>
-        )}
+      {view === "register" && (
+        <FindIdCardWrap>
+          <RegisterStep1 onNext={() => navigate("/register")} />
+        </FindIdCardWrap>
+      )}
       <Icon onClick={() => navigate(-1)}>
         <IconBehind />
       </Icon>

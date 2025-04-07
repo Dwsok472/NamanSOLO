@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  margin-top: 50px;
+  margin-top: 150px;
   margin-bottom: 170px;
   & hr {
     //width: 90%;

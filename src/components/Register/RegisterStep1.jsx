@@ -9,7 +9,7 @@ import { IconBehind } from "../Icons";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 95vh;
+  height: 80vh;
   margin-top: 50px;
 `;
 const H1 = styled.h1`
