@@ -130,6 +130,7 @@ function ChatBot({ onClose }) {
     const [messages, setMessages] = useState([]); // 메시지 리스트
     const [botMessageIndex, setBotMessageIndex] = useState(0);
 
+    //임시 챗봇 내용
     const botMessages = [
         "안녕하세요! 무엇을 도와드릴까요?",
         "데이트 장소 추천을 해드릴까요?",
@@ -149,16 +150,14 @@ function ChatBot({ onClose }) {
     const handleSend = () => {
         if (text.trim() === "") return; // 빈 텍스트는 전송하지 않도록 처리
 
-        // 사용자 메시지 추가
+        // 사용자 메시지 추가(배열로 저장)
         setMessages(prevMessages => [
             ...prevMessages,
             { type: "user", text }
         ]);
-
         setIsSending(true);
         setText(""); // 전송 후 텍스트 초기화
-
-        // 봇의 메시지가 순차적으로 출력되도록 함
+        // 봇의 메시지가 순차적으로 출력
         setTimeout(() => {
             if (botMessageIndex === 1) {
                 setMessages(prevMessages => [
@@ -167,7 +166,6 @@ function ChatBot({ onClose }) {
                 ]);
                 setBotMessageIndex(2); // 2번 인덱스 메시지로 이동
             } else if (botMessageIndex === 2) {
-                // 2번 인덱스와 3번 인덱스를 2초 간격으로 출력
                 setMessages(prevMessages => [
                     ...prevMessages,
                     { type: "bot", text: botMessages[botMessageIndex] }
@@ -177,23 +175,22 @@ function ChatBot({ onClose }) {
                         ...prevMessages,
                         { type: "bot", text: botMessages[botMessageIndex + 1] }
                     ]);
-                }, 2000); // 2초 후에 3번 인덱스 메시지 추가
+                }, 2000);
                 setTimeout(() => {
                     setMessages(prevMessages => [
                         ...prevMessages,
                         { type: "bot", text: botMessages[botMessageIndex + 2] }
                     ]);
                     setBotMessageIndex(5);
-                }, 2000);
+                }, 3000);
             } else if (botMessageIndex === 5) {
-                // 봇 메시지 5번 추가
                 setMessages(prevMessages => [
                     ...prevMessages,
                     { type: "bot", text: botMessages[botMessageIndex] }
                 ]);
                 setBotMessageIndex(6); // 더 이상 메시지를 추가하지 않음
             }
-        }, 500); // 사용자가 메시지를 보낸 후 0.5초 뒤에 봇의 응답이 나오도록 설정
+        }, 1000);
     };
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
