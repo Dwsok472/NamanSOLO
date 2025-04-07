@@ -113,10 +113,6 @@ function MainPage() {
     };
   }, []);
 
-  const scrollToStory = () => {
-    bookRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   const togglePage = () => setFlipped((prev) => !prev);
 
   return (
@@ -152,7 +148,7 @@ function MainPage() {
         />
 
       <MainContent id="main-content" $slideOut={slideOut} $show={showMain} $blur={blurred}>
-          <Hero scrollToStory={scrollToStory}/>
+          <Hero/>
           <BookSection
             flipped={flipped}
             togglePage={togglePage}

@@ -173,8 +173,8 @@ function Hero({ scrollToStory }) {
         <br />
         <strong>WeARE가 함께할게요.</strong>
       </HeroDesc>
-      <Link to={BookSection}>
-        <CTAButton onClick={scrollToStory}>지금 바로 담아두기</CTAButton>
+      <Link to="/mypage/story">
+        <CTAButton>지금 바로 담아두기</CTAButton>
       </Link>
 
       <VisualRow>
