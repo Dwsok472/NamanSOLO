@@ -11,6 +11,7 @@ import { BrowserRouter } from "react-router-dom";
 //import Couple from "../img/lover.png";
 import { UserLogin } from "../api";
 import WeARE from "../img/weare.png";
+import WeARE1 from "../img/weare1.png";
 import { IconBehind } from "../Icons";
 
 const CardWrap = styled.div`
@@ -191,6 +192,8 @@ export const useUserStore = create(
   )
 );
 
+const images = [WeARE, WeARE1];
+
 function Login() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -200,6 +203,16 @@ function Login() {
   const handleGoMain = () => {
     navigate("/ "); // MainPage 이동
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1)% images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const [currentImage, setCurrentImage] = useState(0);
 
   async function handleSubmit() {
     try {
@@ -215,7 +228,7 @@ function Login() {
   return (
     <Container>
       <ImgWrap onClick={handleGoMain}>
-        <img src={WeARE} />
+        <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
       <CardWrap>
         <Card>
