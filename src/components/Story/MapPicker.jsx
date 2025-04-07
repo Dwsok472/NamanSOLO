@@ -10,6 +10,7 @@ const MapContainer = styled.div`
 const Title = styled.h3`
 color: black;
   margin-bottom: 10px;
+  font-size: 1.5rem;
 `;
 
 const Controls = styled.div`
@@ -29,25 +30,31 @@ const Button = styled.button`
   padding: 10px 16px;
   border: none;
   border-radius: 6px;
-  background-color: #007aff;
-  color: white;
+  background-color: #ffffff;
+  color: black;
   cursor: pointer;
-  font-weight: bold;
-
+  font-weight: 700;
+  font-size: 0.8rem;
   &:hover {
-    background-color: #005fcc;
+    color: #a1a1a1;
   }
 `;
 
 const PredictionList = styled.ul`
   border: 1px solid #ccc;
-  border-radius: 6px;
   list-style: none;
   padding: 0;
   margin: 5px 0 10px;
   max-height: 150px;
   overflow-y: auto;
   background-color: #fff;
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 핸들의 색상 */
+    border-radius: 10px;
+  }
 `;
 
 const PredictionItem = styled.li`
@@ -55,7 +62,8 @@ const PredictionItem = styled.li`
   cursor: pointer;
   border-bottom: 1px solid #eee;
   color: #333;
-
+  font-size: 0.8rem;
+  text-align: start;
   &:hover {
     background-color: #f0f0f0;
   }
@@ -63,9 +71,9 @@ const PredictionItem = styled.li`
 
 const MapView = styled.div`
   width: 100%;
-  height: 400px;
+  /* height: 400px; */
+  min-height: 280px;
   border: 1px solid #ccc;
-  border-radius: 10px;
   margin-top: 10px;
 `;
 

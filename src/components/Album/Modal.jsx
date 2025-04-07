@@ -9,13 +9,15 @@ const Overlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  background: white;
+  background: #ffffff;
   margin: 100px auto;
   padding: 20px;
   width: 90%;
   max-width: 700px;
+  height: 600px;
   border-radius: 12px;
   position: relative;
+
 `;
 
 const Modal = ({ children, onClose }) => (

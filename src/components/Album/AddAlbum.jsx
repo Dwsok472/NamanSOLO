@@ -154,9 +154,15 @@ const Box = styled.div`
       }
       .location {
         font-size: 0.8rem;
-        color: #ffffff;
+        color: #ffffff;      
       }
     }
+    .address{
+        font-size: 0.8rem;
+        text-align: start;
+        padding-left: 10px;
+
+      }
     .tags-list {
       width: 100%;
       background-color: black;
@@ -196,7 +202,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
       title,
       date: Date.now(), // 현재 시간
       username: 'user7', // 예시 사용자 이름
-      location: '대전 둔산로 221', // 예시 위치
+      location: selectedPlace.address, // 예시 위치
       tag: tags.map((tag) => tag.text), // 입력된 태그
       likes: [], // 좋아요 목록
       comments: [], // 댓글 목록
@@ -341,20 +347,20 @@ function AddAlbum({ onClose, onAddAlbum }) {
                 ))}
               </div>
               {showMap && (
-  <Modal onClose={handleCloseMap}>
-    <MapPicker onSelect={handleLocationSelect} />
-  </Modal>
-)}
+                <Modal onClose={handleCloseMap}>
+                  <MapPicker onSelect={handleLocationSelect} />
+                </Modal>
+              )}
               <div className="map" onClick={handleOpenMap}>
-                  <img src={location} alt="" className="locationimg" />
-                  <div className="location">위치 추가</div>
-                </div>
+                <img src={location} alt="" className="locationimg" />
+                <div className="location">위치 추가</div>
+              </div>
 
-                {selectedPlace && (
-                  <div className="address">
-                    선택된 위치: <strong>{selectedPlace.address}</strong>
-                  </div>
-                )}
+              {selectedPlace && (
+                <div className="address">
+                  <strong>{selectedPlace.address}</strong>
+                </div>
+              )}
             </div>
             <div className="buttonBox" onClick={submitAlbum}>
               <button>등록</button>
