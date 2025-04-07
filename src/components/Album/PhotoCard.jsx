@@ -86,7 +86,7 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
 
 
   return (
-    <CardWrapper rotate={rotate} $offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
+    <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
       <Pin><img src={pinColor} className="pin" /></Pin>
 
       {multipleImages && (
@@ -102,7 +102,7 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
       )}
 
       {title && <Caption>{title}</Caption>}
-  </CardWrapper>
+    </CardWrapper>
   );
 };
 
