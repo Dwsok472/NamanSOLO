@@ -7,13 +7,15 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   width: 100%;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 `;
 
 const RegionTitle = styled.h3`
-  font-size: 1.1rem;
+  font-size: 1.4rem;
+  text-align: center;
   font-weight: 700;
   margin-bottom: 8px;
 `;
@@ -29,6 +31,10 @@ const AddButton = styled.button`
 
   &:focus {
     outline: none;
+  }
+
+  &:hover {
+    background-color: #e84664;
   }
 `;
 
@@ -52,8 +58,18 @@ const CloseBtn = styled.button`
 
 const ListContainer = styled.div`
   display: flex;
+  overflow-y: auto;
+  max-height: 600px; // 원하는 스크롤 범위로 제한
   flex-direction: column;
   gap: 12px;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
 `;
 
 const Card = styled.div`
@@ -300,6 +316,11 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
   const places = selectedRegion ? regionPlaces[selectedRegion] || [] : [];
   const categories = ['맛집', '카페', '호텔', '관광지', '포토존'];
+  const [activeCategory, setActiveCategory] = useState('전체');
+
+  const filteredPlaces = activeCategory === '전체'
+  ? places
+  : places.filter(p => p.category === activeCategory);
 
   useEffect(() => {
     if (window.google) {
@@ -406,30 +427,28 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     <Wrapper>
       <RegionTitle>{selectedRegion} 장소</RegionTitle>
 
-      {!showForm && <AddButton onClick={() => setShowForm(true)}>+ 장소 추가</AddButton>}
-
-      {showForm && !editingId && (
-        <Form>
-          <CloseBtn onClick={() => setShowForm(false)}>✖</CloseBtn>
-          <input type="text" placeholder="이름" value={newPlace.name}
-            onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })} />
-          <select value={newPlace.category}
-            onChange={(e) => setNewPlace({ ...newPlace, category: e.target.value })}>
-            <option value="">카테고리 선택</option>
-            {categories.map(c => <option key={c}>{c}</option>)}
-          </select>
-          <input type="text" placeholder="주소" value={newPlace.address}
-            onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })} />
-          <textarea placeholder="설명" value={newPlace.description}
-            onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })} />
-          <input type="file" onChange={handleImage} />
-          {newPlace.preview && <img className="preview" src={newPlace.preview} alt="미리보기" />}
-          <AddButton onClick={handleRegister}>등록하기</AddButton>
-        </Form>
-      )}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
+        {['전체', ...categories].map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            style={{
+              padding: '6px 12px',
+              border: 'none',
+              borderRadius: '20px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              background: activeCategory === cat ? '#ffebee' : '#eee',
+              color: activeCategory === cat ? '#ff5777' : '#333',
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
       <ListContainer>
-        {places.map((place) => (
+        {filteredPlaces.map((place) => (
           <React.Fragment key={place.id}>
             <Card onClick={() => setSelectedId(selectedId === place.id ? null : place.id)}>
               <Thumbnail src={place.thumbnail} alt={place.name} />
@@ -485,6 +504,26 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           </React.Fragment>
         ))}
       </ListContainer>
+      {!showForm && <AddButton onClick={() => setShowForm(true)}>+ 장소 추가</AddButton>}
+        {showForm && !editingId && (
+          <Form>
+            <CloseBtn onClick={() => setShowForm(false)}>✖</CloseBtn>
+            <input type="text" placeholder="이름" value={newPlace.name}
+              onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })} />
+            <select value={newPlace.category}
+              onChange={(e) => setNewPlace({ ...newPlace, category: e.target.value })}>
+              <option value="">카테고리 선택</option>
+              {categories.map(c => <option key={c}>{c}</option>)}
+            </select>
+            <input type="text" placeholder="주소" value={newPlace.address}
+              onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })} />
+            <textarea placeholder="설명" value={newPlace.description}
+              onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })} />
+            <input type="file" onChange={handleImage} />
+            {newPlace.preview && <img className="preview" src={newPlace.preview} alt="미리보기" />}
+            <AddButton onClick={handleRegister}>등록하기</AddButton>
+          </Form>
+      )}
     </Wrapper>
   );
 }
