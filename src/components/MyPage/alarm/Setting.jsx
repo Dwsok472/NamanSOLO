@@ -46,7 +46,7 @@ const CloseButton = styled.button`
 
 const ContainerMain = styled.div`
   width: 90%;
-  height: 330px;
+  height: 350px;
   margin: 0 auto;
   font-size: 16px;
   overflow: scroll;
