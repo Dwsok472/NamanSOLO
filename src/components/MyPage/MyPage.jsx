@@ -13,6 +13,7 @@ import CoupleProfile from "./CoupleProfile";
 import Alarm from "./alarm/Alarm";
 import CommentPage from "./Comment/CommentPage";
 import ChatBotButton from "../ChatBot/ChatBotButton";
+import Setting from "./MySetting";
 
 const Container = styled.div`
   display: flex;
@@ -28,9 +29,10 @@ const ProfileCard = styled.div`
   width: 100%;
   max-width: 380px;
   padding: 20px;
+  border: 1px solid #111;
   /* border-radius: 10px; */
   text-align: center;
-  background-color: ${({ bgColor }) => bgColor || "#f2bdbd"};
+  /* background-color: ${({ bgColor }) => bgColor || "#f2bdbd"}; */
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -39,10 +41,14 @@ const ProfileCard = styled.div`
   /* margin-right: 30px; */
   padding-bottom: 50px;
   height: 750px;
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
 `;
 
 const PhotoSection = styled.div`
-  padding-top: 8%;
+  /* padding-top: 8%; */
   margin-bottom: 8%;
   position: relative;
   display: flex;
@@ -76,7 +82,8 @@ const FileButton = styled.button`
 
 const DateInfo = styled.div`
   margin-top: 5%;
-  border-top: 1px solid ${({ borderColor }) => borderColor || "#7c7c7ca8"};
+  /* border-top: 1px solid ${({ borderColor }) =>
+    borderColor || "#7c7c7ca8"}; */
   padding-top: 3%;
   padding-bottom: 3%;
 `;
@@ -128,7 +135,7 @@ const RightProfileCard = styled.div`
   overflow: auto;
   max-width: 1100px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #111;
   /* border-radius: 10px; */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
   display: flex;
@@ -143,6 +150,11 @@ const RightProfileCard = styled.div`
     background-color: #727272; /* 핸들의 색상 */
     border-radius: 10px;
   }
+  &:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-left: none; /* 겹치는 border 제거 */
+  }
 `;
 const TopSection = styled.div`
   display: flex;
@@ -156,6 +168,7 @@ const Left = styled.div`
 `;
 
 const Button = styled.button`
+  ${({ isStory }) => isStory && "margin-left: auto;"}
   background-color: ${({ bgColor }) => bgColor || "#fff9eb"};
   padding: 10px 20px;
   font-size: 1.2rem;
@@ -174,62 +187,6 @@ const Button = styled.button`
   &.selected {
     background-color: #ffe09e;
     color: #181818;
-  }
-`;
-const BellWrapper = styled.div`
-  .button {
-    width: 50px;
-    height: 50px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    border-radius: 40%;
-    padding: 10px;
-    cursor: pointer;
-    transition-duration: 0.3s;
-    box-shadow: 2px 2px 10px rgba(87, 86, 86, 0.13);
-    border: none;
-    &:focus {
-      outline: none;
-    }
-  }
-  .bell {
-    width: 20px;
-  }
-
-  .bell path {
-    fill: ${({ bellColor }) => bellColor || "rgb(99, 97, 97)"};
-  }
-  .button:hover .bell {
-    animation: bellRing 0.9s both;
-  }
-
-  @keyframes bellRing {
-    0%,
-    100% {
-      transform-origin: top;
-    }
-    15% {
-      transform: rotateZ(10deg);
-    }
-    30% {
-      transform: rotateZ(-10deg);
-    }
-    45% {
-      transform: rotateZ(5deg);
-    }
-    60% {
-      transform: rotateZ(-5deg);
-    }
-    75% {
-      transform: rotateZ(2deg);
-    }
-  }
-
-  .button:active {
-    transform: scale(0.8);
   }
 `;
 
@@ -262,16 +219,12 @@ function MyPage() {
   const [menu, setMenu] = useState("커플 정보");
   const [selectedOption, setSelectedOption] = useState("커플 정보");
   const navigate = useNavigate();
-  const [showAlarm, setShowAlarm] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = (menu) => {
     setMenu(menu);
     switch (menu) {
-      case "커플 정보":
-        navigate("/mypage/info");
-        break;
-      case "나의 스토리":
+      case "스토리":
         setTimeout(() => {
           navigate("/mypage/story", { replace: true });
         }, 0);
@@ -341,13 +294,11 @@ function MyPage() {
   const FileInput = () => {
     document.getElementById("file-upload-c").click();
   };
-  // 알람 모달 열기/닫기 함수
-  const toggleAlarm = () => {
-    setShowAlarm((prev) => !prev);
-  };
+
   return (
     <Container>
       <ProfileCard>
+        <Setting />
         <PhotoSection>
           <Img src={image} onClick={FileInput} />
           <ImgInput
@@ -387,12 +338,12 @@ function MyPage() {
           <Left>
             <Button
               onClick={() => {
-                handleButtonClick("커플 정보");
-                handleBoxClick("커플 정보");
+                handleButtonClick("그 외");
+                handleBoxClick("그 외");
               }}
-              className={pathname.includes("/mypage/info") ? "selected" : ""}
+              className={pathname.includes("/mypage/other") ? "selected" : ""}
             >
-              커플 정보
+              즐겨찾기
             </Button>
             <Button
               onClick={() => {
@@ -410,29 +361,23 @@ function MyPage() {
               }}
               className={pathname.includes("/mypage/todo") ? "selected" : ""}
             >
-              커플 캘린더
+              캘린더
             </Button>
             <Button
+              isStory
               onClick={() => {
-                handleButtonClick("그 외");
-                handleBoxClick("그 외");
+                handleButtonClick("스토리");
+                handleBoxClick("스토리");
               }}
-              className={pathname.includes("/mypage/other") ? "selected" : ""}
+              className={pathname.includes("/mypage/story") ? "selected" : ""}
             >
-              그 외
+              스토리
             </Button>
           </Left>
-          <BellWrapper>
-            <button className="button" onClick={toggleAlarm}>
-              <IconBell />
-            </button>
-            {showAlarm && <Alarm onClose={toggleAlarm} />}
-          </BellWrapper>
         </TopSection>
         <BottomSection>
           {" "}
           <Routes>
-            <Route path="/info" element={<CoupleProfile />} />
             <Route path="/myalbum" element={<MyAlbum />} />
             <Route path="/comment" element={<CommentPage />} />
             <Route path="/todo" element={<Todo />} />

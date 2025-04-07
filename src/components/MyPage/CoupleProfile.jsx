@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Octagon from "../Register/Octagon";
-import heartRate from "../img/heart-rate.png";
+import rate from "../img/starrate.png";
 import defaultcouple from "../img/couple.png";
 import iconUser from "../img/people.png";
 
@@ -15,8 +15,8 @@ const Content = styled.div`
   gap: 30px;
 
   .heartRate {
-    width: 50px;
-    height: 50px;
+    width: 150px;
+    height: 150px;
     object-fit: cover;
   }
 `;
@@ -58,7 +58,7 @@ function CoupleProfile() {
         isProfilePage={true}
         isSignUpPage={false}
       />
-      <img src={heartRate} className="heartRate" />
+      <img src={rate} className="heartRate" />
       <Octagon
         id="profileF"
         data={profileF}
