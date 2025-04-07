@@ -8,6 +8,7 @@ import CommentButton from './CommentButton';
 import comment from '../img/comment.png';
 import Comment from './Comment';
 import location from '../img/location.png';
+import ImageSlider from '../MyPage/MyAlbum/ImageSlider';
 
 // 스타일 정의
 const Container = styled.div`
@@ -181,6 +182,12 @@ function AlbumDetailModal({ albumData, onClose }) {
     setIsCommentVisible((prevVisibility) => !prevVisibility);
   };
 
+   // 댓글 수 업데이트
+  const handleNewComment = (newCount) => {
+    console.log('실시간 댓글 수:', commentCount);
+    setCommentCount(newCount);
+  };
+
   // 좋아요 클릭 시 처리 함수
   const handleLike = (userId) => {
     setUserLikes((prevLikes) => {
@@ -260,7 +267,7 @@ function AlbumDetailModal({ albumData, onClose }) {
 
           {isCommentVisible && selectedAlbumId === albumData.id && (
             <CommentBox>
-              <Comment albumData={albumData} />
+              <Comment albumData={albumData} onCommentAdd={handleNewComment} />
             </CommentBox>
           )}
         </BottomBox>
