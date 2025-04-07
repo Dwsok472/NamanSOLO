@@ -45,7 +45,6 @@ const PhotoGrid = styled.div`
   width: 100%;
 `;
 
-
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 
 const MyAlbum = () => {
@@ -79,12 +78,20 @@ const MyAlbum = () => {
       id: 2,
       username: 'my_user',
       title: '한강 야경',
-      imgurl: [couple2],
+      imgurl: [couple2, couple2],
       date: '2025-01-12',
       location: '한강 반포지구',
       tag: ['야경', '데이트'],
       likes: ['user1', 'user3'],
-      comments: [],
+      comments: [
+        {
+          id: 1,
+          albumId: 2,
+          username: 'user1',
+          text: '너무 예쁘네요!',
+          date: '2025-01-13'
+        }
+      ],
       isPublic: true,
     },
     {
@@ -119,8 +126,8 @@ const MyAlbum = () => {
           ))}
         </PhotoGrid>
 
-        {isModalOpen && selectedPost && (
-          <AlbumDetailModal album={selectedPost} onClose={handleCloseModal} />
+        {isModalOpen && selectedPost && selectedPost.likes && (
+          <AlbumDetailModal albumData={selectedPost} onClose={handleCloseModal} />
         )}
       </AlbumInner>
     </AlbumWrapper>
@@ -128,4 +135,3 @@ const MyAlbum = () => {
 };
 
 export default MyAlbum;
-

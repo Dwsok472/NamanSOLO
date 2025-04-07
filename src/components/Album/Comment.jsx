@@ -93,7 +93,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-function Comment({ albumData }) {
+function Comment({ albumData, onCommentAdd }) {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true); // 로딩 상태
@@ -166,18 +166,26 @@ function Comment({ albumData }) {
   };
 
   const AddComment = async () => {
-    if (value.trim() === '') return; // 빈 댓글이 입력되면 등록하지 않음
-
+    if (value.trim() === '') return;
+  
     const newComment = {
-      id: data.length + 1,
+      id: Date.now(), 
       albumId: albumData.id,
       text: value,
       username: 'user1',
       date: new Date().toISOString().split('T')[0],
     };
-    setData((prevComments) => [...prevComments, newComment]);
+  
+    const updatedComments = [...data, newComment];
+    setData(updatedComments);
     setValue('');
+  
+    // ✅ 부모에게 댓글 수 전달
+    if (typeof onCommentAdd === 'function') {
+      onCommentAdd(updatedComments.length);
+    }
   };
+  
 
   const toggleCommentVisibility = (commentId) => {
     setIsCommentVisible((prevVisibility) => ({
