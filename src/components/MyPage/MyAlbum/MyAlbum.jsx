@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import PhotoCard from '../../Album/PhotoCard';
 import AlbumDetailModal from '../../Album/AlbumDetailModal';
+import AddAlbum from '../../Album/AddAlbum';
 
 import couple1 from '../../img/couple1.png';
 import couple2 from '../../img/couple2.png';
@@ -35,8 +36,79 @@ const HeaderTitle = styled.h2`
   font-size: 2.5rem;
   font-weight: 800;
   color: white;
+  margin-bottom: 20px;
+`;
+
+const HeaderBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
   margin-bottom: 40px;
 `;
+const FilterBox = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const FilterButton = styled.button`
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  background-color: ${({ active }) => (active ? '#ff5c8a' : '#fbe4eb')};
+  color: ${({ active }) => (active ? '#fff' : '#333')};
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ff7fa4;
+    color: white;
+  }
+`;
+
+const SearchBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+`;
+
+const AddButton = styled.button`
+  position: fixed;
+  bottom: 100px;
+  right: 40px;
+  background-color: #b20a37;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 1.8rem;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 200;
+
+  &:hover {
+    background-color: #e91e63;
+  }
+`;
+
 
 const PhotoGrid = styled.div`
   display: grid;
@@ -45,23 +117,41 @@ const PhotoGrid = styled.div`
   width: 100%;
 `;
 
+const TrashZone = styled.div`
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #000;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 2px dashed #fff;
+  opacity: 0.8;
+  z-index: 500;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: #ff5c5c;
+    color: white;
+    border-color: #ff5c5c;
+  }
+`;
+
+
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 
 const MyAlbum = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sortOption, setSortOption] = useState('최신순');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
+  const [draggedId, setDraggedId] = useState(null);
 
-  const handleCardClick = (post) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-  };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedPost(null);
-  };
-
-  const myPosts = [
+  const [myPosts, setMyPosts] = useState([
     {
       id: 1,
       username: 'my_user',
@@ -106,30 +196,128 @@ const MyAlbum = () => {
       comments: [],
       isPublic: true,
     },
-  ];
+  ]);
+
+  const handleAddAlbum = (newAlbum) => {
+    setMyPosts((prev) => [newAlbum, ...prev]);
+  };
+
+  const filteredData = [...myPosts]
+  .filter((post) =>
+    post.username.toLowerCase().includes(searchKeyword.toLowerCase())
+  )
+  .sort((a, b) => {
+    if (sortOption === '좋아요순') return b.likes.length - a.likes.length;
+    if (sortOption === '댓글순') return b.comments.length - a.comments.length;
+    return new Date(b.date) - new Date(a.date); // 최신순
+  });
+
+  const handleCardClick = (post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
+
+  const handleSearch = () => {
+    if (searchKeyword.trim() === '') return;
+    alert(`${searchKeyword}로 검색했어요 `);
+  };
+
+  const handleEditAlbum = (post) => {
+    setEditingPost(post);
+    setIsAddModalOpen(true);
+  };
+
+  const handleUpdateAlbum = (updatedAlbum) => {
+    setMyPosts((prev) =>
+      prev.map((post) => (post.id === updatedAlbum.id ? updatedAlbum : post))
+    );
+  };
+
+  const handleDeleteAlbum = (id) => {
+    setMyPosts((prev) => prev.filter((post) => post.id !== id));
+    setSelectedPost(null);
+    setIsModalOpen(false);
+  };
 
   return (
     <AlbumWrapper>
       <AlbumInner>
-        <HeaderTitle>✨ 나의 스토리</HeaderTitle>
+      <HeaderBox>
+        <FilterBox>
+          {['최신순', '좋아요순', '댓글순'].map((label) => (
+            <FilterButton
+              key={label}
+              active={sortOption === label}
+              onClick={() => setSortOption(label)}
+            >
+              {label}
+            </FilterButton>
+          ))}
+        </FilterBox>
+
+        <SearchBox>
+          <input
+            type="text"
+            placeholder="USERNAME을 입력해주세요"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+          />
+          <button onClick={handleSearch}>🔍</button>
+        </SearchBox>
+      </HeaderBox>
+
         <PhotoGrid>
-          {myPosts.map((album, idx) => (
+          {filteredData.map((album, idx) => (
             <PhotoCard
-              key={album.id}
-              src={album.imgurl}
-              title={album.title}
-              rotate={Math.floor(Math.random() * 6 - 3)}
-              offsetY={Math.floor(Math.random() * 20 - 10)}
-              pinColor={pin[idx % pin.length]}
-              onClick={() => handleCardClick(album)}
-            />
+            key={album.id}
+            src={album.imgurl}
+            title={album.title}
+            rotate={Math.floor(Math.random() * 6 - 3)}
+            offsetY={Math.floor(Math.random() * 20 - 10)}
+            pinColor={pin[idx % pin.length]}
+            onClick={() => handleCardClick(album)}
+            draggable
+            onDragStart={
+              () => setDraggedId(album.id)}
+          />
           ))}
         </PhotoGrid>
 
         {isModalOpen && selectedPost && selectedPost.likes && (
-          <AlbumDetailModal albumData={selectedPost} onClose={handleCloseModal} />
+          <AlbumDetailModal
+            albumData={selectedPost}
+            onClose={handleCloseModal}
+            onEdit={handleEditAlbum}
+          />
         )}
       </AlbumInner>
+      {isAddModalOpen && (
+  <AddAlbum
+    onClose={() => {
+      setIsAddModalOpen(false);
+      setEditingPost(null);
+    }}
+    onAddAlbum={handleAddAlbum}
+    onEditAlbum={handleUpdateAlbum} 
+    editMode={!!editingPost}
+    editData={editingPost}     
+  />
+)}
+      <AddButton onClick={() => setIsAddModalOpen(true)}>＋</AddButton>
+      <TrashZone
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={() => {
+          if (draggedId) handleDeleteAlbum(draggedId);
+          setDraggedId(null);
+        }}
+      >
+        🗑️ 삭제
+      </TrashZone>
     </AlbumWrapper>
   );
 };

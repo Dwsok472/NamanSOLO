@@ -135,7 +135,29 @@ const Box = styled.div`
   }
 `;
 
-function AlbumDetailModal({ albumData, onClose }) {
+const EditButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #000;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: #fff;
+    color: #000;
+  }
+`;
+
+
+
+function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
@@ -218,11 +240,14 @@ function AlbumDetailModal({ albumData, onClose }) {
               className="leftkey"
               onClick={prevImage}
             />
+          <div style={{ position: 'relative' }}>
+            <EditButton onClick={() => onEdit(albumData)}>수정</EditButton>
             <img
               src={albumData.imgurl[imageIndex]}
               alt="image"
               className="image"
             />
+          </div>
             <img
               src={rightkey}
               alt="rightkey"

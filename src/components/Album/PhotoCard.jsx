@@ -3,8 +3,6 @@ import styled from "styled-components";
 import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
 
-
-
 const CardWrapper = styled.div`
   width: 280px;
   height: 300px;
@@ -65,7 +63,7 @@ const Caption = styled.div`
   color: #555;
 `;
 
-const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan, onClick }) => {
+const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan, onClick, draggable, onDragStart }) => {
   const [imageIndex, setImageIndex] = useState(0);
 
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
@@ -86,8 +84,18 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
 
 
   return (
-    <CardWrapper rotate={rotate} offsetY={offsetY} colSpan={colSpan} rowSpan={rowSpan} onClick={onClick}>
-      <Pin><img src={pinColor} className="pin" /></Pin>
+    <CardWrapper
+      rotate={rotate}
+      offsetY={offsetY}
+      colSpan={colSpan}
+      rowSpan={rowSpan}
+      onClick={onClick}
+      draggable={draggable}
+      onDragStart={(e) => {
+        e.stopPropagation(); // 드래그 시 클릭 이벤트 방지
+        if (onDragStart) onDragStart(e);
+      }}
+    >
 
       {multipleImages && (
         <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />

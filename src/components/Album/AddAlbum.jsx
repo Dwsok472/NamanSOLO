@@ -178,7 +178,7 @@ const Box = styled.div`
   }
 `;
 
-function AddAlbum({ onClose, onAddAlbum }) {
+function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
   const [title, setTitle] = useState('');
   const [images, setImages] = useState([]);
   const [imageIndex, setImageIndex] = useState(0);
@@ -197,21 +197,28 @@ function AddAlbum({ onClose, onAddAlbum }) {
 
   const submitAlbum = () => {
     const newAlbum = {
-      id: Date.now(), // 고유 ID
-      imgurl: images.map((img) => img.file), // 이미지 배열
+      id: editMode ? editData.id : Date.now(), // 고유 ID
+      imgurl: images.map((img) =>
+        img.file instanceof File ? img.file : img.preview
+      ), // 이미지 배열
       title,
       date: Date.now(), // 현재 시간
       username: 'user7', // 예시 사용자 이름
-      location: selectedPlace.address, // 예시 위치
+      location: selectedPlace?.address || '', // 예시 위치
       tag: tags.map((tag) => tag.text), // 입력된 태그
       likes: [], // 좋아요 목록
       comments: [], // 댓글 목록
       isPublic,
     };
 
-    onAddAlbum(newAlbum); // 앨범 추가 함수 호출
-    onClose(); // 앨범 추가 후 모달 닫기
-  };
+    if (editMode && onEditAlbum) {
+      onEditAlbum(newAlbum);
+    } else {
+      onAddAlbum(newAlbum);
+    }
+
+    onClose(); // 수정 또는 등록 후 닫기
+};
 
   const handleSwitchChange = () => {
     setIsPublic((prev) => !prev); // 공개/비공개 상태 토글
@@ -263,12 +270,36 @@ function AddAlbum({ onClose, onAddAlbum }) {
     }
   };
 
+  useEffect(() => {
+    if (editMode && editData) {
+      setTitle(editData.title);
+      setTags(editData.tag.map((t) => ({ id: Date.now() + Math.random(), text: t })));
+      setImages(
+        editData.imgurl.map((img) =>
+          typeof img === 'string'
+            ? { file: null, preview: img } // 문자열이면 preview , 파일이면 file로 처리하는거거
+            : { file: img, preview: URL.createObjectURL(img) }
+        )
+      );
+      setSelectedPlace({ address: editData.location });
+      setIsPublic(editData.isPublic);
+    }
+  }, [editMode, editData]);
+
   // 태그 삭제 함수
   const handleTagDelete = (id) => {
     setTags((prevTags) => prevTags.filter((tag) => tag.id !== id));
   };
   console.log(images);
   console.log(imageIndex);
+
+  const currentImage = images[imageIndex];
+  const previewUrl =
+  currentImage?.preview ||
+  (currentImage?.file instanceof File ? URL.createObjectURL(currentImage.file) : null);
+
+  
+
   return (
     <>
       <Back onClick={onClose} />
@@ -282,12 +313,6 @@ function AddAlbum({ onClose, onAddAlbum }) {
               />
             </div>
             <div className="img">
-              <img
-                src={leftkey}
-                alt="leftkey"
-                className="leftkey"
-                onClick={prevImage}
-              />
               {images.length > 0 && (
                 <>
                   <div
@@ -297,7 +322,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
                     <IconClose />
                   </div>
                   <img
-                    src={URL.createObjectURL(images[imageIndex].file)}
+                    src={images[imageIndex].preview || (images[imageIndex].file && URL.createObjectURL(images[imageIndex].file))}
                     alt={`image-${imageIndex}`}
                     className="current-image"
                   />
