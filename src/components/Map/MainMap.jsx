@@ -116,7 +116,7 @@ const LeftBox = styled.div`
   height: 100%;
   background-color: #fff0f0;
   display: flex;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
   border-right: 2px dashed #ffa8a8;
 
@@ -131,17 +131,17 @@ const LeftBox = styled.div`
 const RightBox = styled.div`
   width: 50%;
   height: 100%;
-  background-color: #f0faff;
+  background-color: #75c7c3;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-left: 2px dashed #91caff;
+  border-left: 2px dashed #75c7c3;
 
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
     border-left: none;
-    border-top: 2px dashed #91caff;
+    border-top: 2px dashed #75c7c3;
   }
 `;
 
@@ -150,8 +150,6 @@ const InnerBox = styled.div`
   max-width: 600px;
   padding: 40px;
   box-sizing: border-box;
-
-  margin-left: -40px;
 
   @media (max-width: 768px) {
     margin-left: 0;
@@ -225,14 +223,17 @@ const Text = styled.div`
 `;
 
 const ScrollWrapper = styled.div`
-  max-height: 600px;
-  overflow-y: auto;
-  padding-right: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
 `;
 
 function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
+  const categories = ['전체', '맛집', '카페', '호텔', '관광지', '포토존'];
   const [regionPlaces, setRegionPlaces] = useState({
     충청남도: [
       {
