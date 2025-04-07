@@ -383,9 +383,6 @@ function RegisterStep1({ onNext }) {
           </ButtomWrap>
         </Card>
       </CardWrap>
-      <Icon onClick={() => navigate(-1)}>
-        <IconBehind />
-      </Icon>
     </Container>
   );
 }
