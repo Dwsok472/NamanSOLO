@@ -1,8 +1,10 @@
-import styled from 'styled-components';
-import topImg from './img/top.png';
-import { useEffect, useState } from 'react';
-import ChatBotButton from './ChatBot/ChatBotButton';
-import ChatBot from './ChatBot/ChatBot';
+import styled from "styled-components";
+import topImg from "./img/top.png";
+import { useEffect, useState } from "react";
+import ChatBotButton from "./ChatBot/ChatBotButton";
+import ChatBot from "./ChatBot/ChatBot";
+import Alarm from "./MyPage/alarm/Alarm";
+import { IconBell } from "./Icons";
 
 const FooterWrapper = styled.footer`
   width: 100%;
@@ -80,7 +82,7 @@ const FixedBtn = styled.button`
   align-items: center;
   justify-content: center;
   opacity: ${(props) => (props.$show ? 1 : 0)};
-  pointer-events: ${(props) => (props.$show ? 'auto' : 'none')};
+  pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   transition: opacity 0.8s ease;
 
   &:focus {
@@ -100,7 +102,7 @@ const FixedBtn = styled.button`
 `;
 
 const FixedChat = styled.div`
-   position: fixed;
+  position: fixed;
   bottom: 80px;
   right: 18px;
   z-index: 9999;
@@ -110,31 +112,95 @@ const FixedChat = styled.div`
   padding: 0;
   width: 55px;
   height: 55px;
-`
+`;
+const BellWrapper = styled.div`
+  position: fixed;
+  bottom: 150px;
+  right: 23px;
+  z-index: 9999;
+  .button {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 40%;
+    padding: 10px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+    box-shadow: 2px 2px 10px rgba(87, 86, 86, 0.13);
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  .bell {
+    width: 20px;
+  }
+
+  .bell path {
+    fill: ${({ bellColor }) => bellColor || "rgb(99, 97, 97)"};
+  }
+  .button:hover .bell {
+    animation: bellRing 0.9s both;
+  }
+
+  @keyframes bellRing {
+    0%,
+    100% {
+      transform-origin: top;
+    }
+    15% {
+      transform: rotateZ(10deg);
+    }
+    30% {
+      transform: rotateZ(-10deg);
+    }
+    45% {
+      transform: rotateZ(5deg);
+    }
+    60% {
+      transform: rotateZ(-5deg);
+    }
+    75% {
+      transform: rotateZ(2deg);
+    }
+  }
+
+  .button:active {
+    transform: scale(0.8);
+  }
+`;
 
 const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [showAlarm, setShowAlarm] = useState(false);
+  const toggleAlarm = () => {
+    setShowAlarm((prev) => !prev);
+  };
 
   const handleChat = () => {
     setShowChat(true);
-  }
+  };
 
   const handleCloseChat = () => {
     setShowChat(false);
-  }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       setShowTopBtn(window.scrollY > 0);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
@@ -164,6 +230,12 @@ const Footer = () => {
           </FooterGrid>
         </FooterInner>
       </FooterWrapper>
+      <BellWrapper>
+        <button className="button" onClick={toggleAlarm}>
+          <IconBell />
+        </button>
+        {showAlarm && <Alarm onClose={toggleAlarm} />}
+      </BellWrapper>
       <FixedChat>
         <ChatBotButton onClick={handleChat} />
       </FixedChat>

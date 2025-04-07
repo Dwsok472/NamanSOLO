@@ -55,8 +55,8 @@ const cityTranslations = {
 
 const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
-  top: 70px; /* 버튼 아래 여백 */
-  right: 0; /* 오른쪽 정렬 */
+  bottom: 50px; /* 버튼 아래 여백 */
+  right: 100px; /* 오른쪽 정렬 */
   z-index: 210;
 `;
 

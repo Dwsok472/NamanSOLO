@@ -4,8 +4,8 @@ import { IconClose } from "../../Icons";
 
 const Container = styled.div`
   position: absolute;
-  top: 70px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
-  right: 400px; // 화면 오른쪽에서 적당히 띄움
+  bottom: 50px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
+  right: 500px; // 화면 오른쪽에서 적당히 띄움
   z-index: 200;
 `;
 

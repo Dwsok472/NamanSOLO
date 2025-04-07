@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const Thumbnail = styled.div`
   background: #ddd;
   border-radius: 12px;
   margin-right: 16px;
-  background-image: url('https://placeholderjs.com/60x60');
+  background-image: url("https://placeholderjs.com/60x60");
   background-size: cover;
   background-position: center;
 `;
@@ -110,7 +110,7 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button`
-  background: ${({ danger }) => (danger ? '#ffe0e0' : '#f0f0f0')};
+  background: ${({ danger }) => (danger ? "#ffe0e0" : "#f0f0f0")};
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 4px 10px;
@@ -144,63 +144,61 @@ const ScrollSection = styled.div`
   }
 `;
 
-
 const CommentPage = () => {
   const [editingId, setEditingId] = useState(null);
-  const [editValue, setEditValue] = useState('');
-  
+  const [editValue, setEditValue] = useState("");
 
   const [comments, setComments] = useState([
     {
       id: 1,
-      feedTitle: '첫 여행 ✈️',
-      content: '진짜 행복한 순간이었어요!',
-      date: '2025-04-01',
+      feedTitle: "첫 여행 ✈️",
+      content: "진짜 행복한 순간이었어요!",
+      date: "2025-04-01",
     },
     {
       id: 2,
-      feedTitle: '우리의 첫 기념일 💖',
-      content: '이날은 정말 평생 못 잊을 듯!',
-      date: '2025-04-02',
+      feedTitle: "우리의 첫 기념일 💖",
+      content: "이날은 정말 평생 못 잊을 듯!",
+      date: "2025-04-02",
     },
     {
       id: 3,
-      feedTitle: '맛집 투어 🍜',
-      content: '배터지게 먹은 날 😆',
-      date: '2025-04-03',
+      feedTitle: "맛집 투어 🍜",
+      content: "배터지게 먹은 날 😆",
+      date: "2025-04-03",
     },
     {
       id: 4,
-      feedTitle: '첫 여행 ✈️',
-      content: '진짜 행복한 순간이었어요!',
-      date: '2025-04-01',
+      feedTitle: "첫 여행 ✈️",
+      content: "진짜 행복한 순간이었어요!",
+      date: "2025-04-01",
     },
     {
       id: 5,
-      feedTitle: '우리의 첫 기념일 💖',
-      content: '이날은 정말 평생 못 잊을 듯!',
-      date: '2025-04-02',
+      feedTitle: "우리의 첫 기념일 💖",
+      content: "이날은 정말 평생 못 잊을 듯!",
+      date: "2025-04-02",
     },
     {
       id: 6,
-      feedTitle: '맛집 투어 🍜',
-      content: '배터지게 먹은 날 😆',
-      date: '2025-04-03',
+      feedTitle: "맛집 투어 🍜",
+      content: "배터지게 먹은 날 😆",
+      date: "2025-04-03",
     },
   ]);
 
-  const [replies, setReplies] = useState ([
+  const [replies, setReplies] = useState([
     {
       id: 4,
-      feedTitle: '서프라이즈 이벤트 🎁',
-      content: '저도 깜짝 놀랐어요!',
-      date: '2025-04-01',
+      feedTitle: "서프라이즈 이벤트 🎁",
+      content: "저도 깜짝 놀랐어요!",
+      date: "2025-04-01",
     },
     {
       id: 5,
-      feedTitle: '벚꽃놀이 🌸',
-      content: '사진이 진짜 예쁘네요!',
-      date: '2025-04-02',
+      feedTitle: "벚꽃놀이 🌸",
+      content: "사진이 진짜 예쁘네요!",
+      date: "2025-04-02",
     },
   ]);
 
@@ -211,21 +209,21 @@ const CommentPage = () => {
       );
       setter(updated);
     };
-  
+
     if (isReply) {
       updater(replies, setReplies);
     } else {
       updater(comments, setComments);
     }
-  
+
     setEditingId(null);
-    setEditValue('');
+    setEditValue("");
   };
 
   const handleDelete = (id, isReply) => {
-    const confirm = window.confirm('정말 삭제하시겠습니까?');
+    const confirm = window.confirm("정말 삭제하시겠습니까?");
     if (!confirm) return;
-  
+
     if (isReply) {
       setReplies((prev) => prev.filter((item) => item.id !== id));
     } else {
@@ -254,14 +252,20 @@ const CommentPage = () => {
             )}
             <ButtonGroup>
               {editingId === item.id ? (
-                  <Button onClick={() => handleSave(item.id, isReply)}>저장</Button>
-                ) : (
-                  <Button onClick={() => {
-                  setEditingId(item.id);
-                  setEditValue(item.content);
-                }}>수정</Button>
+                <Button onClick={() => handleSave(item.id, isReply)}>
+                  저장
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setEditingId(item.id);
+                    setEditValue(item.content);
+                  }}
+                >
+                  수정
+                </Button>
               )}
-              <Button>{isReply ? '댓글 보기' : '답글'}</Button>
+              <Button>{isReply ? "댓글 보기" : "답글"}</Button>
             </ButtonGroup>
           </CommentRow>
         </Content>
@@ -278,11 +282,9 @@ const CommentPage = () => {
             <span>총 댓글 수 {comments.length}</span>
           </CountBox>
         </TopFixed>
-        <ScrollSection>
-          {renderList(comments)}
-        </ScrollSection>
+        <ScrollSection>{renderList(comments)}</ScrollSection>
       </Column>
-    
+
       <Column>
         <TopFixed>
           <SectionTitle>내가 단 대댓글</SectionTitle>
@@ -290,9 +292,7 @@ const CommentPage = () => {
             <span>총 답글 수 {replies.length}</span>
           </CountBox>
         </TopFixed>
-        <ScrollSection>
-          {renderList(replies, true)}
-        </ScrollSection>
+        <ScrollSection>{renderList(replies, true)}</ScrollSection>
       </Column>
     </Wrapper>
   );
