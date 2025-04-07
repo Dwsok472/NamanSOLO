@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import topImg from './img/top.png';
 import { useEffect, useState } from 'react';
 import ChatBotButton from './ChatBot/ChatBotButton';
+import ChatBot from './ChatBot/ChatBot';
 
 const FooterWrapper = styled.footer`
   width: 100%;
@@ -113,6 +114,15 @@ const FixedChat = styled.div`
 
 const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+
+  const handleChat = () => {
+    setShowChat(true);
+  }
+
+  const handleCloseChat = () => {
+    setShowChat(false);
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -155,8 +165,9 @@ const Footer = () => {
         </FooterInner>
       </FooterWrapper>
       <FixedChat>
-        <ChatBotButton />
+        <ChatBotButton onClick={handleChat} />
       </FixedChat>
+      {showChat && <ChatBot onClose={handleCloseChat} />}
       {showTopBtn && (
         <FixedBtn onClick={scrollToTop} $show={showTopBtn}>
           <img src={topImg} alt="Top" />
