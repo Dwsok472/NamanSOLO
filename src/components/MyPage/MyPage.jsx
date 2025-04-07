@@ -12,6 +12,7 @@ import RegisterStep2 from "../Register/RegisterStep2";
 import CoupleProfile from "./CoupleProfile";
 import Alarm from "./alarm/Alarm";
 import CommentPage from "./Comment/CommentPage";
+import ChatBotButton from "../ChatBot/ChatBotButton";
 
 const Container = styled.div`
   display: flex;

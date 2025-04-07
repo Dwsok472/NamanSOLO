@@ -14,6 +14,7 @@ import MainMap from "./components/Map/MainMap";
 import AlbumBoard from "./components/Album/AlbumBoard";
 import AdminFeedPage from "./components/Admin/AdminFeedPage";
 import AdminUserPage from "./components/Admin/AdminUserPage";
+import ChatBotButton from "./components/ChatBot/ChatBotButton";
 
 const AppWrapper = styled.div`
   width: 100vw;

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import topImg from './img/top.png';
 import { useEffect, useState } from 'react';
+import ChatBotButton from './ChatBot/ChatBotButton';
 
 const FooterWrapper = styled.footer`
   width: 100%;
@@ -97,6 +98,19 @@ const FixedBtn = styled.button`
   }
 `;
 
+const FixedChat = styled.div`
+   position: fixed;
+  bottom: 80px;
+  right: 18px;
+  z-index: 9999;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  width: 55px;
+  height: 55px;
+`
+
 const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
 
@@ -140,7 +154,9 @@ const Footer = () => {
           </FooterGrid>
         </FooterInner>
       </FooterWrapper>
-
+      <FixedChat>
+        <ChatBotButton />
+      </FixedChat>
       {showTopBtn && (
         <FixedBtn onClick={scrollToTop} $show={showTopBtn}>
           <img src={topImg} alt="Top" />
