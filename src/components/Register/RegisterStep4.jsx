@@ -30,6 +30,7 @@ const H1 = styled.h1`
 `;
 const Box = styled.div`
   width: 100%;
+  height: 15%;
   .cloudleft {
     position: absolute;
     left: 50px;
@@ -59,6 +60,13 @@ const Box = styled.div`
     color: #8c0d17;
   }
 `;
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px; /* 버튼 위치를 아래로 살짝 내릴 수 있음 */
+`;
+
 const Button = styled.button`
   width: 110px;
   border-radius: 20px;
@@ -67,13 +75,11 @@ const Button = styled.button`
   font-weight: 700;
   color: white;
   transition: all 0.3s ease;
-  position: absolute;
-  right: 800px;
-  top: 700px;
+
   cursor: pointer;
   &:hover {
     background-color: #ffffff;
-    color: #2e2e2e;
+    color: #8c0d17;
     border: 1px solid #3333;
   }
   &:focus {
@@ -109,7 +115,9 @@ function RegisterStep4({ onBack }) {
           꾸며보세요
         </div>
       </Box>
-      <Button onClick={() => navigate("/login")}>시작하기</Button>
+      <ButtonWrapper>
+        <Button onClick={() => navigate("/login")}>시작하기</Button>
+      </ButtonWrapper>
       <Icon onClick={onBack}>
         <IconBehind />
       </Icon>

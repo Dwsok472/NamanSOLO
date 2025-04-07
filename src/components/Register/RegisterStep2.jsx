@@ -102,6 +102,7 @@ function RegisterStep2({ onNext, onBack }) {
           <GenderLabel> FEMALE</GenderLabel>
           <Octagon
             id="profileF"
+            gender="female"
             data={profileF}
             onChange={(field, value) =>
               setProfileF((prev) => ({ ...prev, [field]: value }))
@@ -121,6 +122,7 @@ function RegisterStep2({ onNext, onBack }) {
           <GenderLabel>MALE</GenderLabel>
           <Octagon
             id="profileM"
+            gender="male"
             data={profileM}
             onChange={(field, value) =>
               setProfileM((prev) => ({ ...prev, [field]: value }))

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Octagon from '../Register/Octagon';
-import heartRate from '../img/heart-rate.png';
-import defaultcouple from '../img/couple.png';
-import iconUser from '../img/people.png';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Octagon from "../Register/Octagon";
+import heartRate from "../img/heart-rate.png";
+import defaultcouple from "../img/couple.png";
+import iconUser from "../img/people.png";
 
 const Content = styled.div`
   width: 100%;
   margin: 0 auto;
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,19 +24,19 @@ const Content = styled.div`
 function CoupleProfile() {
   const [profileF, setProfileF] = useState({
     image: iconUser,
-    name: '박서진',
-    birthday: '1996-01-01',
-    email: 'girl@email.com',
-    phone: '010-1111-2222',
+    name: "박서진",
+    birthday: "1996-01-01",
+    email: "girl@email.com",
+    phone: "010-1111-2222",
     isEditable: false,
   });
 
   const [profileM, setProfileM] = useState({
     image: iconUser,
-    name: '김동인',
-    birthday: '1996-05-03',
-    email: 'boy@email.com',
-    phone: '010-2222-3333',
+    name: "김동인",
+    birthday: "1996-05-03",
+    email: "boy@email.com",
+    phone: "010-2222-3333",
     isEditable: false,
   });
 
@@ -51,8 +52,8 @@ function CoupleProfile() {
         cardwidth="400px"
         cardheight="500px"
         cardbackground="#e0f7fa"
-        imgwidth="120px"
-        imgheight="120px"
+        imgwidth="130px"
+        imgheight="130px"
         buttoncolor="#bfe4fb"
         isProfilePage={true}
         isSignUpPage={false}
@@ -68,8 +69,8 @@ function CoupleProfile() {
         cardwidth="400px"
         cardheight="500px"
         cardbackground="#ffdcd6"
-        imgwidth="120px"
-        imgheight="120px"
+        imgwidth="130px"
+        imgheight="130px"
         buttoncolor="#ffc9c2"
         isProfilePage={true}
         isSignUpPage={false}

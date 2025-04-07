@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 const Button = styled.button`
-  width: 80px;
-  border-radius: 10px;
+  width: 110px;
+  border-radius: 20px;
   background-color: #8c0d17;
   border: 1px solid white;
   font-size: 1rem;
@@ -11,8 +11,9 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   &:hover {
+    background-color: #ffffff;
+    color: #8c0d17;
     border: 1px solid #3333;
-    color: #cdcdcd;
   }
   &:focus {
     outline: none;
