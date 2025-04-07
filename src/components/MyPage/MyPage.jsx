@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import defaultcouple from '../img/couple.png';
-import { IconBell, IconImage } from '../Icons';
-import heart from '../img/heart.png';
-import { useLocation } from 'react-router-dom';
-import Todo from './todo/Todo';
-import Other from './Other/Other';
-import MyAlbum from './MyAlbum/MyAlbum';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import RegisterStep2 from '../Register/RegisterStep2';
-import CoupleProfile from './CoupleProfile';
-import Alarm from './alarm/Alarm';
-import CommentPage from './Comment/CommentPage';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import defaultcouple from "../img/couple.png";
+import { IconBell, IconImage } from "../Icons";
+import heart from "../img/heart.png";
+import { useLocation } from "react-router-dom";
+import Todo from "./todo/Todo";
+import Other from "./Other/Other";
+import MyAlbum from "./MyAlbum/MyAlbum";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import RegisterStep2 from "../Register/RegisterStep2";
+import CoupleProfile from "./CoupleProfile";
+import Alarm from "./alarm/Alarm";
+import CommentPage from "./Comment/CommentPage";
 
 const Container = styled.div`
   display: flex;
@@ -19,8 +19,8 @@ const Container = styled.div`
   align-items: center;
   height: 90vh;
   padding: 20px;
-  /* background-color: ${({ bgColor }) => bgColor || '#fff'}; */
-  background: linear-gradient(to bottom, #940e19, #ffe3e3);
+  /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
+  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
 `;
 
 const ProfileCard = styled.div`
@@ -29,7 +29,7 @@ const ProfileCard = styled.div`
   padding: 20px;
   /* border-radius: 10px; */
   text-align: center;
-  background-color: ${({ bgColor }) => bgColor || '#f2bdbd'};
+  background-color: ${({ bgColor }) => bgColor || "#f2bdbd"};
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -75,21 +75,21 @@ const FileButton = styled.button`
 
 const DateInfo = styled.div`
   margin-top: 5%;
-  border-top: 1px solid ${({ borderColor }) => borderColor || '#7c7c7ca8'};
+  border-top: 1px solid ${({ borderColor }) => borderColor || "#7c7c7ca8"};
   padding-top: 3%;
   padding-bottom: 3%;
 `;
 
 const DaysSince = styled.p`
   font-size: 4.5rem;
-  color: ${({ color }) => color || '#bf1f3c'};
+  color: ${({ color }) => color || "#bf1f3c"};
   font-weight: 700;
   margin: 0 auto;
 `;
 
 const MeetingDate = styled.p`
   font-size: 1.2rem;
-  color: ${({ color }) => color || '#1f1f1f'};
+  color: ${({ color }) => color || "#1f1f1f"};
 `;
 
 const NameHeartSection = styled.div`
@@ -129,7 +129,7 @@ const RightProfileCard = styled.div`
   padding: 20px;
   border: 1px solid #ddd;
   /* border-radius: 10px; */
-  background-color: ${({ bgColor }) => bgColor || '#fff'};
+  background-color: ${({ bgColor }) => bgColor || "#fff"};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -145,26 +145,27 @@ const RightProfileCard = styled.div`
 `;
 const TopSection = styled.div`
   display: flex;
-  border-bottom: 1px solid ${({ borderColor }) => borderColor || '#ababa8'};
+  /* border-bottom: 1px solid ${({ borderColor }) =>
+    borderColor || "#ababa8"}; */
   top: 0;
-  background-color: ${({ bgColor }) => bgColor || '#fff'};
+  background-color: ${({ bgColor }) => bgColor || "#fff"};
 `;
 const Left = styled.div`
   width: 100%;
 `;
 
 const Button = styled.button`
-  background-color: ${({ bgColor }) => bgColor || '#fff9eb'};
+  background-color: ${({ bgColor }) => bgColor || "#fff9eb"};
   padding: 10px 20px;
   font-size: 1.2rem;
   font-weight: 700;
-  border: 1px solid ${({ borderColor }) => borderColor || '#fefdf1'};
+  border: 1px solid ${({ borderColor }) => borderColor || "#fefdf1"};
   /* border-radius: 20px; */
   width: 145px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: ${({ hoverColor }) => hoverColor || '#ffe09e'};
+    background-color: ${({ hoverColor }) => hoverColor || "#ffe09e"};
   }
   &:focus {
     outline: none;
@@ -198,7 +199,7 @@ const BellWrapper = styled.div`
   }
 
   .bell path {
-    fill: ${({ bellColor }) => bellColor || 'rgb(99, 97, 97)'};
+    fill: ${({ bellColor }) => bellColor || "rgb(99, 97, 97)"};
   }
   .button:hover .bell {
     animation: bellRing 0.9s both;
@@ -255,10 +256,10 @@ function MyPage() {
   const [image, setImage] = useState();
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
-  const [girlname, setGirlname] = useState('');
-  const [boyname, setBoyname] = useState('');
-  const [menu, setMenu] = useState('커플 정보');
-  const [selectedOption, setSelectedOption] = useState('커플 정보');
+  const [girlname, setGirlname] = useState("");
+  const [boyname, setBoyname] = useState("");
+  const [menu, setMenu] = useState("커플 정보");
+  const [selectedOption, setSelectedOption] = useState("커플 정보");
   const navigate = useNavigate();
   const [showAlarm, setShowAlarm] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
@@ -266,22 +267,22 @@ function MyPage() {
   const handleButtonClick = (menu) => {
     setMenu(menu);
     switch (menu) {
-      case '커플 정보':
-        navigate('/mypage/info');
+      case "커플 정보":
+        navigate("/mypage/info");
         break;
-      case '나의 스토리':
+      case "나의 스토리":
         setTimeout(() => {
-        navigate('/mypage/story', { replace: true });
-          }, 0);
+          navigate("/mypage/story", { replace: true });
+        }, 0);
         break;
-      case '나의 댓글':
-        navigate('/mypage/comment');
+      case "나의 댓글":
+        navigate("/mypage/comment");
         break;
-      case '커플 캘린더':
-        navigate('/mypage/todo');
+      case "커플 캘린더":
+        navigate("/mypage/todo");
         break;
-      case '그 외':
-        navigate('/mypage/other');
+      case "그 외":
+        navigate("/mypage/other");
         break;
       default:
         break;
@@ -310,7 +311,7 @@ function MyPage() {
   } */
   //임시용
   useEffect(() => {
-    setMeetingDate('2025-03-30');
+    setMeetingDate("2025-03-30");
   }, []);
 
   useEffect(() => {
@@ -337,7 +338,7 @@ function MyPage() {
     }
   };
   const FileInput = () => {
-    document.getElementById('file-upload-c').click();
+    document.getElementById("file-upload-c").click();
   };
   // 알람 모달 열기/닫기 함수
   const toggleAlarm = () => {
@@ -364,18 +365,18 @@ function MyPage() {
           )}
           {meetingDate && (
             <MeetingDate>
-              {new Date(meetingDate).toLocaleDateString('ko-KR')}
+              {new Date(meetingDate).toLocaleDateString("ko-KR")}
             </MeetingDate>
           )}
         </DateInfo>
 
         <NameHeartSection>
           <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
-            {boyname || '박서진'}
+            {boyname || "박서진"}
           </div>
           <img src={heart} className="heart" />
           <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
-            {girlname || '김동인'}
+            {girlname || "김동인"}
           </div>
         </NameHeartSection>
       </ProfileCard>
@@ -385,46 +386,37 @@ function MyPage() {
           <Left>
             <Button
               onClick={() => {
-                handleButtonClick('커플 정보');
-                handleBoxClick('커플 정보');
+                handleButtonClick("커플 정보");
+                handleBoxClick("커플 정보");
               }}
-              className={pathname.includes('/mypage/info') ? 'selected' : ''}
+              className={pathname.includes("/mypage/info") ? "selected" : ""}
             >
               커플 정보
             </Button>
             <Button
               onClick={() => {
-                handleButtonClick('나의 스토리');
-                handleBoxClick('나의 스토리');
+                handleButtonClick("나의 댓글");
+                handleBoxClick("나의 댓글");
               }}
-              className={pathname.includes('/mypage/myalbum') ? 'selected' : ''}
-            >
-              나의 스토리
-            </Button>
-            <Button
-              onClick={() => {
-                handleButtonClick('나의 댓글');
-                handleBoxClick('나의 댓글');
-              }}
-              className={pathname.includes('/mypage/comment') ? 'selected' : ''}
+              className={pathname.includes("/mypage/comment") ? "selected" : ""}
             >
               나의 댓글
             </Button>
             <Button
               onClick={() => {
-                handleButtonClick('커플 캘린더');
-                handleBoxClick('커플 캘린더');
+                handleButtonClick("커플 캘린더");
+                handleBoxClick("커플 캘린더");
               }}
-              className={pathname.includes('/mypage/todo') ? 'selected' : ''}
+              className={pathname.includes("/mypage/todo") ? "selected" : ""}
             >
               커플 캘린더
             </Button>
             <Button
               onClick={() => {
-                handleButtonClick('그 외');
-                handleBoxClick('그 외');
+                handleButtonClick("그 외");
+                handleBoxClick("그 외");
               }}
-              className={pathname.includes('/mypage/other') ? 'selected' : ''}
+              className={pathname.includes("/mypage/other") ? "selected" : ""}
             >
               그 외
             </Button>
@@ -437,7 +429,7 @@ function MyPage() {
           </BellWrapper>
         </TopSection>
         <BottomSection>
-          {' '}
+          {" "}
           <Routes>
             <Route path="/info" element={<CoupleProfile />} />
             <Route path="/myalbum" element={<MyAlbum />} />
