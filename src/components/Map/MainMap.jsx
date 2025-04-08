@@ -284,7 +284,7 @@ function MainMap() {
         }
         const timeElapsed = currentTime - startTime;
         const progress = Math.min(timeElapsed / duration, 1);
-        const currentPosition =
+        const currentPosition = startPosition + distance * easedProgress(progress);
           
 
         window.scrollTo(0, currentPosition);
