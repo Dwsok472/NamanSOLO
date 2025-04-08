@@ -16,7 +16,7 @@ const Container = styled.div`
 `;
 const TopBox = styled.div`
   width: 100%;
-  border-radius: 16px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   padding-left: 30px;

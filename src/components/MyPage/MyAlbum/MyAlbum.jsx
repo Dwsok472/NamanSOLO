@@ -51,7 +51,7 @@ const FilterButton = styled.button`
   padding: 8px 16px;
   border-radius: 20px;
   border: none;
-  font-weight: bold;
+  font-weight: 700;
   background-color: ${({ active }) => (active ? "#8c0d17" : "white")};
   color: ${({ active }) => (active ? "#fff" : "#333")};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);

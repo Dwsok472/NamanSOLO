@@ -80,7 +80,7 @@ function AppRoutes() {
           { to: "/mypage/other", label: "즐겨찾기" },
           { to: "/mypage/comment", label: "나의 댓글" },
           { to: "/mypage/todo", label: "캘린더" },
-          { to: "/mypage/story", label: "스토리" },
+          { to: "/mypage/story", label: "My Story" },
         ]}
         loginText="로그인"
         signupText="회원가입"
