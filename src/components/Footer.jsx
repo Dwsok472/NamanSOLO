@@ -105,7 +105,6 @@ const FixedChat = styled.div`
   position: fixed;
   bottom: 80px;
   right: 18px;
-
   border: none;
   background: none;
   cursor: pointer;
@@ -212,28 +211,6 @@ const Footer = () => {
 
   const handleCloseChat = () => {
     setShowChat(false);
-  };
-
-  const checkAddAlbumAndProceed = (onProceed) => {
-    let albumOpen = false;
-
-    const event = new CustomEvent("checkAddAlbumOpened", {
-      detail: {
-        callback: (isOpen) => {
-          albumOpen = isOpen;
-        },
-      },
-    });
-
-    window.dispatchEvent(event);
-
-    // AddAlbum이 열려있다면 우선 닫기만 하고 끝
-    if (albumOpen) {
-      window.dispatchEvent(new Event("closeAddAlbum"));
-      return false;
-    }
-
-    return true;
   };
 
   useEffect(() => {
