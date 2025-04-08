@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import leftkey from '../img/leftkey.png';
-import rightkey from '../img/rightkey.png';
+import leftkey from "../img/leftkey.png";
+import rightkey from "../img/rightkey.png";
 import StarButton from "./StarButton";
 
+
 const CardWrapper = styled.div`
-  width: ${({ columns }) => (columns === 2 ? "500px" : "280px")};
-  height: ${({ columns }) => (columns === 2 ? "500px" : "300px")};
+  width: ${({ columns }) => (columns === 3 ? "500px" : "280px")};
+  height: ${({ columns }) => (columns === 3 ? "500px" : "300px")};
   padding: 10px;
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
@@ -52,8 +53,8 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: ${({ columns }) => (columns === 2 ? "430px" : "250px")};
-  height: ${({ columns }) => (columns === 2 ? "430px" : "230px")};
+  width: ${({ columns }) => (columns === 3 ? "430px" : "250px")};
+  height: ${({ columns }) => (columns === 3 ? "430px" : "230px")};
   object-fit: cover;
   pointer-events: none;
 `;
@@ -63,6 +64,13 @@ const Caption = styled.div`
   font-size: 20px;
   font-weight: bold;
   color: #555;
+`;
+
+const StarButtonWrapper = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
 `;
 
 const PhotoCard = ({

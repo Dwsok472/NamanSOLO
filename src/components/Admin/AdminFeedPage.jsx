@@ -36,7 +36,6 @@ const BottomSection = styled.div`
   gap: 20px;
 `;
 
-// 📊 예시용 더미데이터
 const dummyLineData = [
   { date: '04-01', count: 4 },
   { date: '04-02', count: 7 },

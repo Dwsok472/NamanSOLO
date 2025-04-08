@@ -85,26 +85,6 @@ const LayoutButton = styled.button`
   }
 `;
 
-const SearchBox = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  input {
-    padding: 8px 12px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-  }
-
-  button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
-`;
-
 const AddButton = styled.button`
   position: fixed;
   bottom: 100px;
@@ -400,11 +380,6 @@ const MyAlbum = () => {
     setSelectedPost(null);
   };
 
-  const handleSearch = () => {
-    if (searchKeyword.trim() === '') return;
-    alert(`${searchKeyword}로 검색했어요 `);
-  };
-
   const handleEditAlbum = (post) => {
     setEditingPost(post);
     setIsAddModalOpen(true);
@@ -438,24 +413,16 @@ const MyAlbum = () => {
           ))}
         </FilterBox>
 
-        <SearchBox>
-          <input
-            type="text"
-            placeholder="USERNAME을 입력해주세요"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-          />
-          <button onClick={handleSearch}>🔍</button>
-        </SearchBox>
-      </HeaderBox>
-
+        
       <LayoutControlBox>
-        {[2, 5, 10].map((num) => (
+        {[3, 5, 10].map((num) => (
           <LayoutButton key={num} onClick={() => setColumns(num)}>
             {num}개 보기
           </LayoutButton>
         ))}
       </LayoutControlBox>
+
+      </HeaderBox>
 
         <PhotoGrid columns={columns}>
           {filteredData.map((album, idx) => (
