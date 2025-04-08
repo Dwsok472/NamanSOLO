@@ -242,13 +242,13 @@ function Octagon({
           </Buttom>
           {isProfilePage && (
             <ButtonWrap>
-              <Button
+              {/* <Button
                 $buttoncolor={buttoncolor}
                 onClick={handleSubmit}
                 disabled={!isEditable}
               >
                 저장
-              </Button>
+              </Button> */}
             </ButtonWrap>
           )}
         </ButtomWrap>

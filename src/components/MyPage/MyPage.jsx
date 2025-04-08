@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import defaultcouple from "../img/couple.png";
-import { IconBell, IconImage } from "../Icons";
+import { IconImage } from "../Icons";
 import heart from "../img/heart.png";
 import { useLocation } from "react-router-dom";
 import Todo from "./todo/Todo";
 import Other from "./Other/Other";
 import MyAlbum from "./MyAlbum/MyAlbum";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import RegisterStep2 from "../Register/RegisterStep2";
 import CoupleProfile from "./CoupleProfile";
-import Alarm from "./alarm/Alarm";
 import CommentPage from "./Comment/CommentPage";
-import ChatBotButton from "../ChatBot/ChatBotButton";
-import Setting from "./MySetting";
+import MySetting from "./MySetting";
 
 const Container = styled.div`
   display: flex;
@@ -213,6 +209,39 @@ const BottomSection = styled.div`
     border-radius: 10px;
   }
 `;
+
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+`;
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  z-index: 1000;
+  padding: 30px;
+  border-radius: 12px;
+  max-height: 90vh;
+  overflow-y: auto;
+`;
+
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+`;
 function MyPage() {
   const location = useLocation();
   const pathname = location.pathname;
@@ -225,6 +254,7 @@ function MyPage() {
   const [menu, setMenu] = useState("커플 정보");
   const [selectedOption, setSelectedOption] = useState("커플 정보");
   const navigate = useNavigate();
+  const [showCoupleProfile, setShowCoupleProfile] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = (menu) => {
@@ -304,7 +334,7 @@ function MyPage() {
   return (
     <Container>
       <ProfileCard>
-        <Setting />
+        <MySetting onClick={() => setShowCoupleProfile(true)} />
         <PhotoSection>
           <Img src={image} onClick={FileInput} />
           <ImgInput
@@ -391,6 +421,15 @@ function MyPage() {
           </Routes>
         </BottomSection>
       </RightProfileCard>
+      {showCoupleProfile && (
+        <>
+          <Backdrop onClick={() => setShowCoupleProfile(false)} />
+          <ModalWrapper>
+            <CloseBtn onClick={() => setShowCoupleProfile(false)}>×</CloseBtn>
+            <CoupleProfile />
+          </ModalWrapper>
+        </>
+      )}
     </Container>
   );
 }

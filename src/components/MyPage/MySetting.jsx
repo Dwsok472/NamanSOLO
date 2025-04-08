@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-const Button = () => {
+const Button = ({ onClick }) => {
   return (
     <StyledWrapper>
       <div className="btn-cont">
-        <button className="button">
+        <button className="button" onClick={onClick}>
           <svg
             className="settings-btn"
             xmlns="http://www.w3.org/2000/svg"

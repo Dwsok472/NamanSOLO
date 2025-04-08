@@ -53,6 +53,7 @@ const Input = styled.input`
   margin-bottom: 30px;
   font-size: 35px;
   font-weight: 700;
+  cursor: pointer;
 
   &::placeholder {
     font-size: 1rem;
