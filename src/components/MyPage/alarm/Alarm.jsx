@@ -57,7 +57,7 @@ const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
   bottom: 50px; /* 버튼 아래 여백 */
   right: 100px; /* 오른쪽 정렬 */
-  z-index: 210;
+  z-index: 9999;
 `;
 
 const ModalContainer = styled.div`
@@ -68,7 +68,7 @@ const ModalContainer = styled.div`
   height: 430px;
   text-align: center;
   position: relative;
-
+  z-index: 380;
   cursor: pointer;
   user-select: none;
   border-radius: 10px;
@@ -237,7 +237,7 @@ const Backdrop = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: 150;
+  z-index: 210;
 `;
 
 function Alarm({ onClose /*, isOpen*/ }) {
