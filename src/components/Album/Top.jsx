@@ -20,21 +20,28 @@ const TopBox = styled.div`
   display: flex;
   align-items: center;
   padding-left: 30px;
+  flex-wrap: nowrap; /* 줄바꿈 방지 */
+
   button {
     font-weight: 700;
-    font-size: 0.7rem;
-    background-color: "#ffffff";
-    color: "#2b2b2b";
+    font-size: 0.9rem; /* 더 큰 글씨 */
+    line-height: 1.2; /* 줄 간격 조정 */
+    background-color: #ffffff;
+    color: #2b2b2b;
     border-radius: 20px;
-    width: 80px;
+    width: 100px; /* 조금 더 넓게 */
+    height: 35px; /* 고정 높이 */
     margin: 5px;
     transition: all 0.2s;
     cursor: pointer;
+    white-space: nowrap; /* 글자 줄바꿈 방지 */
+
     &:hover {
       background-color: #8c0d17;
       color: white;
     }
   }
+
   .selected {
     background-color: #8c0d17;
     color: white;
