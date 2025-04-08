@@ -14,7 +14,7 @@ import { ModifyUserInfo } from "../api";
 const CardWrap = styled.div`
   width: ${(props) => props.$width || "550px"};
   margin: 0 auto;
-  margin-top: 25px;
+  /* margin-top: 25px; */
   /* border: 1px solid #3333; */
   border-radius: 3px;
   /* background-color: #e6d3c1; */
@@ -69,6 +69,9 @@ const ButtomWrap = styled.div`
   width: 90%;
   height: 70%;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Buttom = styled.div`
@@ -77,7 +80,7 @@ const Buttom = styled.div`
   grid-template-rows: 1fr 1fr 1fr 1fr;
   /* border: 1px solid #1a1a1a33; */
   background-color: white;
-  border-radius: 50px;
+  border-radius: 10px;
   margin: 0 auto;
   gap: 10px;
   padding-top: 15px;
@@ -89,7 +92,7 @@ const SmallBox = styled.div`
   width: 85%;
   margin: 0 auto;
   border: 1px solid #02020233;
-  border-radius: 30px;
+  border-radius: 10px;
   background-color: ${(props) => (props.$readOnly ? "#e0e0e0" : "#fefefe")};
   padding-left: 10px;
   display: flex;
@@ -170,29 +173,11 @@ function Octagon({
   data,
   onChange,
 }) {
-  const [image, setImage] = useState(Profile);
   const [name, setName] = useState(data.name);
   const [birthday, setBirthday] = useState(data.birthday);
   const [email, setEmail] = useState(data.email);
   const [phone, setPhone] = useState(data.phone);
   const [isEditable, setIsEditable] = useState(false);
-
-  useEffect(()=>{
-    setImage(data.image || Profile);
-  }, [data.image]);
-
-  const FileInput = () => {
-    document.getElementById(`${id}-file`).click();
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageURL = URL.createObjectURL(file);
-      setImage(imageURL);
-      if (onChange) onChange("image", imageURL);
-    }
-  };
 
   const handleSubmit = async () => {
     try {
@@ -211,34 +196,6 @@ function Octagon({
         $cardheight={cardheight}
         $cardbackground={cardbackground}
       >
-        <Top>
-          {isProfilePage && (
-            <ModifyTop onClick={() => setIsEditable(true)}>
-              <IconModify />
-            </ModifyTop>
-          )}
-          <Img
-            src={image}
-            onClick={isProfilePage && !isEditable ? undefined : FileInput}
-            $imgwidth={imgwidth}
-            $imgheight={imgheight}
-            $editable={isProfilePage && !isEditable}
-          />
-          <ImgInput
-            type="file"
-            id={`${id}-file`}
-            accept="image/*"
-            $readOnly={isProfilePage && !isEditable}
-            $disabled={isProfilePage && !isEditable}
-            onChange={handleImageChange}
-          />
-          <FileButton
-            onClick={isProfilePage && !isEditable ? undefined : FileInput}
-            $editable={isProfilePage && !isEditable}
-          >
-            <IconImage />
-          </FileButton>
-        </Top>
         <ButtomWrap>
           <Buttom>
             <SmallBox $readOnly={isProfilePage && !isEditable}>

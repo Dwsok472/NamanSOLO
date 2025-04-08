@@ -37,7 +37,7 @@ const Container = styled.div`
 `;
 
 const H1 = styled.h1`
-  font-size: 5rem;
+  font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
@@ -70,7 +70,7 @@ const ButtonWrap = styled.div`
 `;
 
 const Icon = styled.div`
-  position: fixed; 
+  position: fixed;
   bottom: 145px;
   right: 24px;
   width: 50px;

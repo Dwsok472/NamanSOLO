@@ -5,6 +5,8 @@ import styled from "styled-components";
 import NextButton from "../Button/NextButton";
 import iconUser from "../img/people.png";
 import { IconBehind } from "../Icons";
+import female from "../img/female.png";
+import male from "../img/male.png";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -23,6 +25,7 @@ const GenderWrapper = styled.div`
   padding: 10px 0;
   margin: 0 10px; */
   width: fit-content;
+  height: 650px;
 `;
 
 const GenderLabel = styled.div`
@@ -30,9 +33,19 @@ const GenderLabel = styled.div`
   font-size: 3.5rem;
   color: #8c0d17;
   /* margin-bottom: 5px; */
+  user-select: none;
 `;
+
+const GenderImage = styled.img`
+  width: 150px; // 원하는 사이즈로
+  height: auto;
+  object-fit: cover;
+
+  user-select: none;
+`;
+
 const H1 = styled.h1`
-  font-size: 5rem;
+  font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
@@ -62,7 +75,7 @@ const ButtonWrap = styled.div`
 `;
 
 const Icon = styled.div`
-  position: fixed; 
+  position: fixed;
   bottom: 145px;
   right: 24px;
   width: 50px;
@@ -99,6 +112,7 @@ function RegisterStep2({ onNext }) {
       <Content>
         <GenderWrapper gender="female">
           <GenderLabel> FEMALE</GenderLabel>
+          <GenderImage src={female} />
           <Octagon
             id="profileF"
             gender="female"
@@ -110,8 +124,6 @@ function RegisterStep2({ onNext }) {
             cardwidth="400px"
             cardheight="500px"
             cardbackground="#e0f7fa"
-            imgwidth="120px"
-            imgheight="120px"
             isProfilePage={false}
             isSignUpPage={true}
           />
@@ -119,6 +131,7 @@ function RegisterStep2({ onNext }) {
         <img src={rate} className="heartRate" />
         <GenderWrapper gender="male">
           <GenderLabel>MALE</GenderLabel>
+          <GenderImage src={male} />
           <Octagon
             id="profileM"
             gender="male"

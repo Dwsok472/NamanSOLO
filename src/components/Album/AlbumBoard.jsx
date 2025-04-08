@@ -332,11 +332,28 @@ const AlbumBoard = () => {
     setShowDetail(false); // 모달을 닫는 함수
   };
   const handleOpenAddAlbum = () => {
-    setShowAddAlbum(true); // AddAlbum 모달 열기
+    // 열기 전에 알람/챗봇 닫기 요청
+    window.dispatchEvent(new Event("closeFooterModals"));
+
+    // "AddAlbum이 열려 있었다"는 flag 설정
+    window.addEventListener("checkAddAlbumOpened", (e) => {
+      e.detail.callback(true); // 알려주기
+    });
+
+    setShowAddAlbum(true);
   };
   const handleCloseAddAlbum = () => {
     setShowAddAlbum(false); // AddAlbum 모달 닫기
   };
+
+  useEffect(() => {
+    const handleClose = () => {
+      setShowAddAlbum(false); // Footer에서 AddAlbum 닫기 요청 시 처리
+    };
+
+    window.addEventListener("closeAddAlbum", handleClose);
+    return () => window.removeEventListener("closeAddAlbum", handleClose);
+  }, []);
 
   useEffect(() => {
     itemsRef.current = []; // 페이지 변경 시 캐시된 아이템 초기화

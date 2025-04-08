@@ -377,7 +377,7 @@ function MyPage() {
               }}
               className={pathname.includes("/mypage/story") ? "selected" : ""}
             >
-              스토리
+              My Story
             </Button>
           </Left>
         </TopSection>

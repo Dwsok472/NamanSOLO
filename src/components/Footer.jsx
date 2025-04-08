@@ -178,16 +178,62 @@ const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showAlarm, setShowAlarm] = useState(false);
+  // 알람 버튼 클릭
   const toggleAlarm = () => {
-    setShowAlarm((prev) => !prev);
+    if (showAlarm) {
+      // 알람이 이미 열려 있으면 → 닫기
+      setShowAlarm(false);
+    } else {
+      // 알람 열기 전, AddAlbum 열려있으면 먼저 닫고 return
+      const event = new Event("closeAddAlbum");
+      window.dispatchEvent(event);
+
+      // 실제 열기 작업은 약간 delay해서 다음 클릭에 맡기기
+      if (!showChat) setTimeout(() => setShowAlarm(true), 0);
+    }
+
+    // 다른 모달은 무조건 닫기
+    setShowChat(false);
   };
 
+  // 챗봇 버튼 클릭
   const handleChat = () => {
-    setShowChat(true);
+    if (showChat) {
+      setShowChat(false);
+    } else {
+      const event = new Event("closeAddAlbum");
+      window.dispatchEvent(event);
+
+      if (!showAlarm) setTimeout(() => setShowChat(true), 0);
+    }
+
+    setShowAlarm(false);
   };
 
   const handleCloseChat = () => {
     setShowChat(false);
+  };
+
+  const checkAddAlbumAndProceed = (onProceed) => {
+    let albumOpen = false;
+
+    const event = new CustomEvent("checkAddAlbumOpened", {
+      detail: {
+        callback: (isOpen) => {
+          albumOpen = isOpen;
+        },
+      },
+    });
+
+    window.dispatchEvent(event);
+
+    // AddAlbum이 열려있다면 우선 닫기만 하고 끝
+    if (albumOpen) {
+      window.dispatchEvent(new Event("closeAddAlbum"));
+      return false;
+    }
+
+    return true;
   };
 
   useEffect(() => {
@@ -202,6 +248,17 @@ const Footer = () => {
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  // 📩 AddAlbum에서 알람/챗봇 닫기 요청 시 처리
+  useEffect(() => {
+    const handleCloseAll = () => {
+      setShowAlarm(false);
+      setShowChat(false);
+    };
+    window.addEventListener("closeFooterModals", handleCloseAll);
+    return () =>
+      window.removeEventListener("closeFooterModals", handleCloseAll);
+  }, []);
 
   return (
     <>

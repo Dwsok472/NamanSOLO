@@ -13,7 +13,7 @@ const Container = styled.div`
   margin-top: 50px;
 `;
 const H1 = styled.h1`
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
