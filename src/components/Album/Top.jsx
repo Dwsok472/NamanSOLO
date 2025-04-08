@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import styled from 'styled-components';
-import { IconSearch } from '../Icons';
-import couple1 from '../img/couple1.png';
-import couple2 from '../img/couple2.png';
-import couple3 from '../img/couple3.png';
-import couple4 from '../img/couple4.jpg';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
+import styled from "styled-components";
+import { IconSearch } from "../Icons";
+import couple1 from "../img/couple1.png";
+import couple2 from "../img/couple2.png";
+import couple3 from "../img/couple3.png";
+import couple4 from "../img/couple4.jpg";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -23,8 +23,8 @@ const TopBox = styled.div`
   button {
     font-weight: 700;
     font-size: 0.7rem;
-    background-color: '#ffffff';
-    color: '#2b2b2b';
+    background-color: "#ffffff";
+    color: "#2b2b2b";
     border-radius: 20px;
     width: 80px;
     margin: 5px;
@@ -49,40 +49,78 @@ const MiddleBox = styled.div`
   flex-direction: column;
   align-items: end;
   gap: 3px;
-  padding-right: 30px;
+  padding-right: 45px;
   position: relative;
 `;
 const SearchBox = styled.div`
-  width: 300px;
-  height: 50px;
-  /* border: 1px solid #6d6d6d33; */
-  border-radius: 10px;
-  /* background-color: #bbbbbb; */
-  padding-top: 3.5px;
-`;
-const InputBox = styled.div`
-  width: 95%;
-  height: 30px;
   display: flex;
+  justify-content: center;
   align-items: center;
-`;
-const Input = styled.input`
-  outline: none;
-  border: none;
-  width: 100%;
-  /* border: 1px solid #3333; */
-  border-radius: 5px;
-  height: 100%;
-  margin-left: 10px;
-  padding-left: 10px;
-  margin-right: 5px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  &::placeholder {
-    font-size: 0.6rem;
-    font-weight: 700;
+  /* margin-top: 20px; */
+
+  .InputContainer {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    overflow: hidden;
+    padding-left: 15px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+  }
+
+  .input {
+    width: 280px;
+    height: 100%;
+    border: none;
+    outline: none;
+    font-size: 0.9em;
+    caret-color: rgb(255, 81, 0);
+  }
+
+  .labelforsearch {
+    cursor: pointer;
+    padding: 0px 12px;
+  }
+
+  .searchIcon {
+    width: 13px;
+  }
+
+  .searchIcon path {
+    fill: rgb(114, 114, 114);
   }
 `;
+/* width: 300px; */
+/* height: 50px; */
+/* border: 1px solid #6d6d6d33; */
+/* border-radius: 10px; */
+/* background-color: #bbbbbb; */
+/* padding-top: 3.5px; */
+// `;
+// const InputBox = styled.div`
+//   width: 95%;
+//   height: 30px;
+//   display: flex;
+//   align-items: center;
+// `;
+// const Input = styled.input`
+//   outline: none;
+//   border: none;
+//   width: 100%;
+/* border: 1px solid #3333; */
+//   border-radius: 5px;
+//   height: 100%;
+//   margin-left: 10px;
+//   padding-left: 10px;
+//   margin-right: 5px;
+//   font-size: 0.8rem;
+//   font-weight: 700;
+//   &::placeholder {
+//     font-size: 0.6rem;
+//     font-weight: 700;
+//   }
+// `;
 
 const SearchResults = styled.div`
   width: 35%;
@@ -151,27 +189,42 @@ const Block = styled.div`
 `;
 
 function Top({ filter, onFilterChange }) {
-  const [inputKeyword, setInputKeyword] = useState('');
+  const [inputKeyword, setInputKeyword] = useState("");
   const [allUsers, setAllUsers] = useState([]); // db상에 전체 유저 조회
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 담기
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
-  const [selected, setSelected] = useState('최신순');
+  const [selected, setSelected] = useState("최신순");
   const navigate = useNavigate();
   const location = useLocation();
+  const [isFocused, setIsFocused] = useState(false);
 
-  const urlKeyword = new URLSearchParams(location.search).get('username');
+  const urlKeyword = new URLSearchParams(location.search).get("username");
 
   //임시용
   useEffect(() => {
     setAllUsers([
-      { username: 'user1', imgurl: couple1 },
-      { username: 'user2', imgurl: couple2 },
-      { username: 'user3', imgurl: couple3 },
-      { username: 'user4', imgurl: couple4 },
-      { username: 'user5', imgurl: couple1 },
-      { username: 'user6', imgurl: couple2 },
+      { username: "user1", imgurl: couple1 },
+      { username: "user2", imgurl: couple2 },
+      { username: "user3", imgurl: couple3 },
+      { username: "user4", imgurl: couple4 },
+      { username: "user5", imgurl: couple1 },
+      { username: "user6", imgurl: couple2 },
     ]);
+  }, []);
+
+  // 바깥 클릭 시 포커스 해제
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   useEffect(() => {
@@ -179,14 +232,14 @@ function Top({ filter, onFilterChange }) {
       //검색바를 사용하고 있는데 그 검색바 영역에서 벗어나면!!
       if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
         setShowResults(false); // 검색바 외부 클릭 시 결과 숨기기
-        setInputKeyword('');
+        setInputKeyword("");
       }
     };
     // 클릭 이벤트 등록
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     // 컴포넌트가 언마운트될 때 이벤트 제거
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -214,33 +267,33 @@ function Top({ filter, onFilterChange }) {
     <Container>
       <TopBox>
         <button
-          className={selected === '최신순' ? 'selected' : ''}
+          className={selected === "최신순" ? "selected" : ""}
           id="newest"
           onClick={() => {
-            onFilterChange('최신순');
-            setSelected('최신순');
+            onFilterChange("최신순");
+            setSelected("최신순");
           }}
         >
           최신순
         </button>
         <button
-          className={selected === '좋아요순' ? 'selected' : ''}
+          className={selected === "좋아요순" ? "selected" : ""}
           id="like"
-          active={filter === '좋아요순'}
+          active={filter === "좋아요순"}
           onClick={() => {
-            onFilterChange('좋아요순');
-            setSelected('좋아요순');
+            onFilterChange("좋아요순");
+            setSelected("좋아요순");
           }}
         >
           좋아요순
         </button>
         <button
-          className={selected === '댓글순' ? 'selected' : ''}
+          className={selected === "댓글순" ? "selected" : ""}
           id="comment"
-          active={filter === '댓글순'}
+          active={filter === "댓글순"}
           onClick={() => {
-            onFilterChange('댓글순');
-            setSelected('댓글순');
+            onFilterChange("댓글순");
+            setSelected("댓글순");
           }}
         >
           댓글순
@@ -248,6 +301,40 @@ function Top({ filter, onFilterChange }) {
       </TopBox>
       <MiddleBox>
         <SearchBox ref={searchBoxRef}>
+          <div className="InputContainer">
+            <input
+              placeholder="USERNAME을 입력해주세요"
+              id="input"
+              className="input"
+              name="text"
+              type="text"
+              value={inputKeyword}
+              onChange={(e) => setInputKeyword(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  inputKeyword
+                    ? searchUsername(inputKeyword)
+                    : alert("검색어를 입력해주세요");
+                }
+              }}
+            />
+            <label
+              className="labelforsearch"
+              htmlFor="input"
+              onClick={() => {
+                inputKeyword
+                  ? searchUsername(inputKeyword)
+                  : alert("검색어를 입력해주세요");
+              }}
+            >
+              <svg className="searchIcon" viewBox="0 0 512 512">
+                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+              </svg>
+            </label>
+          </div>
+        </SearchBox>
+        {/* <SearchBox ref={searchBoxRef}>
           <InputBox>
             <Input
               type="text"
@@ -266,14 +353,14 @@ function Top({ filter, onFilterChange }) {
                 if (inputKeyword) {
                   searchUsername(inputKeyword);
                 } else {
-                  alert('검색어를 입력해주세요');
+                  alert("검색어를 입력해주세요");
                 }
               }}
             />
           </InputBox>
-        </SearchBox>
+        </SearchBox> */}
         {showResults && (
-          <SearchResults className={showResults ? 'show' : ''}>
+          <SearchResults className={showResults ? "show" : ""}>
             <Wrap>
               <ul>
                 {searchResults.map((user) => (
