@@ -105,7 +105,7 @@ const FixedChat = styled.div`
   position: fixed;
   bottom: 80px;
   right: 18px;
-  z-index: 9999;
+
   border: none;
   background: none;
   cursor: pointer;
@@ -117,7 +117,7 @@ const BellWrapper = styled.div`
   position: fixed;
   bottom: 150px;
   right: 23px;
-  z-index: 9999;
+
   .button {
     width: 50px;
     height: 50px;
@@ -248,17 +248,6 @@ const Footer = () => {
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
-
-  // 📩 AddAlbum에서 알람/챗봇 닫기 요청 시 처리
-  useEffect(() => {
-    const handleCloseAll = () => {
-      setShowAlarm(false);
-      setShowChat(false);
-    };
-    window.addEventListener("closeFooterModals", handleCloseAll);
-    return () =>
-      window.removeEventListener("closeFooterModals", handleCloseAll);
-  }, []);
 
   return (
     <>

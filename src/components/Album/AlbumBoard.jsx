@@ -96,6 +96,7 @@ const AddButton = styled.button`
   border: none;
   background: none;
   padding: 0;
+
   cursor: pointer;
 
   svg {
