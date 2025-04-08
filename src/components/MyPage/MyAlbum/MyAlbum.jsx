@@ -19,8 +19,9 @@ import DeleteButton from "./DeleteButton";
 const AlbumWrapper = styled.div`
   background: linear-gradient(to bottom, #b85c79, #fdecec);
   min-height: 100vh;
-
-  justify-content: center;
+  display: flex;
+  justify-content: center; // 수평 가운데 정렬
+  align-items: flex-start; // 위에서부터 정렬
   padding: 60px 20px 100px;
 `;
 
@@ -37,7 +38,7 @@ const HeaderBox = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin-bottom: 40px;
 `;
 
@@ -114,30 +115,15 @@ const PhotoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
   gap: 40px;
-  width: 100%;
   max-width: 1400px;
   padding: 0 20px;
+  margin: 0 auto;
 `;
 
 const TrashZone = styled.div`
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background-color: #000;
-  color: #fff;
-  font-size: 1.2rem;
-  padding: 12px 20px;
-  border-radius: 10px;
-  border: 2px dashed #fff;
-  opacity: 0.8;
-  z-index: 500;
-  transition: all 0.3s;
-
-  &:hover {
-    background-color: #ff5c5c;
-    color: white;
-    border-color: #ff5c5c;
-  }
+  bottom: 40px;
+  left: 60px;
 `;
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
@@ -413,7 +399,7 @@ const MyAlbum = () => {
           </FilterBox>
 
           <LayoutControlBox>
-            {[3, 5, 10].map((num) => (
+            {[3, 5].map((num) => (
               <LayoutButton key={num} onClick={() => setColumns(num)}>
                 {num}개 보기
               </LayoutButton>

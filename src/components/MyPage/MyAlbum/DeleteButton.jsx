@@ -57,7 +57,7 @@ const StyledWrapper = styled.div`
   }
 
   .bin::after {
-    left: -2.5px;
+    left: -2px;
     top: -5px;
     height: 7px;
     width: var(--width);
@@ -74,31 +74,17 @@ const StyledWrapper = styled.div`
     left: 0;
   }
 
-  .bin:focus,
-  .bin:active {
-    outline: none;
-    cursor: none;
-  }
-
-  .bin:focus::before,
-  .bin:focus::after,
-  .bin:active::before,
-  .bin:active::after {
-    animation: binled 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
-  }
-
+  /* ✅ 드래그 or 마우스 호버 시 뚜껑 애니메이션 */
   .open .bin::after,
-  .open .bin::before {
+  .open .bin::before,
+  .trash-inner:hover .bin::after,
+  .trash-inner:hover .bin::before {
     animation: binled 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
   }
 
-  .open .bin::before {
+  .open .bin::before,
+  .trash-inner:hover .bin::before {
     animation: ledhead 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
-  }
-
-  .open .div > small {
-    opacity: 1;
-    animation: throw 300ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
   }
 
   @keyframes binled {
@@ -153,14 +139,14 @@ const StyledWrapper = styled.div`
 
   .bin:focus ~ .div:hover,
   .bin:active ~ .div:hover {
-    cursor: none;
+    cursor: pointer;
   }
 
   .bin:focus ~ .overlay,
   .bin:active ~ .overlay {
     pointer-events: inherit;
     z-index: 2;
-    cursor: none;
+    cursor: pointer;
   }
 
   .bin:focus ~ .div > small,

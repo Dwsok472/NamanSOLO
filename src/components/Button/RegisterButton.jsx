@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Button = styled.button`
   width: 110px;
@@ -12,8 +12,8 @@ const Button = styled.button`
   color: white;
   cursor: pointer;
   &:hover {
-
-    color: #d1d1d1;
+    background-color: white;
+    color: #8c0d17;
   }
   &:focus {
     outline: none;
@@ -24,7 +24,7 @@ function RegisterButton() {
   const navigate = useNavigate();
   return (
     <div>
-      <Button onClick={() => navigate('/login?view=register')}>회원가입</Button>
+      <Button onClick={() => navigate("/login?view=register")}>회원가입</Button>
     </div>
   );
 }
