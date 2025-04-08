@@ -13,15 +13,14 @@ import tape5 from "../img/tape5.png";
 import tape6 from "../img/tape6.png";
 import tape7 from "../img/tape7.png";
 
-import marker from "../img/arrow-left.png";
-import eraser from "../img/arrow-right.png";
 import AlbumDetailModal from "./AlbumDetailModal";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
-import plus from "../img/plus.png";
 
 import Top from "./Top";
 import AddAlbum from "./AddAlbum";
+import { Button as LeftButton } from "./LeftButton";
+import { Button as RightButton } from "./RightButton";
 
 const BoardWrapper = styled.div`
   padding-top: 10px;
@@ -46,24 +45,6 @@ const BoardFrame = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  .marker {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    cursor: pointer;
-    position: absolute;
-    top: 2%;
-    left: -150px;
-  }
-  .eraser {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    cursor: pointer;
-    position: absolute;
-    top: 2%;
-    right: -150px;
-  }
 `;
 
 const PhotoArea = styled.div`
@@ -111,6 +92,20 @@ const AddButton = styled.button`
     stroke: white;
     transform: rotate(90deg);
   }
+`;
+
+const MarkerWrapper = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 2%;
+  left: -260px;
+`;
+
+const EraserWrapper = styled.div`
+  cursor: pointer;
+  position: absolute;
+  top: 2%;
+  right: -245px;
 `;
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
@@ -424,24 +419,20 @@ const AlbumBoard = () => {
     <BoardWrapper>
       <Top filter={filter} onFilterChange={setFilter} />
       <BoardFrame>
-        <img
-          src={marker}
-          alt="marker"
-          className="marker"
-          onClick={handlePrevPage}
-        />
+        <MarkerWrapper>
+          <LeftButton onClick={handlePrevPage} />
+        </MarkerWrapper>
+
         <BoardInner>
           <PhotoArea>
             {loading ? <p>LOADING...</p> : generateItems()}{" "}
             {/* 로딩 중일 때 메시지 */}
           </PhotoArea>
         </BoardInner>
-        <img
-          src={eraser}
-          alt="eraser"
-          className="eraser"
-          onClick={handleNextPage}
-        />
+
+        <EraserWrapper>
+          <RightButton onClick={handleNextPage} />
+        </EraserWrapper>
 
         <AddButton onClick={handleOpenAddAlbum} title="Add New">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

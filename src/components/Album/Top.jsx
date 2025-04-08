@@ -31,12 +31,12 @@ const TopBox = styled.div`
     transition: all 0.2s;
     cursor: pointer;
     &:hover {
-      background-color: #f2a0a0;
+      background-color: #8c0d17;
       color: white;
     }
   }
   .selected {
-    background-color: #f2a0a0;
+    background-color: #8c0d17;
     color: white;
   }
 `;
