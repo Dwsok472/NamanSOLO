@@ -168,8 +168,10 @@ const Left = styled.div`
 `;
 
 const Button = styled.button`
-  ${({ isStory }) => isStory && "margin-left: auto;"}
-  background-color:transparent;
+  margin-left: ${({ isStory }) => (isStory ? "auto" : "0")};
+  color: ${({ isStory }) => (isStory ? "#9f142e" : "#000")};
+  background-color: ${({ isStory }) => (isStory ? "#ffffff" : "transparent")};
+  background-color: transparent;
   padding: 10px 20px;
   font-size: 1.2rem;
   font-weight: 700;
@@ -179,9 +181,9 @@ const Button = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: #ffffff;
-    color: #9f142e;
-    border: 1px solid #3333;
+    color: ${({ isStory }) => (isStory ? "#ffffff" : "#9f142e")};
+    background-color: ${({ isStory }) => (isStory ? "#9f142e" : "#ffffff")};
+    border: 1px solid ${({ isStory }) => (isStory ? "#9f142e" : "#3333")};
   }
   &:focus {
     outline: none;
