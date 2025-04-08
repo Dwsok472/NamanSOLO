@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   width: 100%;
   max-width: 600px;
-  height: 100vh;
+  height: 90vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

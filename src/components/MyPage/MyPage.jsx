@@ -257,6 +257,7 @@ function MyPage() {
   const [selectedOption, setSelectedOption] = useState("커플 정보");
   const navigate = useNavigate();
   const [showCoupleProfile, setShowCoupleProfile] = useState(false);
+  const [editDateMode, setEditDateMode] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = (menu) => {
@@ -355,7 +356,30 @@ function MyPage() {
           )}
           {meetingDate && (
             <MeetingDate>
-              {new Date(meetingDate).toLocaleDateString("ko-KR")}
+              {editDateMode ? (
+                <>
+                  <input
+                    type="date"
+                    value={meetingDate}
+                    onChange={(e) => setMeetingDate(e.target.value)}
+                  />
+                  <button onClick={() => setEditDateMode(false)}>저장</button>
+                </>
+              ) : (
+                <>
+                  {new Date(meetingDate).toLocaleDateString("ko-KR")}
+                  <span
+                    style={{
+                      marginLeft: "8px",
+                      cursor: "pointer",
+                      fontSize: "16px",
+                    }}
+                    onClick={() => setEditDateMode(true)}
+                  >
+                    ✏️
+                  </span>
+                </>
+              )}
             </MeetingDate>
           )}
         </DateInfo>
