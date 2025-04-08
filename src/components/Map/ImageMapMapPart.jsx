@@ -11,7 +11,7 @@ const MapWrapper = styled.div`
 `;
 
 const MapImage = styled.img`
-  width: 114.2%;
+  width: 100%;
   height: auto;
   object-fit: contain;
   margin-left: -7.1%;
@@ -36,13 +36,13 @@ const RegionLabel = styled.div`
 
 const regions = [
   { name: '인천/서울/경기', top: 30, left: 38 },
-  { name: '강원도', top: 35, left: 68 },
-  { name: '충청남도', top: 48, left: 37 },
-  { name: '충청북도', top: 45, left: 55 },
-  { name: '전라북도', top: 58, left: 40 },
-  { name: '전라남도', top: 67, left: 36 },
-  { name: '경상북도', top: 50, left: 70 },
-  { name: '경상남도', top: 61, left: 62 },
+  { name: '강원도', top: 35, left: 63 },
+  { name: '충청남도', top: 48, left: 32 },
+  { name: '충청북도', top: 45, left: 50 },
+  { name: '전라북도', top: 58, left: 35 },
+  { name: '전라남도', top: 67, left: 31 },
+  { name: '경상북도', top: 50, left: 65 },
+  { name: '경상남도', top: 61, left: 57 },
   { name: '제주도', top: 86, left: 24 },
 ];
 

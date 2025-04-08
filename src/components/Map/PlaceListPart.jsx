@@ -8,6 +8,8 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   width: 100%;
   max-width: 600px;
+  height: 100vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -58,8 +60,6 @@ const CloseBtn = styled.button`
 
 const ListContainer = styled.div`
   display: flex;
-  overflow-y: auto;
-  max-height: 600px; // 원하는 스크롤 범위로 제한
   flex-direction: column;
   gap: 12px;
   &::-webkit-scrollbar {
