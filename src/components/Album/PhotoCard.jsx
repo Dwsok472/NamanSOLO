@@ -4,7 +4,6 @@ import leftkey from "../img/leftkey.png";
 import rightkey from "../img/rightkey.png";
 import StarButton from "./StarButton";
 
-
 const CardWrapper = styled.div`
   width: ${({ columns }) => (columns === 3 ? "500px" : "280px")};
   height: ${({ columns }) => (columns === 3 ? "500px" : "300px")};
@@ -122,7 +121,6 @@ const PhotoCard = ({
       }}
       columns={columns}
     >
-
       {multipleImages && (
         <img
           src={leftkey}

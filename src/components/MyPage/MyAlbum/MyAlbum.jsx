@@ -122,8 +122,8 @@ const PhotoGrid = styled.div`
 
 const TrashZone = styled.div`
   position: fixed;
-  bottom: 40px;
-  left: 60px;
+  bottom: 30px;
+  left: 70px;
 `;
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
