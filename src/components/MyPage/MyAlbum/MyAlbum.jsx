@@ -32,13 +32,6 @@ const AlbumInner = styled.div`
   align-items: center;
 `;
 
-const HeaderTitle = styled.h2`
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 20px;
-`;
-
 const HeaderBox = styled.div`
   display: flex;
   justify-content: space-between;
@@ -47,26 +40,6 @@ const HeaderBox = styled.div`
   max-width: 1200px;
   margin-bottom: 40px;
 `;
-
-const ViewOptions = styled.div`
-  display: flex;
-  gap: 10px;
-`;
-
-const ViewButton = styled.button`
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: none;
-  font-weight: bold;
-  background-color: ${({ active }) => (active ? '#ff5c8a' : '#fbe4eb')};
-  color: ${({ active }) => (active ? '#fff' : '#333')};
-  cursor: pointer;
-  &:hover {
-    background-color: #ff7fa4;
-    color: white;
-  }
-`;
-
 
 const FilterBox = styled.div`
   display: flex;
@@ -522,7 +495,7 @@ const MyAlbum = () => {
     editData={editingPost}     
   />
 )}
-      <AddButton onClick={() => setIsAddModalOpen(true)}>＋</AddButton>
+      <AddButton onClick={() => setIsAddModalOpen(true)}></AddButton>
       <TrashZone
         onDragOver={(e) => e.preventDefault()}
         onDrop={() => {
