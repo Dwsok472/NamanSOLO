@@ -11,8 +11,6 @@ import course3 from "../img/banner3.jpg";
 import leftkey from "../img/leftkey.png";
 import rightkey from "../img/rightkey.png";
 
-import { scroller } from "react-scroll";
-
 import ImageMapMapPart from "./ImageMapMapPart";
 import PlaceListPart from "./PlaceListPart";
 
@@ -270,11 +268,35 @@ function MainMap() {
   ];
 
   const scrollToContent = () => {
-    scroller.scrollTo("contentBox", {
-      smooth: true,
-      offset: -60,
-      duration: 500,
-    });
+    const element = document.getElementById("contentBox");
+    if (element) {
+      const elementPosition = element.offsetTop;
+      const offsetPosition = elementPosition;
+      const startPosition = window.pageYOffset;
+      const distance = offsetPosition - startPosition;
+      const duration = 500;
+      let startTime = null;
+      const easedProgress = (t) => t * (2 - t);
+
+      const animateScroll = (currentTime) => {
+        if (startTime === null) {
+          startTime = currentTime;
+        }
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const currentPosition =
+          
+
+        window.scrollTo(0, currentPosition);
+        if (timeElapsed < duration) {
+          requestAnimationFrame(animateScroll);
+        }
+      };
+
+      setTimeout(() => {
+        requestAnimationFrame(animateScroll);
+      }, 100);
+    }
   };
 
   useEffect(() => {
