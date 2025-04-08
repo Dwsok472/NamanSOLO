@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const DeleteButton = ({ isDragOver }) => {
   return (
-    <StyledWrapper className={isDragOver ? "open" : ""}>
+    <StyledWrapper isDragOver={isDragOver}>
       <div className="trash-inner">
         <button className="bin">🗑</button>
         <div className="div">
@@ -74,15 +74,21 @@ const StyledWrapper = styled.div`
     left: 0;
   }
 
-  /* ✅ 드래그 or 마우스 호버 시 뚜껑 애니메이션 */
-  .open .bin::after,
-  .open .bin::before,
-  .trash-inner:hover .bin::after,
-  .trash-inner:hover .bin::before {
+  ${(props) =>
+    props.isDragOver &&
+    `
+    .bin::after {
+      animation: binled 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
+    }
+    .bin::before {
+      animation: ledhead 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
+    }
+  `}
+
+  .trash-inner:hover .bin::after {
     animation: binled 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
   }
 
-  .open .bin::before,
   .trash-inner:hover .bin::before {
     animation: ledhead 500ms 30ms cubic-bezier(0.215, 0.61, 0.355, 0.3) forwards;
   }
@@ -92,10 +98,21 @@ const StyledWrapper = styled.div`
       transform-origin: left bottom;
       transform: rotate(0deg);
     }
-
     50% {
       transform-origin: left bottom;
       transform: rotate(-45deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes ledhead {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(-30deg);
     }
     100% {
       transform: rotate(0deg);
