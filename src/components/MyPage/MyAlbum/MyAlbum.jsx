@@ -137,6 +137,8 @@ const MyAlbum = () => {
   const [editingPost, setEditingPost] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
   const [columns, setColumns] = useState(5); // 기본값: 5개 보기
+  const [isTrashDragOver, setIsTrashDragOver] = useState(false);
+  
 
   const [myPosts, setMyPosts] = useState([
     {
@@ -455,14 +457,19 @@ const MyAlbum = () => {
         </svg>
       </AddButton>
       <TrashZone
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={() => {
-          if (draggedId) handleDeleteAlbum(draggedId);
-          setDraggedId(null);
-        }}
-      >
-        <DeleteButton />
-      </TrashZone>
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsTrashDragOver(true);
+          }}
+          onDragLeave={() => setIsTrashDragOver(false)}
+          onDrop={() => {
+            if (draggedId) handleDeleteAlbum(draggedId);
+            setDraggedId(null);
+            setIsTrashDragOver(false); // 드래그 종료 시 초기화
+          }}
+        >
+          <DeleteButton isDragOver={isTrashDragOver} />
+        </TrashZone>
     </AlbumWrapper>
   );
 };
