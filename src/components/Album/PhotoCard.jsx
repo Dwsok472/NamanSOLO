@@ -4,8 +4,8 @@ import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
 
 const CardWrapper = styled.div`
-  width: 280px;
-  height: 300px;
+  width: ${({ columns }) => (columns === 2 ? '500px' : '280px')};
+  height: ${({ columns }) => (columns === 2 ? '500px' : '300px')};
   padding: 10px;
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
@@ -50,8 +50,8 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: 250px;
-  height: 230px;
+  width: ${({ columns }) => (columns === 2 ? '430px' : '250px')};
+  height: ${({ columns }) => (columns === 2 ? '430px' : '230px')};
   object-fit: cover;
   pointer-events: none;
 `;
@@ -63,7 +63,7 @@ const Caption = styled.div`
   color: #555;
 `;
 
-const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan, onClick, draggable, onDragStart }) => {
+const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan, onClick, draggable, onDragStart, columns  }) => {
   const [imageIndex, setImageIndex] = useState(0);
 
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
@@ -95,6 +95,7 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
         e.stopPropagation(); // 드래그 시 클릭 이벤트 방지
         if (onDragStart) onDragStart(e);
       }}
+      columns={columns}
     >
 
       {multipleImages && (
@@ -102,7 +103,7 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
       )}
 
       {currentImg && (
-        <Image src={currentImg} alt="album" />
+        <Image src={currentImg} alt="album" columns={columns}  />
       )}
 
       {multipleImages && (

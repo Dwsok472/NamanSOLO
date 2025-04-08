@@ -47,6 +47,27 @@ const HeaderBox = styled.div`
   max-width: 1200px;
   margin-bottom: 40px;
 `;
+
+const ViewOptions = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
+const ViewButton = styled.button`
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  font-weight: bold;
+  background-color: ${({ active }) => (active ? '#ff5c8a' : '#fbe4eb')};
+  color: ${({ active }) => (active ? '#fff' : '#333')};
+  cursor: pointer;
+  &:hover {
+    background-color: #ff7fa4;
+    color: white;
+  }
+`;
+
+
 const FilterBox = styled.div`
   display: flex;
   gap: 10px;
@@ -64,6 +85,29 @@ const FilterButton = styled.button`
 
   &:hover {
     background-color: #ff7fa4;
+    color: white;
+  }
+`;
+
+const LayoutControlBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+
+const LayoutButton = styled.button`
+  background-color: #fbe4eb;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background-color: #ff5c8a;
     color: white;
   }
 `;
@@ -112,9 +156,11 @@ const AddButton = styled.button`
 
 const PhotoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
   gap: 40px;
   width: 100%;
+  max-width: 1400px;
+  padding: 0 20px;
 `;
 
 const TrashZone = styled.div`
@@ -149,6 +195,8 @@ const MyAlbum = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
+  const [columns, setColumns] = useState(5); // 기본값: 5개 보기
+
 
 
   const [myPosts, setMyPosts] = useState([
@@ -196,6 +244,163 @@ const MyAlbum = () => {
       comments: [],
       isPublic: true,
     },
+    {
+      id: 4,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 5,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 6,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 7,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 8,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 9,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 10,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 11,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 12,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 13,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 14,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 15,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+    {
+      id: 16,
+      username: 'my_user',
+      title: '첫 데이트 장소',
+      imgurl: [couple1],
+      date: '2025-01-05',
+      location: '서울 연남동',
+      tag: ['데이트', '추억'],
+      likes: ['user2', 'user4'],
+      comments: [],
+      isPublic: true,
+    },
+
   ]);
 
   const handleAddAlbum = (newAlbum) => {
@@ -271,7 +476,15 @@ const MyAlbum = () => {
         </SearchBox>
       </HeaderBox>
 
-        <PhotoGrid>
+      <LayoutControlBox>
+        {[2, 5, 10].map((num) => (
+          <LayoutButton key={num} onClick={() => setColumns(num)}>
+            {num}개 보기
+          </LayoutButton>
+        ))}
+      </LayoutControlBox>
+
+        <PhotoGrid columns={columns}>
           {filteredData.map((album, idx) => (
             <PhotoCard
             key={album.id}
@@ -284,6 +497,7 @@ const MyAlbum = () => {
             draggable
             onDragStart={
               () => setDraggedId(album.id)}
+            columns={columns}
           />
           ))}
         </PhotoGrid>
