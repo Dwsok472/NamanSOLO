@@ -49,7 +49,10 @@ const LovePhrase = styled.h2`
 
 function MainPage() {
   const [displayText, setDisplayText] = useState("");
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    const played = sessionStorage.getItem("introPlayed");
+    return !played; // 아직 본 적 없다면 보여주기
+  });
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
@@ -95,11 +98,19 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
+    if (!showIntro) {
+      // 인트로 안 보여줄 거면 그냥 바로 showMain true로
+      setShowMain(true);
+      setShowLogo(true);
+      return;
+    }
+
     const t1 = setTimeout(() => setAnimateToLogo(true), 2000);
     const t2 = setTimeout(() => setShowLogo(true), 3200);
     const t3 = setTimeout(() => setSlideOut(true), 3600);
     const t4 = setTimeout(() => {
       setShowMain(true);
+      sessionStorage.setItem("introPlayed", "true");
       document.body.classList.remove("blur");
       window.scrollTo({ top: 0 });
     }, 4400);
@@ -137,13 +148,15 @@ function MainPage() {
       />
 
       <PageContainer>
-        <Intro
-          showIntro={showIntro}
-          animateToLogo={animateToLogo}
-          logoPosition={logoPosition}
-          displayText={displayText}
-          slideOut={slideOut}
-        />
+      {showIntro && (
+          <Intro
+            showIntro={showIntro}
+            animateToLogo={animateToLogo}
+            logoPosition={logoPosition}
+            displayText={displayText}
+            slideOut={slideOut}
+          />
+        )}
 
         <MainContent
           id="main-content"

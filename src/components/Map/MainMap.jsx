@@ -271,7 +271,7 @@ function MainMap() {
     const element = document.getElementById("contentBox");
     if (element) {
       const elementPosition = element.offsetTop;
-      const offsetPosition = elementPosition;
+      const offsetPosition = elementPosition - 78;
       const startPosition = window.pageYOffset;
       const distance = offsetPosition - startPosition;
       const duration = 500;
