@@ -9,6 +9,7 @@ import comment from '../img/comment.png';
 import Comment from './Comment';
 import location from '../img/location.png';
 import ImageSlider from '../MyPage/MyAlbum/ImageSlider';
+import Top from './Top';
 
 // 스타일 정의
 const Container = styled.div`
@@ -155,7 +156,30 @@ const EditButton = styled.button`
   }
 `;
 
+const TopWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 20;
+`;
 
+const TopBar = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 10px;
+  background-color: #000;
+  color: white;
+  align-items: center;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+`;
+
+const StarButtonWrapper = styled.div`
+  z-index: 2;
+`;
 
 function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [imageIndex, setImageIndex] = useState(0);
@@ -165,6 +189,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [userLikes, setUserLikes] = useState({}); // 유저별 좋아요 상태 관리
   const currentUser = 'user2'; // 현재 로그인한 사용자 예시
   const [commentCount, setCommentCount] = useState(albumData.comments.length);
+  
 
   useEffect(() => {
     // 초기 좋아요 상태 설정 (기존 좋아요 배열에 포함된 사용자 확인)
@@ -232,14 +257,21 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
       <Backdrop onClick={onClose} />
       <Container>
         <BottomBox isCommentVisible={isCommentVisible}>
-          <Box id={albumData.id}>
+        <Box id={albumData.id}>
+          <TopBar>
             <div className="date">{albumData.date}</div>
-            <img
-              src={leftkey}
-              alt="leftkey"
-              className="leftkey"
-              onClick={prevImage}
-            />
+            <StarButtonWrapper>
+              <StarButton />
+            </StarButtonWrapper>
+          </TopBar>
+
+          <img
+            src={leftkey}
+            alt="leftkey"
+            className="leftkey"
+            onClick={prevImage}
+          />
+
           <div style={{ position: 'relative' }}>
             <EditButton onClick={() => onEdit(albumData)}>수정</EditButton>
             <img
@@ -248,13 +280,14 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
               className="image"
             />
           </div>
-            <img
-              src={rightkey}
-              alt="rightkey"
-              className="rightkey"
-              onClick={nextImage}
-            />
 
+          <img
+            src={rightkey}
+            alt="rightkey"
+            className="rightkey"
+            onClick={nextImage}
+          />
+          
             <div className="boxwrap">
               <div className="box">
                 <div className="username">{albumData.username}</div>
@@ -265,7 +298,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
                   albumId={albumData.id}
                   onLike={() => handleLike(currentUser)}
                   currentUser={currentUser}
-                  likes={Object.keys(userLikes)} // 좋아요를 누른 유저들의 목록을 전달
+                  likes={Object.keys(userLikes)}
                 />
                 <span className="like">{likeCount}</span>
                 <img
@@ -277,6 +310,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
                 <span className="commentCount">{commentCount}</span>
               </div>
             </div>
+  
             <div className="tags">
               {albumData.tag && albumData.tag.length > 0 ? (
                 albumData.tag.map((tag, i) => <span key={i}>#{tag} </span>)
@@ -284,12 +318,13 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
                 <span> </span>
               )}
             </div>
+  
             <div className="map">
               <img src={location} className="locationimg" />
               <div className="location">{albumData.location}</div>
             </div>
           </Box>
-
+  
           {isCommentVisible && selectedAlbumId === albumData.id && (
             <CommentBox>
               <Comment albumData={albumData} onCommentAdd={handleNewComment} />
@@ -298,7 +333,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
         </BottomBox>
       </Container>
     </>
-  );
+  );  
 }
 
 export default AlbumDetailModal;

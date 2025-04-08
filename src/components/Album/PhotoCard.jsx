@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
-import StarButton from "./StarButton";
 
 const CardWrapper = styled.div`
   width: ${({ columns }) => (columns === 2 ? '500px' : '280px')};
@@ -64,13 +63,6 @@ const Caption = styled.div`
   color: #555;
 `;
 
-const StarButtonWrapper = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
-`;
-
 const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", colSpan, rowSpan, onClick, draggable, onDragStart, columns  }) => {
   const [imageIndex, setImageIndex] = useState(0);
 
@@ -105,9 +97,6 @@ const PhotoCard = ({ src, rotate = 0, offsetY = 0, pinColor = '', title = "", co
       }}
       columns={columns}
     >
-      <StarButtonWrapper>
-        <StarButton />
-      </StarButtonWrapper>
 
       {multipleImages && (
         <img src={leftkey} alt="leftkey" className="leftkey" onClick={prevImage} />
