@@ -25,6 +25,7 @@ const Container = styled.div`
     font-size: 4rem;
     font-weight: 700;
     color: #1f1f1f;
+    user-select: none;
   }
 
   .inputbox {
@@ -53,6 +54,13 @@ const Input = styled.input`
   margin-bottom: 30px;
   font-size: 35px;
   font-weight: 700;
+  cursor: pointer;
+
+  &::-webkit-calendar-picker-indicator {
+    opacity: 1;
+    display: block;
+    cursor: pointer;
+  }
 
   &::placeholder {
     font-size: 1rem;
