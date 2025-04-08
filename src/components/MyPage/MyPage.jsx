@@ -167,6 +167,21 @@ const Left = styled.div`
   width: 100%;
 `;
 
+const EditButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #aaa;
+  background-color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f2f2f2;
+  }
+`;
+
 const Button = styled.button`
   margin-left: ${({ isStory }) => (isStory ? "auto" : "0")};
   color: ${({ isStory }) => (isStory ? "#9f142e" : "#000")};
@@ -258,6 +273,7 @@ function MyPage() {
   const navigate = useNavigate();
   const [showCoupleProfile, setShowCoupleProfile] = useState(false);
   const [editDateMode, setEditDateMode] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
 
   const handleButtonClick = (menu) => {
@@ -338,18 +354,25 @@ function MyPage() {
     <Container>
       <ProfileCard>
         <MySetting onClick={() => setShowCoupleProfile(true)} />
-        <PhotoSection>
-          <Img src={image} onClick={FileInput} />
-          <ImgInput
-            type="file"
-            id="file-upload-c"
-            accept="image"
-            onChange={handleImageChange}
-          />
-          <FileButton onClick={FileInput}>
-            <IconImage />
-          </FileButton>
-        </PhotoSection>
+          <EditButton onClick={() => setIsEditMode(prev => !prev)}>
+            {isEditMode ? "완료" : "수정"}
+          </EditButton>
+          <PhotoSection>
+            <Img src={image || ""} alt="" />
+
+            {isEditMode && (
+              <FileButton onClick={FileInput}>
+                <IconImage />
+              </FileButton>
+            )}
+
+            <ImgInput
+              type="file"
+              id="file-upload-c"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </PhotoSection>
         <DateInfo>
           {daysSince !== null && meetingDate && (
             <DaysSince>{daysSince}일</DaysSince>
@@ -368,16 +391,18 @@ function MyPage() {
               ) : (
                 <>
                   {new Date(meetingDate).toLocaleDateString("ko-KR")}
-                  <span
-                    style={{
-                      marginLeft: "8px",
-                      cursor: "pointer",
-                      fontSize: "16px",
-                    }}
-                    onClick={() => setEditDateMode(true)}
-                  >
-                    ✏️
-                  </span>
+                  {isEditMode && (
+                    <span
+                      style={{
+                        marginLeft: "8px",
+                        cursor: "pointer",
+                        fontSize: "16px",
+                      }}
+                      onClick={() => setEditDateMode(true)}
+                    >
+                      ✏️
+                    </span>
+                  )}
                 </>
               )}
             </MeetingDate>
