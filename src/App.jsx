@@ -15,6 +15,7 @@ import AlbumBoard from "./components/Album/AlbumBoard";
 import AdminFeedPage from "./components/Admin/AdminFeedPage";
 import AdminUserPage from "./components/Admin/AdminUserPage";
 import ChatBotButton from "./components/ChatBot/ChatBotButton";
+import ScrollToTop from "./components/MainPage/ScrollToTop";
 
 const AppWrapper = styled.div`
   width: 100vw;
@@ -104,6 +105,7 @@ function AppRoutes() {
         </Routes>
       </MainContent>
       <Footer />
+      <ScrollToTop />
     </AppWrapper>
   );
 }
