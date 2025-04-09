@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
 import MySetting from "./MySetting";
+import Edit from "../img/edit.png";
 
 const Container = styled.div`
   display: flex;
@@ -97,6 +98,18 @@ const DaysSince = styled.p`
 const MeetingDate = styled.p`
   font-size: 1.2rem;
   color: ${({ color }) => color || "#1f1f1f"};
+`;
+const EditIcon = styled.img`
+  align-items: center;
+  width: 1rem;
+  height: 1rem;
+  margin-left: 6px;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
 `;
 
 const NameHeartSection = styled.div`
@@ -380,10 +393,12 @@ function MyPage() {
                         marginLeft: "8px",
                         cursor: "pointer",
                         fontSize: "16px",
+                        display: "inline-flex",
+                        alignItems: "center",
                       }}
                       onClick={() => setEditDateMode(true)}
                     >
-                      ✏️
+                      <EditIcon src={Edit} alt="수정" />
                     </span>
                   )}
                 </>
