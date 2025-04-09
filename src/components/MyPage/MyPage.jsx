@@ -181,6 +181,11 @@ const EditButton = styled.button`
     background-color: #f2f2f2;
   }
 `;
+const ModalWrapper = styled.div`
+  border-radius: 3px;
+  max-height: 90vh;
+  overflow-y: auto;
+`;
 
 const Button = styled.button`
   margin-left: ${({ isStory }) => (isStory ? "auto" : "0")};
@@ -237,28 +242,6 @@ const Backdrop = styled.div`
   z-index: 999;
 `;
 
-const ModalWrapper = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  z-index: 1000;
-  padding: 30px;
-  border-radius: 12px;
-  max-height: 90vh;
-  overflow-y: auto;
-`;
-
-const CloseBtn = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
-`;
 function MyPage() {
   const location = useLocation();
   const pathname = location.pathname;
@@ -354,25 +337,25 @@ function MyPage() {
     <Container>
       <ProfileCard>
         <MySetting onClick={() => setShowCoupleProfile(true)} />
-          <EditButton onClick={() => setIsEditMode(prev => !prev)}>
-            {isEditMode ? "완료" : "수정"}
-          </EditButton>
-          <PhotoSection>
-            <Img src={image || ""} alt="" />
+        <EditButton onClick={() => setIsEditMode((prev) => !prev)}>
+          {isEditMode ? "완료" : "수정"}
+        </EditButton>
+        <PhotoSection>
+          <Img src={image || ""} alt="" />
 
-            {isEditMode && (
-              <FileButton onClick={FileInput}>
-                <IconImage />
-              </FileButton>
-            )}
+          {isEditMode && (
+            <FileButton onClick={FileInput}>
+              <IconImage />
+            </FileButton>
+          )}
 
-            <ImgInput
-              type="file"
-              id="file-upload-c"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
-          </PhotoSection>
+          <ImgInput
+            type="file"
+            id="file-upload-c"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+        </PhotoSection>
         <DateInfo>
           {daysSince !== null && meetingDate && (
             <DaysSince>{daysSince}일</DaysSince>
@@ -474,11 +457,10 @@ function MyPage() {
       </RightProfileCard>
       {showCoupleProfile && (
         <>
-          <Backdrop onClick={() => setShowCoupleProfile(false)} />
           <ModalWrapper>
-            <CloseBtn onClick={() => setShowCoupleProfile(false)}>×</CloseBtn>
-            <CoupleProfile />
+            <CoupleProfile onClose={() => setShowCoupleProfile(false)} />
           </ModalWrapper>
+          <Backdrop onClick={() => setShowCoupleProfile(false)} />
         </>
       )}
     </Container>

@@ -1,27 +1,39 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import iconUser from "../img/people.png";
+import { IconClose } from "../Icons";
 
 const ModalWrapper = styled.div`
+  position: fixed;
   top: 50%;
   left: 50%;
-  width: 100%;
-
+  transform: translate(-50%, -50%);
   background: white;
-  border-radius: 3px;
-  /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); */
   z-index: 1000;
-  /* padding: 30px; */
+  /* padding: 10px; */
+  border-radius: 8px;
+  max-height: 90vh;
+  overflow-y: auto;
 `;
 
 const Top = styled.div`
+  position: relative; /* 중요 */
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* 가운데 정렬 */
   align-items: center;
   background-color: #8c0d17;
   color: white;
   padding: 15px 20px;
   border-radius: 8px 8px 0 0;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  right: 1px;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
 `;
 
 const Content = styled.div`
@@ -65,12 +77,14 @@ const ProfileBox = styled.div`
 const ControlButtons = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 25px;
+  margin-top: 10px;
+  margin-bottom: 25px;
   gap: 20px;
 
   button {
     background-color: #9f142e;
     color: white;
+
     font-size: 1rem;
     padding: 10px 25px;
     border-radius: 8px;
@@ -82,7 +96,7 @@ const ControlButtons = styled.div`
   }
 `;
 
-function CoupleProfile() {
+function CoupleProfile({ onClose }) {
   const [isEditable, setIsEditable] = useState(false);
 
   const [profileF, setProfileF] = useState({
@@ -116,6 +130,9 @@ function CoupleProfile() {
     <ModalWrapper>
       <Top>
         <h2>커플 정보 수정</h2>
+        <CloseButton onClick={onClose}>
+          <IconClose />
+        </CloseButton>
       </Top>
 
       <Content>
