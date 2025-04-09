@@ -156,8 +156,6 @@ const EditButton = styled.button`
   }
 `;
 
-
-
 const TopBar = styled.div`
   width: 100%;
   display: flex;

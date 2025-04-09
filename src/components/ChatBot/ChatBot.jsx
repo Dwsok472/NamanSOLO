@@ -128,6 +128,8 @@ function ChatBot({ onClose }) {
   const [isSending, setIsSending] = useState(false); // 전송 중 여부를 나타내는 상태
   const [messages, setMessages] = useState([]); // 메시지 리스트
   const [botMessageIndex, setBotMessageIndex] = useState(0);
+  const [showOptions, setShowOptions] = useState(false); // 네, 아니요 선택지 주기
+
 
   //임시 챗봇 내용
   const botMessages = [
@@ -161,6 +163,7 @@ function ChatBot({ onClose }) {
           { type: "bot", text: botMessages[botMessageIndex] },
         ]);
         setBotMessageIndex(2); // 2번 인덱스 메시지로 이동
+        setShowOptions(true);
       } else if (botMessageIndex === 2) {
         setMessages((prevMessages) => [
           ...prevMessages,
@@ -218,7 +221,7 @@ function ChatBot({ onClose }) {
               })}
             </MessageList>
           </Main>
-          <Bottom>
+          {/* <Bottom>
             <input
               type="text"
               value={text}
@@ -233,7 +236,7 @@ function ChatBot({ onClose }) {
             >
               전송
             </button>
-          </Bottom>
+          </Bottom> */}
         </Card>
       </Container>
     </>
