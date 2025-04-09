@@ -83,7 +83,7 @@ const AddButton = styled.button`
   svg {
     width: 60px;
     height: 60px;
-    stroke: #571e1e;
+    stroke: #7b1e3c;
     fill: none;
     transition: all 0.3s ease;
   }
