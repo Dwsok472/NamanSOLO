@@ -138,14 +138,12 @@ function ChatBot({ onClose }) {
   ];
 
   useEffect(() => {
-    // 첫 메시지 출력
     setMessages([{ type: "bot", text: botMessages[0] }]);
-  }, []);
-  useEffect(() => {
     setTimeout(() => {
-      setMessages((prev) => [...prev, { type: "bot", text: botMessages[1] }]);
-      setBotMessageIndex(2); // 다음 메시지는 2번부터 시작
-      setShowOptions(true); // "네/아니요" 버튼 표시
+      setMessages((prev) => [...prev, { type: "bot", text: botMessages[1] },
+      ]);
+      setBotMessageIndex(2);
+      setShowOptions(true);
     }, 2000);
   }, []);
 
