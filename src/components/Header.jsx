@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import LoginButton from './Button/LoginButton';
 import RegisterButton from './Button/RegisterButton';
 import { useNavigate } from 'react-router-dom';
+import logo2 from './img/logo2.png';
 
 const Container = styled.header`
   width: 100%;
