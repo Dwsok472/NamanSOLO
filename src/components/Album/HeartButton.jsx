@@ -3,16 +3,20 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 const HeartButton = ({ albumId, likes, currentUser, onLike }) => {
-  const isLiked = likes.includes(currentUser); // 현재 사용자가 이미 좋아요를 눌렀는지 확인
-  const handleClick = () => {
-    onLike(albumId); // 클릭 시 onLike 함수 호출
+  const isLiked = likes.includes(currentUser);
+
+  const handleClick = async () => {
+    await onLike(albumId); // 여기서 onLike는 비동기 함수
   };
 
   return (
     <StyledWrapper>
       <label className="container">
-        <input type="checkbox" checked={isLiked} // 현재 상태에 따라 체크박스 상태 결정
-          onChange={handleClick} />
+        <input
+          type="checkbox"
+          checked={isLiked} // 현재 상태에 따라 체크박스 상태 결정
+          onChange={handleClick}
+        />
         <svg
           id="Layer_1"
           version={1.0}

@@ -1,46 +1,48 @@
-import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
-import { useUserStore } from "../Login/Login";
+import React, { useEffect, useState, useRef } from 'react';
+import styled from 'styled-components';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { useUserStore } from '../Login/Login';
 
 function Top({ filter, onFilterChange }) {
-  const [inputKeyword, setInputKeyword] = useState("");
+  const [inputKeyword, setInputKeyword] = useState('');
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 담기
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
-  const [selected, setSelected] = useState("최신순");
+  const [selected, setSelected] = useState('최신순');
   const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
-
 
   async function handleSearch() {
     try {
       await SearchUser(inputKeyword);
     } catch (error) {
-      alert("로그인 실패! 다시 시도해주세요.");
+      alert('로그인 실패! 다시 시도해주세요.');
     }
   }
   async function SearchUser(inputKeyword) {
-    const jwt = sessionStorage.getItem("jwt-token");
-    if (!jwt) { return; }
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      return;
+    }
     try {
-      const response = await axios.get(`/api/follow/search/all/${inputKeyword}`,
+      const response = await axios.get(
+        `/api/follow/search/all/${inputKeyword}`,
         {
           headers: {
-            Authorization: `Bearer ${jwt}`
-          }
+            Authorization: `Bearer ${jwt}`,
+          },
         }
       );
       if (!response || response.length === 0) {
-        console.log("해당 단어로 존재하는 유저가 없습니다");
+        console.log('해당 단어로 존재하는 유저가 없습니다');
         setSearchResults([]);
         setShowResults(false);
         return;
       }
       setSearchResults(response.data);
       setShowResults(true);
-      console.log(response.data)
+      console.log(response.data);
     } catch (error) {
       setSearchResults([]);
       setShowResults(false);
@@ -49,57 +51,56 @@ function Top({ filter, onFilterChange }) {
 
   useEffect(() => {
     handleSearch();
-  }, [inputKeyword])
+  }, [inputKeyword]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       //검색바를 사용하고 있는데 그 검색바 영역에서 벗어나면!!
       if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
         setShowResults(false); // 검색바 외부 클릭 시 결과 숨기기
-        setInputKeyword("");
+        setInputKeyword('');
         setIsFocused(false);
       }
     };
     // 클릭 이벤트 등록
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     // 컴포넌트가 언마운트될 때 이벤트 제거
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
 
   return (
     <Container>
       <TopBox>
         <button
-          className={selected === "최신순" ? "selected" : ""}
+          className={selected === '최신순' ? 'selected' : ''}
           id="newest"
           onClick={() => {
-            onFilterChange("최신순");
-            setSelected("최신순");
+            onFilterChange('최신순');
+            setSelected('최신순');
           }}
         >
           최신순
         </button>
         <button
-          className={selected === "좋아요순" ? "selected" : ""}
+          className={selected === '좋아요순' ? 'selected' : ''}
           id="like"
-          active={filter === "좋아요순"}
+          active={filter === '좋아요순'}
           onClick={() => {
-            onFilterChange("좋아요순");
-            setSelected("좋아요순");
+            onFilterChange('좋아요순');
+            setSelected('좋아요순');
           }}
         >
           좋아요순
         </button>
         <button
-          className={selected === "댓글순" ? "selected" : ""}
+          className={selected === '댓글순' ? 'selected' : ''}
           id="comment"
-          active={filter === "댓글순"}
+          active={filter === '댓글순'}
           onClick={() => {
-            onFilterChange("댓글순");
-            setSelected("댓글순");
+            onFilterChange('댓글순');
+            setSelected('댓글순');
           }}
         >
           댓글순
@@ -118,10 +119,10 @@ function Top({ filter, onFilterChange }) {
               onChange={(e) => setInputKeyword(e.target.value)}
               onFocus={() => setIsFocused(true)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   inputKeyword
                     ? SearchUser(inputKeyword)
-                    : alert("검색어를 입력해주세요");
+                    : alert('검색어를 입력해주세요');
                 }
               }}
             />
@@ -131,7 +132,7 @@ function Top({ filter, onFilterChange }) {
               onClick={() => {
                 inputKeyword
                   ? SearchUser(inputKeyword)
-                  : alert("검색어를 입력해주세요");
+                  : alert('검색어를 입력해주세요');
               }}
             >
               <svg className="searchIcon" viewBox="0 0 512 512">
@@ -142,7 +143,7 @@ function Top({ filter, onFilterChange }) {
         </SearchBox>
 
         {showResults && (
-          <SearchResults className={showResults ? "show" : ""}>
+          <SearchResults className={showResults ? 'show' : ''}>
             <Wrap>
               <ul>
                 {searchResults.map((user) => (
@@ -154,18 +155,22 @@ function Top({ filter, onFilterChange }) {
                       <img src={user.profileUrl} alt="profile" />
                       <div className="username">{user.username}</div>
                       <button
-                        className={`follow ${user.relation === "FRIEND"
-                          ? "friend"
-                          : user.relation === "FOLLOWING"
-                            ? "following"
-                            : user.relation === "FOLLOWER"
-                              ? "follower"
-                              : "none"
-                          }`}
-                      >  {user.relation === "FRIEND" && "맞팔 중"}
-                        {user.relation === "FOLLOWING" && "팔로우 중"}
-                        {user.relation === "FOLLOWER" && "맞팔하기"}
-                        {user.relation === "NONE" && "팔로우하기"}</button>
+                        className={`follow ${
+                          user.relation === 'FRIEND'
+                            ? 'friend'
+                            : user.relation === 'FOLLOWING'
+                            ? 'following'
+                            : user.relation === 'FOLLOWER'
+                            ? 'follower'
+                            : 'none'
+                        }`}
+                      >
+                        {' '}
+                        {user.relation === 'FRIEND' && '맞팔 중'}
+                        {user.relation === 'FOLLOWING' && '팔로우 중'}
+                        {user.relation === 'FOLLOWER' && '맞팔하기'}
+                        {user.relation === 'NONE' && '팔로우하기'}
+                      </button>
                     </Block>
                   </li>
                 ))}
@@ -181,7 +186,7 @@ function Top({ filter, onFilterChange }) {
 export default Top;
 
 const SearchResults = styled.div`
-  width: 34.5%;
+  width: 334px;
   background-color: #ffffff;
   border-radius: 10px;
   height: 200px;
@@ -245,22 +250,21 @@ const Block = styled.div`
     font-weight: 700;
   }
   .follow.friend {
-  background-color: #707070;
-}
+    background-color: #707070;
+  }
 
-.follow.following {
-  background-color: #ffe600;
-}
+  .follow.following {
+    background-color: #ffe600;
+  }
 
-.follow.follower {
-  background-color: #0af;
-}
+  .follow.follower {
+    background-color: #0af;
+  }
 
-.follow.none {
-  background-color: #000000;
-}
+  .follow.none {
+    background-color: #000000;
+  }
 `;
-
 
 //   useEffect(() => {
 //     const allUser = async () => {
@@ -275,7 +279,6 @@ const Block = styled.div`
 //     };
 //     allUser();
 //   }, []);
-
 
 const Container = styled.div`
   width: 100%;

@@ -2,22 +2,21 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ReComment from './ReComment';
 import axios from 'axios';
-import { AddCommentByAlbumId, getAllCommentByAlbumId } from '../api';
-
+import { useUserStore } from '../Login/Login';
 
 function Comment({ albumData, onCommentAdd }) {
   const [value, setValue] = useState('');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isCommentVisible, setIsCommentVisible] = useState({}); // 각 댓글의 답글 표시 여부 상태 관리
-
+  const currentUser = useUserStore((state) => state.user?.username);
 
   async function GetCommentByAlbumId() {
     try {
       // 서버로 중복 확인 요청
       const response = await axios.get(`/api/comment/album-id/${albumData.id}`);
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setData(response.data);
@@ -29,7 +28,7 @@ function Comment({ albumData, onCommentAdd }) {
   }
   useEffect(() => {
     GetCommentByAlbumId();
-  }, [])
+  }, []);
 
   const handleSubmit = () => {
     AddComment(); // 댓글 등록 함수 호출
@@ -40,27 +39,44 @@ function Comment({ albumData, onCommentAdd }) {
     }
   };
 
-  const AddComment = async () => {
-    if (value.trim() === '') return;
-
-    const newComment = {
-      id: Date.now(),
-      albumId: albumData.id,
-      text: value,
-      username: 'user1',
-      date: new Date().toISOString().split('T')[0],
-    };
-
-    const updatedComments = [...data, newComment];
-    setData(updatedComments);
-    setValue('');
-
-    // ✅ 부모에게 댓글 수 전달
-    if (typeof onCommentAdd === 'function') {
-      onCommentAdd(updatedComments.length);
-    }
+  const newComment = {
+    content: value,
+    albumId: albumData.id,
   };
 
+  const AddComment = async () => {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    if (value.trim() === '') return;
+    try {
+      const response = await axios.post('/api/comment/save', newComment, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        const savedComment = response.data;
+        const updatedComments = [...data, savedComment];
+        setData(updatedComments);
+        setValue('');
+        // ✅ 부모에게 댓글 수 전달
+        if (typeof onCommentAdd === 'function') {
+          onCommentAdd(updatedComments.length);
+        }
+      } else {
+        console.error('등록 실패', response);
+        alert('댓글 등록에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.error('에러 발생', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+  };
 
   const toggleCommentVisibility = (commentId) => {
     setIsCommentVisible((prevVisibility) => ({
@@ -77,7 +93,7 @@ function Comment({ albumData, onCommentAdd }) {
         ) : (
           data.map((comment) => (
             <Box key={comment.id}>
-              <span className="username">{comment.username}</span>
+              <span className="username">{currentUser}</span>
               <span className="date">{comment.addDate}</span>
               <div className="wrap">
                 <Text>{comment.content}</Text>
@@ -208,8 +224,6 @@ export default Comment;
 //   setData(filterdata);
 //   setLoading(false); // 데이터 로드 후 로딩 상태를 false로 변경
 // }, [albumData.id]);
-
-
 
 const Container = styled.div`
   width: 100%;

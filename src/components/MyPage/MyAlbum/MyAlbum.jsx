@@ -1,26 +1,27 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import PhotoCard from "../../Album/PhotoCard";
-import AlbumDetailModal from "../../Album/AlbumDetailModal";
-import AddAlbum from "../../Album/AddAlbum";
-import tape1 from "../../img/tape1.png";
-import tape2 from "../../img/tape2.png";
-import tape3 from "../../img/tape3.png";
-import tape4 from "../../img/tape4.png";
-import tape5 from "../../img/tape5.png";
-import tape6 from "../../img/tape6.png";
-import tape7 from "../../img/tape7.png";
-import DeleteButton from "./DeleteButton";
-import { useUserStore } from "../../Login/Login";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import PhotoCard from '../../Album/PhotoCard';
+import AlbumDetailModal from '../../Album/AlbumDetailModal';
+import AddAlbum from '../../Album/AddAlbum';
+import tape1 from '../../img/tape1.png';
+import tape2 from '../../img/tape2.png';
+import tape3 from '../../img/tape3.png';
+import tape4 from '../../img/tape4.png';
+import tape5 from '../../img/tape5.png';
+import tape6 from '../../img/tape6.png';
+import tape7 from '../../img/tape7.png';
+import DeleteButton from './DeleteButton';
+import { useUserStore } from '../../Login/Login';
+import axios from 'axios';
+import ModifyAlbumAndDetail from './ModifyAlbumAndDetail';
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const MyAlbum = () => {
   const username = useUserStore((state) => state.user?.username);
   const [selectedPost, setSelectedPost] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sortOption, setSortOption] = useState("최신순");
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [sortOption, setSortOption] = useState('최신순');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [draggedId, setDraggedId] = useState(null);
@@ -29,7 +30,7 @@ const MyAlbum = () => {
   const [myPosts, setMyPosts] = useState([]);
 
   async function GetMyAlbum() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
       return;
     }
@@ -37,11 +38,11 @@ const MyAlbum = () => {
       // 서버로 중복 확인 요청
       const response = await axios.get(`/api/album/username/${username}`, {
         headers: {
-          Authorization: `Bearer ${jwt}`
-        }
+          Authorization: `Bearer ${jwt}`,
+        },
       });
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setMyPosts(response.data);
@@ -52,8 +53,7 @@ const MyAlbum = () => {
   }
   useEffect(() => {
     GetMyAlbum();
-  }, [])
-
+  }, []);
 
   const handleAddAlbum = (newAlbum) => {
     setMyPosts((prev) => [newAlbum, ...prev]);
@@ -64,8 +64,8 @@ const MyAlbum = () => {
       post.username.toLowerCase().includes(searchKeyword.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortOption === "좋아요순") return b.likes.length - a.likes.length;
-      if (sortOption === "댓글순") return b.comments.length - a.comments.length;
+      if (sortOption === '좋아요순') return b.greats.length - a.greats.length;
+      if (sortOption === '댓글순') return b.comments.length - a.comments.length;
       return new Date(b.date) - new Date(a.date); // 최신순
     });
 
@@ -101,7 +101,7 @@ const MyAlbum = () => {
       <AlbumInner>
         <HeaderBox>
           <FilterBox>
-            {["최신순", "좋아요순", "댓글순"].map((label) => (
+            {['최신순', '좋아요순', '댓글순'].map((label) => (
               <FilterButton
                 key={label}
                 active={sortOption === label}
@@ -125,7 +125,7 @@ const MyAlbum = () => {
           {filteredData.map((album, idx) => (
             <PhotoCard
               key={album.id}
-              src={album.url.map(media => media.mediaUrl)}
+              src={album.url.map((media) => media.mediaUrl)}
               title={album.title}
               rotate={Math.floor(Math.random() * 6 - 3)}
               offsetY={Math.floor(Math.random() * 20 - 10)}
@@ -138,7 +138,7 @@ const MyAlbum = () => {
           ))}
         </PhotoGrid>
 
-        {isModalOpen && selectedPost && selectedPost.likes && (
+        {isModalOpen && selectedPost && selectedPost.greats && (
           <AlbumDetailModal
             albumData={selectedPost}
             onClose={handleCloseModal}
@@ -147,7 +147,7 @@ const MyAlbum = () => {
         )}
       </AlbumInner>
       {isAddModalOpen && (
-        <AddAlbum
+        <ModifyAlbumAndDetail
           onClose={() => {
             setIsAddModalOpen(false);
             setEditingPost(null);
@@ -224,8 +224,8 @@ const FilterButton = styled.button`
   border-radius: 20px;
   border: none;
   font-weight: 700;
-  background-color: ${({ active }) => (active ? "#8c0d17" : "white")};
-  color: ${({ active }) => (active ? "#fff" : "#333")};
+  background-color: ${({ active }) => (active ? '#8c0d17' : 'white')};
+  color: ${({ active }) => (active ? '#fff' : '#333')};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 
@@ -297,8 +297,6 @@ const TrashZone = styled.div`
   bottom: 30px;
   left: 70px;
 `;
-
-
 
 // const [myPosts, setMyPosts] = useState([
 //   {

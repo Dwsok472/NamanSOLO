@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-
+import { useUserStore } from '../Login/Login';
 
 function ReComment({ commentId }) {
   const [value, setValue] = useState(''); // 리댓글 입력 값
   const [data, setData] = useState([]); // 리댓글 데이터
   const [loading, setLoading] = useState(true); // 로딩 상태
-
+  const currentUser = useUserStore((state) => state.user?.username);
 
   async function GetCommentByCommentId() {
     try {
       // 서버로 중복 확인 요청
-      const response = await axios.get(`/api/recomment/comment-id/${commentId}`);
+      const response = await axios.get(
+        `/api/recomment/comment-id/${commentId}`
+      );
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setData(response.data);
@@ -26,8 +28,7 @@ function ReComment({ commentId }) {
   }
   useEffect(() => {
     GetCommentByCommentId();
-  }, [])
-
+  }, []);
 
   const handleSubmit = () => {
     AddRecomment(); // 리댓글 등록 함수 호출
@@ -39,19 +40,37 @@ function ReComment({ commentId }) {
     }
   };
 
+  const newRecomment = {
+    commentId: commentId,
+    content: value,
+  };
   const AddRecomment = async () => {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
     if (value.trim() === '') return; // 빈 리댓글이 입력되면 등록하지 않음
-
-    const newRecomment = {
-      id: data.length + 1, // 새로 추가되는 리댓글의 ID
-      commentId: commentId, // 해당 댓글에 대한 리댓글
-      text: value, // 리댓글 내용
-      username: 'user1', // 리댓글 작성자 (예시로 'user1')
-      date: new Date().toISOString().split('T')[0], // 현재 날짜
-    };
-
-    setData((prevRecomments) => [...prevRecomments, newRecomment]); // 리댓글 목록에 추가
-    setValue(''); // 입력 필드 초기화
+    try {
+      const response = await axios.post('/api/recomment/save', newRecomment, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200 || response.status === 201) {
+        const savedReComment = response.data;
+        const updatedReComments = [...data, savedReComment];
+        setData(updatedReComments);
+        setValue('');
+      } else {
+        console.error('등록 실패', response);
+        alert('대댓글 등록에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.error('에러 발생', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -62,7 +81,7 @@ function ReComment({ commentId }) {
         ) : (
           data.map((recomment) => (
             <Box key={recomment.id}>
-              <span className="username">{recomment.username}</span>
+              <span className="username">{currentUser}</span>
               <span className="date">{recomment.addDate}</span>
               <Text>{recomment.content}</Text>
             </Box>
@@ -186,7 +205,7 @@ const Input = styled.input`
   outline: none;
   color: white;
   background-color: black;
-  &::placeholder{
+  &::placeholder {
     color: #cfcfcf;
   }
 `;
@@ -199,7 +218,7 @@ const SubmitButton = styled.button`
   cursor: pointer;
   font-size: 0.8rem;
   border-radius: 0;
-  &:hover{
+  &:hover {
     color: #cccccc;
   }
 `;
