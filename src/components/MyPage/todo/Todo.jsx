@@ -238,13 +238,14 @@ const BottomArea = styled.div`
 `;
 
 const SectionH3 = styled.h3`
-  cursor: pointer;
+  cursor: ${({ activeSection }) => (activeSection != 'anniversary'||'travel' ? 'default' : 'pointer')};
   text-align: center;
   font-weight: bold;
   font-size: 1.0rem;
   margin-bottom: 16px;
   user-select: none;
   transition: 0.2s;
+
   &:hover {
     font-size: 1.1rem;
   }
