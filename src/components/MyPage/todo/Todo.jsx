@@ -242,12 +242,14 @@ const SectionH3 = styled.h3`
   text-align: center;
   font-weight: bold;
   font-size: 1.0rem;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   user-select: none;
   transition: 0.2s;
-
-  &:hover {
-    font-size: 1.1rem;
+  img {
+    &:hover {
+      filter: brightness(0.1) invert(0.5);
+      cursor: pointer;
+    }
   }
 `;
 
@@ -482,7 +484,6 @@ function Todo() {
     cellDate.setHours(0, 0, 0, 0);
   
     return events.filter((event) => {
-      // ❗ 전체보기 상태에서는 type 체크 안 함
       if (!showAllEvents && event.type !== activeSection) return false;
   
       if (event.type === 'anniversary') {
@@ -602,69 +603,66 @@ function Todo() {
               </AddButton>
             )}
 
-            <SectionH3
-              onClick={() => {
-                if (!showAllEvents) {
-                  setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary');
-                }
-              }}
-              style={{ cursor: showAllEvents ? 'default' : 'pointer' }}
-            >
-              {showAllEvents ? '전체 일정' : (activeSection === 'anniversary' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} />}
+            <SectionH3>
+              {showAllEvents ? '전체 일정' : (activeSection === 'anniversary' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} 
+                onClick={() => {
+                  if (!showAllEvents) {
+                    setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary');
+                  }
+                }}/>}
             </SectionH3>
 
             <List>
-              {events
-                .filter(e => e.type === activeSection)
-                .map((event, idx) => {
-                  const diffDays = getDiffInDays(
-                    event.type === 'anniversary' ? event.start_date : event.start_date
-                  );
+              {(showAllEvents ? events : events.filter(e => e.type === activeSection)).map((event, idx) => {
 
-                  return (
-                    <ListItem
-                      title={`${ event.type === 'anniversary'?
-                      (event.fixed ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
-                      : event.title + ' ' + event.start_date+' ~ '+event.end_date }`}
-                      key={idx}
-                      onMouseEnter={() => setHoveredItem(idx)}
-                      onMouseLeave={() => setHoveredItem(null)}
-                    >
-                      <div className='eventTitle'>{event.title}</div>
-                      <div className='day'>
-                        <div className='diff'>
-                          {diffDays >= 0
-                            ? diffDays === 0
-                              ? 'Today'
-                              : `D -${diffDays}`
-                            : `D +${Math.abs(diffDays)}`}
-                        </div>
-                        <ListDate>
-                          {event.type === 'anniversary'
-                            ? event.start_date
-                            : <> {event.start_date} <br />~ {event.end_date} </> }
-                        </ListDate>
+                const diffDays = getDiffInDays(
+                  event.type === 'anniversary' ? event.start_date : event.start_date
+                );
+
+                return (
+                  <ListItem
+                    title={`${ event.type === 'anniversary'?
+                    (event.fixed ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
+                    : event.title + ' ' + event.start_date+' ~ '+event.end_date }`}
+                    key={idx}
+                    onMouseEnter={() => setHoveredItem(idx)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    <div className='eventTitle'>{event.title}</div>
+                    <div className='day'>
+                      <div className='diff'>
+                        {diffDays >= 0
+                          ? diffDays === 0
+                            ? 'Today'
+                            : `D -${diffDays}`
+                          : `D +${Math.abs(diffDays)}`}
                       </div>
+                      <ListDate>
+                        {event.type === 'anniversary'
+                          ? event.start_date
+                          : <> {event.start_date} <br />~ {event.end_date} </> }
+                      </ListDate>
+                    </div>
 
-                      {hoveredItem === idx && !event.fixed && (
-                        <>
-                          <IconButton onClick={() => handleDelete(event)}>
-                            <IconClose />
-                          </IconButton>
-                          <EditButton
-                            onClick={() =>
-                              event.type === 'anniversary'
-                                ? setEditingTodoEvent({ ...event })
-                                : setEditingTravelEvent({ ...event })
-                            }
-                          >
-                            <IconEdit />
-                          </EditButton>
-                        </>
-                      )}
-                    </ListItem>
-                  );
-                })}
+                    {hoveredItem === idx && !event.fixed && (
+                      <>
+                        <IconButton onClick={() => handleDelete(event)}>
+                          <IconClose />
+                        </IconButton>
+                        <EditButton
+                          onClick={() =>
+                            event.type === 'anniversary'
+                              ? setEditingTodoEvent({ ...event })
+                              : setEditingTravelEvent({ ...event })
+                          }
+                        >
+                          <IconEdit />
+                        </EditButton>
+                      </>
+                    )}
+                  </ListItem>
+                );
+              })}
                 
             </List>
             <ViewAllButton onClick={() => setShowAllEvents(prev => !prev)}>
