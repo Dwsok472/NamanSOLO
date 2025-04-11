@@ -339,7 +339,7 @@ const ViewAllButton = styled.button`
 
 const ListItem = styled.li`
   font-weight: 700;
-  padding: 9px 0;
+  padding: 4px 0;
   border-bottom: 1px solid #ccc;
   display: flex;
   justify-content: space-between;
