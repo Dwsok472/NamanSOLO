@@ -204,6 +204,12 @@ const EventBox = styled.div`
   }
 `;
 
+const TopArea = styled.div`
+  padding: 20px;
+  border-bottom: 1px solid #e0cfcf;
+  background-color: #ffeef0;
+  flex-shrink: 0;
+`;
 
 const AnniversarySection = styled.section`
   flex: 1 1 30%;
@@ -220,6 +226,15 @@ const AnniversarySection = styled.section`
     height: 16px;
     cursor: pointer;
   }
+`;
+
+const BottomArea = styled.div`
+  padding: 10px 20px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffeef0;
+  flex-shrink: 0;
 `;
 
 const SectionH3 = styled.h3`
@@ -302,6 +317,26 @@ const List = styled.ul`
   padding-left: 0;
 `;
 
+const ViewAllButton = styled.button`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #fff;
+  color: #c41c1c;
+  border: 1px solid #c41c1c;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  &:hover {
+    background-color: #c41c1c;
+    color: #fff;
+  }
+`;
+
 const ListItem = styled.li`
   font-weight: 700;
   padding: 9px 0;
@@ -356,6 +391,8 @@ function Todo() {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  const [showAllEvents, setShowAllEvents] = useState(false);
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -440,25 +477,26 @@ function Todo() {
   const getEventsForDay = (date) => {
     if (!date) return [];
 
-  const cellDate = new Date(date);
-  cellDate.setHours(0, 0, 0, 0);
-
-  return events.filter((event) => {
-    if (event.type !== activeSection) return false; // <-- 이 라인 추가
-
-    if (event.type === 'anniversary') {
-      const eventDate = new Date(`${event.start_date}T00:00:00`);
-      return eventDate.getTime() === cellDate.getTime();
-    }
-
-    if (event.type === 'travel') {
-      const start = new Date(`${event.start_date}T00:00:00`);
-      const end = new Date(`${event.end_date}T00:00:00`);
-      return start <= cellDate && cellDate <= end;
-    }
-
-    return false;
-  });
+    const cellDate = new Date(date);
+    cellDate.setHours(0, 0, 0, 0);
+  
+    return events.filter((event) => {
+      // ❗ 전체보기 상태에서는 type 체크 안 함
+      if (!showAllEvents && event.type !== activeSection) return false;
+  
+      if (event.type === 'anniversary') {
+        const eventDate = new Date(`${event.start_date}T00:00:00`);
+        return eventDate.getTime() === cellDate.getTime();
+      }
+  
+      if (event.type === 'travel') {
+        const start = new Date(`${event.start_date}T00:00:00`);
+        const end = new Date(`${event.end_date}T00:00:00`);
+        return start <= cellDate && cellDate <= end;
+      }
+  
+      return false;
+    });
   };
 
   const getDiffInDays = (dateStr) => {
@@ -553,21 +591,25 @@ function Todo() {
           </LeftPanel>
 
           <AnniversarySection>
-            <AddButton onClick={() => {
-              activeSection === 'anniversary'
-                ? setIsModalOpen(true)
-                : setIsTravelModalOpen(true)
-            }}>
-              <AddButtonImage src={Plus}/>
-            </AddButton>
+            {!showAllEvents && (
+              <AddButton onClick={() => {
+                activeSection === 'anniversary'
+                  ? setIsModalOpen(true)
+                  : setIsTravelModalOpen(true)
+              }}>
+                <AddButtonImage src={Plus} />
+              </AddButton>
+            )}
 
             <SectionH3
-              onClick={() =>
-                setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary')
-              }
-              title="클릭해서 전환"
+              onClick={() => {
+                if (!showAllEvents) {
+                  setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary');
+                }
+              }}
+              style={{ cursor: showAllEvents ? 'default' : 'pointer' }}
             >
-              {activeSection === 'anniversary' ? '기념일' : '데이트'} <img src={Rotate} />
+              {showAllEvents ? '전체 일정' : (activeSection === 'anniversary' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} />}
             </SectionH3>
 
             <List>
@@ -622,7 +664,13 @@ function Todo() {
                     </ListItem>
                   );
                 })}
+                
             </List>
+            <ViewAllButton onClick={() => setShowAllEvents(prev => !prev)}>
+              {showAllEvents
+                ? `${activeSection === 'anniversary' ? '기념일' : '데이트'} 보기`
+                : '전체보기'}
+            </ViewAllButton>
           </AnniversarySection>
         </Main>
 
