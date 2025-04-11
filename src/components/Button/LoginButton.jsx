@@ -20,13 +20,13 @@ const Button = styled.button`
   }
 `;
 
-function LoginButton({ type }) {
+function LoginButton({ type, onClick }) {
   const navigate = useNavigate();
 
   if (type === "navigate") {
     return <Button onClick={() => navigate("/login")}>로그인</Button>;
   } else {
-    return <Button>로그인</Button>;
+    return <Button onClick={onClick}>로그인</Button>;
   }
 }
 

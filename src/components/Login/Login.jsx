@@ -3,18 +3,173 @@ import { IconPassword, IconUser } from "../Icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import LoginButton from "../Button/LoginButton";
-import RegisterButton from "../Button/RegisterButton";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { useRef, useState } from "react";
-import { BrowserRouter } from "react-router-dom";
 import Find from "../FindIdAndPwd/Find";
-//import Couple from "../img/lover.png";
 import { UserLogin } from "../api";
 import WeARE from "../img/weare.png";
 import WeARE1 from "../img/weare1.png";
 import { IconBehind } from "../Icons";
 import RegisterStep1 from "../Register/RegisterStep1";
+import axios from "axios";
+
+export const useUserStore = create(
+  persist(
+    (set) => ({
+      user: null,
+      isLoggedIn: false,
+      login: (user) => set({ user, isLoggedIn: true }), // 로그인 처리
+      logout: () => set({ user: null, isLoggedIn: false }), // 로그아웃 처리
+    }),
+    {
+      name: "user-storage", // sessionStorage에 저장될 키 이름
+      storage: createJSONStorage(() => sessionStorage), // sessionStorage에 저장
+    }
+  )
+);
+const images = [WeARE, WeARE1];
+function Login() {
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const { login, user, isLoggedIn } = useUserStore();
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const view = searchParams.get("view") || "login";
+
+  const handleViewChange = (targetView) => {
+    navigate(`/login?view=${targetView}`);
+  };
+
+  const handleGoMain = () => {
+    navigate("/"); // MainPage 이동
+  };
+
+  async function handleSubmit() {
+    try {
+      const userData = await UserLogin(username, password); // 로그인 API 호출
+      login({ username: userData.username }); // Zustand 상태에 로그인 정보 저장
+      setUsername(""); // 입력 필드 초기화
+      setPassword(""); // 입력 필드 초기화
+      navigate("/"); // 로그인 후 메인으로
+    } catch (error) {
+      alert("로그인 실패! 다시 시도해주세요.");
+    }
+  }
+  async function UserLogin(username, password) {
+    try {
+      const response = await axios.post(
+        "/api/authenticate",
+        {
+          username,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("로그인 성공:", response.data);
+      sessionStorage.setItem("jwt-token", response.data.token);
+      return response.data;
+    } catch (error) {
+      console.error("로그인 실패:", error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  return (
+    <Container>
+      <ImgWrap onClick={handleGoMain}>
+        <img src={images[currentImage]} alt={`slide-${currentImage}`} />
+      </ImgWrap>
+      {view === "login" && (
+        <CardWrap>
+          <Card>
+            <Top>
+              <H1>LOGIN</H1>
+            </Top>
+            <ButtomWrap>
+              <Buttom>
+                {/* 입력 필드들 */}
+                <SmallBox>
+                  <IconUser />
+                  <Input
+                    type="text"
+                    placeholder="아이디를 입력해주세요"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                  />
+                </SmallBox>
+                <SmallBox>
+                  <IconPassword />
+                  <Input
+                    type="password"
+                    placeholder="비밀번호를 입력해주세요"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </SmallBox>
+
+                <FindBox>
+                  <StyledButton onClick={() => handleViewChange("find-id")}>
+                    아이디 찾기
+                  </StyledButton>
+                  <StyledButton onClick={() => handleViewChange("find-pwd")}>
+                    비밀번호 찾기
+                  </StyledButton>
+                  <StyledButton onClick={() => handleViewChange("register")}>
+                    회원가입
+                  </StyledButton>
+                </FindBox>
+
+                <ButtonWrap>
+                  <LoginButton onClick={handleSubmit} />
+                </ButtonWrap>
+              </Buttom>
+            </ButtomWrap>
+          </Card>
+        </CardWrap>
+      )}
+
+      {view === "find-id" && (
+        <FindIdCardWrap>
+          <Find isFindId={true} />
+        </FindIdCardWrap>
+      )}
+
+      {view === "find-pwd" && (
+        <FindIdCardWrap>
+          <Find isFindId={false} />
+        </FindIdCardWrap>
+      )}
+
+      {view === "register" && (
+        <FindIdCardWrap>
+          <RegisterStep1 onNext={() => navigate("/register")} />
+        </FindIdCardWrap>
+      )}
+      <Icon onClick={() => navigate(-1)}>
+        <IconBehind />
+      </Icon>
+    </Container>
+  );
+}
+
+export default Login;
+
 
 const FindIdCardWrap = styled.div`
   width: 550px;
@@ -201,137 +356,3 @@ const Container = styled.div`
   /* background: linear-gradient(to right, #7b1e3c, #ffb3b3, #ffe3e3); */
 `;
 
-export const useUserStore = create(
-  persist(
-    (set) => ({
-      user: null,
-      isLoggedIn: false,
-      login: (user) => set({ user, isLoggedIn: true }), // 로그인 처리
-      logout: () => set({ user: null, isLoggedIn: false }), // 로그아웃 처리
-    }),
-    {
-      name: "user-storage", // sessionStorage에 저장될 키 이름
-      storage: createJSONStorage(() => sessionStorage), // sessionStorage에 저장
-    }
-  )
-);
-
-const images = [WeARE, WeARE1];
-
-function Login() {
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const { login, user, isLoggedIn } = useUserStore();
-  const navigate = useNavigate();
-
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const view = searchParams.get("view") || "login";
-
-  const handleViewChange = (targetView) => {
-    navigate(`/login?view=${targetView}`);
-  };
-
-  const handleGoMain = () => {
-    navigate("/"); // MainPage 이동
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const [currentImage, setCurrentImage] = useState(0);
-
-  async function handleSubmit() {
-    try {
-      const userData = await UserLogin(username, password); // 로그인 API 호출
-      login({ username: userData.username }); // Zustand 상태에 로그인 정보 저장
-      setUsername(""); // 입력 필드 초기화
-      setPassword(""); // 입력 필드 초기화
-    } catch (error) {
-      alert("로그인 실패! 다시 시도해주세요.");
-    }
-  }
-  return (
-    <Container>
-      <ImgWrap onClick={handleGoMain}>
-        <img src={images[currentImage]} alt={`slide-${currentImage}`} />
-      </ImgWrap>
-      {view === "login" && (
-        <CardWrap>
-          <Card>
-            <Top>
-              <H1>LOGIN</H1>
-            </Top>
-            <ButtomWrap>
-              <Buttom>
-                {/* 입력 필드들 */}
-                <SmallBox>
-                  <IconUser />
-                  <Input
-                    type="text"
-                    placeholder="아이디를 입력해주세요"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </SmallBox>
-                <SmallBox>
-                  <IconPassword />
-                  <Input
-                    type="password"
-                    placeholder="비밀번호를 입력해주세요"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </SmallBox>
-
-                <FindBox>
-                  <StyledButton onClick={() => handleViewChange("find-id")}>
-                    아이디 찾기
-                  </StyledButton>
-                  <StyledButton onClick={() => handleViewChange("find-pwd")}>
-                    비밀번호 찾기
-                  </StyledButton>
-                  <StyledButton onClick={() => handleViewChange("register")}>
-                    회원가입
-                  </StyledButton>
-                </FindBox>
-
-                <ButtonWrap>
-                  <LoginButton onClick={handleSubmit} />
-                </ButtonWrap>
-              </Buttom>
-            </ButtomWrap>
-          </Card>
-        </CardWrap>
-      )}
-
-      {view === "find-id" && (
-        <FindIdCardWrap>
-          <Find isFindId={true} />
-        </FindIdCardWrap>
-      )}
-
-      {view === "find-pwd" && (
-        <FindIdCardWrap>
-          <Find isFindId={false} />
-        </FindIdCardWrap>
-      )}
-
-      {view === "register" && (
-        <FindIdCardWrap>
-          <RegisterStep1 onNext={() => navigate("/register")} />
-        </FindIdCardWrap>
-      )}
-      <Icon onClick={() => navigate(-1)}>
-        <IconBehind />
-      </Icon>
-    </Container>
-  );
-}
-
-export default Login;

@@ -4,6 +4,86 @@ import leftkey from "../img/leftkey.png";
 import rightkey from "../img/rightkey.png";
 import StarButton from "./StarButton";
 
+
+const PhotoCard = ({
+  src,
+  rotate = 0,
+  offsetY = 0,
+  pinColor = "",
+  title = "",
+  colSpan,
+  rowSpan,
+  onClick,
+  draggable,
+  onDragStart,
+  columns,
+}) => {
+  const [imageIndex, setImageIndex] = useState(0);
+
+  // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
+  const prevImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : src.length - 1
+    );
+  };
+
+  // 이미지 변경 함수 (오른쪽 화살표 클릭 시)
+  const nextImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex < src.length - 1 ? prevIndex + 1 : 0
+    );
+  };
+  // imgurl이 배열인지, 비어있지 않은지 확인
+  // if (!src || !Array.isArray(src) || src.length === 0) {
+  //   return <p>이미지가 없습니다.</p>;  // src가 없거나 배열이 아닐 때, 또는 비어있을 때 대체 UI
+  // }
+  const currentImg = src?.[imageIndex];
+  const multipleImages = src?.length > 1;
+
+  return (
+    <CardWrapper
+      rotate={rotate}
+      offsetY={offsetY}
+      colSpan={colSpan}
+      rowSpan={rowSpan}
+      onClick={onClick}
+      pinColor={pinColor}
+      draggable={draggable}
+      onDragStart={(e) => {
+        e.stopPropagation(); // 드래그 시 클릭 이벤트 방지
+        if (onDragStart) onDragStart(e);
+      }}
+      columns={columns}
+    >
+      <Pin><img src={pinColor} className="pin" /></Pin>
+      {multipleImages && (
+        <img
+          src={leftkey}
+          alt="leftkey"
+          className="leftkey"
+          onClick={prevImage}
+        />
+      )}
+
+      {currentImg && <Image src={currentImg} alt="album" columns={columns} key={imageIndex} />}
+
+      {multipleImages && (
+        <img
+          src={rightkey}
+          alt="rightkey"
+          className="rightkey"
+          onClick={nextImage}
+        />
+      )}
+
+      {title && <Caption>{title}</Caption>}
+    </CardWrapper>
+  );
+};
+
+export default PhotoCard;
+
+
 const CardWrapper = styled.div`
   width: ${({ columns }) => (columns === 3 ? "500px" : "280px")};
   height: ${({ columns }) => (columns === 3 ? "500px" : "300px")};
@@ -71,79 +151,3 @@ const StarButtonWrapper = styled.div`
   right: 8px;
   z-index: 10;
 `;
-
-const PhotoCard = ({
-  src,
-  rotate = 0,
-  offsetY = 0,
-  pinColor = "",
-  title = "",
-  colSpan,
-  rowSpan,
-  onClick,
-  draggable,
-  onDragStart,
-  columns,
-}) => {
-  const [imageIndex, setImageIndex] = useState(0);
-
-  // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
-  const prevImage = () => {
-    setImageIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : src.length - 1
-    );
-  };
-
-  // 이미지 변경 함수 (오른쪽 화살표 클릭 시)
-  const nextImage = () => {
-    setImageIndex((prevIndex) =>
-      prevIndex < src.length - 1 ? prevIndex + 1 : 0
-    );
-  };
-  // imgurl이 배열인지, 비어있지 않은지 확인
-  // if (!src || !Array.isArray(src) || src.length === 0) {
-  //   return <p>이미지가 없습니다.</p>;  // src가 없거나 배열이 아닐 때, 또는 비어있을 때 대체 UI
-  // }
-  const currentImg = src?.[imageIndex];
-  const multipleImages = src?.length > 1;
-
-  return (
-    <CardWrapper
-      rotate={rotate}
-      offsetY={offsetY}
-      colSpan={colSpan}
-      rowSpan={rowSpan}
-      onClick={onClick}
-      draggable={draggable}
-      onDragStart={(e) => {
-        e.stopPropagation(); // 드래그 시 클릭 이벤트 방지
-        if (onDragStart) onDragStart(e);
-      }}
-      columns={columns}
-    >
-      {multipleImages && (
-        <img
-          src={leftkey}
-          alt="leftkey"
-          className="leftkey"
-          onClick={prevImage}
-        />
-      )}
-
-      {currentImg && <Image src={currentImg} alt="album" columns={columns} />}
-
-      {multipleImages && (
-        <img
-          src={rightkey}
-          alt="rightkey"
-          className="rightkey"
-          onClick={nextImage}
-        />
-      )}
-
-      {title && <Caption>{title}</Caption>}
-    </CardWrapper>
-  );
-};
-
-export default PhotoCard;
