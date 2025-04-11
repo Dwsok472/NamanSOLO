@@ -8,6 +8,103 @@ import Comment from './Comment';
 import location from './img/location.png';
 import ImageSlider from './ImageSlider';
 
+
+
+function MyAlbumModal({ album, onClose }) {
+  const [imageIndex, setImageIndex] = useState(0); // ✅ 이미지 넘기기
+  const [isCommentVisible, setIsCommentVisible] = useState(false);
+  const [likeCount, setLikeCount] = useState(album?.likes?.length || 0);
+  const [userLikes, setUserLikes] = useState({});
+  const [commentCount, setCommentCount] = useState(album?.comments?.length || 0);
+  const currentUser = 'user1';
+
+  useEffect(() => {
+    if (album?.likes) {
+      const initialLikes = album.likes.reduce((acc, user) => {
+        acc[user] = true;
+        return acc;
+      }, {});
+      setUserLikes(initialLikes);
+    }
+  }, [album?.likes]);
+
+  const toggleCommentVisibility = () => {
+    setIsCommentVisible((prev) => !prev);
+  };
+
+  const handleLike = () => {
+    setUserLikes((prevLikes) => {
+      const updated = { ...prevLikes };
+      if (updated[currentUser]) {
+        delete updated[currentUser];
+      } else {
+        updated[currentUser] = true;
+      }
+      setLikeCount(Object.keys(updated).length);
+      return updated;
+    });
+  };
+
+  const handleNewComment = (newCount) => {
+    setCommentCount(newCount);
+  };
+
+  return (
+    <>
+      <Backdrop onClick={onClose} />
+      <Container>
+        <BottomBox $isCommentVisible={isCommentVisible}>
+          <Box>
+            <div className="date">{album?.date}</div>
+            <ImageSlider imgurl={album?.imgurl} />
+            <div className="boxwrap">
+              <div>
+                <div className="username">{album?.username}</div>
+                <div className="title">{album?.title}</div>
+              </div>
+              <div className="button">
+                <HeartButton
+                  albumId={album?.id}
+                  onLike={handleLike}
+                  currentUser={currentUser}
+                  likes={Object.keys(userLikes)}
+                />
+                <span className="like">{likeCount}</span>
+                <img
+                  src={comment}
+                  alt="comment"
+                  className="comment"
+                  onClick={toggleCommentVisibility}
+                />
+                <span className="commentCount">{commentCount}</span>
+              </div>
+            </div>
+
+            <div className="tags">
+              {album?.tag?.map((tag, i) => (
+                <span key={i}>#{tag} </span>
+              ))}
+            </div>
+            <div className="map">
+              <img src={location} alt="location" className="locationimg" />
+              <span>{album?.location}</span>
+            </div>
+          </Box>
+
+          {isCommentVisible && (
+            <CommentBox>
+              <Comment albumData={album} onCommentAdd={handleNewComment} />
+            </CommentBox>
+          )}
+        </BottomBox>
+      </Container>
+    </>
+  );
+}
+
+export default MyAlbumModal;
+
+
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
@@ -131,97 +228,3 @@ const Box = styled.div`
     height: 20px;
   }
 `;
-
-function MyAlbumModal({ album, onClose }) {
-  const [imageIndex, setImageIndex] = useState(0); // ✅ 이미지 넘기기
-  const [isCommentVisible, setIsCommentVisible] = useState(false);
-  const [likeCount, setLikeCount] = useState(album?.likes?.length || 0);
-  const [userLikes, setUserLikes] = useState({});
-  const [commentCount, setCommentCount] = useState(album?.comments?.length || 0);
-  const currentUser = 'user1';
-
-  useEffect(() => {
-    if (album?.likes) {
-      const initialLikes = album.likes.reduce((acc, user) => {
-        acc[user] = true;
-        return acc;
-      }, {});
-      setUserLikes(initialLikes);
-    }
-  }, [album?.likes]);
-  
-  const toggleCommentVisibility = () => {
-    setIsCommentVisible((prev) => !prev);
-  };
-
-  const handleLike = () => {
-    setUserLikes((prevLikes) => {
-      const updated = { ...prevLikes };
-      if (updated[currentUser]) {
-        delete updated[currentUser];
-      } else {
-        updated[currentUser] = true;
-      }
-      setLikeCount(Object.keys(updated).length);
-      return updated;
-    });
-  };
-
-  const handleNewComment = (newCount) => {
-    setCommentCount(newCount);
-  };
-
-    return (
-    <>
-      <Backdrop onClick={onClose} />
-      <Container>
-        <BottomBox $isCommentVisible={isCommentVisible}>
-          <Box>
-            <div className="date">{album?.date}</div>
-            <ImageSlider imgurl={album?.imgurl} />
-            <div className="boxwrap">
-              <div>
-                <div className="username">{album?.username}</div>
-                <div className="title">{album?.title}</div>
-              </div>
-              <div className="button">
-                <HeartButton
-                  albumId={album?.id}
-                  onLike={handleLike}
-                  currentUser={currentUser}
-                  likes={Object.keys(userLikes)}
-                />
-                <span className="like">{likeCount}</span>
-                <img
-                  src={comment}
-                  alt="comment"
-                  className="comment"
-                  onClick={toggleCommentVisibility}
-                />
-                <span className="commentCount">{commentCount}</span>
-              </div>
-            </div>
-
-            <div className="tags">
-              {album?.tag?.map((tag, i) => (
-                <span key={i}>#{tag} </span>
-              ))}
-            </div>
-            <div className="map">
-              <img src={location} alt="location" className="locationimg" />
-              <span>{album?.location}</span>
-            </div>
-          </Box>
-
-          {isCommentVisible && (
-            <CommentBox>
-              <Comment albumData={album} onCommentAdd={handleNewComment} />
-            </CommentBox>
-          )}
-        </BottomBox>
-      </Container>
-    </>
-  );
-}
-
-export default MyAlbumModal;
