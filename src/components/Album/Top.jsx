@@ -368,29 +368,3 @@ const SearchBox = styled.div`
     fill: rgb(114, 114, 114);
   }
 `;
-
-{/* <SearchBox ref={searchBoxRef}>
-          <InputBox>
-            <Input
-              type="text"
-              value={inputKeyword}
-              onChange={(e) => setInputKeyword(e.target.value)}
-              placeholder="USERNAME을 입력해주세요"
-            />
-            <IconSearch
-              //   onClick={() => {
-              //     inputKeyword
-              //       ? navigate(`/search?username=${inputKeyword}`)
-              //       : alert('검색어를 입력해주세요');
-              //   }}
-              onClick={() => {
-                // 검색어가 있을 때만 검색 실행
-                if (inputKeyword) {
-                  searchUsername(inputKeyword);
-                } else {
-                  alert("검색어를 입력해주세요");
-                }
-              }}
-            />
-          </InputBox>
-        </SearchBox> */}

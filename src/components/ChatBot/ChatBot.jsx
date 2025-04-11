@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import ai from "../img/ai.png";
 import styled from "styled-components";
+import { useUserStore } from "../Login/Login";
+
 
 function ChatBot({ onClose }) {
+  const username = useUserStore((state) => state.user?.username);
   const [messages, setMessages] = useState([]); // 메시지 리스트
   const [botMessageIndex, setBotMessageIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false); // 네, 아니요 선택지 주기
@@ -27,7 +30,15 @@ function ChatBot({ onClose }) {
   }, []);
 
   const fetchRecommendation = async () => {
-    const res = await fetch(`/api/chat/recommend?username=${username}`);
+    const jwt = sessionStorage.getItem("jwt-token");
+    if (!jwt) { return; }
+    const res = await fetch(`/api/hugging/recommend?username=${username}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        }
+      }
+    );
     const data = await res.text();
     setMessages((prev) => [...prev, { type: "bot", text: data }]);
     setTimeout(() => {

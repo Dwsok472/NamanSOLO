@@ -7,9 +7,10 @@ import rightkey from '../img/rightkey.png';
 import Modal from './Modal';
 import MapPicker from '../Story/MapPicker';
 import { IconClose, IconClose1, IconImage } from '../Icons';
+import axios from 'axios';
 
 
-function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
+function AddAlbum({ onClose, onAddAlbum }) {
   const [title, setTitle] = useState('');
   const [images, setImages] = useState([]);
   const [imageIndex, setImageIndex] = useState(0);
@@ -26,51 +27,50 @@ function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
     setShowMap(false);
   };
 
-  const submitAlbum = () => {
-    const newAlbum = {
-      id: editMode ? editData.id : Date.now(), // 고유 ID
-      imgurl: images.map((img) =>
-        img.file instanceof File ? img.file : img.preview
-      ), // 이미지 배열
-      title,
-      date: Date.now(), // 현재 시간
-      username: 'user7', // 예시 사용자 이름
-      location: selectedPlace?.address || '', // 예시 위치
-      tag: tags.map((tag) => tag.text), // 입력된 태그
-      likes: [], // 좋아요 목록
-      comments: [], // 댓글 목록
-      isPublic,
-    };
-
-    if (editMode && onEditAlbum) {
-      onEditAlbum(newAlbum);
-    } else {
-      onAddAlbum(newAlbum);
-    }
-
-    onClose(); // 수정 또는 등록 후 닫기
+  const newAlbum = {
+    title,
+    visibility: isPublic ? "PUBLIC" : "PRIVATE", // 문자열 타입
+    mediaUrl: images.map((img, index) => ({
+      id: index,
+      mediaUrl: URL.createObjectURL(img.file), // 서버에서 URL을 요구한다면, 여기에 서버 업로드 URL이 필요
+      mediaType: "PICTURE" // 혹은 "VIDEO" 등으로 변경 가능
+    })),
+    latitude: selectedPlace?.lat || 0,
+    longitude: selectedPlace?.lng || 0,
+    location: selectedPlace?.address || "",
+    tagList: tags.map((tag, index) => ({
+      id: index,
+      name: tag.text
+    }))
   };
 
-  async function PostAlbum(newAlbum) {
-    try {
-      const response = await axios.post(
-        "/api/authenticate",
-        {
-          username,
-          password,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("로그인 성공:", response.data);
-      sessionStorage.setItem("jwt-token", response.data.token);
-      return response.data;
-    } catch (error) {
-      console.error("로그인 실패:", error.response?.data || error.message);
-      throw error;
+  async function submitAlbum() {
+    const jwt = sessionStorage.getItem("jwt-token");
+    if (!jwt) {
+      alert("로그인이 필요합니다.");
+      return;
     }
-  }
+    try {
+      const response = await axios.post("/api/album/save", newAlbum, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        alert("앨범이 등록되었습니다.");
+        onAddAlbum(newAlbum); // 등록된 앨범을 상위로 전달
+        onClose(); // 모달 닫기
+      } else {
+        console.error("등록 실패", response);
+        alert("앨범 등록에 실패하였습니다.");
+      }
+    } catch (error) {
+      console.error("에러 발생", error);
+      alert("서버와 통신 중 오류가 발생했습니다.");
+    }
+  };
 
   const handleSwitchChange = () => {
     setIsPublic((prev) => !prev); // 공개/비공개 상태 토글
@@ -122,36 +122,12 @@ function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
     }
   };
 
-  useEffect(() => {
-    if (editMode && editData) {
-      setTitle(editData.title);
-      setTags(editData.tag.map((t) => ({ id: Date.now() + Math.random(), text: t })));
-      setImages(
-        editData.imgurl.map((img) =>
-          typeof img === 'string'
-            ? { file: null, preview: img } // 문자열이면 preview , 파일이면 file로 처리하는거거
-            : { file: img, preview: URL.createObjectURL(img) }
-        )
-      );
-      setSelectedPlace({ address: editData.location });
-      setIsPublic(editData.isPublic);
-    }
-  }, [editMode, editData]);
-
   // 태그 삭제 함수
   const handleTagDelete = (id) => {
     setTags((prevTags) => prevTags.filter((tag) => tag.id !== id));
   };
   console.log(images);
   console.log(imageIndex);
-
-  const currentImage = images[imageIndex];
-  const previewUrl =
-    currentImage?.preview ||
-    (currentImage?.file instanceof File ? URL.createObjectURL(currentImage.file) : null);
-
-
-
   return (
     <>
       <Back onClick={onClose} />
@@ -165,6 +141,12 @@ function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
               />
             </div>
             <div className="img">
+              <img
+                src={leftkey}
+                alt="leftkey"
+                className="leftkey"
+                onClick={prevImage}
+              />
               {images.length > 0 && (
                 <>
                   <div
@@ -174,7 +156,7 @@ function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
                     <IconClose />
                   </div>
                   <img
-                    src={images[imageIndex].preview || (images[imageIndex].file && URL.createObjectURL(images[imageIndex].file))}
+                    src={URL.createObjectURL(images[imageIndex].file)}
                     alt={`image-${imageIndex}`}
                     className="current-image"
                   />
@@ -235,7 +217,7 @@ function AddAlbum({ onClose, onAddAlbum, onEditAlbum, editMode, editData }) {
 
               {selectedPlace && (
                 <div className="address">
-                  <strong>{selectedPlace.address}</strong>
+                  선택된 위치: <strong>{selectedPlace.address}</strong>
                 </div>
               )}
             </div>
@@ -415,15 +397,9 @@ const Box = styled.div`
       }
       .location {
         font-size: 0.8rem;
-        color: #ffffff;      
+        color: #ffffff;
       }
     }
-    .address{
-        font-size: 0.8rem;
-        text-align: start;
-        padding-left: 10px;
-
-      }
     .tags-list {
       width: 100%;
       background-color: black;
