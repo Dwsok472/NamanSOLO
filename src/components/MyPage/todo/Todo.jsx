@@ -12,6 +12,7 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
+import { fetchAnniversaries } from '../../api2';
 // import useUserStore from '../../stores/useUserStore'; 
 
 // const { user, setEvents } = useUserStore();
@@ -399,15 +400,28 @@ function Todo() {
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [events, setEvents] = useState([
-    { id:2, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary' },
-    { id:3, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', fixed:true },
-  ]);
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const data = await fetchAnniversaries();
+        setEvents(data);
+      } catch (err) {
+        console.error('기념일 불러오기 실패:', err);
+      }
+    };
+  
+    loadEvents();
+  }, []);
+  // const [events, setEvents] = useState([
+  //   { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary', editable:true },
+  //   { id:2, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', editable:false },
+  // ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary' });
-  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [] });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary', editable:true });
+  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [], editable:true });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
   const [viewTravelEvent, setViewTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
@@ -577,9 +591,9 @@ function Todo() {
                                 onMouseEnter={() => setHoveringEventId(event.id)}
                                 onMouseLeave={() => setHoveringEventId(null)}
                                 $isHovered={hoveringEventId === event.id}
-                                onClick={() => event.type === 'anniversary' ? (!event.fixed ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
+                                onClick={() => event.type === 'anniversary' ? (event.editable ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
                               >
-                                <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (event.fixed?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
+                                <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (!event.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
                               </EventBox>
                             ))}
                           </StyledTd>
@@ -593,15 +607,7 @@ function Todo() {
           </LeftPanel>
 
           <AnniversarySection>
-            {!showAllEvents && (
-              <AddButton onClick={() => {
-                activeSection === 'anniversary'
-                  ? setIsModalOpen(true)
-                  : setIsTravelModalOpen(true)
-              }}>
-                <AddButtonImage src={Plus} />
-              </AddButton>
-            )}
+            
 
             <SectionH3>
               {showAllEvents ? '전체 일정' : (activeSection === 'anniversary' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} 
@@ -622,7 +628,7 @@ function Todo() {
                 return (
                   <ListItem
                     title={`${ event.type === 'anniversary'?
-                    (event.fixed ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
+                    (!event.editable ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
                     : event.title + ' ' + event.start_date+' ~ '+event.end_date }`}
                     key={idx}
                     onMouseEnter={() => setHoveredItem(idx)}
@@ -644,7 +650,7 @@ function Todo() {
                       </ListDate>
                     </div>
 
-                    {hoveredItem === idx && !event.fixed && (
+                    {hoveredItem === idx && event.editable && (
                       <>
                         <IconButton onClick={() => handleDelete(event)}>
                           <IconClose />
@@ -665,6 +671,15 @@ function Todo() {
               })}
                 
             </List>
+            {!showAllEvents && (
+              <AddButton onClick={() => {
+                activeSection === 'anniversary'
+                  ? setIsModalOpen(true)
+                  : setIsTravelModalOpen(true)
+              }}>
+                <AddButtonImage src={Plus} />
+              </AddButton>
+            )}
             <ViewAllButton onClick={() => setShowAllEvents(prev => !prev)}>
               {showAllEvents
                 ? `${activeSection === 'anniversary' ? '기념일' : '데이트'} 보기`
@@ -726,6 +741,7 @@ function Todo() {
                 start_date: newAnniversaryEvent.start_date,
                 color: newAnniversaryEvent.color,
                 type: 'anniversary',
+                editable:true,
               };
             
               setEvents([...events, eventToAdd]);
