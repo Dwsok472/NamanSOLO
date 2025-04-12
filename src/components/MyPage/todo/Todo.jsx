@@ -12,7 +12,7 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
-import { fetchAnniversaries } from '../../api2';
+import { fetchAnniversaries, fetchTravels } from '../../api2';
 // import useUserStore from '../../stores/useUserStore'; 
 
 // const { user, setEvents } = useUserStore();
@@ -403,16 +403,23 @@ function Todo() {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const loadEvents = async () => {
-      try {
-        const data = await fetchAnniversaries();
-        setEvents(data);
-      } catch (err) {
-        console.error('기념일 불러오기 실패:', err);
-      }
+      const [annivs, travels] = await Promise.all([
+        fetchAnniversaries(),
+        fetchTravels(),
+      ]);
+      
+      const all = [...annivs, ...travels].map(ev => ({
+        ...ev,
+        start_date: ev.startDate,
+        end_date: ev.endDate,
+      }));
+  
+      setEvents(all);
     };
   
     loadEvents();
   }, []);
+  
   // const [events, setEvents] = useState([
   //   { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary', editable:true },
   //   { id:2, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', editable:false },
@@ -453,7 +460,7 @@ function Todo() {
   const handleDelete = 
   // async
   (eventToDelete) => {
-    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type=='anniversary'? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
+    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toLowerCase()=='anniversary'? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
 
     // try {
@@ -491,28 +498,33 @@ function Todo() {
 
   const [hoveringEventId, setHoveringEventId] = useState(null);
 
-  const getEventsForDay = (date) => {
-    if (!date) return [];
+  const formatDate = (date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
-    const cellDate = new Date(date);
-    cellDate.setHours(0, 0, 0, 0);
-  
-    return events.filter((event) => {
-      if (!showAllEvents && event.type !== activeSection) return false;
-  
-      if (event.type === 'anniversary') {
-        const eventDate = new Date(`${event.start_date}T00:00:00`);
-        return eventDate.getTime() === cellDate.getTime();
-      }
-  
-      if (event.type === 'travel') {
-        const start = new Date(`${event.start_date}T00:00:00`);
-        const end = new Date(`${event.end_date}T00:00:00`);
-        return start <= cellDate && cellDate <= end;
-      }
-  
-      return false;
+  const getEventsForDay = (date) => {
+      if (!date) return [];
+
+    const cellDateStr = formatDate(date); // 🧠 요거!
+
+    const matching = events.filter((event) => {
+      if (!showAllEvents && event.type.toLowerCase() !== activeSection) return false;
+
+      const eventStart = event.start_date;
+      const eventEnd = event.last_date;
+
+      const isMatch = (
+        eventStart <= cellDateStr &&
+        cellDateStr <= eventEnd
+      );
+
+      return isMatch;
     });
+
+    return matching;
   };
 
   const getDiffInDays = (dateStr) => {
@@ -587,13 +599,13 @@ function Todo() {
                               <EventBox
                                 key={i}
                                 color={event.color}
-                                className={`${event.type}${event.id}`}
+                                className={`${event.type.toLowerCase()}${event.id}`}
                                 onMouseEnter={() => setHoveringEventId(event.id)}
                                 onMouseLeave={() => setHoveringEventId(null)}
                                 $isHovered={hoveringEventId === event.id}
-                                onClick={() => event.type === 'anniversary' ? (event.editable ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
+                                onClick={() => event.type.toLowerCase() === 'anniversary' ? (event.editable ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
                               >
-                                <div title={event.type === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (!event.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
+                                <div title={event.type.toLowerCase() === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (!event.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
                               </EventBox>
                             ))}
                           </StyledTd>
@@ -619,15 +631,15 @@ function Todo() {
             </SectionH3>
 
             <List>
-              {(showAllEvents ? events : events.filter(e => e.type === activeSection)).map((event, idx) => {
+              {(showAllEvents ? events : events.filter(e => e.type.toLowerCase() === activeSection)).map((event, idx) => {
 
                 const diffDays = getDiffInDays(
-                  event.type === 'anniversary' ? event.start_date : event.start_date
+                  event.type.toLowerCase() === 'anniversary' ? event.start_date : event.start_date
                 );
 
                 return (
                   <ListItem
-                    title={`${ event.type === 'anniversary'?
+                    title={`${ event.type.toLowerCase() === 'anniversary'?
                     (!event.editable ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
                     : event.title + ' ' + event.start_date+' ~ '+event.end_date }`}
                     key={idx}
@@ -644,7 +656,7 @@ function Todo() {
                           : `D +${Math.abs(diffDays)}`}
                       </div>
                       <ListDate>
-                        {event.type === 'anniversary'
+                        {event.type.toLowerCase() === 'anniversary'
                           ? event.start_date
                           : <> {event.start_date} <br />~ {event.end_date} </> }
                       </ListDate>
@@ -657,7 +669,7 @@ function Todo() {
                         </IconButton>
                         <EditButton
                           onClick={() =>
-                            event.type === 'anniversary'
+                            event.type.toLowerCase() === 'anniversary'
                               ? setEditingTodoEvent({ ...event })
                               : setEditingTravelEvent({ ...event })
                           }

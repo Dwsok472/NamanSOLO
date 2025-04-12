@@ -13,6 +13,15 @@ export const fetchAnniversaries = async () => {
   return res.data;
 };
 
+export const fetchTravels = async () => {
+  const res = await axios.get(`${BASE_URL}/travel/all`, {
+    headers: {
+      'Authorization' : `Bearer ${token}`
+    }
+  });
+  return res.data;
+}
+
 export const updateAnniversary = async (id, event) => {
   const payload = {
     id,
