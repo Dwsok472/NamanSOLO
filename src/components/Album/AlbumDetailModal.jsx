@@ -120,7 +120,7 @@ function AlbumDetailModal({ albumData, onClose }) {
             <TopBar>
               <div className="date">{albumData.date}</div>
               <StarButtonWrapper>
-                <StarButton />
+                <StarButton albumId={albumData.id} />
               </StarButtonWrapper>
             </TopBar>
             {multipleImages && (

@@ -9,9 +9,12 @@ function Top({ filter, onFilterChange }) {
   const [searchResults, setSearchResults] = useState([]); // 검색 결과 담기
   const [showResults, setShowResults] = useState(false); //결과 보여줄지 말지
   const searchBoxRef = useRef(null); // 바깥 영역을 클릭할때는 다시 렌더링 하지 말기!(검색바 참조)
+  const searchResultsRef = useRef(null);
   const [selected, setSelected] = useState('최신순');
   const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
+  const [updatingUser, setUpdatingUser] = useState(null); // 팔로우 중인 유저 username
+  const username = useUserStore((state) => state.user?.username);
 
   async function handleSearch() {
     try {
@@ -53,10 +56,60 @@ function Top({ filter, onFilterChange }) {
     handleSearch();
   }, [inputKeyword]);
 
+  async function addFollow(targetUsername) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    const newFollow = {
+      follower: username,
+      following: targetUsername,
+    };
+    try {
+      const response = await axios.post(
+        '/api/follow/new/following',
+        newFollow,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        setSearchResults((prevResults) =>
+          prevResults.map((user) =>
+            user.username === targetUsername
+              ? {
+                  ...user, //기존 유저 객체를 그대로 복사
+                  // 관계만 변경해주기
+                  relation:
+                    user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
+                }
+              : user
+          )
+        );
+      } else {
+        console.error('등록 실패', response);
+        alert('팔로우 등록에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.error('에러 발생', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+  }
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       //검색바를 사용하고 있는데 그 검색바 영역에서 벗어나면!!
-      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(e.target) &&
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(e.target)
+      ) {
         setShowResults(false); // 검색바 외부 클릭 시 결과 숨기기
         setInputKeyword('');
         setIsFocused(false);
@@ -143,17 +196,22 @@ function Top({ filter, onFilterChange }) {
         </SearchBox>
 
         {showResults && (
-          <SearchResults className={showResults ? 'show' : ''}>
+          <SearchResults
+            ref={searchResultsRef}
+            className={showResults ? 'show' : ''}
+          >
             <Wrap>
               <ul>
                 {searchResults.map((user) => (
-                  <li
-                    key={user.username}
-                    onClick={() => navigate(`/user/story/${user.username}`)}
-                  >
+                  <li key={user.username}>
                     <Block>
                       <img src={user.profileUrl} alt="profile" />
-                      <div className="username">{user.username}</div>
+                      <div
+                        className="username"
+                        onClick={() => navigate(`/user/story/${user.username}`)}
+                      >
+                        {user.username}
+                      </div>
                       <button
                         className={`follow ${
                           user.relation === 'FRIEND'
@@ -164,6 +222,14 @@ function Top({ filter, onFilterChange }) {
                             ? 'follower'
                             : 'none'
                         }`}
+                        onClick={() => {
+                          if (
+                            user.relation === 'FOLLOWER' ||
+                            user.relation === 'NONE'
+                          ) {
+                            addFollow(user.username);
+                          }
+                        }}
                       >
                         {' '}
                         {user.relation === 'FRIEND' && '맞팔 중'}

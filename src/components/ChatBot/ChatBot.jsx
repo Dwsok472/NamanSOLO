@@ -1,66 +1,85 @@
-import React, { useState, useEffect } from "react";
-import ai from "../img/ai.png";
-import styled from "styled-components";
-import { useUserStore } from "../Login/Login";
-
+import React, { useState, useEffect } from 'react';
+import ai from '../img/ai.png';
+import styled from 'styled-components';
+import { useUserStore } from '../Login/Login';
 
 function ChatBot({ onClose }) {
   const username = useUserStore((state) => state.user?.username);
-  const [messages, setMessages] = useState([]); // 메시지 리스트
-  const [botMessageIndex, setBotMessageIndex] = useState(0);
-  const [showOptions, setShowOptions] = useState(false); // 네, 아니요 선택지 주기
+  const [messages, setMessages] = useState([]);
+  const [showOptions, setShowOptions] = useState(false);
+  const [recommendationCount, setRecommendationCount] = useState(0); // 추천 횟수 저장
 
-
-  //임시 챗봇 내용
-  const botMessages = [
-    "안녕하세요! 데이트 장소 추천을 해주는 챗봇입니다",
-    "데이트 장소 추천을 해드릴까요?",
-    "감사합니다.",
-    "챗봇 이용이 마무리되었습니다.",
-  ];
+  const botMessages = {
+    greeting: '안녕하세요! 데이트 장소 추천을 해주는 챗봇입니다',
+    ask: '데이트 장소 추천을 해드릴까요?',
+    more: '다른 장소도 추천해드릴까요?',
+    thanks: '감사합니다.',
+    end: '챗봇 이용이 마무리되었습니다.',
+    bye: '알겠습니다. 다음에 도와드릴게요!',
+  };
 
   useEffect(() => {
-    setMessages([{ type: "bot", text: botMessages[0] }]);
+    setMessages([{ type: 'bot', text: botMessages.greeting }]);
     setTimeout(() => {
-      setMessages((prev) => [...prev, { type: "bot", text: botMessages[1] },
-      ]);
-      setBotMessageIndex(2);
+      setMessages((prev) => [...prev, { type: 'bot', text: botMessages.ask }]);
       setShowOptions(true);
-    }, 2000);
+    }, 1500);
   }, []);
 
   const fetchRecommendation = async () => {
-    const jwt = sessionStorage.getItem("jwt-token");
-    if (!jwt) { return; }
-    const res = await fetch(`/api/hugging/recommend?username=${username}`,
-      {
-        headers: {
-          Authorization: `Bearer ${jwt}`
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+
+    try {
+      const res = await fetch(
+        `/api/hugging/recommend?username=${username}&count=${recommendationCount}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
         }
+      );
+
+      const data = await res.text();
+
+      setMessages((prev) => [...prev, { type: 'bot', text: data }]);
+
+      if (recommendationCount === 0) {
+        // 첫 번째 추천 후
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            { type: 'bot', text: botMessages.more },
+          ]);
+          setShowOptions(true);
+          setRecommendationCount(1);
+        }, 1500);
+      } else {
+        // 두 번째 추천 후
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            { type: 'bot', text: botMessages.thanks },
+            { type: 'bot', text: botMessages.end },
+          ]);
+        }, 1500);
       }
-    );
-    const data = await res.text();
-    setMessages((prev) => [...prev, { type: "bot", text: data }]);
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { type: "bot", text: botMessages[2] },
-        { type: "bot", text: botMessages[3] },
-      ]);
-    }, 2000);
+    } catch (err) {
+      console.error('추천 에러:', err);
+    }
   };
 
-
   const handleOptionClick = (optionText) => {
-    setMessages((prev) => [...prev, { type: "user", text: optionText }]);
+    setMessages((prev) => [...prev, { type: 'user', text: optionText }]);
     setShowOptions(false);
-    if (optionText === "네") {
+
+    if (optionText === '네') {
       fetchRecommendation();
     } else {
       setMessages((prev) => [
         ...prev,
-        { type: "bot", text: "알겠습니다. 다음에 도와드릴게요!" },
-        { type: "bot", text: botMessages[3] },
+        { type: 'bot', text: botMessages.bye },
+        { type: 'bot', text: botMessages.end },
       ]);
     }
   };
@@ -75,25 +94,22 @@ function ChatBot({ onClose }) {
             <span>채널봇</span>
           </Top>
           <Main>
-            {/* 메시지 리스트 출력 */}
             <MessageList>
-              {messages.map((message, index) => {
-                return message.type === "bot" ? (
-                  <BotMessage key={index} className="botmessage">
-                    {message.text}
-                  </BotMessage>
+              {messages.map((message, index) =>
+                message.type === 'bot' ? (
+                  <BotMessage key={index}>{message.text}</BotMessage>
                 ) : (
-                  <UserMessage key={index} className="usermessage">
-                    {message.text}
-                  </UserMessage>
-                );
-              })}
+                  <UserMessage key={index}>{message.text}</UserMessage>
+                )
+              )}
             </MessageList>
           </Main>
           {showOptions && (
             <Bottom>
-              <button onClick={() => handleOptionClick("네")}>네</button>
-              <button onClick={() => handleOptionClick("아니요")}>아니요</button>
+              <button onClick={() => handleOptionClick('네')}>네</button>
+              <button onClick={() => handleOptionClick('아니요')}>
+                아니요
+              </button>
             </Bottom>
           )}
         </Card>
@@ -103,7 +119,6 @@ function ChatBot({ onClose }) {
 }
 
 export default ChatBot;
-
 //  // 첫 번째 질문에 대한 응답
 //  if (botMessageIndex === 2 && optionText === "네") {
 //   setTimeout(() => {
@@ -219,18 +234,17 @@ const Bottom = styled.div`
   align-items: center;
   display: flex;
   gap: 5px;
-  button{
-      color: black;
-      background-color: white;
-      font-size: 0.8rem;
-      font-weight: 700;
-      width: 100px;
-      &:hover{
-        color: white;
-        background-color: #8c0d17;
-      }
+  button {
+    color: black;
+    background-color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 100px;
+    &:hover {
+      color: white;
+      background-color: #8c0d17;
+    }
   }
-
 `;
 
 const Main = styled.div`
