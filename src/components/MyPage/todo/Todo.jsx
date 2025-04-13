@@ -12,7 +12,7 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
-import { fetchAnniversaries, fetchTravels } from '../../api2';
+import { createAnniversary, createTravel, deleteAnniversary, deleteTravel, fetchAnniversaries, fetchTravels, updateAnniversary, updateTravel } from '../../api2';
 // import useUserStore from '../../stores/useUserStore'; 
 
 // const { user, setEvents } = useUserStore();
@@ -403,18 +403,16 @@ function Todo() {
   const [events, setEvents] = useState([]);
   useEffect(() => {
     const loadEvents = async () => {
-      const [annivs, travels] = await Promise.all([
-        fetchAnniversaries(),
-        fetchTravels(),
-      ]);
-      
-      const all = [...annivs, ...travels].map(ev => ({
-        ...ev,
-        start_date: ev.startDate,
-        end_date: ev.endDate,
-      }));
-  
-      setEvents(all);
+      try {
+        const [annivs, travels] = await Promise.all([
+          fetchAnniversaries(),
+          fetchTravels(),
+        ]);
+    
+        setEvents([...annivs, ...travels]);
+      } catch (e) {
+        console.error('초기 데이터 로딩 실패', e);
+      }
     };
   
     loadEvents();
@@ -438,38 +436,36 @@ function Todo() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [yearRangeStart, setYearRangeStart] = useState(currentYear - 2);
 
-  const handleUpdate = 
-  // async
-  (updatedEvent) => {
-    // try {
-    //   await api2.updateEvent(updatedEvent);
-    //   setEvents(events.map(event =>
-    //     event.id === updatedEvent.id ? updatedEvent : event
-    //   ));
-    // } catch (err) {
-    //   console.error('수정 실패:', err);
-    // }
-    setEvents(events.map(event =>
-      event.id === updatedEvent.id
-      ? updatedEvent
-      : event
-    ));
-    setEditingTodoEvent(null);
+  const handleUpdate = async (updatedEvent) => {
+    try {
+      let updated;
+      if (updatedEvent.type === 'anniversary') {
+        updated = await updateAnniversary(updatedEvent.id, updatedEvent);
+      } else {
+        updated = await updateTravel(updatedEvent.id, updatedEvent);
+      }
+      setEvents(events.map(event => event.id === updated.id ? updated : event));
+      setEditingTodoEvent(null);
+      setEditingTravelEvent(null);
+    } catch (e) {
+      console.error('수정 실패:', e);
+    }
   };
 
-  const handleDelete = 
-  // async
-  (eventToDelete) => {
-    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toLowerCase()=='anniversary'? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
+  const handleDelete = async (eventToDelete) => {
+    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type === 'anniversary' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
 
-    // try {
-    //   await api2.deleteEvent(eventToDelete.id);
-    //   setEvents(events.filter(event => event !== eventToDelete));
-    // } catch (err) {
-    //   console.error('삭제 실패:', err);
-    // }
-    setEvents(events.filter(event => event !== eventToDelete));
+    try {
+      if (eventToDelete.type === 'anniversary') {
+        await deleteAnniversary(eventToDelete.id);
+      } else {
+        await deleteTravel(eventToDelete.id);
+      }
+      setEvents(events.filter(event => event !== eventToDelete));
+    } catch (e) {
+      console.error('삭제 실패:', e);
+    }
   };
 
   const colorSamples = ['#ffc0cb', '#ffb6c1', '#ffd700', '#90ee90', '#87cefa', '#dda0dd', '#ff7f50', '#b0c4de'];
@@ -723,43 +719,25 @@ function Todo() {
             paletteOpen={anniversaryPaletteOpen}
             setPaletteOpen={setAnniversaryPaletteOpen}
             colorSamples={colorSamples}
-            onSubmit={
-              // async
-              (e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
 
-              
-              // const eventToAdd = {
-              //   title: newAnniversaryEvent.title,
-              //   start_date: newAnniversaryEvent.start_date,
-              //   color: newAnniversaryEvent.color,
-              //   type: 'anniversary',
-              // };
-            
-              // try {
-              //   const created = await api2.createAnniversary(eventToAdd);
-              //   setEvents([...events, created]);
-              // } catch (err) {
-              //   console.error('기념일 추가 실패', err);
-              // }
-            
-              // setIsModalOpen(false);
-              // setAnniversaryPaletteOpen(false);
-              
-              
               const eventToAdd = {
-                id: events.length + 1,
                 title: newAnniversaryEvent.title,
-                start_date: newAnniversaryEvent.start_date,
+                startDate: newAnniversaryEvent.start_date,
                 color: newAnniversaryEvent.color,
-                type: 'anniversary',
-                editable:true,
               };
             
-              setEvents([...events, eventToAdd]);
-              setNewAnniversaryEvent({ title: '', date: '', color: '#ffc0cb', type: 'anniversary' });
-              setIsModalOpen(false);
-              setAnniversaryPaletteOpen(false);
+              try {
+                const created = await createAnniversary(eventToAdd);
+                setEvents([...events, created]);
+                setNewAnniversaryEvent({ title: '', start_date: '', color: '#ffc0cb', type: 'anniversary' });
+                setIsModalOpen(false);
+                setAnniversaryPaletteOpen(false);
+              } catch (err) {
+                console.error("❌ 기념일 추가 실패:", err);
+                alert("서버에서 기념일 등록 중 문제가 발생했습니다!");
+              }
             }}
           />
         )}
@@ -839,41 +817,43 @@ function Todo() {
             setPaletteOpen={setTravelPaletteOpen}
             colorSamples={colorSamples}
             
-            onSubmit={
-              // async
-              (e) => {
+            onSubmit={ async (e) => {
               e.preventDefault();
             
               const start = new Date(newTravelEvent.start_date);
               const end = new Date(newTravelEvent.end_date);
-
+            
               if (start > end) {
                 alert('종료일은 시작일보다 빠를 수 없습니다!');
                 return;
               }
             
-              const travelEvent = {
-                id: events.length + 1,
-                title: newTravelEvent.title,
-                start_date: newTravelEvent.start_date,
-                end_date: newTravelEvent.end_date,
-                color: newTravelEvent.color,
-                images: newTravelEvent.images || [],
-                type: 'travel'
-              };
-
-              // try {
-              //   const created = await api2.createTravel(travelEvent);
-              //   setEvents([...events, created]);
-              // } catch (err) {
-              //   console.error('여행 일정 추가 실패', err);
-              // }
-
-              setEvents([...events, travelEvent]);
-
-              setNewTravelEvent({ title: '', start_date: '', end_date: '', color: '#ffc0cb', images: [], type: 'travel' });
-              setIsTravelModalOpen(false);
-              setTravelPaletteOpen(false);
+              try {
+                const created = await createTravel({
+                  title: newTravelEvent.title,
+                  startDate: newTravelEvent.start_date,
+                  endDate: newTravelEvent.end_date,
+                  color: newTravelEvent.color,
+                  images: newTravelEvent.images || []
+                });
+            
+                setEvents(prev => [...prev, created]);
+            
+                setNewTravelEvent({
+                  title: '',
+                  start_date: '',
+                  end_date: '',
+                  color: '#87cefa',
+                  images: [],
+                  type: 'travel'
+                });
+            
+                setIsTravelModalOpen(false);
+                setTravelPaletteOpen(false);
+              } catch (error) {
+                console.error('🚨 여행 일정 추가 실패:', error);
+                alert('여행 일정 추가에 실패했어요 😢');
+              }
             }}
           />
         )}
