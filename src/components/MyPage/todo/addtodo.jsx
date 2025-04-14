@@ -159,7 +159,7 @@ function Addtodo({
             <Input
               type="date"
               value={newEvent.start_date || ''}
-              onChange={(e) => setNewEvent({ ...newEvent, start_date: e.target.value })}
+              onChange={(e) => setNewEvent({ ...newEvent, start_date: e.target.value, end_date: e.target.value, type:'anniversary' })}
               required
             />
 

@@ -16,7 +16,7 @@ export const fetchAnniversaries = async () => {
     return res.data.map(item => ({
       ...item,
       start_date: item.startDate,
-      end_date: item.endDate,
+      last_date: item.endDate,
       editable: true,
       type: 'anniversary'
     }));

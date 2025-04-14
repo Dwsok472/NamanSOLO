@@ -425,7 +425,7 @@ function Todo() {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary', editable:true });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'ANNIVERSARY', editable:true });
   const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [], editable:true });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
   const [viewTravelEvent, setViewTravelEvent] = useState(null);
@@ -439,7 +439,7 @@ function Todo() {
   const handleUpdate = async (updatedEvent) => {
     try {
       let updated;
-      if (updatedEvent.type === 'anniversary') {
+      if (updatedEvent.type === 'ANNIVERSARY') {
         updated = await updateAnniversary(updatedEvent.id, updatedEvent);
       } else {
         updated = await updateTravel(updatedEvent.id, updatedEvent);
@@ -453,11 +453,11 @@ function Todo() {
   };
 
   const handleDelete = async (eventToDelete) => {
-    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type === 'anniversary' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
+    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type === 'ANNIVERSARY' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
 
     try {
-      if (eventToDelete.type === 'anniversary') {
+      if (eventToDelete.type === 'ANNIVERSARY') {
         await deleteAnniversary(eventToDelete.id);
       } else {
         await deleteTravel(eventToDelete.id);
@@ -725,13 +725,15 @@ function Todo() {
               const eventToAdd = {
                 title: newAnniversaryEvent.title,
                 startDate: newAnniversaryEvent.start_date,
+                endDate:newAnniversaryEvent.end_date,
                 color: newAnniversaryEvent.color,
+                type: newAnniversaryEvent.type,
               };
             
               try {
                 const created = await createAnniversary(eventToAdd);
                 setEvents([...events, created]);
-                setNewAnniversaryEvent({ title: '', start_date: '', color: '#ffc0cb', type: 'anniversary' });
+                setNewAnniversaryEvent({ title: '', start_date: '', end_date:'', color: '#ffc0cb', type: 'ANNIVERSARY' });
                 setIsModalOpen(false);
                 setAnniversaryPaletteOpen(false);
               } catch (err) {
