@@ -27,23 +27,6 @@ function AddAlbum({ onClose, onAddAlbum }) {
     setShowMap(false);
   };
 
-  const newAlbum = {
-    title,
-    visibility: isPublic ? 'PUBLIC' : 'PRIVATE', // 문자열 타입
-    mediaUrl: images.map((img, index) => ({
-      id: index,
-      mediaUrl: URL.createObjectURL(img.file), // 서버에서 URL을 요구한다면, 여기에 서버 업로드 URL이 필요
-      mediaType: 'PICTURE', // 혹은 "VIDEO" 등으로 변경 가능
-    })),
-    latitude: selectedPlace?.lat || 0,
-    longitude: selectedPlace?.lng || 0,
-    location: selectedPlace?.address || '',
-    tagList:
-      tags.map((tag, index) => ({
-        id: index,
-        name: tag.text,
-      })) || ' ',
-  };
 
   async function submitAlbum() {
     const jwt = sessionStorage.getItem('jwt-token');
@@ -59,29 +42,54 @@ function AddAlbum({ onClose, onAddAlbum }) {
       alert('제목은 필수 등록사항입니다.');
       return;
     }
+    const formData = new FormData();
+    formData.append("title", title);
+    images.forEach((img) => formData.append("files", img.file)); // 파일들 업로드
+
     try {
-      const response = await axios.post('/api/album/save', newAlbum, {
+      // ✅ 1. 이미지 먼저 업로드
+      const uploadRes = await axios.post("/api/album/upload/multiple", formData, {
         headers: {
           Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      if (response.status === 200 || response.status === 201) {
-        alert('앨범이 등록되었습니다.');
-        onAddAlbum(newAlbum); // 등록된 앨범을 상위로 전달
+      const uploadedMedia = uploadRes.data; // MediaDTO 배열
+      // ✅ 2. 업로드된 결과로 앨범 데이터 생성
+      const newAlbum = {
+        title,
+        visibility: isPublic ? "PUBLIC" : "PRIVATE",
+        mediaUrl: uploadedMedia, // 여기에 서버로부터 받은 mediaUrl/mediaType을 그대로 사용
+        latitude: selectedPlace?.lat || 0,
+        longitude: selectedPlace?.lng || 0,
+        location: selectedPlace?.address || "",
+        tagList: tags.map((tag, index) => ({
+          id: index,
+          name: tag.text,
+        })),
+      };
+      // ✅ 3. 앨범 저장
+      const albumRes = await axios.post("/api/album/save", newAlbum, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (albumRes.status === 200 || albumRes.status === 201) {
+        alert("앨범이 등록되었습니다.");
+        onAddAlbum(newAlbum);
         window.location.reload();
-        onClose(); // 모달 닫기
+        onClose();
       } else {
-        console.error('등록 실패', response);
-        alert('앨범 등록에 실패하였습니다.');
+        alert("앨범 등록 실패");
       }
     } catch (error) {
-      console.error('에러 발생', error);
-      alert('서버와 통신 중 오류가 발생했습니다.');
+      console.error(error);
+      alert("서버와 통신 중 오류가 발생했습니다.");
     }
   }
-
   const handleSwitchChange = () => {
     setIsPublic((prev) => !prev); // 공개/비공개 상태 토글
   };
