@@ -5,60 +5,66 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// 1. 전체 장소 조회 (선택)
-export const getAllPlaces = async () => {
-  const res = await api.get('api/all/recommend');
+api.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem('jwt-token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// ✅ 1. 이미지 업로드만 처리
+export const uploadRecommendPlaceImages = async (placeDTO, files) => {
+  const token = sessionStorage.getItem("jwt-token");
+  const formData = new FormData();
+
+  formData.append("place", new Blob([JSON.stringify(placeDTO)], { type: "application/json" }));
+
+  files.forEach((file) => {
+    formData.append("files", file);
+  });
+
+  const response = await axios.post(
+    "http://localhost:8082/api/recommend_place/upload/full",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    }
+  );
+
+  return response.data;
+};
+
+// ✅ 2. 장소 저장 (JSON)
+export const saveRecommendPlace = async (placeDTO) => {
+  const token = sessionStorage.getItem("jwt-token");
+
+  const res = await axios.post(
+    "http://localhost:8082/api/recommend_place/save",
+    placeDTO,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    }
+  );
+
   return res.data;
 };
 
-// 2. 지역별 장소 조회
+// 지역별 장소 조회
 export const getPlacesByRegion = async (region) => {
-  const res = await api.get(`/recommend?region=${encodeURIComponent(region)}`);
+  const res = await api.get(`/recommend_place/region/${region}`);
   return res.data;
 };
 
-// 3. 카테고리별 장소 조회 
-export const getPlacesByCategory = async (category) => {
-  const res = await api.get(`/recommend?category=${encodeURIComponent(category)}`);
-  return res.data;
-};
-
-// 4. 장소 등록 (FormData 포함)
-export const createPlace = async (placeData) => {
-  const formData = new FormData();
-  formData.append('name', placeData.name);
-  formData.append('category', placeData.category);
-  formData.append('address', placeData.address);
-  formData.append('description', placeData.description);
-  if (placeData.image instanceof File) {
-    formData.append('image', placeData.image);
-  }
-
-  const res = await api.post('/recommend', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-  return res.data;
-};
-
-// 5. 장소 수정
-export const updatePlace = async (id, placeData) => {
-  const formData = new FormData();
-  formData.append('name', placeData.name);
-  formData.append('category', placeData.category);
-  formData.append('address', placeData.address);
-  formData.append('description', placeData.description);
-  if (placeData.image instanceof File) {
-    formData.append('image', placeData.image);
-  }
-
-  const res = await api.put(`/recommend/${id}`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-  return res.data;
-};
-
-// 6. 장소 삭제 
-export const deletePlace = async (id) => {
-  const res = await api.delete(`/recommend/${id}`);
+export const getAllRecommendPlaces = async () => {
+  const res = await api.get('/recommend_place/all');
   return res.data;
 };
