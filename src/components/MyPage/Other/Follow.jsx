@@ -4,17 +4,23 @@ import styled from 'styled-components';
 import { useUserStore } from '../../Login/Login';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useMemo } from 'react';
 
 function Follow({ type }) {
   const [inputKeyword, setInputKeyword] = useState('');
   const [follower, setFollower] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
+  // const [data, setData] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
   const urlKeyword = new URLSearchParams(location.search).get('username');
   const currentUser = useUserStore((state) => state.user?.username);
+
+  const data = useMemo(() => {
+    return type === 'follower' ? follower : following;
+  }, [type, follower, following]);
 
   async function GetAllFollower() {
     const jwt = sessionStorage.getItem('jwt-token');
@@ -46,7 +52,7 @@ function Follow({ type }) {
     try {
       const response = await axios.get('/api/follow/all/followings', {
         headers: {
-          Authorization: `Bearer ${jwt}`, // 🔑 헤더에 JWT 추가
+          Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response || response.length === 0) {
@@ -64,8 +70,6 @@ function Follow({ type }) {
     GetAllFollower();
     GetAllFollowings();
   }, []);
-
-  const data = type === 'follower' ? follower : following;
 
   //검색
   async function SearchUserFollower() {
@@ -134,6 +138,105 @@ function Follow({ type }) {
     }
   }, [inputKeyword, type]);
 
+  async function deleteFollower(username) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      await axios.delete(`/api/follow/delete/follower/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      setFollower(prevFollowers => prevFollowers.filter(user => user.username !== username));
+
+      setLoading(false);
+      window.location.reload();
+    } catch (error) {
+      throw error;
+    }
+  }
+  async function handledeleteFollower(username) {
+    try {
+      const isConfirmed = confirm('해당 유저를 삭제 처리하도록 할까요 ?');
+      if (isConfirmed) {
+        await deleteFollower(username);
+      }
+    } catch (error) {
+      alert('삭제에 실패하였습니다');
+    }
+  }
+  async function deleteFollowing(username) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      await axios.delete(`/api/follow/delete/following/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      setFollowing(prevFollowings => prevFollowings.filter(user => user.username !== username));
+
+      setLoading(false);
+      window.location.reload();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function handledeleteFollowing(username) {
+    try {
+      const isConfirmed = confirm('해당 유저를 팔로우 취소 처리하도록 할까요 ?');
+      if (isConfirmed) {
+        await deleteFollowing(username);
+      }
+    } catch (error) {
+      alert('삭제에 실패하였습니다');
+    }
+  }
+
+  async function addFollow(targetUsername) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    const newFollow = {
+      follower: currentUser,
+      following: targetUsername,
+    };
+    try {
+      const response = await axios.post(
+        '/api/follow/new/following',
+        newFollow,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        setFollowing((prev) => {
+          const exists = prev.some((user) => user.username === targetUsername);
+          if (exists) return prev;
+          return [...prev, {
+            username: targetUsername,
+            profileUrl: '', // 서버에서 받아온 경우 사용
+          }];
+        });
+
+        alert('팔로우 성공!');
+        window.location.reload();
+      } else {
+        console.error('등록 실패', response);
+        alert('팔로잉 등록에 실패하였습니다.');
+      }
+    } catch (error) {
+      console.error('에러 발생', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
+    }
+  }
   return (
     <Container>
       <Top>
@@ -169,14 +272,20 @@ function Follow({ type }) {
                   <p className="userName">{item.username}</p>
                 </Left>
                 <Right>
-                  <TopButton>
-                    {' '}
-                    {type === 'follower' ? '차단' : '피드 구경가기'}
+                  <TopButton className={item.mutualFollow ? 'mutual' : 'none'}
+                    onClick={() => {
+                      if (!item.mutualFollow) {
+                        addFollow(item.username);
+                      }
+                    }}>
+                    {type === 'follower'
+                      ? item.mutualFollow ? '맞팔중' : '팔로우 하기'
+                      : item.mutualFollow ? '맞팔중' : '피드 구경하기'}
                   </TopButton>
-                  <ButtomButton>
-                    {' '}
-                    {type === 'follower' ? '팔로우 하기' : '팔로우 취소'}
+                  <ButtomButton onClick={() => type === 'follower' ? handledeleteFollower(item.username) : handledeleteFollowing(item.username)}>
+                    {type === 'follower' ? '팔로우 해제' : '팔로우 취소'}
                   </ButtomButton>
+
                 </Right>
               </SmallBox>
             ))
@@ -293,6 +402,18 @@ const Right = styled.div`
   flex-direction: column;
   justify-content: center; // 수직 중앙
   align-items: center; // 수평 중앙
+  .none{
+    &:hover {
+    background-color: #afafaf;
+    color: white;
+    border: none;
+  }
+  }
+  .mutual{
+    background-color: #000000;
+    color: white;
+    border: none;
+  }
 `;
 const TopButton = styled.button`
   width: 90px;
@@ -306,12 +427,8 @@ const TopButton = styled.button`
   &:focus {
     outline: none;
   }
-  &:hover {
-    background-color: #afafaf;
-    color: white;
-    border: none;
-  }
 `;
+
 const ButtomButton = styled.button`
   width: 90px;
   font-size: 0.6rem;
@@ -324,8 +441,9 @@ const ButtomButton = styled.button`
     outline: none;
   }
   &:hover {
-    font-size: 0.7rem;
-    font-weight: 700;
+    background-color: #ff3434;
+    color: white;
+    border: none;
   }
 `;
 
