@@ -169,9 +169,9 @@ function AlbumDetailModal({ albumData, onClose }) {
             </div>
 
             <div className="tags">
-              {albumData.tag && albumData.albumTags.length > 0 ? (
+              {albumData.albumTags.length > 0 ? (
                 albumData.albumTags.map((tag, i) => (
-                  <span key={i}>#{tag} </span>
+                  <span key={i}>{tag} </span>
                 ))
               ) : (
                 <span> </span>

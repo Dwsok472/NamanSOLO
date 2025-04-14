@@ -6,16 +6,16 @@ import { IconClose } from '../../Icons';
 import { useUserStore } from '../../Login/Login';
 import axios from 'axios';
 import qs from 'qs';
+import AlbumDetailModal from '../../Album/AlbumDetailModal';
 
 function BookMark() {
   const currentUser = useUserStore((state) => state.user?.username);
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const currentDate = new Date();
-  const formattedDate = currentDate.toISOString().split('T')[0];
+  const [showDetail, setShowDetail] = useState(false);
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
   const urlKeyword = new URLSearchParams(location.search).get('userName');
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
 
   const handleDelete = (id) => {
     setData((prevData) => prevData.filter((item) => item.albumId !== id));
@@ -66,6 +66,27 @@ function BookMark() {
     GetAllBookmark();
   }, []);
 
+  const handleAlbumId = async (id) => {
+    setShowDetail(true);
+    try {
+      const response = await axios.get(`/api/album/id/${id}`);
+      console.log(response.data);
+      console.log(response.data.greats.length)
+      if (!response || response.length === 0) {
+        console.log("앨범 데이터를 가져오지 못했습니다.");
+        return;
+      }
+      setSelectedAlbum(response.data);
+      console.log(selectedAlbum)
+    } catch (error) {
+      console.error('앨범 정보 불러오기 실패:', error);
+    }
+  };
+  useEffect(() => {
+    if (selectedAlbum) {
+      console.log("selectedAlbum:", selectedAlbum);
+    }
+  }, [selectedAlbum]);
   return (
     <Container>
       <Top>
@@ -78,7 +99,12 @@ function BookMark() {
             <p>LOADING...</p>
           ) : (
             data.map((item) => (
-              <SmallBox key={item.albumId}>
+              <SmallBox
+                key={item.albumId}
+                onClick={() => {
+                  handleAlbumId(item.albumId);
+                }}
+              >
                 <DeleteButton onClick={() => handleDelete(item.albumId)}>
                   <IconClose />
                 </DeleteButton>
@@ -93,6 +119,7 @@ function BookMark() {
             ))
           )}
         </ContentBox>
+        {showDetail && selectedAlbum && (<AlbumDetailModal albumData={selectedAlbum} onClose={() => setShowDetail(false)} />)}
       </ContainerMain>
     </Container>
   );
