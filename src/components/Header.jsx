@@ -5,6 +5,174 @@ import LoginButton from './Button/LoginButton';
 import RegisterButton from './Button/RegisterButton';
 import { useNavigate } from 'react-router-dom';
 import logo2 from './img/logo2.png';
+import { useUserStore } from './Login/Login';
+
+
+function Header({
+  logoText = 'WeARE',
+  menuItems = [],
+  subMenuItems = [],
+  loginText = '로그인',
+  signupText = '회원가입',
+  logoRef,
+  showLogo,
+  onSubMenuToggle,
+}) {
+  const navigate = useNavigate();
+  const { isLoggedIn, logout } = useUserStore();
+  const [isSubOpen, setSubOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const subMenuRef = useRef(null);
+  const location = useLocation();
+  const isLoginPage =
+    location.pathname === '/login' || location.pathname === '/register';
+
+  useEffect(() => {
+    if (onSubMenuToggle) {
+      onSubMenuToggle(isSubOpen);
+    }
+  }, [isSubOpen]);
+
+  const toggleSubMenu = () => setSubOpen(!isSubOpen);
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+    setSubOpen(false);
+  };
+
+  useEffect(() => {
+    if (isSubOpen) {
+      document.body.classList.add('blur');
+    } else {
+      document.body.classList.remove('blur');
+    }
+  }, [isSubOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        isSubOpen &&
+        subMenuRef.current &&
+        !subMenuRef.current.contains(e.target)
+      ) {
+        setSubOpen(false); // 여기서 false로 바뀌면 위 useEffect가 실행됨
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isSubOpen]);
+
+
+  return (
+    <>
+      <Container>
+        <Link to="/">
+          <Logo ref={logoRef} $visible={showLogo !== false}>
+            {logoText}
+          </Logo>
+        </Link>
+
+        <Nav>
+          {menuItems.map(({ to, label }) => (
+            <Link key={to} to={to}>
+              {label}
+            </Link>
+          ))}
+
+          <MenuWrapper ref={subMenuRef}>
+            <div onClick={toggleSubMenu}>
+              마이페이지{' '}
+              <span
+                style={{
+                  transform: isSubOpen ? 'rotate(180deg)' : 'none',
+                  display: 'inline-block',
+                  transition: '0.2s',
+                }}
+              >
+                ▼
+              </span>
+            </div>
+            {isSubOpen && (
+              <SubMenu>
+                {subMenuItems.map(({ to, label }) => (
+                  <li key={to} onClick={toggleSubMenu}>
+                    <Link to={to}>{label}</Link>
+                  </li>
+                ))}
+              </SubMenu>
+            )}
+          </MenuWrapper>
+        </Nav>
+
+        <ButtonGroup>
+          {!isLoginPage && (
+            <>
+              {isLoggedIn ? (
+                <button onClick={logout} className='logout'>로그아웃</button>
+              ) : (
+                <>
+                  <LoginButton type="navigate" />
+                  <RegisterButton />
+                </>
+              )}
+            </>
+          )}
+        </ButtonGroup>
+
+        <Hamburger onClick={() => setSidebarOpen(true)}>☰</Hamburger>
+      </Container>
+
+      <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
+      <Sidebar $open={isSidebarOpen}>
+        <ul>
+          {menuItems.map(({ to, label }) => (
+            <li key={to}>
+              <Link to={to} onClick={closeSidebar}>
+                {label}
+              </Link>
+            </li>
+          ))}
+          <li onClick={toggleSubMenu}>
+            <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
+          </li>
+          {isSubOpen &&
+            subMenuItems.map(({ to, label }) => (
+              <li key={to}>
+                <Link to={to} onClick={closeSidebar}>
+                  {label}
+                </Link>
+              </li>
+            ))}
+          {!isLoginPage && (
+            <>
+              {isLoggedIn ? (
+                <li onClick={() => { logout(); closeSidebar(); }}>
+                  <span>로그아웃</span>
+                </li>
+              ) : (
+                <>
+                  <li>
+                    <Link to="/login" onClick={closeSidebar}>
+                      {loginText}
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/login?view=register" onClick={closeSidebar}>
+                      {signupText}
+                    </Link>
+                  </li>
+                </>
+              )}
+            </>
+          )}
+        </ul>
+      </Sidebar>
+    </>
+  );
+}
+
+export default Header;
+
 
 const Container = styled.header`
   width: 100%;
@@ -106,6 +274,22 @@ const ButtonGroup = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
+  .logout{
+  /* width: 100px; */
+  border-radius: 10px;
+  background-color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #8c0d17;
+  cursor: pointer;
+  &:hover {
+    color: #000000;
+    border: 1px solid #3333;
+  }
+  &:focus {
+    outline: none;
+  }
+  }
 `;
 
 const Hamburger = styled.button`
@@ -163,152 +347,3 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 `;
-
-function Header({
-  logoText = 'WeARE',
-  menuItems = [],
-  subMenuItems = [],
-  loginText = '로그인',
-  signupText = '회원가입',
-  logoRef,
-  showLogo,
-  onSubMenuToggle,
-}) {
-  const navigate = useNavigate();
-  const [isSubOpen, setSubOpen] = useState(false);
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
-  const subMenuRef = useRef(null);
-  const location = useLocation();
-  const isLoginPage =
-    location.pathname === '/login' || location.pathname === '/register';
-
-  useEffect(() => {
-    if (onSubMenuToggle) {
-      onSubMenuToggle(isSubOpen);
-    }
-  }, [isSubOpen]);
-
-  const toggleSubMenu = () => setSubOpen(!isSubOpen);
-  const closeSidebar = () => {
-    setSidebarOpen(false);
-    setSubOpen(false);
-  };
-
-  useEffect(() => {
-    if (isSubOpen) {
-      document.body.classList.add('blur');
-    } else {
-      document.body.classList.remove('blur');
-    }
-  }, [isSubOpen]);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (
-        isSubOpen &&
-        subMenuRef.current &&
-        !subMenuRef.current.contains(e.target)
-      ) {
-        setSubOpen(false); // 여기서 false로 바뀌면 위 useEffect가 실행됨
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isSubOpen]);
-
-  return (
-    <>
-      <Container>
-        <Link to="/">
-          <Logo ref={logoRef} $visible={showLogo !== false}>
-            {logoText}
-          </Logo>
-        </Link>
-
-        <Nav>
-          {menuItems.map(({ to, label }) => (
-            <Link key={to} to={to}>
-              {label}
-            </Link>
-          ))}
-
-          <MenuWrapper ref={subMenuRef}>
-            <div onClick={toggleSubMenu}>
-              마이페이지{' '}
-              <span
-                style={{
-                  transform: isSubOpen ? 'rotate(180deg)' : 'none',
-                  display: 'inline-block',
-                  transition: '0.2s',
-                }}
-              >
-                ▼
-              </span>
-            </div>
-            {isSubOpen && (
-              <SubMenu>
-                {subMenuItems.map(({ to, label }) => (
-                  <li key={to} onClick={toggleSubMenu}>
-                    <Link to={to}>{label}</Link>
-                  </li>
-                ))}
-              </SubMenu>
-            )}
-          </MenuWrapper>
-        </Nav>
-
-        <ButtonGroup>
-          {!isLoginPage && (
-            <>
-              <LoginButton type="navigate" />
-              <RegisterButton />
-            </>
-          )}
-        </ButtonGroup>
-
-        <Hamburger onClick={() => setSidebarOpen(true)}>☰</Hamburger>
-      </Container>
-
-      <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
-      <Sidebar $open={isSidebarOpen}>
-        <ul>
-          {menuItems.map(({ to, label }) => (
-            <li key={to}>
-              <Link to={to} onClick={closeSidebar}>
-                {label}
-              </Link>
-            </li>
-          ))}
-          <li onClick={toggleSubMenu}>
-            <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
-          </li>
-          {isSubOpen &&
-            subMenuItems.map(({ to, label }) => (
-              <li key={to}>
-                <Link to={to} onClick={closeSidebar}>
-                  {label}
-                </Link>
-              </li>
-            ))}
-          {!isLoginPage && (
-            <>
-              <li>
-                <Link to="/login" onClick={closeSidebar}>
-                  {loginText}
-                </Link>
-              </li>
-              <li>
-                <Link to="/login?view=register" onClick={closeSidebar}>
-                  {signupText}
-                </Link>
-              </li>
-            </>
-          )}
-        </ul>
-      </Sidebar>
-    </>
-  );
-}
-
-export default Header;
