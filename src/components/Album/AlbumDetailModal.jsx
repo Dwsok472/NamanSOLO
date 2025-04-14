@@ -7,7 +7,7 @@ import HeartButton from './HeartButton';
 import CommentButton from './CommentButton';
 import comment from '../img/comment.png';
 import Comment from './Comment';
-import location from '../img/location.png';
+import locationpicker from '../img/location.png';
 import ImageSlider from '../MyPage/MyAlbum/ImageSlider';
 import Top from './Top';
 import axios from 'axios';
@@ -118,7 +118,7 @@ function AlbumDetailModal({ albumData, onClose }) {
         <BottomBox isCommentVisible={isCommentVisible}>
           <Box id={albumData.id}>
             <TopBar>
-              <div className="date">{albumData.date}</div>
+              <div className="date">{albumData.addDate}</div>
               <StarButtonWrapper>
                 <StarButton albumId={albumData.id} />
               </StarButtonWrapper>
@@ -179,7 +179,7 @@ function AlbumDetailModal({ albumData, onClose }) {
             </div>
 
             <div className="map">
-              <img src={location} className="locationimg" />
+              <img src={locationpicker} className="locationimg" />
               <div className="location">{albumData.location}</div>
             </div>
           </Box>

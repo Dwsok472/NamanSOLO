@@ -69,7 +69,7 @@ const AlbumBoard = () => {
     if (filter === "댓글순") {
       return b.comments.length - a.comments.length;
     }
-    return new Date(b.date) - new Date(a.date); // 기본 최신순
+    return new Date(b.addDate) - new Date(a.addDate); // 기본 최신순
   });
 
   function handleSelectedAlbum(album) {
