@@ -20,11 +20,14 @@ export const useUserStore = create(
       user: null,
       isLoggedIn: false,
       login: (user) => set({ user, isLoggedIn: true }), // 로그인 처리
-      logout: () => set({ user: null, isLoggedIn: false }), // 로그아웃 처리
+      logout: () => {
+        sessionStorage.removeItem("jwt-token"); // 토큰 삭제
+        set({ user: null, isLoggedIn: false }); // 상태 초기화
+      },
     }),
     {
       name: "user-storage", // sessionStorage에 저장될 키 이름
-      storage: createJSONStorage(() => sessionStorage), // sessionStorage에 저장
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
