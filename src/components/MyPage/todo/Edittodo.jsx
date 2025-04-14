@@ -153,7 +153,7 @@ function Edittodo({
             <Input
               type="date"
               value={event.start_date || ''}
-              onChange={(e) => setEvent({ ...event, start_date: e.target.value, end_date: e.target.value })}
+              onChange={(e) => setEvent({ ...event, start_date: e.target.value, end_date: e.target.value, type:"ANNIVERSARY" })}
               required
             />
 

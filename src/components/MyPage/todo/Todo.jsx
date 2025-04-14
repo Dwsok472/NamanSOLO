@@ -425,7 +425,7 @@ function Todo() {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'ANNIVERSARY', editable:true });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary', editable:true });
   const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [], editable:true });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
   const [viewTravelEvent, setViewTravelEvent] = useState(null);
@@ -439,7 +439,7 @@ function Todo() {
   const handleUpdate = async (updatedEvent) => {
     try {
       let updated;
-      if (updatedEvent.type === 'ANNIVERSARY') {
+      if (updatedEvent.type.toLowerCase() === "anniversary") {
         updated = await updateAnniversary(updatedEvent.id, updatedEvent);
       } else {
         updated = await updateTravel(updatedEvent.id, updatedEvent);
@@ -453,11 +453,11 @@ function Todo() {
   };
 
   const handleDelete = async (eventToDelete) => {
-    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type === 'ANNIVERSARY' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
+    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toLowerCase() === 'anniversary' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
 
     try {
-      if (eventToDelete.type === 'ANNIVERSARY') {
+      if (eventToDelete.type.toLowerCase() === 'anniversary') {
         await deleteAnniversary(eventToDelete.id);
       } else {
         await deleteTravel(eventToDelete.id);
@@ -510,7 +510,7 @@ function Todo() {
       if (!showAllEvents && event.type.toLowerCase() !== activeSection) return false;
 
       const eventStart = event.start_date;
-      const eventEnd = event.last_date;
+      const eventEnd = event.end_date;
 
       const isMatch = (
         eventStart <= cellDateStr &&
@@ -751,8 +751,13 @@ function Todo() {
             onClose={() => setEditingTodoEvent(null)}
             onSubmit={(e) => {
               e.preventDefault();
-
-              handleUpdate(editingTodoEvent);
+        
+              const updatedEvent = {
+                ...editingTodoEvent,
+                type: editingTodoEvent.type.toUpperCase() || 'ANNIVERSARY',
+              };
+        
+              handleUpdate(updatedEvent);
             }}
             paletteOpen={anniversaryPaletteOpen}
             setPaletteOpen={setAnniversaryPaletteOpen}

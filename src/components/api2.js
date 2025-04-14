@@ -16,8 +16,8 @@ export const fetchAnniversaries = async () => {
     return res.data.map(item => ({
       ...item,
       start_date: item.startDate,
-      last_date: item.endDate,
-      editable: true,
+      end_date: item.endDate,
+      editable: item.editable,
       type: 'anniversary'
     }));
   } catch (e) {
@@ -106,7 +106,7 @@ export const updateAnniversary = async (id, anniv) => {
       start_date: res.data.startDate,
       end_date: res.data.endDate,
       editable: true,
-      type: 'anniversary'
+      type: 'ANNIVERSARY'
     };
   } catch (e) {
     handleError('updateAnniversary', e);
@@ -123,7 +123,7 @@ export const updateTravel = async (id, travel) => {
       start_date: res.data.startDate,
       end_date: res.data.endDate,
       editable: true,
-      type: 'travel'
+      type: 'TRAVEL'
     };
   } catch (e) {
     handleError('updateTravel', e);
