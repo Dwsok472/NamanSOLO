@@ -15,6 +15,8 @@ function Top({ filter, onFilterChange }) {
   const [isFocused, setIsFocused] = useState(false);
   const [updatingUser, setUpdatingUser] = useState(null); // 팔로우 중인 유저 username
   const username = useUserStore((state) => state.user?.username);
+  const location = useLocation(); // 현재 경로 가져오기
+  const isUserStoryPage = location.pathname.startsWith('/user/story/');
 
   async function handleSearch() {
     try {
@@ -159,92 +161,96 @@ function Top({ filter, onFilterChange }) {
           댓글순
         </button>
       </TopBox>
-      <MiddleBox>
-        <SearchBox ref={searchBoxRef}>
-          <div className="InputContainer">
-            <input
-              placeholder="USERNAME을 입력해주세요"
-              id="input"
-              className="input"
-              name="text"
-              type="text"
-              value={inputKeyword}
-              onChange={(e) => setInputKeyword(e.target.value)}
-              onFocus={() => setIsFocused(true)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+      {!isUserStoryPage && (
+        <MiddleBox>
+          <SearchBox ref={searchBoxRef}>
+            <div className="InputContainer">
+              <input
+                placeholder="USERNAME을 입력해주세요"
+                id="input"
+                className="input"
+                name="text"
+                type="text"
+                value={inputKeyword}
+                onChange={(e) => setInputKeyword(e.target.value)}
+                onFocus={() => setIsFocused(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    inputKeyword
+                      ? SearchUser(inputKeyword)
+                      : alert('검색어를 입력해주세요');
+                  }
+                }}
+              />
+              <label
+                className="labelforsearch"
+                htmlFor="input"
+                onClick={() => {
                   inputKeyword
                     ? SearchUser(inputKeyword)
                     : alert('검색어를 입력해주세요');
-                }
-              }}
-            />
-            <label
-              className="labelforsearch"
-              htmlFor="input"
-              onClick={() => {
-                inputKeyword
-                  ? SearchUser(inputKeyword)
-                  : alert('검색어를 입력해주세요');
-              }}
-            >
-              <svg className="searchIcon" viewBox="0 0 512 512">
-                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-              </svg>
-            </label>
-          </div>
-        </SearchBox>
+                }}
+              >
+                <svg className="searchIcon" viewBox="0 0 512 512">
+                  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                </svg>
+              </label>
+            </div>
+          </SearchBox>
 
-        {showResults && (
-          <SearchResults
-            ref={searchResultsRef}
-            className={showResults ? 'show' : ''}
-          >
-            <Wrap>
-              <ul>
-                {searchResults.map((user) => (
-                  <li key={user.username}>
-                    <Block>
-                      <img src={user.profileUrl} alt="profile" />
-                      <div
-                        className="username"
-                        onClick={() => navigate(`/user/story/${user.username}`)}
-                      >
-                        {user.username}
-                      </div>
-                      <button
-                        className={`follow ${
-                          user.relation === 'FRIEND'
-                            ? 'friend'
-                            : user.relation === 'FOLLOWING'
-                            ? 'following'
-                            : user.relation === 'FOLLOWER'
-                            ? 'follower'
-                            : 'none'
-                        }`}
-                        onClick={() => {
-                          if (
-                            user.relation === 'FOLLOWER' ||
-                            user.relation === 'NONE'
-                          ) {
-                            addFollow(user.username);
+          {showResults && (
+            <SearchResults
+              ref={searchResultsRef}
+              className={showResults ? 'show' : ''}
+            >
+              <Wrap>
+                <ul>
+                  {searchResults.map((user) => (
+                    <li key={user.username}>
+                      <Block>
+                        <img src={user.profileUrl} alt="profile" />
+                        <div
+                          className="username"
+                          onClick={() =>
+                            navigate(`/user/story/${user.username}`)
                           }
-                        }}
-                      >
-                        {' '}
-                        {user.relation === 'FRIEND' && '맞팔 중'}
-                        {user.relation === 'FOLLOWING' && '팔로우 중'}
-                        {user.relation === 'FOLLOWER' && '맞팔하기'}
-                        {user.relation === 'NONE' && '팔로우하기'}
-                      </button>
-                    </Block>
-                  </li>
-                ))}
-              </ul>
-            </Wrap>
-          </SearchResults>
-        )}
-      </MiddleBox>
+                        >
+                          {user.username}
+                        </div>
+                        <button
+                          className={`follow ${
+                            user.relation === 'FRIEND'
+                              ? 'friend'
+                              : user.relation === 'FOLLOWING'
+                              ? 'following'
+                              : user.relation === 'FOLLOWER'
+                              ? 'follower'
+                              : 'none'
+                          }`}
+                          onClick={() => {
+                            if (
+                              user.relation === 'FOLLOWER' ||
+                              user.relation === 'NONE'
+                            ) {
+                              addFollow(user.username);
+                            }
+                          }}
+                        >
+                          {' '}
+                          {user.relation === 'FRIEND' && '맞팔 중'}
+                          {user.relation === 'FOLLOWING' && '팔로우 중'}
+                          {user.relation === 'FOLLOWER' && '맞팔하기'}
+                          {user.relation === 'NONE' && '팔로우하기'}
+                        </button>
+                      </Block>
+                    </li>
+                  ))}
+                </ul>
+              </Wrap>
+            </SearchResults>
+          )}
+        </MiddleBox>
+      )}
     </Container>
   );
 }
