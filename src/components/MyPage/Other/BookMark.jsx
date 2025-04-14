@@ -3,6 +3,102 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import star from '../../img/star.png';
 import { IconClose } from '../../Icons';
+import { useUserStore } from '../../Login/Login';
+import axios from 'axios';
+import qs from 'qs';
+
+function BookMark() {
+  const currentUser = useUserStore((state) => state.user?.username);
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().split('T')[0];
+  const location = useLocation(); // url로부터 정보를 얻기위한 함수
+  const urlKeyword = new URLSearchParams(location.search).get('userName');
+
+  const handleDelete = (id) => {
+    setData((prevData) => prevData.filter((item) => item.albumId !== id));
+    const key = `bookmarkedAlbums_${currentUser}`;
+    const stored = localStorage.getItem(key);
+
+    if (stored) {
+      const parsed = JSON.parse(stored); // 배열
+      const updated = parsed.filter((albumId) => albumId !== id); // 삭제
+      localStorage.setItem(key, JSON.stringify(updated));
+    }
+  };
+
+  async function GetAllBookmark() {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      return;
+    }
+    const stored = localStorage.getItem(`bookmarkedAlbums_${currentUser}`);
+    const parsed = JSON.parse(stored);
+    console.log(stored);
+    try {
+      // 서버로 중복 확인 요청
+      const response = await axios.get('/api/album/ids', {
+        params: {
+          id: parsed,
+        },
+        paramsSerializer: {
+          serialize: (params) =>
+            qs.stringify(params, { arrayFormat: 'repeat' }), // 핵심
+        },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response || response.length === 0) {
+        console.log('즐겨찾기 데이터를 가져오지 못했습니다.');
+        return;
+      }
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+      throw error; // 에러 처리
+    }
+  }
+  useEffect(() => {
+    GetAllBookmark();
+  }, []);
+
+  return (
+    <Container>
+      <Top>
+        <Image src={star} />
+        <h1>즐겨찾기</h1>
+      </Top>
+      <ContainerMain>
+        <ContentBox>
+          {loading ? (
+            <p>LOADING...</p>
+          ) : (
+            data.map((item) => (
+              <SmallBox key={item.albumId}>
+                <DeleteButton onClick={() => handleDelete(item.albumId)}>
+                  <IconClose />
+                </DeleteButton>
+                <Left>
+                  <Img src={item.url} />
+                </Left>
+
+                <BottomName>
+                  <p className="userName">{item.username}</p>
+                </BottomName>
+              </SmallBox>
+            ))
+          )}
+        </ContentBox>
+      </ContainerMain>
+    </Container>
+  );
+}
+
+export default BookMark;
 
 const Container = styled.div`
   width: 330px;
@@ -106,117 +202,3 @@ const BottomName = styled.div`
   justify-content: center;
   font-weight: 700;
 `;
-
-function BookMark() {
-  const [data, setData] = useState();
-  const [loading, setLoading] = useState(true);
-
-  const currentDate = new Date();
-  const formattedDate = currentDate.toISOString().split('T')[0];
-
-  const location = useLocation(); // url로부터 정보를 얻기위한 함수
-  const urlKeyword = new URLSearchParams(location.search).get('userName');
-
-  const handleDelete = (id) => {
-    setData((prevData) => prevData.filter((item) => item.id !== id));
-  };
-
-  // 페이지 로드 시 로컬스토리지에서 데이터 불러오기
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('bookmarks'));
-    if (savedData) {
-      setData(savedData);
-    } else {
-      setData([
-        {
-          id: 1,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sangsu1',
-        },
-        {
-          id: 2,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sangsu2',
-        },
-        {
-          id: 3,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu3',
-        },
-        {
-          id: 4,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu4',
-        },
-        {
-          id: 5,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu5',
-        },
-        {
-          id: 6,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu6',
-        },
-        {
-          id: 7,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu7',
-        },
-        {
-          id: 8,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu8',
-        },
-        {
-          id: 9,
-          imgurl:
-            'https://img.freepik.com/premium-vector/cute-kawaii-asian-lovers-couple-goals-affection-cartoon-korean-style_733271-1261.jpg',
-          username: 'sagsu9',
-        },
-      ]);
-    }
-    setLoading(false);
-  }, []);
-
-  return (
-    <Container>
-      <Top>
-        <Image src={star} />
-        <h1>즐겨찾기</h1>
-      </Top>
-      <ContainerMain>
-        <ContentBox>
-          {loading ? (
-            <p>LOADING...</p>
-          ) : (
-            data.map((item) => (
-              <SmallBox key={item.id}>
-                <DeleteButton onClick={() => handleDelete(item.id)}>
-                  <IconClose />
-                </DeleteButton>
-                <Left>
-                  <Img src={item.imgurl} />
-                </Left>
-
-                <BottomName>
-                  <p className="userName">{item.username}</p>
-                </BottomName>
-              </SmallBox>
-            ))
-          )}
-        </ContentBox>
-      </ContainerMain>
-    </Container>
-  );
-}
-
-export default BookMark;

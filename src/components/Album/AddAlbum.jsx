@@ -8,7 +8,7 @@ import Modal from './Modal';
 import MapPicker from '../Story/MapPicker';
 import { IconClose, IconClose1, IconImage } from '../Icons';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 function AddAlbum({ onClose, onAddAlbum }) {
   const [title, setTitle] = useState('');
@@ -18,7 +18,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
   const [isPublic, setIsPublic] = useState(true);
   const [showMap, setShowMap] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
-
+  const navigate = useNavigate();
   const handleOpenMap = () => setShowMap(true);
   const handleCloseMap = () => setShowMap(false);
 
@@ -29,48 +29,58 @@ function AddAlbum({ onClose, onAddAlbum }) {
 
   const newAlbum = {
     title,
-    visibility: isPublic ? "PUBLIC" : "PRIVATE", // 문자열 타입
+    visibility: isPublic ? 'PUBLIC' : 'PRIVATE', // 문자열 타입
     mediaUrl: images.map((img, index) => ({
       id: index,
       mediaUrl: URL.createObjectURL(img.file), // 서버에서 URL을 요구한다면, 여기에 서버 업로드 URL이 필요
-      mediaType: "PICTURE" // 혹은 "VIDEO" 등으로 변경 가능
+      mediaType: 'PICTURE', // 혹은 "VIDEO" 등으로 변경 가능
     })),
     latitude: selectedPlace?.lat || 0,
     longitude: selectedPlace?.lng || 0,
-    location: selectedPlace?.address || "",
-    tagList: tags.map((tag, index) => ({
-      id: index,
-      name: tag.text
-    }))
+    location: selectedPlace?.address || '',
+    tagList:
+      tags.map((tag, index) => ({
+        id: index,
+        name: tag.text,
+      })) || ' ',
   };
 
   async function submitAlbum() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
-      alert("로그인이 필요합니다.");
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    if (images.length === 0) {
+      alert('이미지를 한 장 이상 등록해주세요.');
+      return;
+    }
+    if (title.trim() === '') {
+      alert('제목은 필수 등록사항입니다.');
       return;
     }
     try {
-      const response = await axios.post("/api/album/save", newAlbum, {
+      const response = await axios.post('/api/album/save', newAlbum, {
         headers: {
           Authorization: `Bearer ${jwt}`,
-          "Content-Type": "application/json"
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.status === 200 || response.status === 201) {
-        alert("앨범이 등록되었습니다.");
+        alert('앨범이 등록되었습니다.');
         onAddAlbum(newAlbum); // 등록된 앨범을 상위로 전달
+        window.location.reload();
         onClose(); // 모달 닫기
       } else {
-        console.error("등록 실패", response);
-        alert("앨범 등록에 실패하였습니다.");
+        console.error('등록 실패', response);
+        alert('앨범 등록에 실패하였습니다.');
       }
     } catch (error) {
-      console.error("에러 발생", error);
-      alert("서버와 통신 중 오류가 발생했습니다.");
+      console.error('에러 발생', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
     }
-  };
+  }
 
   const handleSwitchChange = () => {
     setIsPublic((prev) => !prev); // 공개/비공개 상태 토글
@@ -232,24 +242,6 @@ function AddAlbum({ onClose, onAddAlbum }) {
 }
 
 export default AddAlbum;
-
-// useEffect(() => {
-//   setData([
-//     {
-//       id: 11,
-//       imgurl: images,
-//       title: title,
-//       date: Date.now,
-//       username: 'user7',
-//       location: '둔산로 221',
-//       tag: tags,
-//       likes: [],
-//       comments: [],
-//       isPublic
-//     },
-//   ]);
-// }, []);
-
 
 const Container = styled.div`
   width: 25%;
