@@ -38,6 +38,7 @@ const AlbumBoard = () => {
   const { username } = useParams();
   const location = useLocation();
   const itemsRef = useRef([]);
+  const isUserStoryPage = location.pathname.startsWith('/user/story/');
 
   async function GetAllAlbum() {
     try {
@@ -222,20 +223,23 @@ const AlbumBoard = () => {
         <EraserWrapper>
           <RightButton onClick={handleNextPage} />
         </EraserWrapper>
+        {!isUserStoryPage && (
+          <>
+            <AddButton onClick={handleOpenAddAlbum} title="Add New">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                  d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                  strokeWidth="1.5"
+                />
+                <path d="M8 12H16" strokeWidth="1.5" />
+                <path d="M12 16V8" strokeWidth="1.5" />
+              </svg>
+            </AddButton>
 
-        <AddButton onClick={handleOpenAddAlbum} title="Add New">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
-              strokeWidth="1.5"
-            />
-            <path d="M8 12H16" strokeWidth="1.5" />
-            <path d="M12 16V8" strokeWidth="1.5" />
-          </svg>
-        </AddButton>
-
-        {showAddAlbum && (
-          <AddAlbum onClose={handleCloseAddAlbum} onAddAlbum={addNewAlbum} />
+            {showAddAlbum && (
+              <AddAlbum onClose={handleCloseAddAlbum} onAddAlbum={addNewAlbum} />
+            )}
+          </>
         )}
       </BoardFrame>
       {showDetail && (

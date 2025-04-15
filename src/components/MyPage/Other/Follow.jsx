@@ -5,6 +5,7 @@ import { useUserStore } from '../../Login/Login';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
 function Follow({ type }) {
   const [inputKeyword, setInputKeyword] = useState('');
@@ -12,7 +13,7 @@ function Follow({ type }) {
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [data, setData] = useState([]);
-
+  const { username } = useParams();
   const navigate = useNavigate();
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
   const urlKeyword = new URLSearchParams(location.search).get('username');
@@ -278,14 +279,20 @@ function Follow({ type }) {
               <SmallBox key={item.username}>
                 <Left>
                   <Img src={item.profileUrl} />
-                  <p className="userName">{item.username}</p>
+                  <p className="userName"
+                    onClick={() =>
+                      navigate(`/user/story/${item.username}`)
+                    }>{item.username}</p>
                 </Left>
                 <Right>
                   <TopButton
                     className={item.mutualFollow ? 'mutual' : 'none'}
-                    onClick={() => {
-                      if (!item.mutualFollow) {
-                        addFollow(item.username);
+                    onClick={async () => {
+                      if (type === "follower" && !item.mutualFollow) {
+                        await addFollow(item.username); // 팔로우 요청
+                      }
+                      if (type === "following" && !item.mutualFollow) {
+                        navigate(`/user/story/${item.username}`); // 피드 구경
                       }
                     }}
                   >
@@ -294,8 +301,8 @@ function Follow({ type }) {
                         ? '맞팔중'
                         : '팔로우 하기'
                       : item.mutualFollow
-                      ? '맞팔중'
-                      : '피드 구경하기'}
+                        ? '맞팔중'
+                        : '피드 구경하기'}
                   </TopButton>
                   <ButtomButton
                     onClick={() =>
@@ -406,6 +413,7 @@ const Left = styled.div`
     font-size: 1rem;
     font-weight: 700;
     padding-left: 5px;
+    cursor: pointer;
   }
 `;
 const Img = styled.img`
