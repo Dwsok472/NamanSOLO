@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { IconClose } from "../../Icons";
+import leftkey from '../../img/leftkey.png';
 
 const CommentPage = () => {
   const [editingId, setEditingId] = useState(null);
@@ -8,95 +10,151 @@ const CommentPage = () => {
   const [comments, setComments] = useState([]);
   const [replies, setReplies] = useState([]);
 
-  async function getAllComment() {
-    const jwt = sessionStorage.getItem('jwt-token');
-    if (!jwt) {
-      return;
-    }
-    try {
-      const response = await axios.get('/api/comment/username', {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      if (!response || response.length === 0) {
-        console.log('댓글 데이터를 가져오지 못했습니다.');
-        return;
-      }
-      setComments(response.data);
-    } catch (error) {
-      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
-      throw error; // 에러 처리
-    }
-  }
-
-  async function getAllReComment() {
-    const jwt = sessionStorage.getItem('jwt-token');
-    if (!jwt) {
-      return;
-    }
-    try {
-      const response = await axios.get('/api/recomment/username', {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      if (!response || response.length === 0) {
-        console.log('대댓글 데이터를 가져오지 못했습니다.');
-        return;
-      }
-      setReplies(response.data);
-    } catch (error) {
-      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
-      throw error; // 에러 처리
-    }
-  }
-
   useEffect(() => {
-    getAllReComment();
     getAllComment();
+    getAllReComment();
   }, []);
 
+  async function getAllComment() {
+    const jwt = sessionStorage.getItem("jwt-token");
+    if (!jwt) return;
 
+    try {
+      const response = await axios.get("/api/comment/username", {
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
 
-  const handleSave = (id, isReply) => {
-    const updater = (list, setter) => {
-      const updated = list.map((item) =>
-        item.id === id ? { ...item, content: editValue } : item
+      const commentsWithAlbum = await Promise.all(
+        response.data.map(async (item) => {
+          const album = await findAlbum(item.albumId);
+          return {
+            ...item,
+            albumTitle: album?.title || "제목 없음",
+            albumThumbnail: album?.url?.[0]?.mediaUrl || "/default-thumbnail.png",
+
+          };
+
+        })
       );
-      setter(updated);
-    };
+      setComments(commentsWithAlbum);
+    } catch (error) {
+      alert("댓글 불러오기 중 오류 발생!");
+    }
+  }
 
-    if (isReply) {
-      updater(replies, setReplies);
-    } else {
-      updater(comments, setComments);
+  console.log(comments);
+  async function getAllReComment() {
+    const jwt = sessionStorage.getItem("jwt-token");
+    if (!jwt) return;
+
+    try {
+      const response = await axios.get("/api/recomment/username", {
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+
+      const repliesWithAlbum = await Promise.all(
+        response.data.map(async (item) => {
+          const album = await findAlbum(item.albumId);
+          return {
+            ...item,
+            albumTitle: album?.title || "제목 없음",
+            albumThumbnail: album?.url?.[0]?.mediaUrl || "/default-thumbnail.png",
+          };
+        })
+      );
+      setReplies(repliesWithAlbum);
+    } catch (error) {
+      alert("답글 불러오기 중 오류 발생!");
+    }
+  }
+
+  async function findAlbum(albumId) {
+    const jwt = sessionStorage.getItem("jwt-token");
+    if (!jwt) return null;
+
+    try {
+      const response = await axios.get(`/api/album/id/${albumId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("앨범 정보 불러오기 실패", error);
+      return null;
+    }
+  }
+
+  const Update = async (id, isReply) => {
+    const jwt = sessionStorage.getItem("jwt-token");
+    if (!jwt) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    if (editValue.trim() === "") {
+      alert("공란으로는 저장할 수 없습니다.");
+      return;
     }
 
+    const contentValue = {
+      id: id,
+      content: editValue,
+    };
+
+    if (!isReply) {
+      contentValue.albumId = comments.find((item) => item.id === id)?.albumId;
+    } else {
+      contentValue.commentId = replies.find((item) => item.id === id)?.commentId;
+    }
+
+    try {
+      const url = isReply ? "/api/recomment/update" : "/api/comment/update";
+      const response = await axios.put(url, contentValue, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        const updater = (list) =>
+          list.map((item) =>
+            item.id === id ? { ...item, content: editValue } : item
+          );
+        isReply ? setReplies(updater) : setComments(updater);
+        alert("정상적으로 수정되었습니다.");
+      } else {
+        alert("수정에 실패했습니다.");
+      }
+    } catch (error) {
+      alert("서버 통신 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleSave = (id, isReply) => {
+    Update(id, isReply);
     setEditingId(null);
     setEditValue("");
   };
 
   const handleDelete = (id, isReply) => {
-    const confirm = window.confirm("정말 삭제하시겠습니까?");
-    if (!confirm) return;
-
-    if (isReply) {
-      setReplies((prev) => prev.filter((item) => item.id !== id));
-    } else {
-      setComments((prev) => prev.filter((item) => item.id !== id));
-    }
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+    isReply
+      ? setReplies((prev) => prev.filter((item) => item.id !== id))
+      : setComments((prev) => prev.filter((item) => item.id !== id));
   };
 
   const renderList = (data, isReply = false) =>
     data.map((item) => (
       <Card key={item.id}>
-        <Thumbnail />
+        <Thumbnail>
+          <img src={item.albumThumbnail} alt="앨범 썸네일" className="albumimg" />
+        </Thumbnail>
         <Content>
-          <Date>📅 {item.addDate}</Date>
-          <TitleRow>
-            {/* <span>{item.feedTitle}</span> */}
-          </TitleRow>
+          <Date>작성일자 : {item.addDate}</Date>
+          <TitleRow>제목 : {item.albumTitle}</TitleRow>
           <CommentRow>
             {editingId === item.id ? (
               <CommentText
@@ -105,13 +163,11 @@ const CommentPage = () => {
                 autoFocus
               />
             ) : (
-              <span>{item.content}</span>
+              <span className="comment">내용 : {item.content}</span>
             )}
             <ButtonGroup>
               {editingId === item.id ? (
-                <Button onClick={() => handleSave(item.id, isReply)}>
-                  저장
-                </Button>
+                <Button onClick={() => handleSave(item.id, isReply)}>저장</Button>
               ) : (
                 <Button
                   onClick={() => {
@@ -122,11 +178,12 @@ const CommentPage = () => {
                   수정
                 </Button>
               )}
-              <Button>{isReply ? "댓글 보기" : "답글"}</Button>
             </ButtonGroup>
           </CommentRow>
         </Content>
-        <CloseBtn onClick={() => handleDelete(item.id, isReply)}>×</CloseBtn>
+        <CloseBtn onClick={() => handleDelete(item.id, isReply)}>
+          <IconClose />
+        </CloseBtn>
       </Card>
     ));
 
@@ -134,9 +191,8 @@ const CommentPage = () => {
     <Wrapper>
       <Column>
         <TopFixed>
-          <SectionTitle>내가 단 댓글</SectionTitle>
           <CountBox>
-            <span>총 댓글 수 {comments.length}</span>
+            <span>총 댓글 수 <hr />{comments.length}</span>
           </CountBox>
         </TopFixed>
         <ScrollSection>{renderList(comments)}</ScrollSection>
@@ -144,9 +200,8 @@ const CommentPage = () => {
 
       <Column>
         <TopFixed>
-          <SectionTitle>내가 단 대댓글</SectionTitle>
           <CountBox>
-            <span>총 답글 수 {replies.length}</span>
+            <span>총 답글 수 <hr />{replies.length}</span>
           </CountBox>
         </TopFixed>
         <ScrollSection>{renderList(replies, true)}</ScrollSection>
@@ -157,7 +212,6 @@ const CommentPage = () => {
 
 export default CommentPage;
 
-
 const Wrapper = styled.div`
   display: flex;
   gap: 20px;
@@ -167,13 +221,11 @@ const Wrapper = styled.div`
 
 const Column = styled.div`
   flex: 1;
-  background: #c0c0c09e;
+  background-color: #c0c0c09e;
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid #c0c0c09e;
   display: flex;
   flex-direction: column;
-  height: 100%;
   height: 605px;
 `;
 
@@ -181,22 +233,17 @@ const TopFixed = styled.div`
   flex: 0 0 auto;
 `;
 
-const SectionTitle = styled.h3`
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 8px;
-`;
-
 const CountBox = styled.div`
   display: flex;
   justify-content: center;
   gap: 16px;
   margin: 0 0 12px;
-
   span {
-    background: #333;
+    text-align: center;
+    background: #000000;
     color: white;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 700;
     padding: 6px 12px;
     border-radius: 8px;
   }
@@ -205,57 +252,71 @@ const CountBox = styled.div`
 const Card = styled.div`
   display: flex;
   position: relative;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  border-radius: 10px;
   background-color: #fff;
   margin-bottom: 16px;
-  padding: 16px;
+  /* padding: 12px; */
+  padding-top: 10px;
+  padding-left: 10px;
+  height: 80px;
 `;
 
 const Thumbnail = styled.div`
   width: 60px;
   height: 60px;
-  background: #ddd;
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 15px;
+  border: 1px solid #3333;
   margin-right: 16px;
-  background-image: url("https://placeholderjs.com/60x60");
-  background-size: cover;
-  background-position: center;
+  img{
+    /* border-radius: 15px; */
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    font-size: 0.7rem;
+    border: none;
+  }
+`;
+
+const TitleRow = styled.div`
+  font-size: 0.65rem;
+  color: #636262;
+  cursor: pointer;
+  margin-bottom: 4px;
 `;
 
 const Content = styled.div`
   flex: 1;
+  margin-right: 10px;
+  margin-top: 3px;
 `;
 
 const Date = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: #888;
   margin-bottom: 4px;
 `;
 
-const TitleRow = styled.div`
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-`;
 
 const CommentRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
+  span{
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
 `;
 const CommentText = styled.input`
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 1rem;
-
+  font-size: 0.8rem;
+  font-weight: 700;
   &:focus {
     outline: none;
-    border-bottom: 1px solid #aaa;
+    /* border-bottom: 1px solid #aaa; */
   }
 `;
 
@@ -268,21 +329,25 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button`
-  background: ${({ danger }) => (danger ? "#ffe0e0" : "#f0f0f0")};
-  border: 1px solid #ccc;
+  background-color: #fffffffa ;
+  border: 1px solid #b3b3b3;
   border-radius: 6px;
   padding: 4px 10px;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #333333;
   cursor: pointer;
+  &:hover{
+    background-color: #0f0f0ff9 ;
+    color: #ffffff;
+    border: none;
+  }
 `;
 
-const CloseBtn = styled.button`
+const CloseBtn = styled.div`
   position: absolute;
-  top: 10px;
+  top: 0px;
   right: 10px;
-  background: transparent;
-  border: none;
-  font-size: 1rem;
   cursor: pointer;
 `;
 

@@ -55,6 +55,8 @@ const MyAlbum = () => {
     GetMyAlbum();
   }, []);
 
+
+
   //앨범 추가 시 , 내 기존 앨범에서 추가된 앨범을 앞에다가 넣기!!!
   const handleAddAlbum = (newAlbum) => {
     setMyPosts((prev) => [newAlbum, ...prev]);
@@ -91,13 +93,35 @@ const MyAlbum = () => {
       prev.map((post) => (post.id === updatedAlbum.id ? updatedAlbum : post))
     );
   };
+  // 앨범 삭제
+  async function deleteMyAlbum(id) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      // 서버로 중복 확인 요청
+      await axios.delete(`/api/album/id/${id}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      setMyPosts((prev) =>
+        prev.filter((album) => album.id !== id)
+      );
+      // window.location.reload();
+    } catch (error) {
+      throw error;
+    }
+  }
+
 
   //해당 ID를 가진 앨범을 삭제하기
-  const handleDeleteAlbum = (id) => {
-    setMyPosts((prev) => prev.filter((post) => post.id !== id));
+  async function handleDeleteAlbum(id) {
+    await deleteMyAlbum(id);
     setSelectedPost(null);
     setIsModalOpen(false);
   };
+
+
 
   return (
     <AlbumWrapper>
