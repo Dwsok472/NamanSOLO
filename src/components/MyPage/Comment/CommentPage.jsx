@@ -138,6 +138,26 @@ const CommentPage = () => {
     setEditValue("");
   };
 
+  async function deleteTarget(id, isReply) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      await axios.delete(`/api/follow/delete/follower/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      setFollower((prevFollowers) =>
+        prevFollowers.filter((user) => user.username !== username)
+      );
+
+      setLoading(false);
+      window.location.reload();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   const handleDelete = (id, isReply) => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (!confirmDelete) return;
