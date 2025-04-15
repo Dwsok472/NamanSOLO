@@ -1,10 +1,12 @@
 // 지금은 시각화만 하기 위한 코드입니다. 통계랑은 별개입니다 그래프만 따옴
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AdminSidebar from './AdminSidebar';
 import UserJoinChart from './UserJoinChart';
 import UserDonutChart from './UserDonutChart';
 import UserTable from './UserTable';
+import EventModal from './EventModal';
+
 
 const dummyUsers = [
   { id: 1, username: 'USER1', date: '2025.01.01 12:00:01' },
@@ -54,10 +56,12 @@ const BottomRow = styled.div`
 `;
 
 function AdminUserPage() {
+  const [showModal, setShowModal] = useState(false);
   return (
     <Layout>
+      {showModal && <EventModal onClose={() => setShowModal(false)} />}
       <SidebarWrapper>
-        <AdminSidebar />
+      <AdminSidebar setShowModal={setShowModal} />
       </SidebarWrapper>
       <ContentWrapper>
         <TopRow>

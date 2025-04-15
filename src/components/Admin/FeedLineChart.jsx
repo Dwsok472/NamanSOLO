@@ -27,8 +27,9 @@ const Container = styled.div`
   background: white;
   padding: 20px;
   border-radius: 12px;
-  width: 90%;
-  height: 30%;
+  width: 110%;
+  height: 500px; 
+  flex: 1; 
 `;
 
 const Title = styled.h3`

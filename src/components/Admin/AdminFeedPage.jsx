@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AdminSidebar from './AdminSidebar';
 import FeedUploadRank from './FeedUploadRank';
-import FeedDonutChart from './FeedDonutChart';
 import FeedLineChart from './FeedLineChart';
 import FeedActivityTable from './FeedActivityTable';
 import FeedAvgBox from './FeedAvgBox';
+import EventModal from './EventModal';
 
 const Layout = styled.div`
   display: flex;
@@ -36,6 +36,7 @@ const BottomSection = styled.div`
   gap: 20px;
 `;
 
+
 const dummyLineData = [
   { date: '04-01', count: 4 },
   { date: '04-02', count: 7 },
@@ -63,20 +64,21 @@ const dummyUsers = [
 ];
 
 function AdminFeedPage() {
+  const [showModal, setShowModal] = useState(false);
+  
   return (
     <Layout>
       <SidebarWrapper>
-        <AdminSidebar />
+        <AdminSidebar setShowModal={setShowModal} />
       </SidebarWrapper>
 
       <ContentWrapper>
+      {showModal && <EventModal onClose={() => setShowModal(false)} />}
 
         <TopSection>
           <FeedUploadRank />
-          <FeedDonutChart total={35} />
+          <FeedLineChart data={dummyLineData} />
         </TopSection>
-
-        <FeedLineChart data={dummyLineData} />
 
         <BottomSection>
           <FeedActivityTable users={dummyUsers} />

@@ -41,7 +41,7 @@ const MenuItem = styled(NavLink)`
   }
 `;
 
-function AdminSidebar() {
+function AdminSidebar({ setShowModal }) {
   return (
     <Sidebar>
       <Logo>ADMIN</Logo>
@@ -49,6 +49,9 @@ function AdminSidebar() {
       <MenuGroup>
         <MenuItem to="/admin/users">🧑 유저 정보 및 통계</MenuItem>
         <MenuItem to="/admin/feeds">📄 피드 정보 및 통계</MenuItem>
+        <MenuItem as="button" onClick={() => setShowModal(true)}>
+          📊 이벤트 관리
+        </MenuItem>
       </MenuGroup>
     </Sidebar>
   );
