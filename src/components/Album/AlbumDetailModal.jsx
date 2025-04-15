@@ -14,7 +14,7 @@ import axios from 'axios';
 import { useUserStore } from '../Login/Login';
 import { useLocation } from 'react-router-dom';
 
-function AlbumDetailModal({ albumData, onClose }) {
+function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);

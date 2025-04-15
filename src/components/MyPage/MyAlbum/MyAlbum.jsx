@@ -17,18 +17,18 @@ import ModifyAlbumAndDetail from './ModifyAlbumAndDetail';
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const MyAlbum = () => {
-  const username = useUserStore((state) => state.user?.username);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sortOption, setSortOption] = useState('최신순');
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState(null);
-  const [draggedId, setDraggedId] = useState(null);
+  const username = useUserStore((state) => state.user?.username);  //현재 유저 
+  const [selectedPost, setSelectedPost] = useState(null); // 선택된 앨범
+  const [isModalOpen, setIsModalOpen] = useState(false); // 디테일 오픈
+  const [sortOption, setSortOption] = useState('최신순'); // 옵션들
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);  // 앨범 추가 열기
+  const [editingPost, setEditingPost] = useState(null); // 수정할 데이터 값들
+  const [draggedId, setDraggedId] = useState(null); // 드래그 값
   const [columns, setColumns] = useState(5); // 기본값: 5개 보기
   const [isTrashDragOver, setIsTrashDragOver] = useState(false);
-  const [myPosts, setMyPosts] = useState([]);
+  const [myPosts, setMyPosts] = useState([]); // 나의 포스트들~~
 
+  // 내 앨범 가지고 오기!!!!!
   async function GetMyAlbum() {
     const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
@@ -55,41 +55,44 @@ const MyAlbum = () => {
     GetMyAlbum();
   }, []);
 
+  //앨범 추가 시 , 내 기존 앨범에서 추가된 앨범을 앞에다가 넣기!!!
   const handleAddAlbum = (newAlbum) => {
     setMyPosts((prev) => [newAlbum, ...prev]);
   };
 
-  const filteredData = [...myPosts]
-    .filter((post) =>
-      post.username.toLowerCase().includes(searchKeyword.toLowerCase())
-    )
-    .sort((a, b) => {
-      if (sortOption === '좋아요순') return b.greats.length - a.greats.length;
-      if (sortOption === '댓글순') return b.comments.length - a.comments.length;
-      return new Date(b.addDate) - new Date(a.addDate); // 최신순
-    });
+  // 필터링 및 정렬 로직
+  const filteredData = [...myPosts].sort((a, b) => {
+    if (sortOption === '좋아요순') return b.greats.length - a.greats.length;
+    if (sortOption === '댓글순') return b.comments.length - a.comments.length;
+    return new Date(b.addDate) - new Date(a.addDate); // 기본 최신순
+  });
 
+  //내 앨범 클릭 시, 디테일 창 보이게
   const handleCardClick = (post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
   };
-
+  //디테일 창 닫기!!!!
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedPost(null);
   };
 
+  // 수정할 수 있도록 처리!!!
   const handleEditAlbum = (post) => {
     setEditingPost(post);
     setIsAddModalOpen(true);
   };
 
+  //앨범 정보를 수정한 후 화면에 반영
+  //updatedAlbum.id와 일치하는 게시글을 찾아서, 그 자리만 updatedAlbum으로 바꿈
   const handleUpdateAlbum = (updatedAlbum) => {
     setMyPosts((prev) =>
       prev.map((post) => (post.id === updatedAlbum.id ? updatedAlbum : post))
     );
   };
 
+  //해당 ID를 가진 앨범을 삭제하기
   const handleDeleteAlbum = (id) => {
     setMyPosts((prev) => prev.filter((post) => post.id !== id));
     setSelectedPost(null);
@@ -100,6 +103,7 @@ const MyAlbum = () => {
     <AlbumWrapper>
       <AlbumInner>
         <HeaderBox>
+          {/* 필터링 */}
           <FilterBox>
             {['최신순', '좋아요순', '댓글순'].map((label) => (
               <FilterButton
@@ -111,7 +115,7 @@ const MyAlbum = () => {
               </FilterButton>
             ))}
           </FilterBox>
-
+          {/* 3,5개로 볼건지 선택(디폴트 5개) */}
           <LayoutControlBox>
             {[3, 5].map((num) => (
               <LayoutButton key={num} onClick={() => setColumns(num)}>
@@ -120,7 +124,8 @@ const MyAlbum = () => {
             ))}
           </LayoutControlBox>
         </HeaderBox>
-
+        {/* 선택된 컬럼 수에 따라서 다르게 화면 렌더링 */}
+        {/* filteredData: 필터된 조건에 따라서 다르게 렌더링 */}
         <PhotoGrid columns={columns}>
           {filteredData.map((album, idx) => (
             <PhotoCard
@@ -130,15 +135,17 @@ const MyAlbum = () => {
               rotate={Math.floor(Math.random() * 6 - 3)}
               offsetY={Math.floor(Math.random() * 20 - 10)}
               pinColor={pin[idx % pin.length]}
+              //디테일 창 볼 수 있도록 처리
               onClick={() => handleCardClick(album)}
               draggable
+              //드래그하면 해당 앨범 아이디 저장
               onDragStart={() => setDraggedId(album.id)}
               columns={columns}
             />
           ))}
         </PhotoGrid>
-
-        {isModalOpen && selectedPost && selectedPost.greats && (
+        {/* 디테일(수정 버튼 있음) 열기 */}
+        {isModalOpen && selectedPost && (
           <AlbumDetailModal
             albumData={selectedPost}
             onClose={handleCloseModal}
@@ -146,6 +153,7 @@ const MyAlbum = () => {
           />
         )}
       </AlbumInner>
+      {/* 앨범 추가하기 */}
       {isAddModalOpen && (
         <ModifyAlbumAndDetail
           onClose={() => {
@@ -154,11 +162,11 @@ const MyAlbum = () => {
           }}
           onAddAlbum={handleAddAlbum}
           onEditAlbum={handleUpdateAlbum}
-          editMode={!!editingPost}
+          editMode={!!editingPost} // 강제로 불리언으로 변경하기
           editData={editingPost}
         />
       )}
-      <AddButton onClick={() => setIsAddModalOpen(true)} title="Add New">
+      <AddButton onClick={() => { setIsAddModalOpen(true); setEditingPost(null); }} title="Add New">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <path
             d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
@@ -168,6 +176,8 @@ const MyAlbum = () => {
           <path d="M12 16V8" strokeWidth="1.5" />
         </svg>
       </AddButton>
+      {/* 앨범 추가하기 끝 */}
+      {/* 앨범을 끌고가서 쓰레기통에 버리기 */}
       <TrashZone
         onDragOver={(e) => {
           e.preventDefault();
@@ -182,6 +192,7 @@ const MyAlbum = () => {
       >
         <DeleteButton isDragOver={isTrashDragOver} />
       </TrashZone>
+      {/* 앨범을 끌고가서 쓰레기통에 버리기 끝 */}
     </AlbumWrapper>
   );
 };
@@ -196,7 +207,6 @@ const AlbumWrapper = styled.div`
   align-items: flex-start; // 위에서부터 정렬
   padding: 60px 20px 100px;
 `;
-
 const AlbumInner = styled.div`
   width: 100%;
   max-width: 1400px;
@@ -204,21 +214,17 @@ const AlbumInner = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
 const HeaderBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  /* max-width: 1200px; */
   margin-bottom: 40px;
 `;
-
 const FilterBox = styled.div`
   display: flex;
   gap: 10px;
 `;
-
 const FilterButton = styled.button`
   padding: 8px 16px;
   border-radius: 20px;
@@ -228,13 +234,11 @@ const FilterButton = styled.button`
   color: ${({ active }) => (active ? '#fff' : '#333')};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-
   &:hover {
     background-color: #8c0d17;
     color: white;
   }
 `;
-
 const LayoutControlBox = styled.div`
   padding: 8px 16px;
   display: flex;
@@ -242,7 +246,6 @@ const LayoutControlBox = styled.div`
   align-items: center;
   gap: 10px;
 `;
-
 const LayoutButton = styled.button`
   background-color: white;
   /* border: none; */
@@ -251,14 +254,11 @@ const LayoutButton = styled.button`
   font-weight: 700;
   cursor: pointer;
   color: #333;
-  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); */
-
   &:hover {
     background-color: #8c0d17;
     color: white;
   }
 `;
-
 const AddButton = styled.button`
   position: fixed;
   bottom: 210px;
@@ -266,9 +266,7 @@ const AddButton = styled.button`
   border: none;
   background: none;
   padding: 0;
-
   cursor: pointer;
-
   svg {
     width: 60px;
     height: 60px;
@@ -276,13 +274,11 @@ const AddButton = styled.button`
     fill: none;
     transition: all 0.3s ease;
   }
-
   &:hover svg {
     stroke: white;
     transform: rotate(90deg);
   }
 `;
-
 const PhotoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
@@ -291,212 +287,8 @@ const PhotoGrid = styled.div`
   padding: 0 20px;
   margin: 0 auto;
 `;
-
 const TrashZone = styled.div`
   position: fixed;
   bottom: 30px;
   left: 70px;
 `;
-
-// const [myPosts, setMyPosts] = useState([
-//   {
-//     id: 1,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 2,
-//     username: "my_user",
-//     title: "한강 야경",
-//     imgurl: [couple2, couple2],
-//     date: "2025-01-12",
-//     location: "한강 반포지구",
-//     tag: ["야경", "데이트"],
-//     likes: ["user1", "user3"],
-//     comments: [
-//       {
-//         id: 1,
-//         albumId: 2,
-//         username: "user1",
-//         text: "너무 예쁘네요!",
-//         date: "2025-01-13",
-//       },
-//     ],
-//     isPublic: true,
-//   },
-//   {
-//     id: 3,
-//     username: "my_user",
-//     title: "성수동 카페 데이트",
-//     imgurl: [couple3],
-//     date: "2025-01-15",
-//     location: "성수동 카페거리",
-//     tag: ["디저트", "사진맛집"],
-//     likes: [],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 4,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 5,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 6,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 7,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 8,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 9,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 10,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 11,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 12,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 13,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 14,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 15,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-//   {
-//     id: 16,
-//     username: "my_user",
-//     title: "첫 데이트 장소",
-//     imgurl: [couple1],
-//     date: "2025-01-05",
-//     location: "서울 연남동",
-//     tag: ["데이트", "추억"],
-//     likes: ["user2", "user4"],
-//     comments: [],
-//     isPublic: true,
-//   },
-// ]);

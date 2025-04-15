@@ -7,54 +7,145 @@ import rightkey from '../../img/rightkey.png';
 import Modal from '../../Album/Modal';
 import MapPicker from '../../Story/MapPicker';
 import { IconClose, IconClose1, IconImage } from '../../Icons';
+import axios from 'axios';
 
 function ModifyAlbumAndDetail({
   onClose,
   onEditAlbum,
   onAddAlbum,
   editMode,
-  editData,
+  editData,  // 수정할 데이터
 }) {
-  const [title, setTitle] = useState('');
-  const [images, setImages] = useState([]);
-  const [imageIndex, setImageIndex] = useState(0);
-  const [tags, setTags] = useState([]);
-  const [isPublic, setIsPublic] = useState(true);
-  const [showMap, setShowMap] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState(null);
-
+  const [imageIndex, setImageIndex] = useState(0);  //이미지 인덱스
+  const [title, setTitle] = useState(''); // 제목
+  const [images, setImages] = useState([]); // 이미지들 배열 모음
+  const [tags, setTags] = useState([]); // 태그 배열 모음
+  const [isPublic, setIsPublic] = useState(true); // 공개 비공개 여부
+  const [showMap, setShowMap] = useState(false); // 지도 펼치기 여부
+  const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소
   const handleOpenMap = () => setShowMap(true);
   const handleCloseMap = () => setShowMap(false);
-
   const handleLocationSelect = (location) => {
     setSelectedPlace(location);
     setShowMap(false);
   };
 
-  const submitAlbum = () => {
-    const newAlbum = {
-      id: editMode ? editData.id : Date.now(), // 고유 ID
-      imgurl: images.map((img) =>
-        img.file instanceof File ? img.file : img.preview
-      ), // 이미지 배열
-      title,
-      date: Date.now(), // 현재 시간
-      username: 'user7', // 예시 사용자 이름
-      location: selectedPlace?.address || '', // 예시 위치
-      tag: tags.map((tag) => tag.text), // 입력된 태그
-      likes: [], // 좋아요 목록
-      comments: [], // 댓글 목록
-      isPublic,
-    };
-
-    if (editMode && onEditAlbum) {
-      onEditAlbum(newAlbum);
-    } else {
-      onAddAlbum(newAlbum);
+  console.log(editMode + " " + " " + onEditAlbum)
+  async function submitAlbum() {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      alert('로그인이 필요합니다.');
+      return;
     }
+    if (images.length === 0) {
+      alert('이미지를 한 장 이상 등록해주세요.');
+      return;
+    }
+    if (title.trim() === '') {
+      alert('제목은 필수 등록사항입니다.');
+      return;
+    }
+    const formData = new FormData();
+    formData.append("title", title);
+    images.forEach((img) => formData.append("files", img.file)); // 파일들 업로드
 
-    onClose(); // 수정 또는 등록 후 닫기
-  };
+    try {
+      // ✅ 1. 이미지 먼저 업로드
+      const uploadRes = await axios.post("/api/album/upload/multiple", formData, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedMedia = uploadRes.data; // MediaDTO 배열
+
+      //앨범 추가
+      const newAlbum = {
+        title,
+        visibility: isPublic ? "PUBLIC" : "PRIVATE",
+        mediaUrl: uploadedMedia, // 여기에 서버로부터 받은 mediaUrl/mediaType을 그대로 사용
+        latitude: selectedPlace?.lat || 0,
+        longitude: selectedPlace?.lng || 0,
+        location: selectedPlace?.address || "",
+        tagList: tags.map((tag, index) => ({
+          id: index,
+          name: tag.text,
+        })),
+      };
+      let updateAlbum = null;
+      if (editMode && editData) {
+        updateAlbum = {
+          id: editData.id,
+          title,
+          visibility: isPublic ? "PUBLIC" : "PRIVATE",
+          mediaUrl: uploadedMedia,
+          latitude: selectedPlace?.lat || 0,
+          longitude: selectedPlace?.lng || 0,
+          location: selectedPlace?.address || "",
+          tagList: tags.map((tag, index) => ({
+            id: index,
+            name: tag.text,
+          })),
+        };
+      }
+
+      if (editMode && onEditAlbum && editData) {
+        const res = await axios.put(`/api/album/update`, updateAlbum, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (res.status === 200 || res.status === 201) {
+          alert("앨범이 수정되었습니다.");
+          onEditAlbum(res.data); // 부모에게 수정된 앨범 전달
+          onClose(); // 모달 닫기
+          window.location.reload();
+        } else {
+          alert("앨범 수정 실패");
+        }
+      } else {
+        const albumRes = await axios.post("/api/album/save", newAlbum, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (albumRes.status === 200 || albumRes.status === 201) {
+          alert("앨범이 등록되었습니다.");
+          onAddAlbum(newAlbum);
+          window.location.reload();
+          onClose();
+        } else {
+          alert("앨범 등록 실패");
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      alert("서버와 통신 중 오류가 발생했습니다.");
+    }
+  }
+  //기존 데이터를 폼에 자동으로 채워주는 기능과 공개/비공개 스위치 제어 기능
+  useEffect(() => {
+    if (editMode && editData) {
+      setTitle(editData.title);
+      setTags(
+        editData.albumTags.map((t) => ({ id: Date.now() + Math.random(), text: t }))
+      );
+      setImages(
+        editData.url.map((img) => ({
+          id: img.id, // id 추가
+          mediaUrl: img.mediaUrl, // 이미지 URL
+          mediaType: img.mediaType, // 이미지 타입 (필요한 경우)
+        })),
+        console.log(images)
+      );
+      setSelectedPlace({ address: editData.location });
+      setIsPublic(editData.isPublic);
+    }
+  }, [editMode, editData]);
 
   const handleSwitchChange = () => {
     setIsPublic((prev) => !prev); // 공개/비공개 상태 토글
@@ -67,6 +158,7 @@ function ModifyAlbumAndDetail({
     }));
     setImages((prevImages) => [...prevImages, ...files]);
   };
+
   const prevImage = () => {
     setImageIndex((prevIndex) =>
       prevIndex > 0 ? prevIndex - 1 : images.length - 1
@@ -86,6 +178,7 @@ function ModifyAlbumAndDetail({
       prevIndex < images.length - 1 ? prevIndex + 1 : 0
     );
   };
+
   //IconImage를 클릭하면  id가 file인 곳으로 강제 이동
   const FileInput = () => {
     document.getElementById('file-upload').click();
@@ -106,38 +199,12 @@ function ModifyAlbumAndDetail({
     }
   };
 
-  useEffect(() => {
-    if (editMode && editData) {
-      setTitle(editData.title);
-      setTags(
-        editData.tag.map((t) => ({ id: Date.now() + Math.random(), text: t }))
-      );
-      setImages(
-        editData.imgurl.map((img) =>
-          typeof img === 'string'
-            ? { file: null, preview: img } // 문자열이면 preview , 파일이면 file로 처리하는거거
-            : { file: img, preview: URL.createObjectURL(img) }
-        )
-      );
-      setSelectedPlace({ address: editData.location });
-      setIsPublic(editData.isPublic);
-    }
-  }, [editMode, editData]);
-
   // 태그 삭제 함수
   const handleTagDelete = (id) => {
     setTags((prevTags) => prevTags.filter((tag) => tag.id !== id));
   };
   console.log(images);
   console.log(imageIndex);
-
-  const currentImage = images[imageIndex];
-  const previewUrl =
-    currentImage?.preview ||
-    (currentImage?.file instanceof File
-      ? URL.createObjectURL(currentImage.file)
-      : null);
-
   return (
     <>
       <Back onClick={onClose} />
@@ -151,6 +218,12 @@ function ModifyAlbumAndDetail({
               />
             </div>
             <div className="img">
+              <img
+                src={leftkey}
+                alt="leftkey"
+                className="leftkey"
+                onClick={prevImage}
+              />
               {images.length > 0 && (
                 <>
                   <div
@@ -161,10 +234,10 @@ function ModifyAlbumAndDetail({
                   </div>
                   <img
                     src={
-                      images[imageIndex].preview ||
-                      (images[imageIndex].file &&
-                        URL.createObjectURL(images[imageIndex].file))
-                    }
+                      images[imageIndex].file
+                        ? URL.createObjectURL(images[imageIndex].file)
+                        : images[imageIndex].mediaUrl
+                    }                  // 서버에서 불러온 이미지}
                     alt={`image-${imageIndex}`}
                     className="current-image"
                   />
@@ -230,7 +303,7 @@ function ModifyAlbumAndDetail({
               )}
             </div>
             <div className="buttonBox" onClick={submitAlbum}>
-              <button>등록</button>
+              <button>{editMode && onEditAlbum ? "수정" : "등록"}</button>
             </div>
           </Box>
         </BoxWrap>
@@ -238,25 +311,7 @@ function ModifyAlbumAndDetail({
     </>
   );
 }
-
 export default ModifyAlbumAndDetail;
-
-// useEffect(() => {
-//   setData([
-//     {
-//       id: 11,
-//       imgurl: images,
-//       title: title,
-//       date: Date.now,
-//       username: 'user7',
-//       location: '둔산로 221',
-//       tag: tags,
-//       likes: [],
-//       comments: [],
-//       isPublic
-//     },
-//   ]);
-// }, []);
 
 const Container = styled.div`
   width: 25%;
