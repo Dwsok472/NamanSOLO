@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { createSessionStorage } from 'react-router-dom';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 // 미디어
-
 const BASE_URL = 'http://localhost:8082/api';
 const todo_url = '/todo'
 const token = sessionStorage.getItem('jwt-token');
@@ -267,3 +269,108 @@ export const fetchFemalePresents = async () => {
   }); return res.data; } 
   catch (err) { console.error('여성 선물 불러오기 실패:', err); throw err; }
 };
+
+const user_url = '/user';
+
+export const registerUser = async (formData) => {
+  try {
+    const response = await axios.post(`${BASE_URL}${user_url}/register`, formData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("회원가입 API 에러:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const useRegisterStore = create(
+  persist(
+    (set, get) => ({
+      formData: {
+        username: "",
+        password: "",
+        emailM: "",
+        emailF: "",
+        realNameM: "",
+        realNameF: "",
+        birthM: "",
+        birthF: "",
+        phoneNumberM: "",
+        phoneNumberF: "",
+        authority: "",
+        addDate: "",
+        dDay: "",
+        alarmAlert: true,
+        commentAlert: true,
+        followAlert: true,
+        greatAlert: true,
+        eventAlert: true,
+        recommendAlert: true,
+        recommentAlert: true,
+        todoAlert: true,
+        mediaUrl: null,
+      },
+
+      setFormData: (data) => set((state) => ({
+        formData: {
+          ...state.formData,
+          ...data,
+        }
+      })),
+
+      submitRegistration: async () => {
+        try {
+          const res = await axios.post(`${BASE_URL}${user_url}/register`, get().formData);
+          return res.data;
+        } catch (error) {
+          console.error("회원가입 실패:", error);
+          throw error;
+        }
+      },
+
+      resetForm: () => set({
+        formData: {
+          username: "",
+          password: "",
+          emailM: "",
+          emailF: "",
+          realNameM: "",
+          realNameF: "",
+          birthM: "",
+          birthF: "",
+          phoneNumberM: "",
+          phoneNumberF: "",
+          authority: "",
+          addDate: "",
+          dDay: "",
+          alarmAlert: true,
+          commentAlert: true,
+          followAlert: true,
+          greatAlert: true,
+          eventAlert: true,
+          recommendAlert: true,
+          recommentAlert: true,
+          todoAlert: true,
+          mediaUrl: null,
+        }
+      })
+    }),
+    {
+      name: "register-storage", // storage key 이름
+      storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+);
+
+export async function checkUsernameDuplicate(username) {
+  try {
+    const response = await axios.get(`${BASE_URL}${user_url}/check-id/${username}`);
+    return !response.data; // false면 사용 가능이니까 결과 반전해서 true 리턴
+  } catch (error) {
+    console.error("중복 확인 실패:", error);
+    throw error;
+  }
+}

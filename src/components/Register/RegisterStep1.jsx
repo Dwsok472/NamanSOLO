@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { IconPassword, IconUser } from "../Icons";
 import NextButton from "../Button/NextButton";
 import { Navigate, useNavigate } from "react-router-dom";
 import { IconBehind } from "../Icons";
+import { checkUsernameDuplicate, useRegisterStore } from "../api2";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -97,7 +98,7 @@ const Top = styled.div`
     content: "";
     position: absolute;
     top: 50%;
-    left: 20.5%;
+    left: 21.5%;
     transform: translate(-50%, -50%);
     width: 15px;
     height: 15px;
@@ -178,10 +179,10 @@ const GuideText = styled.div`
   font-size: 0.75rem;
   margin: 5px 0 10px 10px;
   text-align: center;
-  color: ${({ isError }) =>
-    isError === true
+  color: ${({ $isError }) =>
+    $isError === true
       ? "#d32f2f" // 에러 - 빨간색
-      : isError === false
+      : $isError === false
       ? "#2e7d32" // 성공 - 초록색
       : "#888"}; // 기본 회색 or 안내 메시지용
 `;
@@ -198,8 +199,7 @@ const Icon = styled.div`
 `;
 
 function RegisterStep1({ onNext }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const { formData, setFormData } = useRegisterStore();
   const [matchpassword, setmatchpassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [buttonText, setButtonText] = useState("중복확인");
@@ -208,11 +208,15 @@ function RegisterStep1({ onNext }) {
     setIsChecked(!isChecked); // 체크된 상태를 반전
   };
   const navigate = useNavigate();
+  const usernameRef = useRef();
+  const pwdRef = useRef();
+  const matchPwdRef = useRef();
 
   async function handleCheckUsername() {
     try {
-      const check = await UserLogin(username);
-      if (check.data === true) {
+      const isAvaliable = await checkUsernameDuplicate(formData.username);
+
+      if (isAvaliable) {
         setButtonText("사용 가능");
       } else {
         alert("이미 등록된 아이디입니다");
@@ -222,6 +226,7 @@ function RegisterStep1({ onNext }) {
       setButtonText("중복확인");
     }
   }
+
 
   // async function handleCheckUsername() {
   //   try {
@@ -237,13 +242,45 @@ function RegisterStep1({ onNext }) {
   // }
 
   async function handleMatchPwd() {
-    if (password === matchpassword) {
+    if (formData.password === matchpassword) {
       setmatchText("완료");
     } else {
       alert("입력하신 비밀번호가 일치하지 않습니다");
       return;
     }
   }
+
+  const handleNextStep = () => {
+    const { password } = formData;
+    
+    if (buttonText !== "사용 가능") {
+      alert("아이디 중복 확인을 먼저 해주세요.");
+      usernameRef.current.focus();
+      return;
+    }
+    
+    if (password.length < 8) {
+      alert("비밀번호는 8자 이상이어야 합니다.");
+      pwdRef.current.focus();
+      return;
+    }
+  
+    if (password !== matchpassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+      matchPwdRef.current.focus();
+      return;
+    }
+  
+    if (!isChecked) {
+      alert("약관에 동의해주세요.");
+      document.getElementById("agree").focus();
+      return;
+    }
+  
+    // 유효성 검사 통과 후 다음 스텝으로 이동
+    onNext();
+  };
+
   return (
     <Container>
       <H1>회원가입</H1>
@@ -329,35 +366,41 @@ function RegisterStep1({ onNext }) {
               <SmallBox>
                 <IconUser />
                 <Input
+                  ref={usernameRef}
                   type="text"
+                  maxLength={12}
                   placeholder="아이디를 입력해주세요"
                   autoComplete="off" // 자동완성 기능 끄기
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={formData.username}
+                  onChange={(e) => setFormData({ username : e.target.value.replace(/[^a-zA-Z.0-9-_]/g, '') })}
                 />
 
                 <button onClick={handleCheckUsername}>{buttonText}</button>
               </SmallBox>
-              <GuideText isError={username.length > 0 && username.length < 6}>
+              <GuideText $isError={formData.username.length >= 0 && formData.username.length < 6}>
                 6~12자의 영문 또는 숫자를 입력해주세요.
               </GuideText>
               <SmallBox>
                 <IconPassword />
                 <Input
+                  maxLength={16}
+                  ref={pwdRef}
                   type="password"
                   placeholder="비밀번호를 입력해주세요"
                   autoComplete="off"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ password : e.target.value.replace(/[^a-z!-_A-Z0-9]/g, '') })}
                 />
               </SmallBox>
-              <GuideText isError={password.length > 0 && password.length < 8}>
-                영문, 숫자를 포함해 8자 이상 입력해주세요.
+              <GuideText $isError={formData.password.length >= 0 && formData.password.length < 8}>
+                숫자 1번부터 -까지의 특수문자, 영문, 숫자를 포함해 8자 이상 입력해주세요.
               </GuideText>
 
               <SmallBox>
                 <IconPassword />
                 <Input
+                  maxLength={16}
+                  ref={matchPwdRef}
                   type="password"
                   placeholder="비밀번호를 재입력해주세요"
                   autoComplete="off"
@@ -367,17 +410,17 @@ function RegisterStep1({ onNext }) {
 
                 <button onClick={handleMatchPwd}>{matchText}</button>
               </SmallBox>
-              {password.length > 0 &&
+              {formData.password.length > 0 &&
                 matchpassword.length > 0 &&
-                (password !== matchpassword ? (
-                  <GuideText isError={true}>
+                (formData.password !== matchpassword ? (
+                  <GuideText $isError={true}>
                     비밀번호가 일치하지 않습니다.
                   </GuideText>
                 ) : (
-                  <GuideText isError={false}>비밀번호가 일치합니다.</GuideText>
+                  <GuideText $isError={false}>비밀번호가 일치합니다.</GuideText>
                 ))}
               <NextButtonWrapper>
-                <NextButton onClick={onNext} />
+                <NextButton onClick={handleNextStep} />
               </NextButtonWrapper>
             </Buttom>
           </ButtomWrap>
