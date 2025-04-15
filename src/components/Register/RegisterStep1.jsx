@@ -178,13 +178,14 @@ const Buttom = styled.div`
 const GuideText = styled.div`
   font-size: 0.75rem;
   margin: 5px 0 10px 10px;
-  text-align: center;
+  text-align: ${({ $alignRight }) => ($alignRight ? "right" : "center")};
   color: ${({ $isError }) =>
     $isError === true
       ? "#d32f2f" // 에러 - 빨간색
       : $isError === false
       ? "#2e7d32" // 성공 - 초록색
       : "#888"}; // 기본 회색 or 안내 메시지용
+  display: ${({ $hide }) => ($hide ? "none" : "block")};
 `;
 const NextButtonWrapper = styled.div`
   margin-top: 30px;
@@ -251,23 +252,14 @@ function RegisterStep1({ onNext }) {
   }
 
   const handleNextStep = () => {
-    const { password } = formData;
-    
     if (buttonText !== "사용 가능") {
-      alert("아이디 중복 확인을 먼저 해주세요.");
+      alert("아이디가 중복되는지 확인해주세요.");
       usernameRef.current.focus();
       return;
     }
     
-    if (password.length < 8) {
-      alert("비밀번호는 8자 이상이어야 합니다.");
-      pwdRef.current.focus();
-      return;
-    }
-  
-    if (password !== matchpassword) {
-      alert("비밀번호가 일치하지 않습니다.");
-      matchPwdRef.current.focus();
+    if (matchText !=="완료") {
+      alert("비밀번호가 일치하는지 확인하세요.")
       return;
     }
   
@@ -359,6 +351,9 @@ function RegisterStep1({ onNext }) {
                 onChange={handleChange}
               />
               <label htmlFor="agree">동의</label>
+              <GuideText $isError={!isChecked} $alignRight={true} $hide={isChecked === true}>
+                해당 약관에 동의하셔야 다음으로 진행이 가능합니다.
+              </GuideText>
             </div>
           </Top>
           <ButtomWrap>
