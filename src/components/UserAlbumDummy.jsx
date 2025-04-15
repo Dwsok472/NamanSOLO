@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import PhotoCard from './PhotoCard';
-import couple1 from '../img/couple1.png';
-import couple2 from '../img/couple2.png';
-import couple3 from '../img/couple3.png';
-import couple4 from '../img/couple4.jpg';
-import tape1 from '../img/tape1.png';
-import tape2 from '../img/tape2.png';
-import tape3 from '../img/tape3.png';
-import tape4 from '../img/tape4.png';
-import tape5 from '../img/tape5.png';
-import tape6 from '../img/tape6.png';
-import tape7 from '../img/tape7.png';
-
-import AlbumDetailModal from './AlbumDetailModal';
-import { useNavigate } from 'react-router-dom';
+import PhotoCard from './Album/PhotoCard';
+import tape1 from './img/tape1.png';
+import tape2 from './img/tape2.png';
+import tape3 from './img/tape3.png';
+import tape4 from './img/tape4.png';
+import tape5 from './img/tape5.png';
+import tape6 from './img/tape6.png';
+import tape7 from './img/tape7.png';
+import AlbumDetailModal from './Album/AlbumDetailModal';
 import { useRef } from 'react';
 import axios from 'axios';
 
-import Top from './Top';
-import AddAlbum from './AddAlbum';
-import { Button as LeftButton } from './LeftButton';
-import { Button as RightButton } from './RightButton';
+import Top from './Album/Top';
+import { Button as LeftButton } from './Album/LeftButton';
+import { Button as RightButton } from './Album/RightButton';
 import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
-const AlbumBoard = () => {
+const UserAlbum = () => {
   const [data, setData] = useState([]); // 데이터 저장용
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
@@ -35,25 +27,8 @@ const AlbumBoard = () => {
   const [showDetail, setShowDetail] = useState(false); // 모달 창 열림/닫힘 상태
   const [filter, setFilter] = useState('최신순'); // 필터용
   const [showAddAlbum, setShowAddAlbum] = useState(false);
-  const { username } = useParams();
-  const location = useLocation();
   const itemsRef = useRef([]);
-
-  async function GetAllAlbum() {
-    try {
-      // 서버로 중복 확인 요청
-      const response = await axios.get('/api/album/all');
-      if (!response || response.length === 0) {
-        console.log('앨범 데이터를 가져오지 못했습니다.');
-        return;
-      }
-      setData(response.data);
-      setLoading(false);
-    } catch (error) {
-      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
-      throw error; // 에러 처리
-    }
-  }
+  const { username } = useParams();
 
   async function GetAlbumByUsername() {
     const jwt = sessionStorage.getItem('jwt-token');
@@ -80,19 +55,9 @@ const AlbumBoard = () => {
       throw error; // 에러 처리
     }
   }
-  console.log(username);
   useEffect(() => {
-    if (username) {
-      GetAlbumByUsername(); // 특정 유저 앨범 조회
-    } else {
-      GetAllAlbum(); // 전체 앨범 조회
-    }
-  }, [username, location.pathname]);
-
-  // 새 앨범을 추가하는 함수
-  const addNewAlbum = (newAlbum) => {
-    setData((prevData) => [newAlbum, ...prevData]);
-  };
+    GetAlbumByUsername();
+  }, []);
 
   // 필터링 및 정렬 로직
   const sortedData = [...data].sort((a, b) => {
@@ -112,20 +77,6 @@ const AlbumBoard = () => {
 
   const toggleBack = () => {
     setShowDetail(false); // 모달을 닫는 함수
-  };
-  const handleOpenAddAlbum = () => {
-    // 열기 전에 알람/챗봇 닫기 요청
-    window.dispatchEvent(new Event('closeFooterModals'));
-
-    // "AddAlbum이 열려 있었다"는 flag 설정
-    window.addEventListener('checkAddAlbumOpened', (e) => {
-      e.detail.callback(true); // 알려주기
-    });
-
-    setShowAddAlbum(true);
-  };
-  const handleCloseAddAlbum = () => {
-    setShowAddAlbum(false); // AddAlbum 모달 닫기
   };
 
   useEffect(() => {
@@ -222,21 +173,6 @@ const AlbumBoard = () => {
         <EraserWrapper>
           <RightButton onClick={handleNextPage} />
         </EraserWrapper>
-
-        <AddButton onClick={handleOpenAddAlbum} title="Add New">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
-              strokeWidth="1.5"
-            />
-            <path d="M8 12H16" strokeWidth="1.5" />
-            <path d="M12 16V8" strokeWidth="1.5" />
-          </svg>
-        </AddButton>
-
-        {showAddAlbum && (
-          <AddAlbum onClose={handleCloseAddAlbum} onAddAlbum={addNewAlbum} />
-        )}
       </BoardFrame>
       {showDetail && (
         <AlbumDetailModal albumData={selectedAlbum} onClose={toggleBack} />
@@ -245,7 +181,7 @@ const AlbumBoard = () => {
   );
 };
 
-export default AlbumBoard;
+export default UserAlbum;
 
 const BoardWrapper = styled.div`
   padding-top: 10px;
@@ -256,8 +192,6 @@ const BoardWrapper = styled.div`
   gap: 10px;
   align-items: center;
   height: auto;
-  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
-  /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
   background: linear-gradient(to bottom, #b85c79, #fdecec);
 `;
 

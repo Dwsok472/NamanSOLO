@@ -66,7 +66,7 @@ const MyAlbum = () => {
     .sort((a, b) => {
       if (sortOption === '좋아요순') return b.greats.length - a.greats.length;
       if (sortOption === '댓글순') return b.comments.length - a.comments.length;
-      return new Date(b.date) - new Date(a.date); // 최신순
+      return new Date(b.addDate) - new Date(a.addDate); // 최신순
     });
 
   const handleCardClick = (post) => {
@@ -168,7 +168,7 @@ const MyAlbum = () => {
           <path d="M12 16V8" strokeWidth="1.5" />
         </svg>
       </AddButton>
-      {/* <TrashZone
+      <TrashZone
         onDragOver={(e) => {
           e.preventDefault();
           setIsTrashDragOver(true);
@@ -181,7 +181,7 @@ const MyAlbum = () => {
         }}
       >
         <DeleteButton isDragOver={isTrashDragOver} />
-      </TrashZone> */}
+      </TrashZone>
     </AlbumWrapper>
   );
 };

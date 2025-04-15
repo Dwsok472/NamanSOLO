@@ -147,7 +147,9 @@ function Follow({ type }) {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      setFollower(prevFollowers => prevFollowers.filter(user => user.username !== username));
+      setFollower((prevFollowers) =>
+        prevFollowers.filter((user) => user.username !== username)
+      );
 
       setLoading(false);
       window.location.reload();
@@ -174,7 +176,9 @@ function Follow({ type }) {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      setFollowing(prevFollowings => prevFollowings.filter(user => user.username !== username));
+      setFollowing((prevFollowings) =>
+        prevFollowings.filter((user) => user.username !== username)
+      );
 
       setLoading(false);
       window.location.reload();
@@ -185,7 +189,9 @@ function Follow({ type }) {
 
   async function handledeleteFollowing(username) {
     try {
-      const isConfirmed = confirm('해당 유저를 팔로우 취소 처리하도록 할까요 ?');
+      const isConfirmed = confirm(
+        '해당 유저를 팔로우 취소 처리하도록 할까요 ?'
+      );
       if (isConfirmed) {
         await deleteFollowing(username);
       }
@@ -220,10 +226,13 @@ function Follow({ type }) {
         setFollowing((prev) => {
           const exists = prev.some((user) => user.username === targetUsername);
           if (exists) return prev;
-          return [...prev, {
-            username: targetUsername,
-            profileUrl: '', // 서버에서 받아온 경우 사용
-          }];
+          return [
+            ...prev,
+            {
+              username: targetUsername,
+              profileUrl: '', // 서버에서 받아온 경우 사용
+            },
+          ];
         });
 
         alert('팔로우 성공!');
@@ -272,20 +281,31 @@ function Follow({ type }) {
                   <p className="userName">{item.username}</p>
                 </Left>
                 <Right>
-                  <TopButton className={item.mutualFollow ? 'mutual' : 'none'}
+                  <TopButton
+                    className={item.mutualFollow ? 'mutual' : 'none'}
                     onClick={() => {
                       if (!item.mutualFollow) {
                         addFollow(item.username);
                       }
-                    }}>
+                    }}
+                  >
                     {type === 'follower'
-                      ? item.mutualFollow ? '맞팔중' : '팔로우 하기'
-                      : item.mutualFollow ? '맞팔중' : '피드 구경하기'}
+                      ? item.mutualFollow
+                        ? '맞팔중'
+                        : '팔로우 하기'
+                      : item.mutualFollow
+                      ? '맞팔중'
+                      : '피드 구경하기'}
                   </TopButton>
-                  <ButtomButton onClick={() => type === 'follower' ? handledeleteFollower(item.username) : handledeleteFollowing(item.username)}>
+                  <ButtomButton
+                    onClick={() =>
+                      type === 'follower'
+                        ? handledeleteFollower(item.username)
+                        : handledeleteFollowing(item.username)
+                    }
+                  >
                     {type === 'follower' ? '팔로우 해제' : '팔로우 취소'}
                   </ButtomButton>
-
                 </Right>
               </SmallBox>
             ))
@@ -390,7 +410,7 @@ const Left = styled.div`
 `;
 const Img = styled.img`
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid #3333;
   align-items: center;
   width: 40%;
@@ -402,14 +422,14 @@ const Right = styled.div`
   flex-direction: column;
   justify-content: center; // 수직 중앙
   align-items: center; // 수평 중앙
-  .none{
+  .none {
     &:hover {
-    background-color: #afafaf;
-    color: white;
-    border: none;
+      background-color: #afafaf;
+      color: white;
+      border: none;
+    }
   }
-  }
-  .mutual{
+  .mutual {
     background-color: #000000;
     color: white;
     border: none;

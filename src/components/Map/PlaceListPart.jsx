@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-// import { getAllPlaces } from '../api/api1';
-// import { createPlace, updatePlace, deletePlace } from '../api/api1';
-// import { getPlacesByRegion } from '../api/api1';
-// import { getPlacesByCategory } from '../api/api1';
+import {
+  uploadRecommendPlaceImages,
+  saveRecommendPlace,
+  getAllRecommendPlaces,
+  getPlacesByRegion
+} from '../api1';
+import axios from 'axios';
+
 
 const Wrapper = styled.div`
   width: 100%;
@@ -185,126 +189,8 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [showMap, setShowMap] = useState(false);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const [mapId, setMapId] = useState(null);
-
-  // 카테고리별 장소조회 함수에서 카테고리별 가져온 리스트 저장하는거
-  // const [filteredPlaces, setFilteredPlaces] = useState([]);
-
-  // 장소목록 전체체 불러오는 함수 api1
-  // const [places, setPlaces] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchPlaces = async () => {
-  //     try {
-  //       const placesData = await getAllPlaces(); 
-  //       setPlaces(placesData);
-  //     } catch (error) {
-  //       console.error("장소 목록 불러오기 실패", error);
-  //     }
-  //   };
-
-  //   fetchPlaces();
-  // }, []);
-  // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  const [images, setImages] = useState([]);
   
-  // 지역별로 장소 불러오기
-  // useEffect(() => {
-  //   if (!selectedRegion) return;
-  
-  //   const fetchPlaces = async () => {
-  //     try {
-  //       const data = await getPlacesByRegion(selectedRegion);
-  //       setRegionPlaces(prev => ({ ...prev, [selectedRegion]: data }));
-  //     } catch (err) {
-  //       console.error("지역별 장소 조회 실패", err);
-  //     }
-  //   };
-  
-  //   fetchPlaces();
-  // }, [selectedRegion]); 
-// ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-  // ***생성
-  // const handleRegister = async () => {
-  //   try {
-  //     const response = await createPlace(newPlace);
-  //     const updated = [...places, {
-  //       id: response.id,
-  //       ...newPlace,
-  //       thumbnail: typeof newPlace.image === 'string'
-  //         ? newPlace.image
-  //         : URL.createObjectURL(newPlace.image),
-  //     }];
-  //     setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
-  //     setShowForm(false);
-  //   } catch (error) {
-  //     console.error('등록 실패', error);
-  //   }
-  // };
-  
-  // *** 수정
-  // const handleUpdate = async () => {
-  //   try {
-  //     const response = await updatePlace(editingId, newPlace);
-  //     const updated = places.map((p) =>
-  //       p.id === editingId
-  //         ? {
-  //             ...p,
-  //             ...newPlace,
-  //             thumbnail: typeof newPlace.image === 'string'
-  //               ? newPlace.image
-  //               : URL.createObjectURL(newPlace.image),
-  //           }
-  //         : p
-  //     );
-  //     setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
-  //     setEditingId(null);
-  //   } catch (error) {
-  //     console.error('수정 실패', error);
-  //   }
-  // };
-  
-  // ***삭제
-  // const handleDelete = async (id) => {
-  //   if (!window.confirm('정말 삭제하시겠습니까?')) return;
-  //   try {
-  //     await deletePlace(id);
-  //     const updated = places.filter(p => p.id !== id);
-  //     setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
-  //   } catch (error) {
-  //     console.error('삭제 실패', error);
-  //   }
-  // };
-
-  // *** 지역별 장소조회
-
-  // useEffect(() => {
-  //   if (!selectedRegion) return;
-  
-  //   const fetchPlaces = async () => {
-  //     try {
-  //       const regionData = await getPlacesByRegion(selectedRegion);
-  //       setRegionPlaces(prev => ({ ...prev, [selectedRegion]: regionData }));
-  //     } catch (err) {
-  //       console.error("지역별 장소 조회 실패", err);
-  //     }
-  //   };
-  
-  //   fetchPlaces();
-  // }, [selectedRegion]);
-
-  // *** 카테고리별 장소조회
-  // const handleCategoryClick = async (category) => {
-  //   try {
-  //     const data = await getPlacesByCategory(category);
-  //     setFilteredPlaces(data); // 상태는 이름 자유롭게
-  //   } catch (err) {
-  //     console.error('카테고리 조회 실패', err);
-  //   }
-  // };
-
-  // 나중에 jsx 에 등록해서 써야함
-//   <button onClick={() => handleCategoryClick('카페')}>카페</button>
-// <button onClick={() => handleCategoryClick('맛집')}>맛집</button>
-
   const [newPlace, setNewPlace] = useState({
     name: '',
     category: '',
@@ -313,6 +199,13 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     image: null,
     preview: ''
   });
+
+  const getFileName = (url) => {
+    if (!url) return '';
+    const parts = url.split('/');
+    return parts[parts.length - 1]?.trim() || '';
+  };
+  
 
   const places = selectedRegion ? regionPlaces[selectedRegion] || [] : [];
   const categories = ['맛집', '카페', '호텔', '관광지', '포토존'];
@@ -358,16 +251,31 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     }
   }, [mapId, googleLoaded, mapAddress]);
 
+  useEffect(() => {
+    if (selectedRegion) {
+      getPlacesByRegion(selectedRegion).then((data) => {
+        console.log("📡 지역 장소 데이터 받아옴:", selectedRegion, data);
+        setRegionPlaces(prev => ({
+          ...prev,
+          [selectedRegion]: data,
+        }));
+      });
+    }
+  }, [selectedRegion]);
+  
+
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (file) {
       setNewPlace((prev) => ({
         ...prev,
         image: file,
-        preview: URL.createObjectURL(file),
+        preview: URL.createObjectURL(file), // ✅ 미리보기용 URL 생성!
       }));
     }
   };
+  
+  
 
   const handleShowMap = (id, address) => {
     setMapId(id);
@@ -391,35 +299,61 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     });
   };
 
-  const handleDelete = (id) => {
-    if (!window.confirm('정말 삭제하시겠습니까?')) return;
-    const updated = places.filter(p => p.id !== id);
-    setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
+  const fetchAll = async () => {
+    const res = await getAllRecommendPlaces();
+    console.log("📦 응답 데이터:", res);
+  
+    // 👇 여기를 상황에 맞게 고쳐야 해!
+    const realData = Array.isArray(res) ? res : res.data;
+    setPlaces(realData);
   };
 
-  const handleRegister = () => {
-    if (!newPlace.name || !newPlace.category) {
-      alert('이름과 카테고리는 필수입니다.');
-      return;
+
+  const handleRegister = async () => {
+    try {
+      if (!newPlace.image) {
+        alert("이미지를 업로드해주세요.");
+        return;
+      }
+  
+      const placeDTO = {
+        name: newPlace.name,
+        address: newPlace.address,
+        description: newPlace.description,
+        category: newPlace.category,
+        city: selectedRegion, // ✔️ 중요!
+        latitude: 0,
+        longitude: 0,
+      };
+  
+      await uploadRecommendPlaceImages(placeDTO, [newPlace.image]);
+  
+      // ✔️ 등록 성공 후 해당 지역 장소 다시 불러오기
+      const updatedPlaces = await getPlacesByRegion(selectedRegion);
+      setRegionPlaces((prev) => ({
+        ...prev,
+        [selectedRegion]: updatedPlaces,
+      }));
+  
+      alert("✅ 등록 성공!");
+  
+      // 폼 초기화
+      setNewPlace({
+        name: '',
+        category: '',
+        address: '',
+        description: '',
+        image: null,
+        preview: '',
+      });
+      setShowForm(false);
+  
+    } catch (err) {
+      console.error("📛 등록 실패:", err);
+      alert("등록 실패 😭");
     }
-
-    const newItem = {
-      id: editingId ?? Date.now(),
-      ...newPlace,
-      thumbnail: typeof newPlace.image === 'string'
-        ? newPlace.image
-        : URL.createObjectURL(newPlace.image),
-    };
-
-    const updated = editingId
-      ? places.map(p => p.id === editingId ? newItem : p)
-      : [...places, newItem];
-
-    setRegionPlaces({ ...regionPlaces, [selectedRegion]: updated });
-    setNewPlace({ name: '', category: '', address: '', description: '', image: null, preview: '' });
-    setShowForm(false);
-    setEditingId(null);
   };
+  
 
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
 
@@ -451,7 +385,14 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         {filteredPlaces.map((place) => (
           <React.Fragment key={place.id}>
             <Card onClick={() => setSelectedId(selectedId === place.id ? null : place.id)}>
-              <Thumbnail src={place.thumbnail} alt={place.name} />
+            <Thumbnail
+                src={
+                  place.media && place.media.length > 0
+                    ? `http://localhost:8082/api/recommend_place/download/${getFileName(place.media[0].mediaUrl)}`
+                    : 'https://via.placeholder.com/60?text=No+Image'
+                }
+                alt={place.name}
+              />
               <Info>
                 <div className="category">{place.category}</div>
                 <div className="title">{place.name}</div>
@@ -463,7 +404,15 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               <Detail>
                 <CloseBtn onClick={() => setSelectedId(null)}>✖</CloseBtn>
                 <DetailText>{place.description}</DetailText>
-                <Thumbnail className="large" src={place.thumbnail} alt="썸네일" />
+                <Thumbnail
+                  className="large"
+                  src={
+                    place.media && place.media.length > 0
+                      ? `http://localhost:8082${place.media[0].mediaUrl}`
+                      : 'https://via.placeholder.com/300x200?text=No+Image'
+                  }
+                  alt="썸네일"
+                />
                 <ButtonGroup>
                   <SmallBtn onClick={() => handleShowMap(place.id, place.address)}>지도 보기</SmallBtn>
                   <SmallBtn onClick={() => handleEdit(place)}>✏ 수정</SmallBtn>

@@ -1,5 +1,162 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
+const CommentPage = () => {
+  const [editingId, setEditingId] = useState(null);
+  const [editValue, setEditValue] = useState("");
+  const [comments, setComments] = useState([]);
+  const [replies, setReplies] = useState([]);
+
+  async function getAllComment() {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      return;
+    }
+    try {
+      const response = await axios.get('/api/comment/username', {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response || response.length === 0) {
+        console.log('댓글 데이터를 가져오지 못했습니다.');
+        return;
+      }
+      setComments(response.data);
+    } catch (error) {
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+      throw error; // 에러 처리
+    }
+  }
+
+  async function getAllReComment() {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) {
+      return;
+    }
+    try {
+      const response = await axios.get('/api/recomment/username', {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response || response.length === 0) {
+        console.log('대댓글 데이터를 가져오지 못했습니다.');
+        return;
+      }
+      setReplies(response.data);
+    } catch (error) {
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+      throw error; // 에러 처리
+    }
+  }
+
+  useEffect(() => {
+    getAllReComment();
+    getAllComment();
+  }, []);
+
+
+
+  const handleSave = (id, isReply) => {
+    const updater = (list, setter) => {
+      const updated = list.map((item) =>
+        item.id === id ? { ...item, content: editValue } : item
+      );
+      setter(updated);
+    };
+
+    if (isReply) {
+      updater(replies, setReplies);
+    } else {
+      updater(comments, setComments);
+    }
+
+    setEditingId(null);
+    setEditValue("");
+  };
+
+  const handleDelete = (id, isReply) => {
+    const confirm = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirm) return;
+
+    if (isReply) {
+      setReplies((prev) => prev.filter((item) => item.id !== id));
+    } else {
+      setComments((prev) => prev.filter((item) => item.id !== id));
+    }
+  };
+
+  const renderList = (data, isReply = false) =>
+    data.map((item) => (
+      <Card key={item.id}>
+        <Thumbnail />
+        <Content>
+          <Date>📅 {item.addDate}</Date>
+          <TitleRow>
+            {/* <span>{item.feedTitle}</span> */}
+          </TitleRow>
+          <CommentRow>
+            {editingId === item.id ? (
+              <CommentText
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                autoFocus
+              />
+            ) : (
+              <span>{item.content}</span>
+            )}
+            <ButtonGroup>
+              {editingId === item.id ? (
+                <Button onClick={() => handleSave(item.id, isReply)}>
+                  저장
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setEditingId(item.id);
+                    setEditValue(item.content);
+                  }}
+                >
+                  수정
+                </Button>
+              )}
+              <Button>{isReply ? "댓글 보기" : "답글"}</Button>
+            </ButtonGroup>
+          </CommentRow>
+        </Content>
+        <CloseBtn onClick={() => handleDelete(item.id, isReply)}>×</CloseBtn>
+      </Card>
+    ));
+
+  return (
+    <Wrapper>
+      <Column>
+        <TopFixed>
+          <SectionTitle>내가 단 댓글</SectionTitle>
+          <CountBox>
+            <span>총 댓글 수 {comments.length}</span>
+          </CountBox>
+        </TopFixed>
+        <ScrollSection>{renderList(comments)}</ScrollSection>
+      </Column>
+
+      <Column>
+        <TopFixed>
+          <SectionTitle>내가 단 대댓글</SectionTitle>
+          <CountBox>
+            <span>총 답글 수 {replies.length}</span>
+          </CountBox>
+        </TopFixed>
+        <ScrollSection>{renderList(replies, true)}</ScrollSection>
+      </Column>
+    </Wrapper>
+  );
+};
+
+export default CommentPage;
+
 
 const Wrapper = styled.div`
   display: flex;
@@ -10,13 +167,14 @@ const Wrapper = styled.div`
 
 const Column = styled.div`
   flex: 1;
-  background: #fafafa;
+  background: #c0c0c09e;
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid #c0c0c09e;
   display: flex;
   flex-direction: column;
   height: 100%;
+  height: 605px;
 `;
 
 const TopFixed = styled.div`
@@ -143,159 +301,3 @@ const ScrollSection = styled.div`
     border-radius: 4px;
   }
 `;
-
-const CommentPage = () => {
-  const [editingId, setEditingId] = useState(null);
-  const [editValue, setEditValue] = useState("");
-
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      feedTitle: "첫 여행 ✈️",
-      content: "진짜 행복한 순간이었어요!",
-      date: "2025-04-01",
-    },
-    {
-      id: 2,
-      feedTitle: "우리의 첫 기념일 💖",
-      content: "이날은 정말 평생 못 잊을 듯!",
-      date: "2025-04-02",
-    },
-    {
-      id: 3,
-      feedTitle: "맛집 투어 🍜",
-      content: "배터지게 먹은 날 😆",
-      date: "2025-04-03",
-    },
-    {
-      id: 4,
-      feedTitle: "첫 여행 ✈️",
-      content: "진짜 행복한 순간이었어요!",
-      date: "2025-04-01",
-    },
-    {
-      id: 5,
-      feedTitle: "우리의 첫 기념일 💖",
-      content: "이날은 정말 평생 못 잊을 듯!",
-      date: "2025-04-02",
-    },
-    {
-      id: 6,
-      feedTitle: "맛집 투어 🍜",
-      content: "배터지게 먹은 날 😆",
-      date: "2025-04-03",
-    },
-  ]);
-
-  const [replies, setReplies] = useState([
-    {
-      id: 4,
-      feedTitle: "서프라이즈 이벤트 🎁",
-      content: "저도 깜짝 놀랐어요!",
-      date: "2025-04-01",
-    },
-    {
-      id: 5,
-      feedTitle: "벚꽃놀이 🌸",
-      content: "사진이 진짜 예쁘네요!",
-      date: "2025-04-02",
-    },
-  ]);
-
-  const handleSave = (id, isReply) => {
-    const updater = (list, setter) => {
-      const updated = list.map((item) =>
-        item.id === id ? { ...item, content: editValue } : item
-      );
-      setter(updated);
-    };
-
-    if (isReply) {
-      updater(replies, setReplies);
-    } else {
-      updater(comments, setComments);
-    }
-
-    setEditingId(null);
-    setEditValue("");
-  };
-
-  const handleDelete = (id, isReply) => {
-    const confirm = window.confirm("정말 삭제하시겠습니까?");
-    if (!confirm) return;
-
-    if (isReply) {
-      setReplies((prev) => prev.filter((item) => item.id !== id));
-    } else {
-      setComments((prev) => prev.filter((item) => item.id !== id));
-    }
-  };
-
-  const renderList = (data, isReply = false) =>
-    data.map((item) => (
-      <Card key={item.id}>
-        <Thumbnail />
-        <Content>
-          <Date>📅 {item.date}</Date>
-          <TitleRow>
-            <span>{item.feedTitle}</span>
-          </TitleRow>
-          <CommentRow>
-            {editingId === item.id ? (
-              <CommentText
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                autoFocus
-              />
-            ) : (
-              <span>{item.content}</span>
-            )}
-            <ButtonGroup>
-              {editingId === item.id ? (
-                <Button onClick={() => handleSave(item.id, isReply)}>
-                  저장
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    setEditingId(item.id);
-                    setEditValue(item.content);
-                  }}
-                >
-                  수정
-                </Button>
-              )}
-              <Button>{isReply ? "댓글 보기" : "답글"}</Button>
-            </ButtonGroup>
-          </CommentRow>
-        </Content>
-        <CloseBtn onClick={() => handleDelete(item.id, isReply)}>×</CloseBtn>
-      </Card>
-    ));
-
-  return (
-    <Wrapper>
-      <Column>
-        <TopFixed>
-          <SectionTitle>내가 단 댓글</SectionTitle>
-          <CountBox>
-            <span>총 댓글 수 {comments.length}</span>
-          </CountBox>
-        </TopFixed>
-        <ScrollSection>{renderList(comments)}</ScrollSection>
-      </Column>
-
-      <Column>
-        <TopFixed>
-          <SectionTitle>내가 단 대댓글</SectionTitle>
-          <CountBox>
-            <span>총 답글 수 {replies.length}</span>
-          </CountBox>
-        </TopFixed>
-        <ScrollSection>{renderList(replies, true)}</ScrollSection>
-      </Column>
-    </Wrapper>
-  );
-};
-
-export default CommentPage;
