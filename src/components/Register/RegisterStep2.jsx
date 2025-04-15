@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Octagon from "./Octagon";
 import rate from "../img/starrate1.png";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import iconUser from "../img/people.png";
 import { IconBehind } from "../Icons";
 import female from "../img/female.png";
 import male from "../img/male.png";
+import { useRegisterStore } from "../api2";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -20,7 +21,7 @@ const GenderWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   /* background-color: ${(props) =>
-    props.gender === "male" ? "#ffe5e5" : "#f3e6ff"};
+    props.$gender === "male" ? "#ffe5e5" : "#f3e6ff"};
   border-radius: 10px;
   padding: 10px 0;
   margin: 0 10px; */
@@ -83,20 +84,74 @@ const Icon = styled.div`
 `;
 
 function RegisterStep2({ onNext }) {
+  const { formData, setFormData } = useRegisterStore();
   const [profileF, setProfileF] = useState({
-    image: iconUser,
     name: "",
     birthday: "",
     email: "",
     phone: "",
   });
   const [profileM, setProfileM] = useState({
-    image: iconUser,
     name: "",
     birthday: "",
     email: "",
     phone: "",
   });
+
+  useEffect(() => {
+    setProfileF({
+      name: formData.realNameF || "",
+      birthday: formData.birthF || "",
+      email: formData.emailF || "",
+      phone: formData.phoneNumberF || "",
+    });
+  
+    setProfileM({
+      name: formData.realNameM || "",
+      birthday: formData.birthM || "",
+      email: formData.emailM || "",
+      phone: formData.phoneNumberM || "",
+    });
+  }, []);
+
+  const isValidProfile = (profile) => {
+    const nameValid = profile.name.trim().length > 0;
+    const birthdayValid = profile.birthday !== "";
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email);
+    const phoneValid = /^\d{3}-\d{3,4}-\d{4}$/.test(profile.phone);
+    console.log("유효성 체크 - name:", nameValid, "birthday:", birthdayValid, "email:", emailValid, "phone:", phoneValid);
+  
+    return nameValid && birthdayValid && emailValid && phoneValid;
+  };
+
+  const handleNextStep = () => {
+    if (!isValidProfile(profileF)) {
+      alert("여자쪽 정보가 올바르지 않아요!");
+      return;
+    }
+  
+    if (!isValidProfile(profileM)) {
+      alert("남자쪽 정보가 올바르지 않아요!");
+      return;
+    }
+  
+    // 유효할 경우 저장
+    setFormData({
+      realNameF: profileF.name,
+      birthF: profileF.birthday,
+      emailF: profileF.email,
+      phoneNumberF: profileF.phone,
+      realNameM: profileM.name,
+      birthM: profileM.birthday,
+      emailM: profileM.email,
+      phoneNumberM: profileM.phone,
+    });
+
+    setTimeout(() => {
+      console.log("저장된 formData 확인", useRegisterStore.getState().formData);
+      onNext();
+    }, 50);
+  };
 
   // async function handleNextStep() {
   //     try {
@@ -110,12 +165,12 @@ function RegisterStep2({ onNext }) {
     <Container>
       <H1>회원가입</H1>
       <Content>
-        <GenderWrapper gender="female">
-          <GenderLabel> FEMALE</GenderLabel>
+        <GenderWrapper $gender="female">
+          <GenderLabel>FEMALE</GenderLabel>
           <GenderImage src={female} />
           <Octagon
             id="profileF"
-            gender="female"
+            $gender="female"
             data={profileF}
             onChange={(field, value) =>
               setProfileF((prev) => ({ ...prev, [field]: value }))
@@ -129,12 +184,12 @@ function RegisterStep2({ onNext }) {
           />
         </GenderWrapper>
         <img src={rate} className="heartRate" />
-        <GenderWrapper gender="male">
+        <GenderWrapper $gender="male">
           <GenderLabel>MALE</GenderLabel>
           <GenderImage src={male} />
           <Octagon
             id="profileM"
-            gender="male"
+            $gender="male"
             data={profileM}
             onChange={(field, value) =>
               setProfileM((prev) => ({ ...prev, [field]: value }))
@@ -151,7 +206,7 @@ function RegisterStep2({ onNext }) {
         </GenderWrapper>
       </Content>
       <ButtonWrap>
-        <NextButton onClick={onNext} />
+        <NextButton onClick={handleNextStep} />
       </ButtonWrap>
     </Container>
   );

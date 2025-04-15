@@ -109,7 +109,6 @@ const Input = styled.input`
   padding-left: 30px;
   background-color: ${(props) => (props.$readOnly ? "#e0e0e0" : "#fefefe")};
 `;
-
 const ImgInput = styled.input`
   display: none;
 `;
@@ -179,9 +178,30 @@ function Octagon({
   const [phone, setPhone] = useState(data.phone);
   const [isEditable, setIsEditable] = useState(false);
 
+  useEffect(() => {
+    setName(data.name);
+    setBirthday(data.birthday);
+    setEmail(data.email);
+    setPhone(data.phone);
+  }, [data]);
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const isEmailValid = emailRegex.test(email);
+
+  const formatPhoneNumber = (value) => {
+  const numbersOnly = value.replace(/\D/g, ""); // 숫자만 추출
+    const match = numbersOnly.match(/^(\d{3})(\d{3,4})(\d{4})$/);
+
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+  
+    return numbersOnly;
+  };
+
   const handleSubmit = async () => {
     try {
-      await ModifyUserInfo({ image, name, birthday, email, phone });
+      await ModifyUserInfo({ name, birthday, email, phone });
       alert("저장 완료!");
       setIsEditable(false);
     } catch (err) {
@@ -201,9 +221,12 @@ function Octagon({
             <SmallBox $readOnly={isProfilePage && !isEditable}>
               <IconUser />
               <Input
+                maxLength={10}
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {const value = e.target.value.replace(/[^ㄱ-ㅎ가-힣a-zA-Z\s]/g, "");
+                  setName(value); if (onChange) {
+                    onChange("name", value);}}}
                 $readOnly={isProfilePage && !isEditable}
                 placeholder="이름을 입력해주세요"
               />
@@ -213,7 +236,9 @@ function Octagon({
               <Input
                 type="date"
                 value={birthday}
-                onChange={(e) => setBirthday(e.target.value)}
+                onChange={(e) => {setBirthday(e.target.value);
+                  if (onChange) {
+                    onChange("birthday", e.target.value);}}}
                 $readOnly={isProfilePage}
                 placeholder="생년월일을 입력해주세요"
                 max={new Date().toISOString().split("T")[0]}
@@ -222,19 +247,33 @@ function Octagon({
             <SmallBox $readOnly={isProfilePage && !isEditable}>
               <IconEmail />
               <Input
+                maxLength={26}
                 type="text"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^a-zA-Z0-9@._-]/g, ""); // 허용 문자만 필터
+                  setEmail(value);
+                  if (onChange) {
+                    onChange("email", value);
+                  }
+                }}
                 $readOnly={isProfilePage && !isEditable}
-                placeholder="이메일을 입력해주세요"
+                placeholder="name@naver.com"
               />
             </SmallBox>
             <SmallBox $readOnly={isProfilePage && !isEditable}>
               <IconPhone />
               <Input
+                maxLength={13}
                 type="text"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  const formatted = formatPhoneNumber(e.target.value);
+                  setPhone(formatted);
+                  if (onChange) {
+                    onChange("phone", formatted);
+                  }
+                }}
                 $readOnly={isProfilePage && !isEditable}
                 placeholder="전화번호를 입력해주세요"
               />
