@@ -13,7 +13,7 @@ const handleError = (methodName, error) => {
 
 export const fetchAnniversaries = async () => {
   try {
-    const res = await axios.get(`${BASE_URL}${todo_url}}/anniversary/all`, {
+    const res = await axios.get(`${BASE_URL}${todo_url}/anniversary/all`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     return res.data.map(item => ({
@@ -30,7 +30,7 @@ export const fetchAnniversaries = async () => {
 
 export const fetchTravels = async () => {
   try {
-    const res = await axios.get(`${BASE_URL}${todo_url}}/travel/all`, {
+    const res = await axios.get(`${BASE_URL}${todo_url}/travel/all`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     return res.data.map(item => ({
@@ -47,7 +47,7 @@ export const fetchTravels = async () => {
 
 export const createAnniversary = async (anniv) => {
   try {
-    const res = await axios.post(`${BASE_URL}${todo_url}}/anniversary/save`, anniv, {
+    const res = await axios.post(`${BASE_URL}${todo_url}/anniversary/save`, anniv, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     return {
@@ -78,7 +78,7 @@ export const createTravel = async (travelEvent) => {
       })),
     };
 
-    const res = await axios.post(`${BASE_URL}${todo_url}}/travel/save`, dto, {
+    const res = await axios.post(`${BASE_URL}${todo_url}/travel/save`, dto, {
       headers: {
         'Authorization': `Bearer ${token}`,
       }
@@ -104,7 +104,7 @@ export const uploadTravelMedia = async (title, files) => {
       formData.append("files", file);
     });
 
-    const res = await axios.post(`${BASE_URL}${todo_url}}/upload/multiple`, formData, {
+    const res = await axios.post(`${BASE_URL}${todo_url}/upload/multiple`, formData, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
@@ -133,7 +133,7 @@ export const handleCreateTravelMedia = async (travelEvent) => {
 
 export const deleteAnniversary = async (id) => {
   try {
-    await axios.delete(`${BASE_URL}${todo_url}}/anniversary/delete/${id}`, {
+    await axios.delete(`${BASE_URL}${todo_url}/anniversary/delete/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
   } catch (e) {
@@ -143,7 +143,7 @@ export const deleteAnniversary = async (id) => {
 
 export const deleteTravelMedia = async (id) => {
   try {
-    await axios.delete(`${BASE_URL}${todo_url}}/travel/delete/${id}`, {
+    await axios.delete(`${BASE_URL}${todo_url}/travel/delete/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
   } catch (e) {
@@ -153,7 +153,7 @@ export const deleteTravelMedia = async (id) => {
 
 export const updateAnniversary = async (id, anniv) => {
   try {
-    const res = await axios.put(`${BASE_URL}${todo_url}}/anniversary/update/${id}`, anniv, {
+    const res = await axios.put(`${BASE_URL}${todo_url}/anniversary/update/${id}`, anniv, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     return {
@@ -170,7 +170,7 @@ export const updateAnniversary = async (id, anniv) => {
 
 export const updateTravel = async (id, travelData) => {
   try {
-    const res = await axios.put(`${BASE_URL}${todo_url}}/travel/update/${id}`, travelData, {
+    const res = await axios.put(`${BASE_URL}${todo_url}/travel/update/${id}`, travelData, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
