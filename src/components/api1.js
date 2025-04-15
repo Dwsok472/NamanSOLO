@@ -13,7 +13,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ 1. 이미지 업로드만 처리
 export const uploadRecommendPlaceImages = async (placeDTO, files) => {
   const token = sessionStorage.getItem("jwt-token");
   const formData = new FormData();
@@ -39,7 +38,6 @@ export const uploadRecommendPlaceImages = async (placeDTO, files) => {
   return response.data;
 };
 
-// ✅ 2. 장소 저장 (JSON)
 export const saveRecommendPlace = async (placeDTO) => {
   const token = sessionStorage.getItem("jwt-token");
 
@@ -58,7 +56,6 @@ export const saveRecommendPlace = async (placeDTO) => {
   return res.data;
 };
 
-// 지역별 장소 조회
 export const getPlacesByRegion = async (region) => {
   const res = await api.get(`/recommend_place/region/${region}`);
   return res.data;
@@ -68,3 +65,19 @@ export const getAllRecommendPlaces = async () => {
   const res = await api.get('/recommend_place/all');
   return res.data;
 };
+
+export const getPlacesByRegionAndCategory = async (region, category) => {
+  const res = await api.get(`/categoryplace/region/${region}/category/${category}`);
+  return res.data;
+};
+
+export const deleteRecommendPlace = async (id) => {
+  const res = await api.delete(`/recommend_place/delete/${id}`);
+  return res.data;
+};
+
+export const updateRecommendPlace = async (placeDTO) => {
+  const res = await api.put("/recommend_place/admin/update", placeDTO);
+  return res.data;
+};
+

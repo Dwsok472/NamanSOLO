@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import {
   uploadRecommendPlaceImages,
   saveRecommendPlace,
   getAllRecommendPlaces,
-  getPlacesByRegion
-} from '../api1';
-import axios from 'axios';
-
+  getPlacesByRegion,
+  getPlacesByRegionAndCategory,
+  deleteRecommendPlace,
+  updateRecommendPlace
+} from "../api1";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -83,7 +84,7 @@ const Card = styled.div`
   display: flex;
   gap: 10px;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   cursor: pointer;
 `;
 
@@ -163,10 +164,12 @@ const Form = styled.div`
   background: #fff;
   padding: 16px;
   border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 
-  input, select, textarea {
+  input,
+  select,
+  textarea {
     width: 100%;
     margin: 6px 0;
     padding: 6px 10px;
@@ -185,41 +188,37 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [mapAddress, setMapAddress] = useState('');
+  const [mapAddress, setMapAddress] = useState("");
   const [showMap, setShowMap] = useState(false);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const [mapId, setMapId] = useState(null);
   const [images, setImages] = useState([]);
-  
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
+
   const [newPlace, setNewPlace] = useState({
-    name: '',
-    category: '',
-    address: '',
-    description: '',
+    name: "",
+    category: "",
+    address: "",
+    description: "",
     image: null,
-    preview: ''
+    preview: "",
   });
 
   const getFileName = (url) => {
-    if (!url) return '';
-    const parts = url.split('/');
-    return parts[parts.length - 1]?.trim() || '';
+    if (!url) return "";
+    const parts = url.split("/");
+    return parts[parts.length - 1]?.trim() || "";
   };
-  
 
-  const places = selectedRegion ? regionPlaces[selectedRegion] || [] : [];
-  const categories = ['맛집', '카페', '호텔', '관광지', '포토존'];
-  const [activeCategory, setActiveCategory] = useState('전체');
-
-  const filteredPlaces = activeCategory === '전체'
-  ? places
-  : places.filter(p => p.category === activeCategory);
+  let places = null;
+  const categories = ["맛집", "카페", "호텔", "관광지", "포토존"];
+  const [activeCategory, setActiveCategory] = useState("전체");
 
   useEffect(() => {
     if (window.google) {
       setGoogleLoaded(true);
     } else {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
       script.async = true;
       script.defer = true;
@@ -235,7 +234,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       if (!mapDiv) return;
 
       geocoder.geocode({ address: mapAddress }, (results, status) => {
-        if (status === 'OK') {
+        if (status === "OK") {
           const map = new window.google.maps.Map(mapDiv, {
             center: results[0].geometry.location,
             zoom: 15,
@@ -252,17 +251,31 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   }, [mapId, googleLoaded, mapAddress]);
 
   useEffect(() => {
+    if (!selectedRegion) return;
+  
+    if (activeCategory === "전체") {
+      getPlacesByRegion(selectedRegion).then((data) => {
+        setFilteredPlaces(data);
+      });
+    } else {
+      getPlacesByRegionAndCategory(selectedRegion, activeCategory).then((data) => {
+        setFilteredPlaces(data);
+      });
+    }
+  }, [selectedRegion, activeCategory]);
+  
+
+  useEffect(() => {
     if (selectedRegion) {
       getPlacesByRegion(selectedRegion).then((data) => {
         console.log("📡 지역 장소 데이터 받아옴:", selectedRegion, data);
-        setRegionPlaces(prev => ({
+        setRegionPlaces((prev) => ({
           ...prev,
           [selectedRegion]: data,
         }));
       });
     }
   }, [selectedRegion]);
-  
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -270,44 +283,115 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       setNewPlace((prev) => ({
         ...prev,
         image: file,
-        preview: URL.createObjectURL(file), // ✅ 미리보기용 URL 생성!
+        preview: URL.createObjectURL(file),
       }));
     }
   };
-  
-  
 
   const handleShowMap = (id, address) => {
     setMapId(id);
     setMapAddress(address);
     setTimeout(() => {
       const el = document.getElementById(`map-${id}`);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) el.scrollIntoView({ behavior: "smooth" });
     }, 300);
   };
 
   const handleEdit = (place) => {
     setEditingId(place.id);
-    setShowForm(false);
+    setShowForm(true); 
     setNewPlace({
       name: place.name,
       category: place.category,
       address: place.address,
       description: place.description,
-      image: place.thumbnail,
-      preview: place.thumbnail
+      preview:
+        place.mediaUrl && place.mediaUrl.length > 0
+          ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
+          : "",
+      mediaUrl: place.mediaUrl || [],
     });
   };
+
+  const handleSavePlace = async () => {
+    try {
+      const placeDTO = {
+        id: editingId,
+        name: newPlace.name,
+        category: newPlace.category,
+        address: newPlace.address,
+        description: newPlace.description,
+        city: selectedRegion,
+        latitude: 0,
+        longitude: 0,
+        mediaUrl: newPlace.mediaUrl || [],
+      };
+  
+      if (editingId) {
+        const updatedDTO = { ...placeDTO, id: editingId };
+        if (newPlace.image) {
+          await uploadRecommendPlaceImages(updatedDTO, [newPlace.image]);
+        } else {
+          await updateRecommendPlace(updatedDTO); // 이미지 변경 없을 때
+        }
+        alert("수정 성공");
+      } else {
+        await saveRecommendPlace(placeDTO);
+        alert("등록 성공");
+      }
+      
+  
+      const updatedPlaces = await getPlacesByRegion(selectedRegion);
+      setRegionPlaces((prev) => ({
+        ...prev,
+        [selectedRegion]: updatedPlaces,
+      }));
+      setFilteredPlaces(updatedPlaces);
+  
+      setNewPlace({
+        name: "",
+        category: "",
+        address: "",
+        description: "",
+        image: null,
+        preview: "",
+      });
+      setEditingId(null);
+      setShowForm(false);
+    } catch (err) {
+      console.error("저장 실패:", err);
+      alert("저장 실패!");
+    }
+  };
+  
+
+  const handleDelete = async (id) => {
+    console.log(" 삭제 요청 ID:", id);
+    try {
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        await deleteRecommendPlace(id);
+        const updated = await getPlacesByRegion(selectedRegion);
+        setRegionPlaces((prev) => ({
+          ...prev,
+          [selectedRegion]: updated,
+        }));
+        setFilteredPlaces(updated);
+        alert("삭제 완료!");
+      }
+    } catch (error) {
+      console.error("삭제 실패:", error);
+      alert("삭제 중 오류 발생!");
+    }
+  };
+  
 
   const fetchAll = async () => {
     const res = await getAllRecommendPlaces();
     console.log("📦 응답 데이터:", res);
-  
-    // 👇 여기를 상황에 맞게 고쳐야 해!
+
     const realData = Array.isArray(res) ? res : res.data;
     setPlaces(realData);
   };
-
 
   const handleRegister = async () => {
     try {
@@ -315,45 +399,41 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         alert("이미지를 업로드해주세요.");
         return;
       }
-  
+
       const placeDTO = {
         name: newPlace.name,
         address: newPlace.address,
         description: newPlace.description,
         category: newPlace.category,
-        city: selectedRegion, // ✔️ 중요!
+        city: selectedRegion, 
         latitude: 0,
         longitude: 0,
       };
-  
+
       await uploadRecommendPlaceImages(placeDTO, [newPlace.image]);
-  
-      // ✔️ 등록 성공 후 해당 지역 장소 다시 불러오기
+
       const updatedPlaces = await getPlacesByRegion(selectedRegion);
       setRegionPlaces((prev) => ({
         ...prev,
         [selectedRegion]: updatedPlaces,
       }));
-  
-      alert("✅ 등록 성공!");
-  
-      // 폼 초기화
+
+      alert(" 등록 성공!");
+
       setNewPlace({
-        name: '',
-        category: '',
-        address: '',
-        description: '',
+        name: "",
+        category: "",
+        address: "",
+        description: "",
         image: null,
-        preview: '',
+        preview: "",
       });
       setShowForm(false);
-  
     } catch (err) {
-      console.error("📛 등록 실패:", err);
-      alert("등록 실패 😭");
+      console.error("등록 실패:", err);
+      alert("등록 실패 ");
     }
   };
-  
 
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
 
@@ -361,19 +441,26 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     <Wrapper>
       <RegionTitle>{selectedRegion} 장소</RegionTitle>
 
-      <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-        {['전체', ...categories].map(cat => (
+      <div
+        style={{
+          display: "flex",
+          gap: "8px",
+          marginBottom: "12px",
+          flexWrap: "wrap",
+        }}
+      >
+        {["전체", ...categories].map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
             style={{
-              padding: '6px 12px',
-              border: 'none',
-              borderRadius: '20px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              background: activeCategory === cat ? '#ffebee' : '#eee',
-              color: activeCategory === cat ? '#ff5777' : '#333',
+              padding: "6px 12px",
+              border: "none",
+              borderRadius: "20px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              background: activeCategory === cat ? "#ffebee" : "#eee",
+              color: activeCategory === cat ? "#ff5777" : "#333",
             }}
           >
             {cat}
@@ -382,14 +469,18 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       </div>
 
       <ListContainer>
-        {filteredPlaces.map((place) => (
+        {filteredPlaces?.map((place) => (
           <React.Fragment key={place.id}>
-            <Card onClick={() => setSelectedId(selectedId === place.id ? null : place.id)}>
-            <Thumbnail
+            <Card
+              onClick={() =>
+                setSelectedId(selectedId === place.id ? null : place.id)
+              }
+            >
+              <Thumbnail
                 src={
-                  place.media && place.media.length > 0
-                    ? `http://localhost:8082/api/recommend_place/download/${getFileName(place.media[0].mediaUrl)}`
-                    : 'https://via.placeholder.com/60?text=No+Image'
+                  place.mediaUrl && place.mediaUrl.length > 0
+                    ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
+                    : "https://via.placeholder.com/60?text=No+Image"
                 }
                 alt={place.name}
               />
@@ -407,21 +498,29 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 <Thumbnail
                   className="large"
                   src={
-                    place.media && place.media.length > 0
-                      ? `http://localhost:8082${place.media[0].mediaUrl}`
-                      : 'https://via.placeholder.com/300x200?text=No+Image'
+                    place.mediaUrl && place.mediaUrl.length > 0
+                      ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
+                      : "https://via.placeholder.com/300x200?text=No+Image"
                   }
                   alt="썸네일"
                 />
                 <ButtonGroup>
-                  <SmallBtn onClick={() => handleShowMap(place.id, place.address)}>지도 보기</SmallBtn>
+                  <SmallBtn
+                    onClick={() => handleShowMap(place.id, place.address)}
+                  >
+                    지도 보기
+                  </SmallBtn>
                   <SmallBtn onClick={() => handleEdit(place)}>✏ 수정</SmallBtn>
-                  <SmallBtn onClick={() => handleDelete(place.id)}>🗑 삭제</SmallBtn>
+                  <SmallBtn onClick={() => handleDelete(place.id)}>
+                    🗑 삭제
+                  </SmallBtn>
                 </ButtonGroup>
 
                 {mapId === place.id && (
                   <>
-                    <CloseBtn onClick={() => setMapId(null)}>✖ 지도 닫기</CloseBtn>
+                    <CloseBtn onClick={() => setMapId(null)}>
+                      ✖ 지도 닫기
+                    </CloseBtn>
                     <MapWrapper id={`map-${place.id}`} />
                   </>
                 )}
@@ -430,48 +529,123 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
             {editingId === place.id && (
               <Form>
-                <CloseBtn onClick={() => {
-                  setEditingId(null);
-                  setNewPlace({ name: '', category: '', address: '', description: '', image: null, preview: '' });
-                }}>✖</CloseBtn>
-                <input type="text" placeholder="이름" value={newPlace.name}
-                  onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })} />
-                <select value={newPlace.category}
-                  onChange={(e) => setNewPlace({ ...newPlace, category: e.target.value })}>
+                <CloseBtn
+                  onClick={() => {
+                    setEditingId(null);
+                    setNewPlace({
+                      name: "",
+                      category: "",
+                      address: "",
+                      description: "",
+                      image: null,
+                      preview: "",
+                    });
+                  }}
+                >
+                  ✖
+                </CloseBtn>
+                <input
+                  type="text"
+                  placeholder="이름"
+                  value={newPlace.name}
+                  onChange={(e) =>
+                    setNewPlace({ ...newPlace, name: e.target.value })
+                  }
+                />
+                <select
+                  value={newPlace.category}
+                  onChange={(e) =>
+                    setNewPlace({ ...newPlace, category: e.target.value })
+                  }
+                >
                   <option value="">카테고리 선택</option>
-                  {categories.map(c => <option key={c}>{c}</option>)}
+                  {categories.map((c) => (
+                    <option key={c}>{c}</option>
+                  ))}
                 </select>
-                <input type="text" placeholder="주소" value={newPlace.address}
-                  onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })} />
-                <textarea placeholder="설명" value={newPlace.description}
-                  onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })} />
+                <input
+                  type="text"
+                  placeholder="주소"
+                  value={newPlace.address}
+                  onChange={(e) =>
+                    setNewPlace({ ...newPlace, address: e.target.value })
+                  }
+                />
+                <textarea
+                  placeholder="설명"
+                  value={newPlace.description}
+                  onChange={(e) =>
+                    setNewPlace({ ...newPlace, description: e.target.value })
+                  }
+                />
                 <input type="file" onChange={handleImage} />
-                {newPlace.preview && <img className="preview" src={newPlace.preview} alt="미리보기" />}
-                <AddButton onClick={handleRegister}>수정하기</AddButton>
+                {newPlace.preview && (
+                  <img
+                    className="preview"
+                    src={newPlace.preview}
+                    alt="미리보기"
+                  />
+                )}
+                <AddButton
+                  onClick={() => {
+                    if (editingId) {
+                      handleSavePlace();
+                    } else {
+                      handleRegister();
+                    }
+                  }}
+                >
+                  {editingId ? "수정하기" : "등록하기"}
+                </AddButton>
               </Form>
             )}
           </React.Fragment>
         ))}
       </ListContainer>
-      {!showForm && <AddButton onClick={() => setShowForm(true)}>+ 장소 추가</AddButton>}
-        {showForm && !editingId && (
-          <Form>
-            <CloseBtn onClick={() => setShowForm(false)}>✖</CloseBtn>
-            <input type="text" placeholder="이름" value={newPlace.name}
-              onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })} />
-            <select value={newPlace.category}
-              onChange={(e) => setNewPlace({ ...newPlace, category: e.target.value })}>
-              <option value="">카테고리 선택</option>
-              {categories.map(c => <option key={c}>{c}</option>)}
-            </select>
-            <input type="text" placeholder="주소" value={newPlace.address}
-              onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })} />
-            <textarea placeholder="설명" value={newPlace.description}
-              onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })} />
-            <input type="file" onChange={handleImage} />
-            {newPlace.preview && <img className="preview" src={newPlace.preview} alt="미리보기" />}
-            <AddButton onClick={handleRegister}>등록하기</AddButton>
-          </Form>
+      {!showForm && (
+        <AddButton onClick={() => setShowForm(true)}>+ 장소 추가</AddButton>
+      )}
+      {showForm && editingId === null && (
+        <Form>
+          <CloseBtn onClick={() => setShowForm(false)}>✖</CloseBtn>
+          <input
+            type="text"
+            placeholder="이름"
+            value={newPlace.name}
+            onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
+          />
+          <select
+            value={newPlace.category}
+            onChange={(e) =>
+              setNewPlace({ ...newPlace, category: e.target.value })
+            }
+          >
+            <option value="">카테고리 선택</option>
+            {categories.map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="주소"
+            value={newPlace.address}
+            onChange={(e) =>
+              setNewPlace({ ...newPlace, address: e.target.value })
+            }
+          />
+          <textarea
+            placeholder="설명"
+            value={newPlace.description}
+            onChange={(e) =>
+              setNewPlace({ ...newPlace, description: e.target.value })
+            }
+          />
+          <input type="file" onChange={handleImage} />
+          {newPlace.preview && (
+            <img className="preview" src={newPlace.preview} alt="미리보기" />
+          )}
+          <AddButton onClick={handleRegister}>등록하기</AddButton>
+        </Form>
       )}
     </Wrapper>
   );

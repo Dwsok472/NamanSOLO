@@ -232,34 +232,35 @@ function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
   const categories = ["전체", "맛집", "카페", "호텔", "관광지", "포토존"];
-  const [regionPlaces, setRegionPlaces] = useState({
-    충청남도: [
-      {
-        id: 1,
-        name: "로보쿡 둔산점",
-        category: "맛집",
-        address: "대전 서구 둔산로 221",
-        description: "로봇 테마 맛집",
-        thumbnail: course1,
-      },
-      {
-        id: 2,
-        name: "카페라떼온더문",
-        category: "카페",
-        address: "대전 서구 월평동 123-4",
-        description: "달빛 분위기 카페",
-        thumbnail: course2,
-      },
-      {
-        id: 3,
-        name: "스윗포토존",
-        category: "포토존",
-        address: "대전 서구 탄방동 77",
-        description: "감성 포토존",
-        thumbnail: course3,
-      },
-    ],
-  });
+  const [regionPlaces, setRegionPlaces] = useState({});
+  // const [regionPlaces, setRegionPlaces] = useState({
+  //   충청남도: [
+  //     {
+  //       id: 1,
+  //       name: "로보쿡 둔산점",
+  //       category: "맛집",
+  //       address: "대전 서구 둔산로 221",
+  //       description: "로봇 테마 맛집",
+  //       thumbnail: course1,
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "카페라떼온더문",
+  //       category: "카페",
+  //       address: "대전 서구 월평동 123-4",
+  //       description: "달빛 분위기 카페",
+  //       thumbnail: course2,
+  //     },
+  //     {
+  //       id: 3,
+  //       name: "스윗포토존",
+  //       category: "포토존",
+  //       address: "대전 서구 탄방동 77",
+  //       description: "감성 포토존",
+  //       thumbnail: course3,
+  //     },
+  //   ],
+  // });
 
   const slides = [
     { label: "데이트 코스 1", image: course1 },
@@ -284,8 +285,8 @@ function MainMap() {
         }
         const timeElapsed = currentTime - startTime;
         const progress = Math.min(timeElapsed / duration, 1);
-        const currentPosition = startPosition + distance * easedProgress(progress);
-          
+        const currentPosition =
+          startPosition + distance * easedProgress(progress);
 
         window.scrollTo(0, currentPosition);
         if (timeElapsed < duration) {
