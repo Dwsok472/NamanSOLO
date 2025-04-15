@@ -12,11 +12,7 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
-import { createAnniversary, createTravel, deleteAnniversary, deleteTravel, fetchAnniversaries, fetchTravels, updateAnniversary, updateTravel } from '../../api2';
-// import useUserStore from '../../stores/useUserStore'; 
-
-// const { user, setEvents } = useUserStore();
-// const events = user.events;
+import { createAnniversary, deleteAnniversary, deleteTravelMedia, fetchAnniversaries, fetchTravels, handleCreateTravelMedia, handleUpdateTravelMedia, updateAnniversary } from '../../api2';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -442,7 +438,7 @@ function Todo() {
       if (updatedEvent.type.toLowerCase() === "anniversary") {
         updated = await updateAnniversary(updatedEvent.id, updatedEvent);
       } else {
-        updated = await updateTravel(updatedEvent.id, updatedEvent);
+        updated = await handleUpdateTravelMedia(updatedEvent.id, updatedEvent);
       }
       setEvents(events.map(event => event.id === updated.id ? updated : event));
       setEditingTodoEvent(null);
@@ -460,7 +456,7 @@ function Todo() {
       if (eventToDelete.type.toLowerCase() === 'anniversary') {
         await deleteAnniversary(eventToDelete.id);
       } else {
-        await deleteTravel(eventToDelete.id);
+        await deleteTravelMedia(eventToDelete.id);
       }
       setEvents(events.filter(event => event !== eventToDelete));
     } catch (e) {
@@ -782,32 +778,26 @@ function Todo() {
             setEvent={setEditingTravelEvent}
             onClose={() => setEditingTravelEvent(null)}
             onSubmit={
-              // async
-              (e) => {
-              e.preventDefault();
-
-              const start = new Date(editingTravelEvent.start_date);
-              const end = new Date(editingTravelEvent.end_date);
-            
-              if (start > end) {
-                alert('종료일은 시작일보다 빠를 수 없습니다!');
-                return;
-              }
-
-              // try {
-              //   await api2.updateEvent(editingTravelEvent); // 서버로 PUT 요청
-              //   setEvents((prev) =>
-              //     prev.map((ev) =>
-              //       ev.id === editingTravelEvent.id ? editingTravelEvent : ev
-              //     )
-              //   );
-
-              setEvents(events.map(ev => (
-                ev.id === editingTravelEvent.id ? editingTravelEvent : ev
-              )));
-            
-              setEditingTravelEvent(null);
-            }}
+              async (e) => {
+                e.preventDefault();
+              
+                const start = new Date(editingTravelEvent.start_date);
+                const end = new Date(editingTravelEvent.end_date);
+              
+                if (start > end) {
+                  alert('종료일은 시작일보다 빠를 수 없습니다!');
+                  return;
+                }
+              
+                try {
+                  const updated = await handleUpdateTravelMedia(editingTravelEvent.id, editingTravelEvent);
+                  setEvents(events.map(ev => ev.id === updated.id ? updated : ev));
+                  setEditingTravelEvent(null);
+                } catch (err) {
+                  console.error('🚨 여행 일정 수정 실패:', err);
+                  alert('수정 중 오류 발생!');
+                }
+              }}
             paletteOpen={travelPaletteOpen}
             setPaletteOpen={setTravelPaletteOpen}
             colorSamples={colorSamples}
@@ -824,42 +814,36 @@ function Todo() {
             setPaletteOpen={setTravelPaletteOpen}
             colorSamples={colorSamples}
             
-            onSubmit={ async (e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
             
               const start = new Date(newTravelEvent.start_date);
               const end = new Date(newTravelEvent.end_date);
-            
+
               if (start > end) {
                 alert('종료일은 시작일보다 빠를 수 없습니다!');
                 return;
               }
-            
+
               try {
-                const created = await createTravel({
-                  title: newTravelEvent.title,
-                  startDate: newTravelEvent.start_date,
-                  endDate: newTravelEvent.end_date,
-                  color: newTravelEvent.color,
-                  images: newTravelEvent.images || []
-                });
-            
-                setEvents(prev => [...prev, created]);
-            
+                const created = await handleCreateTravelMedia(newTravelEvent);
+                setEvents([...events, created]);
+
                 setNewTravelEvent({
                   title: '',
                   start_date: '',
                   end_date: '',
-                  color: '#87cefa',
+                  color: '#ffc0cb',
                   images: [],
-                  type: 'travel'
+                  editable: true,
+                  type: 'TRAVEL',
                 });
-            
+
                 setIsTravelModalOpen(false);
                 setTravelPaletteOpen(false);
-              } catch (error) {
-                console.error('🚨 여행 일정 추가 실패:', error);
-                alert('여행 일정 추가에 실패했어요 😢');
+              } catch (err) {
+                console.error('🚨 여행 일정 추가 실패:', err);
+                alert('서버 오류로 여행 일정을 등록하지 못했습니다.');
               }
             }}
           />

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IconClose, IconEdit } from '../../Icons';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
+import { fetchMediaBlobUrls } from '../../api2';
 
 const CardWrap = styled.div`
   width: 500px;
@@ -113,18 +114,32 @@ const Info = styled.div`
 function DetailTravel({ event, onClose, onEdit }) {
   if (!event) return null;
 
+  console.log("🧾 받은 event:", event); 
+
+  const [imageUrls, setImageUrls] = useState([]);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      if (event.mediaUrl?.length > 0) {
+        const blobUrls = await fetchMediaBlobUrls(event.mediaUrl);
+        setImageUrls(blobUrls);
+      }
+    };
+    fetchImages();
+  }, [event]);
+
+  const media = event.mediaUrl || [];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const images = event.images || [];
+  const currentImage = imageUrls[currentImageIndex];
+  console.log("🎞 media 배열:", media);
 
   const handlePrevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentImageIndex((prev) => (prev - 1 + imageUrls.length) % imageUrls.length);
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % imageUrls.length);
   };
-
-  const currentImage = images[currentImageIndex];
 
   return (
     <CardWrap 
@@ -143,14 +158,11 @@ function DetailTravel({ event, onClose, onEdit }) {
         {currentImage && (
           <ImagePreviewContainer>
             <PreviewImage
-              src={
-                currentImage instanceof File
-                  ? URL.createObjectURL(currentImage)
-                  : currentImage
-              }
+              src={`${currentImage}`}
               alt="대표 이미지"
+              style={{ width: '100%', maxHeight: '200px', objectFit: 'contain' }}
             />
-            {images.length > 1 && (
+            {imageUrls.length > 1 && (
               <>
                 <PrevButton onClick={handlePrevImage}>
                   <img src={LeftKey} alt="이전" />

@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconClose, IconPhoto } from '../../Icons';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
+import { fetchMediaBlobUrls } from '../../api2';
 
 const CardWrap = styled.div`
   width: 500px;
@@ -240,83 +241,107 @@ function Edittravel({
   onSubmit
 }) {
   if (!event) return null;
+  const [blobUrls, setBlobUrls] = useState([]);
 
-  const handleDeleteCurrentImage = () => {
-    const confirmDel = window.confirm('정말 이 이미지를 삭제하시겠어요?');
-    
-    if (!confirmDel) {return;}
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const fileInputRef = useRef(null);
 
-    const updatedImages = [...(event.images || [])];
-    updatedImages.splice(currentImageIndex, 1);
-  
-    setEvent({
-      ...event,
-      images: updatedImages,
-    });
-  
-    setCurrentImageIndex((prev) =>
-      prev > 0 ? prev - 1 : 0
-    );
+  const totalImages = [
+    ...blobUrls,
+    ...(event.images || []),
+  ];
+
+  const isFileImage = (index) => index >= (event.mediaUrl?.length || 0);
+
+  const currentImage = totalImages[currentIndex];
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + totalImages.length) % totalImages.length);
   };
 
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % totalImages.length);
+  };
+
+
+  useEffect(() => {
+    const fetchBlobs = async () => {
+      const urls = await fetchMediaBlobUrls(event.mediaUrl || []);
+      setBlobUrls(urls.filter(Boolean)); // null 제거
+    };
+  
+    fetchBlobs();
+  }, [event.mediaUrl]);
+  
   const handleFileChange = (e) => {
-    const files = Array.from(e.target.files).filter((file) => file instanceof File);
+    const files = Array.from(e.target.files);
     setEvent({
       ...event,
+      id: event.id,
       images: [...(event.images || []), ...files],
     });
   };
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const handleDelete = () => {
+    const confirmDel = window.confirm('이 이미지를 삭제할까요?');
+    if (!confirmDel) return;
 
-  const handlePrevImage = () => {
-    setCurrentImageIndex(prev => (prev - 1 + event.images.length) % event.images.length);
-  };
-  
-  const handleNextImage = () => {
-    setCurrentImageIndex(prev => (prev + 1) % event.images.length);
-  };
+    if (isFileImage(currentIndex)) {
+      const idx = currentIndex - (event.mediaUrl?.length || 0);
+      const updatedImages = [...event.images];
+      updatedImages.splice(idx, 1);
+      setEvent({ ...event, images: updatedImages });
+    } else {
+      const updatedMedia = [...event.mediaUrl];
+      updatedMedia.splice(currentIndex, 1);
+      setEvent({ ...event, mediaUrl: updatedMedia });
+    }
 
-  const fileInputRef = useRef(null);
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  };
 
   return (
-    <CardWrap
-      onClick={(e) => e.stopPropagation()}>
+    <CardWrap onClick={(e) => e.stopPropagation()}>
       <Card>
         <Top>
           <TopX onClick={onClose}><IconClose /></TopX>
           여행 일정 수정
         </Top>
         <Bottom>
-        <ImagePreviewContainer>
-          {event.images && event.images.length > 0 ? (
-            <>
-              <PreviewImage
-                src={
-                  event.images[currentImageIndex] instanceof File
-                    ? URL.createObjectURL(event.images[currentImageIndex])
-                    : event.images[currentImageIndex]
-                }
-                alt="여행 사진 미리보기"
-                onClick={() => fileInputRef.current.click()}
-              />
-              {event.images.length > 1 && (
-                <>
-                  <PrevButton type="button" onClick={handlePrevImage}><img src={LeftKey}/></PrevButton>
-                  <NextButton type="button" onClick={handleNextImage}><img src={RightKey}/></NextButton>
-                </>
-              )}
-
-
-            </>
-          ) : (
-            <DefaultUpload onClick={() => fileInputRef.current.click()}>
-              <IconPhoto />
-            </DefaultUpload>
-          )}
-            <HiddenFileInput type="file" ref={fileInputRef} accept="image/*" multiple onChange={handleFileChange} />
-            <DeleteButton onClick={handleDeleteCurrentImage}><IconClose /></DeleteButton>
+          <ImagePreviewContainer>
+            {totalImages.length > 0 ? (
+              <>
+                <PreviewImage
+                  src={
+                    currentImage instanceof File
+                      ? URL.createObjectURL(currentImage)
+                      : currentImage
+                  }
+                  onClick={() => fileInputRef.current.click()}
+                  alt="미리보기"
+                />
+                {totalImages.length > 1 && (
+                  <>
+                    <PrevButton onClick={handlePrev}><img src={LeftKey} alt="prev"/></PrevButton>
+                    <NextButton onClick={handleNext}><img src={RightKey} alt="next"/></NextButton>
+                  </>
+                )}
+                <DeleteButton onClick={handleDelete}><IconClose /></DeleteButton>
+              </>
+            ) : (
+              <DefaultUpload onClick={() => fileInputRef.current.click()}>
+                <IconPhoto />
+              </DefaultUpload>
+            )}
+            <HiddenFileInput
+              type="file"
+              multiple
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+            />
           </ImagePreviewContainer>
+
           <form onSubmit={onSubmit}>
             <Input
               type="text"
@@ -342,13 +367,13 @@ function Edittravel({
             </Row>
 
             <Label>색상</Label>
-            <ColorSection onClick={() => setPaletteOpen((prev) => !prev)}>
+            <ColorSection onClick={() => setPaletteOpen(prev => !prev)}>
               <SelectedColorPreview color={event.color} />
             </ColorSection>
 
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.map((color) => (
+                {colorSamples.map(color => (
                   <ColorDot
                     key={color}
                     color={color}
