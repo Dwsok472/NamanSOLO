@@ -237,7 +237,10 @@ const AlbumBoard = () => {
             </AddButton>
 
             {showAddAlbum && (
-              <AddAlbum onClose={handleCloseAddAlbum} onAddAlbum={addNewAlbum} />
+              <AddAlbum
+                onClose={handleCloseAddAlbum}
+                onAddAlbum={addNewAlbum}
+              />
             )}
           </>
         )}
