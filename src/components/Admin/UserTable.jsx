@@ -137,7 +137,7 @@ function UserTable({ users }) {
           return (
             <UserItem
               key={user.id}
-              active={isSelected}
+              $active={isSelected}
               onClick={() => setSelectedId(user.id)}
             >
               <Rank active={isSelected}>{globalIndex + 1}</Rank>

@@ -81,3 +81,14 @@ export const updateRecommendPlace = async (placeDTO) => {
   return res.data;
 };
 
+export const getDailyFeedStats = async (from, to) => {
+  const res = await api.get(`/album/daily?from=${from}&to=${to}`);
+  return res.data;
+};
+
+export const getMonthlyFeedRank = async (month) => {
+  const res = await api.get(`/album/rank?month=${month}`);
+  return res.data;
+};
+
+

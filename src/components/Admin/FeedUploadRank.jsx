@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { getMonthlyFeedRank } from  '../api1';
 
 const Wrapper = styled.div`
   display: flex;
@@ -82,7 +83,6 @@ const ListItem = styled.li`
     margin-right: 10px;
   }
 
-
   .username {
     font-weight: bold;
     flex: 1;
@@ -94,61 +94,59 @@ const ListItem = styled.li`
   }
 `;
 
-const dummyData = {
-  '2025-01': [
-    { id: 1, username: 'USER1', count: 12 },
-    { id: 2, username: 'USER2', count: 11 },
-    { id: 3, username: 'USER3', count: 10 },
-    { id: 4, username: 'USER4', count: 9 },
-    { id: 5, username: 'USER5', count: 8 },
-    { id: 6, username: 'USER6', count: 7 },
-    { id: 7, username: 'USER7', count: 6 },
-    { id: 8, username: 'USER8', count: 5 },
-    { id: 9, username: 'USER9', count: 4 },
-    { id: 10, username: 'USER10', count: 3 },
-  ],
-};
-
 function FeedUploadRank() {
-  const [currentMonth, setCurrentMonth] = useState('2025-01');
+  const [currentMonth, setCurrentMonth] = useState('2025-04');
   const [selectedUser, setSelectedUser] = useState(null);
+  const [userList, setUserList] = useState([]);
 
-  const users = dummyData[currentMonth] || [];
+  useEffect(() => {
+    getMonthlyFeedRank(currentMonth)
+      .then((res) => setUserList(res))
+      .catch((err) => console.error('업로드 랭킹 로드 실패:', err));
+  }, [currentMonth]);
 
   const handlePrevMonth = () => {
-    setCurrentMonth('2025-01');
+    const [year, month] = currentMonth.split('-').map(Number);
+    const prev = new Date(year, month - 2);
+    const formatted = `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`;
+    setCurrentMonth(formatted);
   };
 
   const handleNextMonth = () => {
-    setCurrentMonth('2025-02');
+    const [year, month] = currentMonth.split('-').map(Number);
+    const next = new Date(year, month);
+    const formatted = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}`;
+    setCurrentMonth(formatted);
   };
 
   return (
     <Wrapper>
-    <Container>
-      <TitleRow>
-        <h3>기간별 피드 업로드 유저 통계</h3>
-        <div className="nav">
-          <button onClick={handlePrevMonth}><FaChevronLeft /></button>
-          {currentMonth.replace('-', '년 ')}월
-          <button onClick={handleNextMonth}><FaChevronRight /></button>
-        </div>
-      </TitleRow>
+      <Container>
+        <TitleRow>
+          <h3>기간별 피드 업로드 유저 통계</h3>
+          <div className="nav">
+            <button onClick={handlePrevMonth}><FaChevronLeft /></button>
+            {currentMonth.replace('-', '년 ')}월
+            <button onClick={handleNextMonth}><FaChevronRight /></button>
+          </div>
+        </TitleRow>
 
-      <List>
-        {users.map((user, index) => (
-          <ListItem
-            key={user.id}
-            $active={selectedUser === user.id}
-            onClick={() => setSelectedUser(user.id)}
-          >
-            <div className="rank">{index + 1}</div>
-            <div className="username">{user.username}</div>
-            <div className="count">{user.count}개</div>
-          </ListItem>
-        ))}
-      </List>
-    </Container>
+        <List>
+          {userList.length > 0 ? userList.map((user, index) => (
+            <ListItem
+              key={index}
+              $active={selectedUser === index}
+              onClick={() => setSelectedUser(index)}
+            >
+              <div className="rank">{index + 1}</div>
+              <div className="username">{user.username}</div>
+              <div className="count">{user.count}개</div>
+            </ListItem>
+          )) : (
+            <div>데이터가 없습니다.</div>
+          )}
+        </List>
+      </Container>
     </Wrapper>
   );
 }
