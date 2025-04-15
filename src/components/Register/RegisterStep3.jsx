@@ -3,6 +3,7 @@ import styled from "styled-components";
 import heartswithrate from "../img/heartswithrate1.png";
 import NextButton from "../Button/NextButton";
 import { IconBehind } from "../Icons";
+import { useRegisterStore } from "../api2";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -86,7 +87,8 @@ const Icon = styled.div`
 `;
 
 function RegisterStep3({ onNext }) {
-  const [dday, setDday] = useState("");
+  const { formData, setFormData, submitRegistration, resetForm } = useRegisterStore(); // 여기에서 setFormData 받아와
+  const [dday, setDday] = useState(formData.dDay || "");
   const [daysDiff, setDaysDiff] = useState(null);
 
   useEffect(() => {
@@ -104,6 +106,31 @@ function RegisterStep3({ onNext }) {
       setDaysDiff(null);
     }
   }, [dday]);
+
+  const handleSubmit = async () => {
+    if (!dday) {
+      alert("날짜를 선택해주세요.");
+      return;
+    }
+
+    // 1. dday를 formData에 저장
+    setFormData({ dDay: dday });
+
+    try {
+      // 2. 서버에 최종 등록 요청
+      await submitRegistration();
+
+
+
+
+      // 3. 등록 된 후 상태 초기화 + 이메일 발송.....추후..예정..
+      resetForm();
+
+      onNext(); // 다음 스텝 or 완료 화면 이동
+    } catch (error) {
+      alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
 
   return (
     <Container>
@@ -129,7 +156,7 @@ function RegisterStep3({ onNext }) {
         />
       </div>
       <ButtonWrap>
-        <NextButton onClick={onNext} />
+        <NextButton onClick={handleSubmit} />
       </ButtonWrap>
     </Container>
   );
