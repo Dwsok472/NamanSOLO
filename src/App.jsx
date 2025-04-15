@@ -16,7 +16,8 @@ import AdminFeedPage from './components/Admin/AdminFeedPage';
 import AdminUserPage from './components/Admin/AdminUserPage';
 import ChatBotButton from './components/ChatBot/ChatBotButton';
 import ScrollToTop from './components/MainPage/ScrollToTop';
-import UserAlbum from './components/UserAlbum';
+import UserAlbum from './components/UserAlbumDummy';
+import AlbumBoardWithKey from './components/Album/AlbumBoardWIthKey';
 
 const AppWrapper = styled.div`
   width: 100vw;
@@ -92,16 +93,14 @@ function AppRoutes() {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterMain />} />
-          <Route path="/story/all" element={<AlbumBoard />} />
+          <Route path="/story/all" element={<AlbumBoard key="all" />} />
+          <Route path="/user/story/:username" element={<AlbumBoardWithKey />} />
           <Route path="/map" element={<MainMap />} />
           <Route path="/events" element={<Event />} />
           <Route path="/admin/users" element={<AdminUserPage />} />
           <Route path="/admin/feeds" element={<AdminFeedPage />} />
-
           <Route path="/mypage/story" element={<MyAlbum />} />
-          <Route path="/user/story/:username" element={<AlbumBoard />} />
           <Route path="/mypage/*" element={<MyPage />} />
-
           <Route path="/find-id" element={<Find isFindId={true} />} />
           <Route path="/find-pwd" element={<Find isFindId={false} />} />
         </Routes>

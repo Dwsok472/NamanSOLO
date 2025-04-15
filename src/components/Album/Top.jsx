@@ -13,7 +13,7 @@ function Top({ filter, onFilterChange }) {
   const [selected, setSelected] = useState('최신순');
   const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
-  const [updatingUser, setUpdatingUser] = useState(null); // 팔로우 중인 유저 username
+  // const [updatingUser, setUpdatingUser] = useState(null); // 팔로우 중인 유저 username
   const username = useUserStore((state) => state.user?.username);
   const location = useLocation(); // 현재 경로 가져오기
   const isUserStoryPage = location.pathname.startsWith('/user/story/');
@@ -85,11 +85,11 @@ function Top({ filter, onFilterChange }) {
           prevResults.map((user) =>
             user.username === targetUsername
               ? {
-                  ...user, //기존 유저 객체를 그대로 복사
-                  // 관계만 변경해주기
-                  relation:
-                    user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
-                }
+                ...user, //기존 유저 객체를 그대로 복사
+                // 관계만 변경해주기
+                relation:
+                  user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
+              }
               : user
           )
         );
@@ -218,15 +218,14 @@ function Top({ filter, onFilterChange }) {
                           {user.username}
                         </div>
                         <button
-                          className={`follow ${
-                            user.relation === 'FRIEND'
+                          className={`follow ${user.relation === 'FRIEND'
                               ? 'friend'
                               : user.relation === 'FOLLOWING'
-                              ? 'following'
-                              : user.relation === 'FOLLOWER'
-                              ? 'follower'
-                              : 'none'
-                          }`}
+                                ? 'following'
+                                : user.relation === 'FOLLOWER'
+                                  ? 'follower'
+                                  : 'none'
+                            }`}
                           onClick={() => {
                             if (
                               user.relation === 'FOLLOWER' ||
