@@ -42,7 +42,6 @@ function Comment({ albumData, onCommentAdd }) {
   const newComment = {
     content: value,
     albumId: albumData.id,
-    username: currentUser
   };
 
   const AddComment = async () => {
@@ -94,7 +93,7 @@ function Comment({ albumData, onCommentAdd }) {
         ) : (
           data.map((comment) => (
             <Box key={comment.id}>
-              <span className="username">{currentUser}</span>
+              <span className="username">{comment.username}</span>
               <span className="date">{comment.addDate}</span>
               <div className="wrap">
                 <Text>{comment.content}</Text>
