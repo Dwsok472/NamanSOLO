@@ -3,7 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./components/Login/Login";
-import Find from "./components/FindIdAndPwd/Find";
+// import Find from "./components/FindIdAndPwd/Find";
 import Event from "./components/Event";
 import RegisterMain from "./components/Register/RegisterMain";
 import AllStories from "./components/Story/AllStories";
@@ -19,6 +19,7 @@ import ScrollToTop from "./components/MainPage/ScrollToTop";
 import UserAlbum from "./components/UserAlbumDummy";
 import AlbumBoardWithKey from "./components/Album/AlbumBoardWIthKey";
 import WebSocketManager from "./components/WebSocket/WebSocketManager";
+import FindIdOrPwd from "./components/FindIdAndPwd/FindIdOrPwd";
 
 const AppWrapper = styled.div`
   width: 100vw;
@@ -102,8 +103,8 @@ function AppRoutes() {
           <Route path="/admin/feeds" element={<AdminFeedPage />} />
           <Route path="/mypage/story" element={<MyAlbum />} />
           <Route path="/mypage/*" element={<MyPage />} />
-          <Route path="/find-id" element={<Find isFindId={true} />} />
-          <Route path="/find-pwd" element={<Find isFindId={false} />} />
+          <Route path="/find-id" element={<FindIdOrPwd isFindId={true} />} />
+          <Route path="/find-pwd" element={<FindIdOrPwd isFindId={false} />} />
         </Routes>
       </MainContent>
       <Footer />

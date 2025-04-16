@@ -4,172 +4,7 @@ import LoginButton from "../Button/LoginButton";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const Container = styled.div`
-  margin: 0 auto;
-  width: 100%;
-  margin-top: 150px;
-  margin-bottom: 170px;
-  & hr {
-    //width: 90%;
-    opacity: 0.5;
-    margin: 0 auto;
-  }
-`;
-const H1 = styled.h1`
-  font-size: 3.5rem;
-  font-weight: 700;
-  text-align: center;
-  color: #202020;
-  user-select: none;
-`;
-const CardWrap = styled.div`
-  width: 550px;
-  margin: 0 auto;
-  margin-top: 40px;
-`;
-const Top = styled.div`
-  width: 100%;
-  /* padding-top: 40px; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* grid-template-columns: 1fr 1fr 1fr; */
-  /* margin-left: 55px; */
-`;
-const Box = styled.div`
-  width: 150px;
-  height: 50px;
-  border: 1px solid #02020233;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1rem;
-  font-weight: 700;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  &:first-child {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-  &:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-left: none; /* 겹치는 border 제거 */
-  }
-  &.selected {
-    background-color: #8c0d17;
-    color: white;
-  }
-`;
 
-const Card = styled.div`
-  width: 550px;
-  padding-bottom: 10px;
-  /* background-color: #ffdcd6;
-  clip-path: polygon(
-    10% 0%,
-    90% 0%,
-    120% 25%,
-    120% 75%,
-    90% 100%,
-    10% 100%,
-    0% 90%,
-    0% 10%
-  ); */
-  margin: 0 auto;
-  /* padding-top: 50px; */
-`;
-const SmallBox = styled.div`
-  width: 85%;
-  margin: 0 auto;
-  border: 1px solid #02020233;
-  border-radius: 10px;
-  background-color: white;
-  padding-left: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  height: 70px;
-  position: relative;
-  button {
-    width: 95px;
-    background-color: #a0a0a0;
-    font-size: 0.8rem;
-    font-weight: 700;
-    border-radius: 20px;
-    color: white;
-    position: absolute;
-    right: 10px;
-    outline: none;
-    &:hover {
-      color: #212121;
-    }
-  }
-  label {
-    font-size: 0.8rem;
-    font-weight: 700;
-  }
-`;
-const Button = styled.button`
-  width: 120px;
-  background-color: #8c0d17;
-  font-size: 0.8rem;
-  font-weight: 700;
-  border-radius: 20px;
-  color: white;
-  margin: 0 auto;
-  margin-top: 5px;
-  outline: none;
-  &:hover {
-    background-color: #ffffff;
-    color: #8c0d17;
-    border: 1px solid #3333;
-  }
-  &:focus {
-    outline: none;
-  }
-`;
-
-const Input = styled.input`
-  width: 80%;
-  border: none;
-  outline: none;
-  padding-left: 30px;
-  font-size: 15px;
-`;
-
-const ButtomWrap = styled.div`
-  width: 85%;
-  margin: 0 auto;
-`;
-const Buttom = styled.div`
-  width: 100%;
-  /* border: 1px solid #1a1a1a33; */
-  background-color: white;
-  border-radius: 50px;
-  margin: 0 auto;
-  gap: 10px;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  height: 80%;
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-`;
-
-const ButtonWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-`;
 function Find({ isFindId }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -433,3 +268,157 @@ function Find({ isFindId }) {
 }
 
 export default Find;
+
+const Container = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  margin-top: 150px;
+  margin-bottom: 170px;
+  & hr {
+    //width: 90%;
+    opacity: 0.5;
+    margin: 0 auto;
+  }
+`;
+const H1 = styled.h1`
+  font-size: 3.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: #202020;
+  user-select: none;
+`;
+const CardWrap = styled.div`
+  width: 550px;
+  margin: 0 auto;
+  margin-top: 40px;
+`;
+const Top = styled.div`
+  width: 100%;
+  /* padding-top: 40px; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* grid-template-columns: 1fr 1fr 1fr; */
+  /* margin-left: 55px; */
+`;
+const Box = styled.div`
+  width: 150px;
+  height: 50px;
+  border: 1px solid #02020233;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+  &:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-left: none; /* 겹치는 border 제거 */
+  }
+  &.selected {
+    background-color: #8c0d17;
+    color: white;
+  }
+`;
+
+const Card = styled.div`
+  width: 550px;
+  padding-bottom: 10px;
+  margin: 0 auto;
+`;
+const SmallBox = styled.div`
+  width: 85%;
+  margin: 0 auto;
+  border: 1px solid #02020233;
+  border-radius: 10px;
+  background-color: white;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  height: 70px;
+  position: relative;
+  button {
+    width: 95px;
+    background-color: #a0a0a0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 20px;
+    color: white;
+    position: absolute;
+    right: 10px;
+    outline: none;
+    &:hover {
+      color: #212121;
+    }
+  }
+  label {
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+`;
+const Button = styled.button`
+  width: 120px;
+  background-color: #8c0d17;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 20px;
+  color: white;
+  margin: 0 auto;
+  margin-top: 5px;
+  outline: none;
+  &:hover {
+    background-color: #ffffff;
+    color: #8c0d17;
+    border: 1px solid #3333;
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Input = styled.input`
+  width: 80%;
+  border: none;
+  outline: none;
+  padding-left: 30px;
+  font-size: 15px;
+`;
+
+const ButtomWrap = styled.div`
+  width: 85%;
+  margin: 0 auto;
+`;
+const Buttom = styled.div`
+  width: 100%;
+  background-color: white;
+  border-radius: 50px;
+  margin: 0 auto;
+  gap: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  height: 80%;
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+`;
+
+const ButtonWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+`;
