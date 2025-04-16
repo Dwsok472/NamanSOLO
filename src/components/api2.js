@@ -331,7 +331,10 @@ export const useRegisterStore = create(
         }
       },
 
-      resetForm: () => set({  })
+      deleteForm: () => { 
+        const storage = createJSONStorage(() => sessionStorage);
+        storage.removeItem?.("register-storage");
+      }
     }),
     {
       name: "register-storage", // storage key 이름

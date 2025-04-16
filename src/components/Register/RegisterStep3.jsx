@@ -87,7 +87,7 @@ const Icon = styled.div`
 `;
 
 function RegisterStep3({ onNext }) {
-  const { formData, setFormData, submitRegistration, resetForm } = useRegisterStore(); // 여기에서 setFormData 받아와
+  const { formData, setFormData, submitRegistration, deleteForm } = useRegisterStore(); // 여기에서 setFormData 받아와
   const [dDay, setdDay] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
 
@@ -127,7 +127,7 @@ function RegisterStep3({ onNext }) {
     }, [formData]);
 
     try {
-      resetForm();
+      deleteForm();
       setTimeout(() => {
         onNext();
       }, 100);
