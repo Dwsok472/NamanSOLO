@@ -331,8 +331,8 @@ const Thumbnail = styled.div`
   border: 1px solid #3333;
   margin-right: 16px;
   img {
-    /* border-radius: 15px; */
-    object-fit: contain;
+    border-radius: 15px;
+    object-fit: cover;
     width: 100%;
     height: 100%;
     font-size: 0.7rem;
