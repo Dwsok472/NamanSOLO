@@ -127,9 +127,27 @@ function Header({
               </Link>
             </li>
           ))}
-          <li onClick={toggleSubMenu}>
-            <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
-          </li>
+          {user?.authority === "ROLE_ADMIN" ? (
+  <li>
+    <Link to="/admin/users" onClick={closeSidebar}>
+      관리자 페이지
+    </Link>
+  </li>
+) : (
+  <>
+    <li onClick={toggleSubMenu}>
+      <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
+    </li>
+    {isSubOpen &&
+      subMenuItems.map(({ to, label }) => (
+        <li key={to}>
+          <Link to={to} onClick={closeSidebar}>
+            {label}
+          </Link>
+        </li>
+      ))}
+  </>
+)}
           {isSubOpen &&
             subMenuItems.map(({ to, label }) => (
               <li key={to}>
