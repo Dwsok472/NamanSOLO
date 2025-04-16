@@ -42,6 +42,7 @@ function Comment({ albumData, onCommentAdd }) {
   const newComment = {
     content: value,
     albumId: albumData.id,
+    username: currentUser
   };
 
   const AddComment = async () => {
