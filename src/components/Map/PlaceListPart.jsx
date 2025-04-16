@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import MapPicker from "../Story/MapPicker";
 import {
   uploadRecommendPlaceImages,
   saveRecommendPlace,
@@ -184,6 +185,44 @@ const Form = styled.div`
   }
 `;
 
+const AddressRow = styled.div`
+  display: flex;
+  gap: 8px;
+
+  input {
+    flex: 1;
+  }
+`;
+
+const SearchButton = styled.button`
+  padding: 6px 12px;
+  background-color: #ff5777;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e84664;
+  }
+`;
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: white;
+  z-index: 9999;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+`;
+
+
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -194,6 +233,11 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [mapId, setMapId] = useState(null);
   const [images, setImages] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
+  const [showMapPicker, setShowMapPicker] = useState(false);
+  const [address, setAddress] = useState("");
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+
 
   const [newPlace, setNewPlace] = useState({
     name: "",
@@ -544,14 +588,6 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 >
                   ✖
                 </CloseBtn>
-                <input
-                  type="text"
-                  placeholder="이름"
-                  value={newPlace.name}
-                  onChange={(e) =>
-                    setNewPlace({ ...newPlace, name: e.target.value })
-                  }
-                />
                 <select
                   value={newPlace.category}
                   onChange={(e) =>
@@ -563,14 +599,37 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                     <option key={c}>{c}</option>
                   ))}
                 </select>
-                <input
-                  type="text"
-                  placeholder="주소"
-                  value={newPlace.address}
-                  onChange={(e) =>
-                    setNewPlace({ ...newPlace, address: e.target.value })
-                  }
-                />
+                  <AddressRow>
+                    <input
+                      type="text"
+                      placeholder="주소"
+                      value={newPlace.address}
+                      onChange={(e) =>
+                        setNewPlace({ ...newPlace, address: e.target.value })
+                      }
+                    />
+                    <SearchButton type="button" onClick={() => setShowMapPicker(true)}>
+                      장소검색
+                    </SearchButton>
+                  </AddressRow>
+                  {showMapPicker && (
+                    <ModalWrapper>
+                      <MapPicker
+                        onSelect={({ address, lat, lng }) => {
+                          setNewPlace((prev) => ({
+                            ...prev,
+                            address,
+                            latitude: lat,
+                            longitude: lng,
+                          }));
+                          setAddress(address);
+                          setLat(lat);
+                          setLng(lng);
+                          setShowMapPicker(false);
+                        }}
+                      />
+                    </ModalWrapper>
+                  )}
                 <textarea
                   placeholder="설명"
                   value={newPlace.description}
@@ -625,14 +684,39 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               <option key={c}>{c}</option>
             ))}
           </select>
-          <input
-            type="text"
-            placeholder="주소"
-            value={newPlace.address}
-            onChange={(e) =>
-              setNewPlace({ ...newPlace, address: e.target.value })
-            }
-          />
+          <AddressRow>
+            <input
+              type="text"
+              placeholder="주소"
+              value={newPlace.address}
+              onChange={(e) =>
+                setNewPlace({ ...newPlace, address: e.target.value })
+              }
+            />
+            <SearchButton type="button" onClick={() => setShowMapPicker(true)}>
+              장소검색
+            </SearchButton>
+          </AddressRow>
+
+          {showMapPicker && (
+            <ModalWrapper>
+              <MapPicker
+                onSelect={({ address, lat, lng }) => {
+                  setNewPlace((prev) => ({
+                    ...prev,
+                    address,
+                    latitude: lat,
+                    longitude: lng,
+                  }));
+                  setAddress(address);
+                  setLat(lat);
+                  setLng(lng);
+                  setShowMapPicker(false);
+                }}
+              />
+  </ModalWrapper>
+)}
+
           <textarea
             placeholder="설명"
             value={newPlace.description}
