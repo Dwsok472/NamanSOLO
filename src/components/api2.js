@@ -319,7 +319,11 @@ export const useRegisterStore = create(
 
       submitRegistration: async () => {
         try {
-          const res = await axios.post(`${BASE_URL}${user_url}/register`, get().formData);
+          const res = await axios.post(`${BASE_URL}${user_url}/register`, get().formData, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
           return res.data;
         } catch (error) {
           console.error("회원가입 실패:", error);

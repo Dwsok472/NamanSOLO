@@ -100,8 +100,8 @@ function RegisterStep3({ onNext }) {
   // const dateOnly = formatDateToYMD(new Date(DDay));
 
   useEffect(() => {
-    if (dDay) {
-      const selectedDate = new Date(dDay);
+    if (formData.dDay) {
+      const selectedDate = new Date(formData.dDay);
       const today = new Date();
       selectedDate.setHours(0, 0, 0, 0);
       today.setHours(0, 0, 0, 0);
@@ -113,25 +113,18 @@ function RegisterStep3({ onNext }) {
     } else {
       setDaysDiff(null);
     }
-  }, [dDay]);
+  }, [formData.dDay]);
 
   const handleSubmit = async () => {
-    if (!dDay) {
+    if (!formData.dDay) {
       alert("날짜를 선택해주세요.");
       return;
     }
 
-    const formatted = new Date(dDay).toISOString().split("T")[0];
-
-    setFormData({
-      ...formData,   // 🔥 이전 정보 유지!
-      dDay: formatted,
-    });
-
     setTimeout(async () => {
       console.log("저장된 formData 확인", useRegisterStore.getState().formData);
       await submitRegistration(useRegisterStore.getState().formData);
-    }, 2350);
+    }, [formData]);
 
     try {
       resetForm();
@@ -162,8 +155,8 @@ function RegisterStep3({ onNext }) {
           type="date"
           placeholder="사귀기 시작한 날짜를 입력해주세요"
           autoComplete="off"
-          value={dDay}
-          onChange={(e) => setdDay(e.target.value)}
+          value={formData.dDay}
+          onChange={(e) => setFormData( {dDay : e.target.value} )}
           max={new Date().toISOString().split("T")[0]}
         />
       </div>
