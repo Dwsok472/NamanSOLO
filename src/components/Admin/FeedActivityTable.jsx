@@ -60,16 +60,22 @@ const FeedActivityTable = () => {
             <th>마지막 활동일</th>
           </tr>
         </thead>
-        <tbody>
-          {users.slice(0, 50).map((user, index) => (
-            <tr key={user.username}>
-              <td>{index + 1}</td>
-              <td>{user.username}</td>
-              <td>{user.lastLogin 
-              ? new Date(user.lastLogin).toLocaleDateString() : '없음'}</td>
-            </tr>
-          ))}
-        </tbody>
+          <tbody>
+          {users
+            .filter(user => user.username !== "AVG")
+            .slice(0, 50)
+            .map((user, index) => (
+              <tr key={user.username}>
+                <td>{index + 1}</td>
+                <td>{user.username}</td>
+                <td>
+                  {user.lastLogin
+                    ? new Date(user.lastLogin + "T00:00:00").toLocaleDateString()
+                    : '없음'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
       </Table>
     </Container>
   );

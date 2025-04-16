@@ -1,7 +1,6 @@
-// 유저 마지막 활동기록 평균
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getUserLastActivity } from '../api1';
 
 const Container = styled.div`
   background: #fff3f3;
@@ -32,11 +31,25 @@ const Unit = styled.div`
   color: #666;
 `;
 
-function FeedAvgBox({ averageDays }) {
+function FeedAvgBox() {
+  const [averageDays, setAverageDays] = useState(null);
+
+  useEffect(() => {
+    getUserLastActivity().then(data => {
+      const avgUser = data.find(user => user.username === "AVG");
+      if (avgUser && avgUser.lastLogin) {
+        const avgDate = new Date(avgUser.lastLogin + "T00:00:00");
+        const today = new Date();
+        const diff = Math.floor((today - avgDate) / (1000 * 60 * 60 * 24));
+        setAverageDays(diff);
+      }
+    });
+  }, []);
+
   return (
     <Container>
       <Title>유저별 마지막 활동 평균</Title>
-      <Number>{averageDays}</Number>
+      <Number>{averageDays ?? "-"}</Number>
       <Unit>일 전</Unit>
     </Container>
   );

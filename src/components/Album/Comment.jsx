@@ -21,6 +21,7 @@ function Comment({ albumData, onCommentAdd }) {
       }
       setData(response.data);
       setLoading(false);
+      console.log(response.data);
     } catch (error) {
       alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
@@ -42,6 +43,7 @@ function Comment({ albumData, onCommentAdd }) {
   const newComment = {
     content: value,
     albumId: albumData.id,
+
   };
 
   const AddComment = async () => {
@@ -61,9 +63,11 @@ function Comment({ albumData, onCommentAdd }) {
 
       if (response.status === 200 || response.status === 201) {
         const savedComment = response.data;
+        console.log(savedComment)
         const updatedComments = [...data, savedComment];
         setData(updatedComments);
         setValue('');
+
         // ✅ 부모에게 댓글 수 전달
         if (typeof onCommentAdd === 'function') {
           onCommentAdd(updatedComments.length);
@@ -93,7 +97,7 @@ function Comment({ albumData, onCommentAdd }) {
         ) : (
           data.map((comment) => (
             <Box key={comment.id}>
-              <span className="username">{currentUser}</span>
+              <span className="username">{comment.username}</span>
               <span className="date">{comment.addDate}</span>
               <div className="wrap">
                 <Text>{comment.content}</Text>

@@ -81,7 +81,7 @@ function ReComment({ commentId }) {
         ) : (
           data.map((recomment) => (
             <Box key={recomment.id}>
-              <span className="username">{currentUser}</span>
+              <span className="username">{recomment.username}</span>
               <span className="date">{recomment.addDate}</span>
               <Text>{recomment.content}</Text>
             </Box>
