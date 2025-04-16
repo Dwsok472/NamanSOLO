@@ -9,6 +9,7 @@ import group from "../../img/group.png";
 import { IconClose } from "../../Icons";
 import { useNavigate } from "react-router-dom";
 import Setting from "./Setting";
+import { useAlarmList } from "./alarmList";
 
 // OpenWeatherMap API 키
 const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
@@ -331,43 +332,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
   };
 
   // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
-  const alarmList = [
-    {
-      id: 1,
-      text: "곧 200일이 다가오고 있어요 데이트 코스를 미리 짜고 예약하는 것은 어떨까요?",
-      link: "/mypage/todo",
-      img: firework,
-      alt: "Firework",
-    },
-    {
-      id: 2,
-      text: "이벤트 공지사항이 추가되었습니다",
-      link: "/events",
-      img: add,
-      alt: "Add",
-    },
-    {
-      id: 3,
-      text: "데이트 장소 추천이 업데이트되었습니다",
-      link: "/map",
-      img: place,
-      alt: "Place",
-    },
-    {
-      id: 4,
-      text: "username이 본인의 피드에 좋아요를 눌렀습니다",
-      link: "/mypage/story",
-      img: heart,
-      alt: "Heart",
-    },
-    {
-      id: 5,
-      text: "username이 본인을 팔로우 팔로우하였습니다",
-      link: "/mypage/other",
-      img: group,
-      alt: "Group",
-    },
-  ];
+  const alarmList = useAlarmList((state) => state.alarmList);
 
   // 일정 기반 알림 가져오기
   // useEffect(() => {

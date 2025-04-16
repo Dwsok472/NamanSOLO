@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useUserStore } from "../Login/Login";
 import SockJS from "sockjs-client";
 import * as Stomp from "@stomp/stompjs";
+import { useAlarmList } from "../MyPage/alarm/alarmList";
 
 function WebSocketManager() {
   const { user, isLoggedIn } = useUserStore();
@@ -42,12 +43,48 @@ function WebSocketManager() {
   }
 
   function onNotificationReceived(notification) {
-    const body = JSON.parse(notification.body);
-    console.log("Notification Received:", body);
-    alert(body.message);
+    const raw = JSON.parse(notification.body);
+  
+    const addAlarm = useAlarmList.getState().addAlarm;
+  
+    // 실제 UI에 맞는 구조로 변환
+    const newAlarm = {
+      id: Date.now(), // 또는 uuid
+      text: raw.message,
+      img: resolveImage(raw.type), // 타입에 따라 아이콘 선택
+      alt: raw.type,
+      link: resolveLink(raw.type),
+    };
+  
+    addAlarm(newAlarm);
   }
 
   return null;
+}
+
+function resolveImage(type) {
+  switch (type) {
+    case "COMMENT":
+    case "LIKE":
+      return "/img/heart.png";
+    case "FOLLOW":
+      return "/img/group.png";
+    case "RECOMMEND":
+      return "/img/place.png";
+    default:
+      return "/img/firework.png";
+  }
+}
+
+function resolveLink(type) {
+  switch (type) {
+    case "COMMENT":
+      return "/mypage/story";
+    case "FOLLOW":
+      return "/mypage/follower";
+    default:
+      return "/";
+  }
 }
 
 export default WebSocketManager;
