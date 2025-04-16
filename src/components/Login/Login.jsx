@@ -13,6 +13,7 @@ import WeARE1 from "../img/weare1.png";
 import { IconBehind } from "../Icons";
 import RegisterStep1 from "../Register/RegisterStep1";
 import axios from "axios";
+import { getCurrentUser } from '../api1';
 
 export const useUserStore = create(
   persist(
@@ -56,7 +57,10 @@ function Login() {
       login({ username: userData.username }); // Zustand 상태에 로그인 정보 저장
       setUsername(""); // 입력 필드 초기화
       setPassword(""); // 입력 필드 초기화
-      navigate("/"); // 로그인 후 메인으로
+  
+      await getCurrentUser(); //마지막 로그인 기록을 위한 호출
+  
+      navigate("/"); // 로그인 후 메인으로 이동
     } catch (error) {
       alert("로그인 실패! 다시 시도해주세요.");
     }

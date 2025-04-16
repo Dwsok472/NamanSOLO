@@ -1,6 +1,6 @@
-// 유저별 마지막 활동기록
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getUserLastActivity } from '../api1';
 
 const Container = styled.div`
   background: white;
@@ -40,7 +40,15 @@ const Table = styled.table`
   }
 `;
 
-const FeedActivityTable = ({ users }) => {
+const FeedActivityTable = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getUserLastActivity()
+      .then(res => setUsers(res))
+      .catch(err => console.error('유저 활동 정보 로딩 실패', err));
+  }, []);
+
   return (
     <Container>
       <Title>유저별 마지막 활동 기록</Title>
@@ -53,11 +61,12 @@ const FeedActivityTable = ({ users }) => {
           </tr>
         </thead>
         <tbody>
-          {users.slice(0, 10).map((user, index) => (
-            <tr key={user.id}>
+          {users.slice(0, 50).map((user, index) => (
+            <tr key={user.username}>
               <td>{index + 1}</td>
               <td>{user.username}</td>
-              <td>{user.lastActive}</td>
+              <td>{user.lastLogin 
+              ? new Date(user.lastLogin).toLocaleDateString() : '없음'}</td>
             </tr>
           ))}
         </tbody>

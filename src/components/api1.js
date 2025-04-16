@@ -91,4 +91,14 @@ export const getMonthlyFeedRank = async (month) => {
   return res.data;
 };
 
+export const getUserLastActivity = async () => {
+  const res = await api.get('/user/admin/last-activity');
+  return res.data;
+};
+
+export const getCurrentUser = async () => {
+  const res = await api.get('/user/me');
+  return res.data;
+};
+
 
