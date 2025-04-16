@@ -274,11 +274,7 @@ const user_url = '/user';
 
 export const registerUser = async (formData) => {
   try {
-    const response = await axios.post(`${BASE_URL}${user_url}/register`, formData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(`${BASE_URL}${user_url}/register`, get().formData);
     return response.data;
   } catch (error) {
     console.error("회원가입 API 에러:", error.response?.data || error.message);
@@ -300,8 +296,8 @@ export const useRegisterStore = create(
         birthF: "",
         phoneNumberM: "",
         phoneNumberF: "",
-        authority: "",
-        addDate: "",
+        authority: "ROLE_USER",
+        addDate: new Date().toISOString().split("T")[0],
         dDay: "",
         alarmAlert: true,
         commentAlert: true,
@@ -311,7 +307,7 @@ export const useRegisterStore = create(
         recommendAlert: true,
         recommentAlert: true,
         todoAlert: true,
-        mediaUrl: null,
+        mediaId: 1,
       },
 
       setFormData: (data) => set((state) => ({
@@ -331,32 +327,7 @@ export const useRegisterStore = create(
         }
       },
 
-      resetForm: () => set({
-        formData: {
-          username: "",
-          password: "",
-          emailM: "",
-          emailF: "",
-          realNameM: "",
-          realNameF: "",
-          birthM: "",
-          birthF: "",
-          phoneNumberM: "",
-          phoneNumberF: "",
-          authority: "",
-          addDate: "",
-          dDay: "",
-          alarmAlert: true,
-          commentAlert: true,
-          followAlert: true,
-          greatAlert: true,
-          eventAlert: true,
-          recommendAlert: true,
-          recommentAlert: true,
-          todoAlert: true,
-          mediaUrl: null,
-        }
-      })
+      resetForm: () => set({  })
     }),
     {
       name: "register-storage", // storage key 이름

@@ -88,12 +88,20 @@ const Icon = styled.div`
 
 function RegisterStep3({ onNext }) {
   const { formData, setFormData, submitRegistration, resetForm } = useRegisterStore(); // 여기에서 setFormData 받아와
-  const [dday, setDday] = useState(formData.dDay || "");
+  const [dDay, setdDay] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
 
+  // const formatDateToYMD = (date) => {
+  //   const year = date.getFullYear();
+  //   const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  //   const day = `${date.getDate()}`.padStart(2, "0");
+  //   return `${year}-${month}-${day}`;
+  // };
+  // const dateOnly = formatDateToYMD(new Date(DDay));
+
   useEffect(() => {
-    if (dday) {
-      const selectedDate = new Date(dday);
+    if (dDay) {
+      const selectedDate = new Date(dDay);
       const today = new Date();
       selectedDate.setHours(0, 0, 0, 0);
       today.setHours(0, 0, 0, 0);
@@ -105,32 +113,36 @@ function RegisterStep3({ onNext }) {
     } else {
       setDaysDiff(null);
     }
-  }, [dday]);
+  }, [dDay]);
 
   const handleSubmit = async () => {
-    if (!dday) {
+    if (!dDay) {
       alert("날짜를 선택해주세요.");
       return;
     }
 
-    // 1. dday를 formData에 저장
-    setFormData({ dDay: dday });
+    const formatted = new Date(dDay).toISOString().split("T")[0];
+
+    setFormData({
+      ...formData,   // 🔥 이전 정보 유지!
+      dDay: formatted,
+    });
+
+    setTimeout(async () => {
+      console.log("저장된 formData 확인", useRegisterStore.getState().formData);
+      await submitRegistration(useRegisterStore.getState().formData);
+    }, 2350);
 
     try {
-      // 2. 서버에 최종 등록 요청
-      await submitRegistration();
-
-
-
-
-      // 3. 등록 된 후 상태 초기화 + 이메일 발송.....추후..예정..
       resetForm();
-
-      onNext(); // 다음 스텝 or 완료 화면 이동
+      setTimeout(() => {
+        onNext();
+      }, 100);
     } catch (error) {
+      console.error("회원가입 중 에러:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
     }
-  };
+};
 
   return (
     <Container>
@@ -150,8 +162,8 @@ function RegisterStep3({ onNext }) {
           type="date"
           placeholder="사귀기 시작한 날짜를 입력해주세요"
           autoComplete="off"
-          value={dday}
-          onChange={(e) => setDday(e.target.value)}
+          value={dDay}
+          onChange={(e) => setdDay(e.target.value)}
           max={new Date().toISOString().split("T")[0]}
         />
       </div>
