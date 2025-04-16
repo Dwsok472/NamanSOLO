@@ -19,7 +19,7 @@ function Header({
   onSubMenuToggle,
 }) {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useUserStore();
+  const { isLoggedIn, logout, user } = useUserStore();
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const subMenuRef = useRef(null);
@@ -73,36 +73,31 @@ function Header({
         </Link>
 
         <Nav>
-          {menuItems.map(({ to, label }) => (
-            <Link key={to} to={to}>
-              {label}
-            </Link>
-          ))}
+  {menuItems.map(({ to, label }) => (
+    <Link key={to} to={to}>
+      {label}
+    </Link>
+  ))}
 
-          <MenuWrapper ref={subMenuRef}>
-            <div onClick={toggleSubMenu}>
-              마이페이지{' '}
-              <span
-                style={{
-                  transform: isSubOpen ? 'rotate(180deg)' : 'none',
-                  display: 'inline-block',
-                  transition: '0.2s',
-                }}
-              >
-                ▼
-              </span>
-            </div>
-            {isSubOpen && (
-              <SubMenu>
-                {subMenuItems.map(({ to, label }) => (
-                  <li key={to} onClick={toggleSubMenu}>
-                    <Link to={to}>{label}</Link>
-                  </li>
-                ))}
-              </SubMenu>
-            )}
-          </MenuWrapper>
-        </Nav>
+  {user?.authority === "ROLE_ADMIN" ? (
+    <Link to="/admin/users">관리자 페이지</Link>
+  ) : (
+    <MenuWrapper ref={subMenuRef}>
+      <div onClick={toggleSubMenu}>
+        마이페이지 <ToggleArrow $open={isSubOpen}>▼</ToggleArrow>
+      </div>
+      {isSubOpen && (
+        <SubMenu>
+          {subMenuItems.map(({ to, label }) => (
+            <li key={to} onClick={toggleSubMenu}>
+              <Link to={to}>{label}</Link>
+            </li>
+          ))}
+        </SubMenu>
+      )}
+    </MenuWrapper>
+  )}
+</Nav>
 
         <ButtonGroup>
           {!isLoginPage && (
@@ -173,6 +168,11 @@ function Header({
 
 export default Header;
 
+const ToggleArrow = styled.span`
+  display: inline-block;
+  transition: 0.2s;
+  transform: ${({ $open }) => ($open ? 'rotate(180deg)' : 'none')};
+`;
 
 const Container = styled.header`
   width: 100%;

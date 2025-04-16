@@ -54,7 +54,11 @@ function Login() {
   async function handleSubmit() {
     try {
       const userData = await UserLogin(username, password); // 로그인 API 호출
-      login({ username: userData.username }); // Zustand 상태에 로그인 정보 저장
+      login({
+        username: userData.username,
+        authority: userData.authority,
+        token: userData.token
+      }); // Zustand 상태에 로그인 정보 저장
       setUsername(""); // 입력 필드 초기화
       setPassword(""); // 입력 필드 초기화
   
