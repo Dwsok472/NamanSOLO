@@ -69,7 +69,7 @@ function AdminUserPage() {
           <UserDonutChart total={85} />
         </TopRow>
         <BottomRow>
-          <UserTable users={dummyUsers} />
+          <UserTable />
         </BottomRow>
       </ContentWrapper>
     </Layout>

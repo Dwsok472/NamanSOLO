@@ -101,4 +101,10 @@ export const getCurrentUser = async () => {
   return res.data;
 };
 
+export const getAllUsers = async () => {
+  const res = await api.get('/user/admin/all');
+  return res.data;
+};
+
+
 

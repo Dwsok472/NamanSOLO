@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getAllUsers } from '../api1'; 
 
 const TableWrapper = styled.div`
   background: #fff;
@@ -43,7 +44,7 @@ const UserItem = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: ${({ active }) => (active ? '#ffe6e7' : '#f9f9f9')};
+  background-color: ${({ $active }) => ($active ? '#ffe6e7' : '#f9f9f9')};
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
@@ -96,11 +97,18 @@ const Pagination = styled.div`
   }
 `;
 
-function UserTable({ users }) {
+function UserTable() {
   const USERS_PER_PAGE = 10;
   const [page, setPage] = useState(0);
   const [selectedId, setSelectedId] = useState(null);
   const [keyword, setKeyword] = useState('');
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getAllUsers()
+      .then(setUsers)
+      .catch((err) => console.error('유저 목록 불러오기 실패', err));
+  }, []);
 
   const filteredUsers = users.filter((user) =>
     user.username.toLowerCase().includes(keyword.toLowerCase())
@@ -142,7 +150,7 @@ function UserTable({ users }) {
             >
               <Rank active={isSelected}>{globalIndex + 1}</Rank>
               <Name>{user.username}</Name>
-              <Date>{user.date}</Date>
+              <Date>{user.addDate}</Date> 
             </UserItem>
           );
         })}
