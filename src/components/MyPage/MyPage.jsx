@@ -344,8 +344,8 @@ function MyPage() {
         console.log("🔥 키 리스트:", Object.keys(data)); 
         setGirlname(data.realNameF);
         setBoyname(data.realNameM);
-        setMeetingDate(data.dday);
-        setOriginalMeetingDate(data.dday);
+        setMeetingDate(data.dDay);
+        setOriginalMeetingDate(data.dDay);
         const mediaUrl = data.mediaDTO?.mediaUrl;
 
         if (mediaUrl) {
@@ -388,7 +388,7 @@ function MyPage() {
       const updatedData = {
         realNameM: boyname,
         realNameF: girlname,
-        dday: meetingDate,
+        dDay: meetingDate,
         profileImageUrl: uploadedImageUrl, // 없으면 null로 전달
       };
   
@@ -451,7 +451,6 @@ function MyPage() {
             type="file"
             id="file-upload-c"
             accept="image/*"
-            style={{display:"none"}}
             ref={imgRef}
             onChange={handleImageChange}
           />
@@ -495,11 +494,11 @@ function MyPage() {
         </DateInfo>
 
         <NameHeartSection>
-          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
+          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
             {boyname || "박서진"}
           </div>
           <img src={heart} className="heart" />
-          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
+          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
             {girlname || "김동인"}
           </div>
         </NameHeartSection>

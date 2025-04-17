@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const DropdownWrapper = styled.div`
@@ -39,12 +39,23 @@ const DropdownItem = styled.li`
     }
 `;
 
+
+
 const cities = ["서울", "경기", "양양", "김제", "수원", "대전", "청주", "울진", "보령", "전주", "창원",
     "속초", "인천", "대구", "광주", "울산", "세종", "부산"];
-
-const CityDropdown = ({ onSelect }) => {
+const CityDropdown = ({ value = "도시" , onSelect, isEditable = true }) => {
   const [open, setOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState("도시");
+  const [selectedCity, setSelectedCity] = useState(value|| "도시");
+
+  useEffect(()=> {
+    setSelectedCity(value||"도시");
+  }, [value])
+
+  const toggleDropdown = () => {
+    if (isEditable) {
+        setOpen((prev) => !prev );
+      }
+  };
 
   const handleSelect = (city) => {
     setSelectedCity(city);
@@ -54,7 +65,7 @@ const CityDropdown = ({ onSelect }) => {
 
   return (
     <DropdownWrapper>
-      <DropdownButton onClick={() => setOpen((prev) => !prev)}>
+      <DropdownButton onClick={toggleDropdown}>
         {selectedCity}
       </DropdownButton>
       {open && (

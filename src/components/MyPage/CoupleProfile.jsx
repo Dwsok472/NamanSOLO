@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IconClose } from "../Icons";
-import { getCurrentUser } from "../api2";
+import { getCurrentUser, updateUserData } from "../api2";
 import CityDropdown from "../Register/DropdownButton";
 
 const ModalWrapper = styled.div`
@@ -129,6 +129,7 @@ function CoupleProfile({ onClose }) {
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
+        setCity(data.city);
 
         setProfileF({
           name:data.realNameF,
@@ -142,7 +143,6 @@ function CoupleProfile({ onClose }) {
           email: data.emailM,
           phone: data.phoneNumberF,
         });
-        setCity(data.city);
       } catch (e) {
         console.error("정보를 제대로 불러오지 못했습니다: " +e)
       }
@@ -158,9 +158,25 @@ function CoupleProfile({ onClose }) {
     }
   };
 
-  const handleSave = () => {
-    setIsEditable(false);
-    alert("저장되었습니다!"); // 나중에 API로 변경 가능
+  const handleSave = async () => {
+    try {
+      const updatedUser = {
+        realNameM: profileM.name,
+        realNameF: profileF.name,
+        emailM: profileM.email,
+        emailF: profileF.email,
+        phoneNumberM: profileM.phone,
+        phoneNumberF: profileF.phone,
+        city: city,
+      };
+  
+      await updateUserData(updatedUser);
+      alert("저장되었습니다!");
+      setIsEditable(false);
+    } catch (err) {
+      console.error("저장 실패", err);
+      alert("저장에 실패했습니다.");
+    }
   };
 
   return (
@@ -181,7 +197,7 @@ function CoupleProfile({ onClose }) {
             key === "image" ? null : (
               <div className="input-field" key={key}>
                 <label>{key}</label>
-                {isEditable ? (
+                {isEditable && key !== "birthday" ? (
                   <input
                     type="text"
                     value={value}
@@ -195,7 +211,7 @@ function CoupleProfile({ onClose }) {
           )}
         </ProfileBox>
         <CityWrapper>
-          <CityDropdown onSelect={(e) => handleChange(city, e)} />
+          <CityDropdown value={city} isEditable={isEditable} onSelect={(e) => setCity(e)} />
         </CityWrapper>
         {/* 여자 프로필 */}
         <ProfileBox>
@@ -204,7 +220,7 @@ function CoupleProfile({ onClose }) {
             key === "image" ? null : (
               <div className="input-field" key={key}>
                 <label>{key}</label>
-                {isEditable ? (
+                {isEditable && key !== "birthday" ? (
                   <input
                     type="text"
                     value={value}
