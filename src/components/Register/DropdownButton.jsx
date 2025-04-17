@@ -17,7 +17,7 @@ const DropdownButton = styled.button`
 
 const DropdownList = styled.ul`
   position: absolute;
-  top: 110%;
+  top: 100%;
   left: 0;
   width: 120%;
   background-color: white;

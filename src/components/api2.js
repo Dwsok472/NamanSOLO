@@ -380,17 +380,32 @@ export const uploadProfileImage = async (file) => {
   return response.data.mediaUrl;
 };
 
-export const updateUserProfileImage = async (mediaUrl) => {
-  const res = await axios.put(`${BASE_URL}${user_url}/user-data`, {
-    profileImageUrl: mediaUrl,
-  }, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  export const updateUserData = async (data) => {
+    try {
+      const res = await axios.put(`${BASE_URL}${user_url}/user-data`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return res.data;
+    } catch (e) {
+      console.error("유저 데이터 업데이트 실패:", e);
+      throw e;
+    }
+  };
 
-  return res.data;
-};
+  export const updateUserProfileImage = async (mediaUrl) => {
+    const res = await axios.put(`${BASE_URL}${user_url}/user-data`, {
+      profileImageUrl: mediaUrl,
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    return res.data;
+  };
 
   export const fetchUserMediaBlobUrl = async (mediaUrl) => {
   try {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IconClose } from "../Icons";
 import { getCurrentUser } from "../api2";
+import CityDropdown from "../Register/DropdownButton";
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -25,6 +26,14 @@ const Top = styled.div`
   color: white;
   padding: 15px 20px;
   border-radius: 8px 8px 0 0;
+`;
+
+const CityWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;      // 중앙 정렬
+  margin-top: -15px;         // 아래로 내리기
+  margin-right: 8px;
 `;
 
 const CloseButton = styled.button`
@@ -103,17 +112,17 @@ function CoupleProfile({ onClose }) {
   const [city, setCity] = useState("");
 
   const [profileF, setProfileF] = useState({
-    name: "박서진",
-    birthday: "1996-01-01",
-    email: "girl@email.com",
-    phone: "010-1111-2222",
+    name: "",
+    birthday: "",
+    email: "",
+    phone: "",
   });
 
   const [profileM, setProfileM] = useState({
-    name: "김동인",
-    birthday: "1996-05-03",
-    email: "boy@email.com",
-    phone: "010-2222-3333",
+    name: "",
+    birthday: "",
+    email: "",
+    phone: "",
   });
 
   useEffect(()=> {
@@ -123,15 +132,15 @@ function CoupleProfile({ onClose }) {
 
         setProfileF({
           name:data.realNameF,
-          birthday:data.birthdayF,
+          birthday:data.birthF,
           email: data.emailF,
-          phone: data.phoneF,
+          phone: data.phoneNumberF,
         });
         setProfileM({
           name: data.realNameM,
-          birthday: data.birthdayM,
+          birthday: data.birthM,
           email: data.emailM,
-          phone: data.phoneF,
+          phone: data.phoneNumberF,
         });
         setCity(data.city);
       } catch (e) {
@@ -164,6 +173,7 @@ function CoupleProfile({ onClose }) {
       </Top>
 
       <Content>
+        
         {/* 남자 프로필 */}
         <ProfileBox>
           <h3>남자 정보</h3>
@@ -184,7 +194,9 @@ function CoupleProfile({ onClose }) {
             )
           )}
         </ProfileBox>
-
+        <CityWrapper>
+          <CityDropdown onSelect={(e) => handleChange(city, e)} />
+        </CityWrapper>
         {/* 여자 프로필 */}
         <ProfileBox>
           <h3>여자 정보</h3>

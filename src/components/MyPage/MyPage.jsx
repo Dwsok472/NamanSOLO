@@ -11,7 +11,7 @@ import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
 import MySetting from "./MySetting";
 import Edit from "../img/edit.png";
-import { fetchUserMediaBlobUrl, getCurrentUser, updateUserProfileImage, uploadProfileImage } from "../api2";
+import { fetchUserMediaBlobUrl, getCurrentUser, updateUserData, uploadProfileImage } from "../api2";
 
 const Container = styled.div`
   display: flex;
@@ -63,7 +63,6 @@ const Img = styled.img`
   object-fit: contain;
   border: 1px solid #3333;
   align-items: center;
-  cursor: pointer;
   background-color: white;
 `;
 const ImgInput = styled.input`
@@ -304,6 +303,8 @@ function MyPage() {
   const [menu, setMenu] = useState("커플 정보");
   const [selectedOption, setSelectedOption] = useState("커플 정보");
   const navigate = useNavigate();
+  const [tempImage, setTempImage] = useState(null); // blob용
+  const [selectedFile, setSelectedFile] = useState(null); // 진짜 파일
   const [showCoupleProfile, setShowCoupleProfile] = useState(false);
   const [editDateMode, setEditDateMode] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -335,51 +336,29 @@ function MyPage() {
     setSelectedOption(option);
   };
 
-  /* useEffect(() => {
-    getDday();
-  }, []);
-  async function getDday() {
-    try {
-      let response = await getDdayByUsername(username);
-      if (!response || response.length === 0) {
-        console.log('데이터를 가져오지 못했습니다.');
-        return;
-      }
-      setMeetingDate(response);
-    } catch (error) {
-      console.log(error);
-      alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-    }
-  } */
-    useEffect(() => {
-      const fetchUser = async () => {
-        try {
-          const data = await getCurrentUser();
-     
-          setGirlname(data.realNameF);
-          setBoyname(data.realNameM);
-          setMeetingDate(data.dday);
-          setOriginalMeetingDate(data.dday);
-
-          const mediaUrl = data.mediaDTO?.mediaUrl;
-
-          if (mediaUrl && typeof mediaUrl === "string") {
-            const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
-            if (blobUrl) {
-              setImage(blobUrl);
-            } else {
-              console.warn("❗ 이미지 blob 변환 실패");
-            }
-          } else {
-            console.warn("⚠️ mediaUrl 정보가 없거나 형식 오류");
-          }
-        } catch (err) {
-          console.error("유저 불러오기 실패", err);
-        }
-      };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await getCurrentUser();
     
-      fetchUser();
-    }, []);
+        console.log("🔥 키 리스트:", Object.keys(data)); 
+        setGirlname(data.realNameF);
+        setBoyname(data.realNameM);
+        setMeetingDate(data.dday);
+        setOriginalMeetingDate(data.dday);
+        const mediaUrl = data.mediaDTO?.mediaUrl;
+
+        if (mediaUrl) {
+          const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
+          setImage(blobUrl); // ✅ blobUrl을 바로 이미지로 사용
+        }
+      } catch (err) {
+        console.error("유저 불러오기 실패", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     if (meetingDate) {
@@ -399,18 +378,31 @@ function MyPage() {
   };
   const handleCompleteEdit = async () => {
     try {
-      if (mediaId) {
-        await updateUserMedia(mediaId);
+      let uploadedImageUrl = null;
+  
+      if (selectedFile) {
+        // 업로드 -> 경로 받아오기
+        uploadedImageUrl = await uploadProfileImage(selectedFile);
       }
   
-      // dday가 바뀌었는지도 확인해서 수정 요청
-      if (meetingDate !== originalMeetingDate) {
-        await updateDday(meetingDate); // 이건 백엔드 API 있는 경우
+      const updatedData = {
+        realNameM: boyname,
+        realNameF: girlname,
+        dday: meetingDate,
+        profileImageUrl: uploadedImageUrl, // 없으면 null로 전달
+      };
+  
+      await updateUserData(updatedData);
+  
+      if (uploadedImageUrl) {
+        const blobUrl = await fetchUserMediaBlobUrl(uploadedImageUrl);
+        setImage(blobUrl); // 실제 이미지 반영
       }
   
+      setOriginalMeetingDate(meetingDate);
       setIsEditMode(false);
-    } catch (error) {
-      console.error("디데이/이미지 업데이트 실패", error);
+    } catch (err) {
+      console.error("수정 실패", err);
     }
   };
 
@@ -420,11 +412,11 @@ function MyPage() {
       return;
     }
     try {
-      const mediaUrl = await uploadProfileImage(file);
-      await updateUserProfileImage(mediaUrl);
-  
-      const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
-      setImage(blobUrl); // useState로 이미지 렌더링
+      const file = e.target.files[0];
+      if (!file) return;
+
+      setSelectedFile(file);
+      setTempImage(URL.createObjectURL(file)); // 로컬 미리보기용
     } catch (e) {
       console.error("이미지 처리 실패", e);
     }
@@ -437,7 +429,6 @@ function MyPage() {
         <EditButton onClick={() => {
           if (isEditMode) {
             handleCompleteEdit();
-            setIsEditMode((prev) => !prev)
           }
           setIsEditMode((prev) => !prev)
           }}>
@@ -445,7 +436,7 @@ function MyPage() {
         </EditButton>
           <PhotoSection>
             {isEditMode ? ( 
-            <Img src={image} alt="profile" onClick={() => {
+            <Img src={image} alt="profile" style={{cursor: "pointer"}} onClick={() => {
               imgRef.current.click();
             }} />
           ) : (<Img src={image} alt="profile"/>)
