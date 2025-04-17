@@ -66,6 +66,8 @@ export const createAnniversary = async (anniv) => {
 
 export const createTravel = async (travelEvent) => {
   try {
+    const mediaList = travelEvent.mediaUrl || [];
+
     const dto = {
       title: travelEvent.title,
       startDate: travelEvent.start_date,
@@ -307,7 +309,7 @@ export const useRegisterStore = create(
         recommendAlert: true,
         recommentAlert: true,
         todoAlert: true,
-        mediaId: 1,
+        mediaDTO: {id:1},
       },
 
       setFormData: (data) => set((state) => ({
@@ -352,3 +354,56 @@ export async function checkUsernameDuplicate(username) {
     throw error;
   }
 }
+
+export const getCurrentUser = async () => { 
+    const res = await axios.get(`${BASE_URL}${user_url}/me`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  console.log(res.data)
+  return res.data;
+};
+
+export const uploadProfileImage = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await axios.post(`${BASE_URL}${user_url}/upload/profile-image`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  return response.data.mediaUrl;
+};
+
+export const updateUserProfileImage = async (mediaUrl) => {
+  const res = await axios.put(`${BASE_URL}${user_url}/user-data`, {
+    profileImageUrl: mediaUrl,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
+};
+
+  export const fetchUserMediaBlobUrl = async (mediaUrl) => {
+  try {
+    const res = await fetch(`${BASE_URL}${user_url}/download/${mediaUrl.split('/').slice(-2).join('/')}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) throw new Error('미디어 fetch 실패');
+
+    const blob = await res.blob();
+    console.log("Fetch response:", blob);
+    return URL.createObjectURL(blob);
+  } catch (e) {
+    console.error('이미지 다운로드 실패:', mediaUrl, e);
+    return null;
+  }
+};

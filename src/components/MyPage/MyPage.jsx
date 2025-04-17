@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { IconImage } from "../Icons";
 import heart from "../img/heart.png";
@@ -11,6 +11,7 @@ import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
 import MySetting from "./MySetting";
 import Edit from "../img/edit.png";
+import { fetchUserMediaBlobUrl, getCurrentUser, updateUserProfileImage, uploadProfileImage } from "../api2";
 
 const Container = styled.div`
   display: flex;
@@ -88,16 +89,19 @@ const DateInfo = styled.div`
   padding-bottom: 3%;
 `;
 
-const DaysSince = styled.p`
+const DaysSince = styled.div`
   font-size: 4.5rem;
   color: ${({ color }) => color || "#bf1f3c"};
   font-weight: 700;
   margin: 0 auto;
 `;
 
-const MeetingDate = styled.p`
+const MeetingDate = styled.div`
   font-size: 1.2rem;
   color: ${({ color }) => color || "#1f1f1f"};
+  button {
+
+  }
 `;
 const EditIcon = styled.img`
   align-items: center;
@@ -255,10 +259,43 @@ const Backdrop = styled.div`
   z-index: 999;
 `;
 
+const DateInputRow = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+
+  input {
+    text-align: center;
+    font-size:1rem;
+    width: 140px;
+  }
+
+  button {
+    position: absolute;
+    bottom: 65px;    // 인풋보다 살짝 아래
+    right: -10px;    // 우측으로 살짝
+    padding: 6px 12px;
+    border: none;
+    background-color: #eb2230;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    &:hover {
+      background-color: #ff2164d2;
+    }
+  }
+`;
+
+
 function MyPage() {
   const location = useLocation();
+  const [originalMeetingDate, setOriginalMeetingDate] = useState(null);
+  const [mediaId, setMediaId] = useState(null);
   const pathname = location.pathname;
-
+  const imgRef = useRef(null);
   const [image, setImage] = useState();
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
@@ -314,10 +351,35 @@ function MyPage() {
       alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
     }
   } */
-  //임시용
-  useEffect(() => {
-    setMeetingDate("2025-03-30");
-  }, []);
+    useEffect(() => {
+      const fetchUser = async () => {
+        try {
+          const data = await getCurrentUser();
+     
+          setGirlname(data.realNameF);
+          setBoyname(data.realNameM);
+          setMeetingDate(data.dday);
+          setOriginalMeetingDate(data.dday);
+
+          const mediaUrl = data.mediaDTO?.mediaUrl;
+
+          if (mediaUrl && typeof mediaUrl === "string") {
+            const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
+            if (blobUrl) {
+              setImage(blobUrl);
+            } else {
+              console.warn("❗ 이미지 blob 변환 실패");
+            }
+          } else {
+            console.warn("⚠️ mediaUrl 정보가 없거나 형식 오류");
+          }
+        } catch (err) {
+          console.error("유저 불러오기 실패", err);
+        }
+      };
+    
+      fetchUser();
+    }, []);
 
   useEffect(() => {
     if (meetingDate) {
@@ -335,29 +397,61 @@ function MyPage() {
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
     setDaysSince(daysDiff);
   };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
+  const handleCompleteEdit = async () => {
+    try {
+      if (mediaId) {
+        await updateUserMedia(mediaId);
+      }
+  
+      // dday가 바뀌었는지도 확인해서 수정 요청
+      if (meetingDate !== originalMeetingDate) {
+        await updateDday(meetingDate); // 이건 백엔드 API 있는 경우
+      }
+  
+      setIsEditMode(false);
+    } catch (error) {
+      console.error("디데이/이미지 업데이트 실패", error);
     }
   };
-  const FileInput = () => {
-    document.getElementById("file-upload-c").click();
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    try {
+      const mediaUrl = await uploadProfileImage(file);
+      await updateUserProfileImage(mediaUrl);
+  
+      const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
+      setImage(blobUrl); // useState로 이미지 렌더링
+    } catch (e) {
+      console.error("이미지 처리 실패", e);
+    }
   };
 
   return (
     <Container>
       <ProfileCard>
         <MySetting onClick={() => setShowCoupleProfile(true)} />
-        <EditButton onClick={() => setIsEditMode((prev) => !prev)}>
+        <EditButton onClick={() => {
+          if (isEditMode) {
+            handleCompleteEdit();
+            setIsEditMode((prev) => !prev)
+          }
+          setIsEditMode((prev) => !prev)
+          }}>
           {isEditMode ? "완료" : "수정"}
         </EditButton>
-        <PhotoSection>
-          <Img src={image || ""} alt="" />
-
+          <PhotoSection>
+            {isEditMode ? ( 
+            <Img src={image} alt="profile" onClick={() => {
+              imgRef.current.click();
+            }} />
+          ) : (<Img src={image} alt="profile"/>)
+          }
           {isEditMode && (
-            <FileButton onClick={FileInput}>
+            <FileButton onClick={()=>imgRef.current &&imgRef.current.click()}>
               <IconImage />
             </FileButton>
           )}
@@ -366,6 +460,8 @@ function MyPage() {
             type="file"
             id="file-upload-c"
             accept="image/*"
+            style={{display:"none"}}
+            ref={imgRef}
             onChange={handleImageChange}
           />
         </PhotoSection>
@@ -375,15 +471,15 @@ function MyPage() {
           )}
           {meetingDate && (
             <MeetingDate>
-              {editDateMode ? (
-                <>
+              {isEditMode ? (
+                <DateInputRow>
                   <input
                     type="date"
                     value={meetingDate}
                     onChange={(e) => setMeetingDate(e.target.value)}
                   />
-                  <button onClick={() => setEditDateMode(false)}>저장</button>
-                </>
+                  <button onClick={() => {setEditDateMode(false); setIsEditMode(false);}}>저장</button>
+                </DateInputRow>
               ) : (
                 <>
                   {new Date(meetingDate).toLocaleDateString("ko-KR")}
@@ -396,7 +492,7 @@ function MyPage() {
                         display: "inline-flex",
                         alignItems: "center",
                       }}
-                      onClick={() => setEditDateMode(true)}
+                      onClick={() => setIsEditMode(true)}
                     >
                       <EditIcon src={Edit} alt="수정" />
                     </span>
