@@ -374,6 +374,9 @@ function MyPage() {
 
     const timeDiff = date2 - date1;
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+    if (daysDiff<1) {
+      setDaysSince("오늘");
+    } 
     setDaysSince(daysDiff);
   };
   const handleCompleteEdit = async () => {
@@ -436,7 +439,7 @@ function MyPage() {
         </EditButton>
           <PhotoSection>
             {isEditMode ? ( 
-            <Img src={image} alt="profile" style={{cursor: "pointer"}} onClick={() => {
+            <Img src={tempImage||image} alt="profile" style={{cursor: "pointer"}} onClick={() => {
               imgRef.current.click();
             }} />
           ) : (<Img src={image} alt="profile"/>)
@@ -467,8 +470,15 @@ function MyPage() {
                     type="date"
                     value={meetingDate}
                     onChange={(e) => setMeetingDate(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
                   />
-                  <button onClick={() => {setEditDateMode(false); setIsEditMode(false);}}>저장</button>
+                  <button onClick={() => {
+                    setEditDateMode(false);
+                    setTempImage(null); 
+                    setSelectedFile(null);
+                    setIsEditMode(false);
+                    setMeetingDate(originalMeetingDate);
+                  }}>취소</button>
                 </DateInputRow>
               ) : (
                 <>
