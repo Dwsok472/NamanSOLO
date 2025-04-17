@@ -4,6 +4,7 @@ import heartswithrate from "../img/heartswithrate1.png";
 import NextButton from "../Button/NextButton";
 import { IconBehind } from "../Icons";
 import { useRegisterStore } from "../api2";
+import CityDropdown from "./DropdownButton";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -86,9 +87,36 @@ const Icon = styled.div`
   cursor: pointer;
 `;
 
+const CityWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;      // 중앙 정렬
+  margin-top: 60px;         // 아래로 내리기
+`;
+
+const Label = styled.label`
+  font-size: 1rem;
+  margin-bottom: 10px;
+`;
+
+const CitySelect = styled.select`
+  padding: 5px 5px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  height: 50px;
+
+  option {
+    padding: 10px;
+  }
+`;
+
 function RegisterStep3({ onNext }) {
   const { formData, setFormData, submitRegistration, deleteForm } = useRegisterStore(); // 여기에서 setFormData 받아와
   const [dDay, setdDay] = useState("");
+  const [city, setCity] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
 
   // const formatDateToYMD = (date) => {
@@ -140,6 +168,10 @@ function RegisterStep3({ onNext }) {
   return (
     <Container>
       <H1>회원가입</H1>
+      <CityWrapper>
+        <Label>도시를 선택해주세요. 사용자맞춤 날씨 정보 제공 기반이 됩니다.</Label>
+        <CityDropdown onSelect={(e) => setFormData({city:e})} />
+      </CityWrapper>
       <img
         src={heartswithrate}
         className="heartswithrate"

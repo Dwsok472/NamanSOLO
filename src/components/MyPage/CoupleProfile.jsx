@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IconClose } from "../Icons";
+import { getCurrentUser } from "../api2";
 
 const ModalWrapper = styled.div`
   position: fixed;
@@ -99,6 +100,8 @@ const ControlButtons = styled.div`
 function CoupleProfile({ onClose }) {
   const [isEditable, setIsEditable] = useState(false);
 
+  const [city, setCity] = useState("");
+
   const [profileF, setProfileF] = useState({
     name: "박서진",
     birthday: "1996-01-01",
@@ -112,6 +115,31 @@ function CoupleProfile({ onClose }) {
     email: "boy@email.com",
     phone: "010-2222-3333",
   });
+
+  useEffect(()=> {
+    const fetchUser = async () => {
+      try {
+        const data = await getCurrentUser();
+
+        setProfileF({
+          name:data.realNameF,
+          birthday:data.birthdayF,
+          email: data.emailF,
+          phone: data.phoneF,
+        });
+        setProfileM({
+          name: data.realNameM,
+          birthday: data.birthdayM,
+          email: data.emailM,
+          phone: data.phoneF,
+        });
+        setCity(data.city);
+      } catch (e) {
+        console.error("정보를 제대로 불러오지 못했습니다: " +e)
+      }
+    }
+    fetchUser();
+  }, [])
 
   const handleChange = (type, field, value) => {
     if (type === "M") {

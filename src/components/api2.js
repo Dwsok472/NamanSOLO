@@ -299,6 +299,7 @@ export const useRegisterStore = create(
         phoneNumberM: "",
         phoneNumberF: "",
         authority: "ROLE_USER",
+        city: "",
         addDate: new Date().toISOString().split("T")[0],
         dDay: "",
         alarmAlert: true,
