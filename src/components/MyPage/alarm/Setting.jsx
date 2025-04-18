@@ -138,45 +138,68 @@ const StyledWrapper = styled.div`
 `;
 
 function Setting({ onClose }) {
-  const [alarmSettings, setAlarmSettings] = useState({
-    anniversaryAlarm: false,
-    storyCommentAlarm: false,
-    storyLikeAlarm: false,
-    anniversaryWeatherAlarm: false,
-    anniversaryOneMonthAlarm: false,
-    followAlarm: false,
-    pageChangeAlarm: false,
-  });
+  const [alarmSettings, setAlarmSettings] = useState(null);
   const [isDraggingSetting, setIsDraggingSetting] = useState(false); // Setting 모달만 위한 드래그 상태
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // 마우스 위치
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
 
-  // const handleSwitchChange = async (setting) => {
-  //   const newSettings = {
-  //     ...alarmSettings,
-  //     [setting]: !alarmSettings[setting],
-  //   };
-  //   setAlarmSettings(newSettings);
+  // 스위치 변경 시 서버에 저장
+  const handleSwitchChange = async (setting) => {
+    const newSettings = {
+      ...alarmSettings,
+      [setting]: !alarmSettings[setting],
+    };
+    setAlarmSettings(newSettings);
 
-  //   try {
-  //     await saveAlarmSettings(userId, newSettings); // API 호출
-  //   } catch (err) {
-  //     console.error("알림 설정 저장 실패:", err);
-  //   }
-  // };
+    try {
+      const token = sessionStorage.getItem("jwt-token");
+      await fetch("/api/alarm/setting", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
 
-  // useEffect(() => {
-  //   const fetchSettings = async () => {
-  //     try {
-  //       const res = await fetchAlarmSettings(userId); // API 호출
-  //       setAlarmSettings(res);
-  //     } catch (err) {
-  //       console.error("알림 설정 불러오기 실패:", err);
-  //     }
-  //   };
+        body: JSON.stringify({
+          follow: newSettings.followAlarm.toString(),
+          comment: newSettings.storyCommentAlarm.toString(),
+          recomment: newSettings.storyReCommentAlarm.toString(),
+          great: newSettings.storyLikeAlarm.toString(),
+          todo: newSettings.anniversaryOneMonthAlarm.toString(),
+          weather: newSettings.anniversaryWeatherAlarm.toString(),
+        }),
+      });
+    } catch (err) {
+      console.error("저장 실패:", err);
+    }
+  };
 
-  //   fetchSettings();
-  // }, [userId]);
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const token = sessionStorage.getItem("jwt-token");
+        const res = await fetch("/api/alarm/setting", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("인증 실패");
+        const data = await res.json();
+        setAlarmSettings({
+          storyCommentAlarm: data.comment === "true",
+          storyReCommentAlarm: data.recomment === "true",
+          storyLikeAlarm: data.great === "true",
+          anniversaryWeatherAlarm: data.weather === "true",
+          anniversaryOneMonthAlarm: data.todo === "true",
+          followAlarm: data.follow === "true",
+        });
+      } catch (err) {
+        console.error("설정 불러오기 실패:", err);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   // 마우스를 누를 때, 드래그 시작
   const handleMouseDownSetting = (e) => {
@@ -220,12 +243,14 @@ function Setting({ onClose }) {
     };
   }, [isDraggingSetting, offset]);
 
-  const handleSwitchChange = (setting) => {
-    setAlarmSettings((prevSettings) => ({
-      ...prevSettings,
-      [setting]: !prevSettings[setting],
-    }));
-  };
+  // const handleSwitchChange = (setting) => {
+  //   setAlarmSettings((prevSettings) => ({
+  //     ...prevSettings,
+  //     [setting]: !prevSettings[setting],
+  //   }));
+  // };
+
+  if (!alarmSettings) return null;
 
   return (
     <Container>
@@ -245,7 +270,7 @@ function Setting({ onClose }) {
         </Top>
 
         <ContainerMain>
-          <AlarmItem>
+          {/* <AlarmItem>
             <TextWrapper>기념일 당일 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
@@ -257,9 +282,9 @@ function Setting({ onClose }) {
                 <span className="slider" />
               </label>
             </StyledWrapper>
-          </AlarmItem>
+          </AlarmItem> */}
           <AlarmItem>
-            <TextWrapper>STORY 댓글 알람</TextWrapper>
+            <TextWrapper>댓글 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
                 <input
@@ -272,7 +297,20 @@ function Setting({ onClose }) {
             </StyledWrapper>
           </AlarmItem>
           <AlarmItem>
-            <TextWrapper>STORY 좋아요 알람</TextWrapper>
+            <TextWrapper>대댓글 알람</TextWrapper>
+            <StyledWrapper>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={alarmSettings.storyReCommentAlarm}
+                  onChange={() => handleSwitchChange("storyReCommentAlarm")}
+                />
+                <span className="slider" />
+              </label>
+            </StyledWrapper>
+          </AlarmItem>
+          <AlarmItem>
+            <TextWrapper>좋아요 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
                 <input
@@ -285,7 +323,7 @@ function Setting({ onClose }) {
             </StyledWrapper>
           </AlarmItem>
           <AlarmItem>
-            <TextWrapper>기념일 1주일 전 날씨 알람</TextWrapper>
+            <TextWrapper>기념일 7일 전 날씨 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
                 <input
@@ -298,7 +336,7 @@ function Setting({ onClose }) {
             </StyledWrapper>
           </AlarmItem>
           <AlarmItem>
-            <TextWrapper>기념일 1달 전에 알람</TextWrapper>
+            <TextWrapper>기념일 7일 전에 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
                 <input
@@ -325,7 +363,7 @@ function Setting({ onClose }) {
               </label>
             </StyledWrapper>
           </AlarmItem>
-          <AlarmItem>
+          {/* <AlarmItem>
             <TextWrapper>페이지 변환 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
@@ -337,7 +375,7 @@ function Setting({ onClose }) {
                 <span className="slider" />
               </label>
             </StyledWrapper>
-          </AlarmItem>
+          </AlarmItem> */}
         </ContainerMain>
       </ModalContainer>
     </Container>

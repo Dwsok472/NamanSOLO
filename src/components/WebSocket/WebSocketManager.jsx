@@ -44,9 +44,9 @@ function WebSocketManager() {
 
   function onNotificationReceived(notification) {
     const raw = JSON.parse(notification.body);
-  
+
     const addAlarm = useAlarmList.getState().addAlarm;
-  
+
     // 실제 UI에 맞는 구조로 변환
     const newAlarm = {
       id: Date.now(), // 또는 uuid
@@ -55,7 +55,7 @@ function WebSocketManager() {
       alt: raw.type,
       link: resolveLink(raw.type),
     };
-  
+
     addAlarm(newAlarm);
   }
 
