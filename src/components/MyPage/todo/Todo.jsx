@@ -373,7 +373,7 @@ const ListDate = styled.div`
   color: #999;
 `;
 
-function Todo({ meetingDate }) {
+function Todo({ meetingDate, events }) {
   // const { user, setEvents } = useUserStore();
 
   // useEffect(() => {
@@ -396,33 +396,13 @@ function Todo({ meetingDate }) {
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  const [events, setEvents] = useState([]);
+  // const [events, setEvents] = useState([]);
   useEffect(() => {
-    const loadEvents = async () => {
-      try {
-        const [annivs, travels] = await Promise.all([
-          fetchAnniversaries(),
-          fetchTravels(),
-        ]);
-    
-        setEvents([...annivs, ...travels]);
-      } catch (e) {
-        console.error('초기 데이터 로딩 실패', e);
-      }
-    };
-  
-    loadEvents();
+    console.log("이벤트 목록:", events);
   }, []);
   
   useEffect(() => {
-    const loadEvents = async () => {
-      const annivs = await fetchAnniversaries();
-      const travels = await fetchTravels();
-      setEvents([...annivs, ...travels]);
-    }
-    if (meetingDate) {
-      loadEvents();
-    }
+    console.log("변경된 이벤트 확인! ", events);
   }, [meetingDate]);
 
   // const [events, setEvents] = useState([

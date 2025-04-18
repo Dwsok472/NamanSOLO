@@ -204,9 +204,9 @@ const ModalWrapper = styled.div`
 `;
 
 const Button = styled.button`
-  margin-left: ${({ isStory }) => (isStory ? "auto" : "0")};
-  color: ${({ isStory }) => (isStory ? "#9f142e" : "#000")};
-  background-color: ${({ isStory }) => (isStory ? "#ffffff" : "transparent")};
+  margin-left: ${({ $isStory }) => ($isStory ? "auto" : "0")};
+  color: ${({ $isStory }) => ($isStory ? "#9f142e" : "#000")};
+  background-color: ${({ $isStory }) => ($isStory ? "#ffffff" : "transparent")};
   background-color: transparent;
   padding: 10px 20px;
   font-size: 1.2rem;
@@ -217,9 +217,9 @@ const Button = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    color: ${({ isStory }) => (isStory ? "#ffffff" : "#9f142e")};
-    background-color: ${({ isStory }) => (isStory ? "#9f142e" : "#ffffff")};
-    border: 1px solid ${({ isStory }) => (isStory ? "#9f142e" : "#3333")};
+    color: ${({ $isStory }) => ($isStory ? "#ffffff" : "#9f142e")};
+    background-color: ${({ $isStory }) => ($isStory ? "#9f142e" : "#ffffff")};
+    border: 1px solid ${({ $isStory }) => ($isStory ? "#9f142e" : "#3333")};
   }
   &:focus {
     outline: none;
@@ -291,6 +291,7 @@ const DateInputRow = styled.div`
 
 function MyPage() {
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
   const [originalMeetingDate, setOriginalMeetingDate] = useState(null);
   const [mediaId, setMediaId] = useState(null);
   const pathname = location.pathname;
@@ -337,38 +338,45 @@ function MyPage() {
     setSelectedOption(option);
   };
 
-  // useEffect(() => {
-  //   const refetchAll = async () => {
-  //     const annivs = await fetchAnniversaries();
-  //     const travels = await fetchTravels();
-  //     setEvents([...annivs, ...travels]);
-  //   };
+  useEffect(() => {
+    const refetchAll = async () => {
+      const annivs = await fetchAnniversaries();
+      const travels = await fetchTravels();
+      setEvents([...annivs, ...travels]);
+    };
   
-  //   refetchAll();
-  // }, [meetingDate]);
+    refetchAll();
+  }, [meetingDate]);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await getCurrentUser();
-    
-        console.log("🔥 키 리스트:", Object.keys(data)); 
-        setGirlname(data.realNameF);
-        setBoyname(data.realNameM);
-        setMeetingDate(data.dDay);
-        setOriginalMeetingDate(data.dDay);
-        const mediaUrl = data.mediaDTO?.mediaUrl;
+    const waitForJWT = async () => {
+      const fetchUser = async () => {
+        try {
+          const data = await getCurrentUser();
+      
+          console.log("🔥 키 리스트:", Object.keys(data)); 
+          setGirlname(data.realNameF);
+          setBoyname(data.realNameM);
+          setMeetingDate(data.dDay);
+          setOriginalMeetingDate(data.dDay);
+          const mediaUrl = data.mediaDTO?.mediaUrl;
 
-        if (mediaUrl) {
-          const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
-          setImage(blobUrl); // ✅ blobUrl을 바로 이미지로 사용
+          if (mediaUrl) {
+            const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
+            setImage(blobUrl); // ✅ blobUrl을 바로 이미지로 사용
+          }
+
+          setLoading(false);
+        } catch (err) {
+          console.error("유저 불러오기 실패", err);
+          return;
         }
-      } catch (err) {
-        console.error("유저 불러오기 실패", err);
-      }
+      };
+
+      fetchUser();
     };
 
-    fetchUser();
+    waitForJWT();
   }, []);
 
   useEffect(() => {
@@ -445,90 +453,94 @@ function MyPage() {
   return (
     <Container>
       <ProfileCard>
-        <MySetting onClick={() => setShowCoupleProfile(true)} />
-        <EditButton onClick={() => {
-          if (isEditMode) {
-            handleCompleteEdit();
-          }
-          setIsEditMode((prev) => !prev)
-          }}>
-          {isEditMode ? "완료" : "수정"}
-        </EditButton>
-          <PhotoSection>
-            {isEditMode ? ( 
-            <Img src={tempImage||image} alt="profile" style={{cursor: "pointer"}} onClick={() => {
-              imgRef.current.click();
-            }} />
-          ) : (<Img src={image} alt="profile"/>)
-          }
-          {isEditMode && (
-            <FileButton onClick={()=>imgRef.current &&imgRef.current.click()}>
-              <IconImage />
-            </FileButton>
-          )}
-
-          <ImgInput
-            type="file"
-            id="file-upload-c"
-            accept="image/*"
-            ref={imgRef}
-            onChange={handleImageChange}
-          />
-        </PhotoSection>
-        <DateInfo>
-          {daysSince !== null && meetingDate && (
-            <DaysSince>{daysSince}일</DaysSince>
-          )}
-          {meetingDate && (
-            <MeetingDate>
-              {isEditMode ? (
-                <DateInputRow>
-                  <input
-                    type="date"
-                    value={meetingDate}
-                    onChange={(e) => setMeetingDate(e.target.value)}
-                    max={new Date().toISOString().split("T")[0]}
-                  />
-                  <button onClick={() => {
-                    setEditDateMode(false);
-                    setTempImage(null); 
-                    setSelectedFile(null);
-                    setIsEditMode(false);
-                    setMeetingDate(originalMeetingDate);
-                  }}>취소</button>
-                </DateInputRow>
-              ) : (
-                <>
-                  {new Date(meetingDate).toLocaleDateString("ko-KR")}
-                  {isEditMode && (
-                    <span
-                      style={{
-                        marginLeft: "8px",
-                        cursor: "pointer",
-                        fontSize: "16px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                      }}
-                      onClick={() => setIsEditMode(true)}
-                    >
-                      <EditIcon src={Edit} alt="수정" />
-                    </span>
-                  )}
-                </>
+      {loading ? (
+        <div style={{ marginTop: "200px", fontSize: "1.5rem" }}>불러오는 중...</div>
+      ) : ( <><MySetting onClick={() => setShowCoupleProfile(true)} />
+            <EditButton onClick={() => {
+              if (isEditMode) {
+                handleCompleteEdit();
+              }
+              setIsEditMode((prev) => !prev)
+              }}>
+              {isEditMode ? "완료" : "수정"}
+            </EditButton>
+              <PhotoSection>
+                {isEditMode ? ( 
+                <Img src={tempImage||image} alt="profile" style={{cursor: "pointer"}} onClick={() => {
+                  imgRef.current.click();
+                }} />
+              ) : (<Img src={image} alt="profile"/>)
+              }
+              {isEditMode && (
+                <FileButton onClick={()=>imgRef.current &&imgRef.current.click()}>
+                  <IconImage />
+                </FileButton>
               )}
-            </MeetingDate>
-          )}
-        </DateInfo>
 
-        <NameHeartSection>
-          <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
-            {boyname || "박서진"}
-          </div>
-          <img src={heart} className="heart" />
-          <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
-            {girlname || "김동인"}
-          </div>
-        </NameHeartSection>
+              <ImgInput
+                type="file"
+                id="file-upload-c"
+                accept="image/*"
+                ref={imgRef}
+                onChange={handleImageChange}
+              />
+            </PhotoSection>
+            <DateInfo>
+              {daysSince !== null && meetingDate && (
+                <DaysSince>{daysSince}일</DaysSince>
+              )}
+              {meetingDate && (
+                <MeetingDate>
+                  {isEditMode ? (
+                    <DateInputRow>
+                      <input
+                        type="date"
+                        value={meetingDate}
+                        onChange={(e) => setMeetingDate(e.target.value)}
+                        max={new Date().toISOString().split("T")[0]}
+                      />
+                      <button onClick={() => {
+                        setEditDateMode(false);
+                        setTempImage(null); 
+                        setSelectedFile(null);
+                        setIsEditMode(false);
+                        setMeetingDate(originalMeetingDate);
+                      }}>취소</button>
+                    </DateInputRow>
+                  ) : (
+                    <>
+                      {new Date(meetingDate).toLocaleDateString("ko-KR")}
+                      {isEditMode && (
+                        <span
+                          style={{
+                            marginLeft: "8px",
+                            cursor: "pointer",
+                            fontSize: "16px",
+                            display: "inline-flex",
+                            alignItems: "center",
+                          }}
+                          onClick={() => setIsEditMode(true)}
+                        >
+                          <EditIcon src={Edit} alt="수정" />
+                        </span>
+                      )}
+                    </>
+                  )}
+                </MeetingDate>
+              )}
+            </DateInfo>
+
+            <NameHeartSection>
+              <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
+                {boyname || "박서진"}
+              </div>
+              <img src={heart} className="heart" />
+              <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
+                {girlname || "김동인"}
+              </div>
+            </NameHeartSection>
+        </>
+      )}
       </ProfileCard>
 
       <RightProfileCard>
@@ -562,7 +574,7 @@ function MyPage() {
               캘린더
             </Button>
             <Button
-              isStory
+              $isStory
               onClick={() => {
                 handleButtonClick("스토리");
                 handleBoxClick("스토리");
@@ -578,7 +590,11 @@ function MyPage() {
           <Routes>
             <Route path="/myalbum" element={<MyAlbum />} />
             <Route path="/comment" element={<CommentPage />} />
-            <Route path="/todo" element={<Todo meetingDate={meetingDate}/>} />
+            <Route path="/todo" element={events ? (
+              <Todo meetingDate={meetingDate} events={events} />
+            ) : (
+              <div>로딩 중...</div>
+            )} />
             <Route path="/other" element={<Other />} />
           </Routes>
         </BottomSection>

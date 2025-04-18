@@ -16,7 +16,7 @@ const handleError = (methodName, error) => {
 export const fetchAnniversaries = async () => {
   try {
     const res = await axios.get(`${BASE_URL}${todo_url}/anniversary/all`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
     return res.data.map(item => ({
       ...item,
@@ -33,7 +33,7 @@ export const fetchAnniversaries = async () => {
 export const fetchTravels = async () => {
   try {
     const res = await axios.get(`${BASE_URL}${todo_url}/travel/all`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
     return res.data.map(item => ({
       ...item,
@@ -50,7 +50,7 @@ export const fetchTravels = async () => {
 export const createAnniversary = async (anniv) => {
   try {
     const res = await axios.post(`${BASE_URL}${todo_url}/anniversary/save`, anniv, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
     return {
       ...res.data,
@@ -84,7 +84,7 @@ export const createTravel = async (travelEvent) => {
 
     const res = await axios.post(`${BASE_URL}${todo_url}/travel/save`, dto, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
       }
     });
 
@@ -110,7 +110,7 @@ export const uploadTravelMedia = async (title, files) => {
 
     const res = await axios.post(`${BASE_URL}${todo_url}/upload/multiple`, formData, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
         'Content-Type': 'multipart/form-data',
       },
     });
@@ -138,7 +138,7 @@ export const handleCreateTravelMedia = async (travelEvent) => {
 export const deleteAnniversary = async (id) => {
   try {
     await axios.delete(`${BASE_URL}${todo_url}/anniversary/delete/${id}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
   } catch (e) {
     handleError('deleteAnniversary', e);
@@ -148,7 +148,7 @@ export const deleteAnniversary = async (id) => {
 export const deleteTravelMedia = async (id) => {
   try {
     await axios.delete(`${BASE_URL}${todo_url}/travel/delete/${id}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
   } catch (e) {
     handleError('deleteTravelMedia', e);
@@ -158,7 +158,7 @@ export const deleteTravelMedia = async (id) => {
 export const updateAnniversary = async (id, anniv) => {
   try {
     const res = await axios.put(`${BASE_URL}${todo_url}/anniversary/update/${id}`, anniv, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
     return {
       ...res.data,
@@ -175,7 +175,7 @@ export const updateAnniversary = async (id, anniv) => {
 export const updateTravel = async (id, travelData) => {
   try {
     const res = await axios.put(`${BASE_URL}${todo_url}/travel/update/${id}`, travelData, {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
     });
 
     return {
@@ -227,7 +227,7 @@ export const fetchMediaBlobUrls = async (mediaList) => {
   const blobPromises = mediaList.map(async (media) => {
     try {
       const res = await fetch(`${BASE_URL}${todo_url}/download/${media.mediaUrl.split('/').slice(-2).join('/')}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
       });
 
       if (!res.ok) throw new Error('403 or failed fetch');
@@ -249,7 +249,7 @@ export const fetchPresents = async () => {
   try {
     const res = await axios.get(`${BASE_URL}${present_url}/all`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
       },
     }); return res.data;
   }
@@ -260,7 +260,7 @@ export const fetchMalePresents = async () => {
   try {
     const res = await axios.get(`${BASE_URL}${present_url}/male`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
       },
     }); return res.data;
   }
@@ -271,7 +271,7 @@ export const fetchFemalePresents = async () => {
   try {
     const res = await axios.get(`${BASE_URL}${present_url}/female`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
       },
     }); return res.data;
   }
@@ -385,7 +385,7 @@ export async function checkPhoneDuplicate(phone) {
 export const getCurrentUser = async () => {
   const res = await axios.get(`${BASE_URL}${user_url}/me`, {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
     },
   });
   console.log(res.data)
@@ -399,7 +399,7 @@ export const uploadProfileImage = async (file) => {
   const response = await axios.post(`${BASE_URL}${user_url}/upload/profile-image`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
     },
   });
 
@@ -410,7 +410,7 @@ export const updateUserData = async (data) => {
   try {
     const res = await axios.put(`${BASE_URL}${user_url}/user-data`, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
         'Content-Type': 'application/json',
       },
     });
@@ -426,7 +426,7 @@ export const updateUserProfileImage = async (mediaUrl) => {
     profileImageUrl: mediaUrl,
   }, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
     },
   });
 
@@ -436,7 +436,7 @@ export const updateUserProfileImage = async (mediaUrl) => {
 export const fetchUserMediaBlobUrl = async (mediaUrl) => {
   try {
     const res = await fetch(`${BASE_URL}${user_url}/download/${mediaUrl.split('/').slice(-2).join('/')}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
     });
 
     if (!res.ok) throw new Error('미디어 fetch 실패');
@@ -455,7 +455,7 @@ const off_url = '/officialevent'
 export const fetchAllOffEvents = async () => {
   try {
     const response = await axios.get(`${BASE_URL}${off_url}/all`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
     });
 
     return response.data;
@@ -468,7 +468,7 @@ export const fetchAllOffEvents = async () => {
 export const deleteOffEvent = async (id) => {
   try {
     await axios.delete(`${BASE_URL}${off_url}/delete/${id}`, {
-      headers : { Authorization: `Bearer ${token}` },
+      headers : { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
     });
   } catch (e) {
     console.error("공식 일정 삭제 중 에러 발생 : " + e);
@@ -477,28 +477,28 @@ export const deleteOffEvent = async (id) => {
 
 export const fetchStaticOffEvents = async () => {
   const response = await axios.get(`${BASE_URL}${off_url}/static`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
   });
   return response.data;
 };
 
 export const fetchNoneStaticOffEvents = async () => {
   const response = await axios.get(`${BASE_URL}${off_url}/none-static`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
   });
   return response.data;
 };
 
 export const saveOffEvent = async () => {
   const res = await axios.post(`${BASE_URL}${off_url}/save`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
   });
   return res.data;
 }
 
 export const updateOffEvent = async (id, dto) => {
   const res = await axios.put(`${BASE_URL}${off_url}/update/${id}`, dto, {
-    headers : { Authorization: `Bearer ${token}` },
+    headers : { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
   });
   return res.data;
 }
