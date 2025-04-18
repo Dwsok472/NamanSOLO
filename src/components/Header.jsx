@@ -73,30 +73,33 @@ function Header({
         </Link>
 
         <Nav>
-  {menuItems.map(({ to, label }) => (
-    <Link key={to} to={to}>
+        {menuItems.map(({ to, label }) => {
+  const isProtected = to === "/events"; // 이벤트만 로그인 필요
+
+  return (
+    <Link key={to} to={isLoggedIn || !isProtected ? to : "/login"}>
       {label}
     </Link>
-  ))}
-
+  );
+})}
   {user?.authority === "ROLE_ADMIN" ? (
-    <Link to="/admin/users">관리자 페이지</Link>
-  ) : (
-    <MenuWrapper ref={subMenuRef}>
-      <div onClick={toggleSubMenu}>
-        마이페이지 <ToggleArrow $open={isSubOpen}>▼</ToggleArrow>
-      </div>
-      {isSubOpen && (
-        <SubMenu>
-          {subMenuItems.map(({ to, label }) => (
-            <li key={to} onClick={toggleSubMenu}>
-              <Link to={to}>{label}</Link>
-            </li>
-          ))}
-        </SubMenu>
-      )}
-    </MenuWrapper>
-  )}
+  <Link to="/admin/users">관리자 페이지</Link>
+) : (
+  <MenuWrapper ref={subMenuRef}>
+    <div onClick={() => isLoggedIn ? toggleSubMenu() : navigate("/login")}>
+      마이페이지 <ToggleArrow $open={isSubOpen}>▼</ToggleArrow>
+    </div>
+    {isSubOpen && isLoggedIn && (
+      <SubMenu>
+        {subMenuItems.map(({ to, label }) => (
+          <li key={to} onClick={toggleSubMenu}>
+            <Link to={to}>{label}</Link>
+          </li>
+        ))}
+      </SubMenu>
+    )}
+  </MenuWrapper>
+)}
 </Nav>
 
         <ButtonGroup>
