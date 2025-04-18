@@ -34,6 +34,10 @@ const CheckboxRow = styled.div`
   justify-content: center;
   gap: 80px;
   margin-bottom: 16px;
+
+  input {
+    margin-right: 10px;
+  }
 `;
 
 const ContentBox = styled.div`
