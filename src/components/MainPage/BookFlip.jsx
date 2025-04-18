@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PhotoCard from '../Album/PhotoCard';
-import couple1 from '../img/couple1.png';
-import couple2 from '../img/couple2.png';
-import couple3 from '../img/couple3.png';
-import couple4 from '../img/couple4.jpg';
-import couple5 from '../img/couple5.png';
+// import couple1 from '../img/couple1.png';
+// import couple2 from '../img/couple2.png';
+// import couple3 from '../img/couple3.png';
+// import couple4 from '../img/couple4.jpg';
+// import couple5 from '../img/couple5.png';
 import leftkey from '../img/leftkey.png';
 import rightkey from '../img/rightkey.png';
+import { useUserStore } from '../Login/Login';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const BookWrapper = styled.div`
   position: relative;
@@ -99,53 +102,92 @@ const NavButton = styled.button`
 
 const BookFlip = () => {
   const [flipped, setFlipped] = useState(false);
+  const [albums, setAlbums] = useState([]);
+  const { isLoggedIn, user } = useUserStore();
+  const navigate = useNavigate();
+  const username = user?.username;
+
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const jwt = sessionStorage.getItem("jwt-token");
+        const headers = jwt ? { Authorization: `Bearer ${jwt}` } : {};
+
+        const url = isLoggedIn && username
+          ? `/api/album/username/${username}`
+          : `/api/album/all`;
+
+        const res = await axios.get(url, { headers });
+        if (res && res.data) {
+          const sorted = isLoggedIn
+            ? res.data.slice(0, 4)
+            : res.data.sort((a, b) => b.greats.length - a.greats.length).slice(0, 4);
+          setAlbums(sorted);
+        }
+      } catch (err) {
+        console.error("앨범 불러오기 실패", err);
+      }
+    };
+
+    fetchAlbums();
+  }, [isLoggedIn, username]);
 
   const togglePage = () => setFlipped((prev) => !prev);
+
+  const handleClick = () => {
+    if (isLoggedIn) {
+      navigate("/mypage/album");
+    } else {
+      navigate("/story/all");
+    }
+  };
 
   return (
     <BookWrapper>
       <FlipCard $flipped={flipped}>
         <PageSet className="front">
           <BookPage className="left">
-            <PhotoCard
-              src={[couple1, couple2]}
-              title="첫 나들이"
-              $rotate={-3}
-              $offsetY={-8}
-            />
+            {albums[0] && (
+              <PhotoCard
+                src={albums[0].url.map((m) => m.mediaUrl)}
+                title={albums[0].title}
+                onClick={handleClick}
+              />
+            )}
           </BookPage>
           <BookPage className="right">
-            <PhotoCard
-              src={[couple3]}
-              title="벚꽃 데이트"
-              $rotate={2}
-              $offsetY={0}
-            />
+            {albums[1] && (
+              <PhotoCard
+                src={albums[1].url.map((m) => m.mediaUrl)}
+                title={albums[1].title}
+                onClick={handleClick}
+              />
+            )}
           </BookPage>
         </PageSet>
-
         <PageSet className="back">
           <BookPage className="left">
-            <PhotoCard
-              src={[couple4]}
-              title="비 오는 날의 카페"
-              $rotate={1}
-              $offsetY={-6}
-            />
+            {albums[2] && (
+              <PhotoCard
+                src={albums[2].url.map((m) => m.mediaUrl)}
+                title={albums[2].title}
+                onClick={handleClick}
+              />
+            )}
           </BookPage>
           <BookPage className="right">
-            <PhotoCard
-              src={[couple5]}
-              title="둘만의 여행"
-              $rotate={-2}
-              $offsetY={4}
-            />
+            {albums[3] && (
+              <PhotoCard
+                src={albums[3].url.map((m) => m.mediaUrl)}
+                title={albums[3].title}
+                onClick={handleClick}
+              />
+            )}
           </BookPage>
         </PageSet>
       </FlipCard>
 
       <BookSpine />
-
       <NavButton $left onClick={togglePage}>
         <img src={leftkey} className="leftkey" />
       </NavButton>
