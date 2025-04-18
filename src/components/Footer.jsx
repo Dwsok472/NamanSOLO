@@ -256,20 +256,20 @@ const Footer = () => {
         </FooterInner>
       </FooterWrapper>
       {isLoggedIn && (
-          <>
-            <BellWrapper>
-              <button className="button" onClick={toggleAlarm}>
-                <IconBell />
-              </button>
-              {showAlarm && <Alarm onClose={toggleAlarm} />}
-            </BellWrapper>
+        <>
+          <BellWrapper>
+            <button className="button" onClick={toggleAlarm}>
+              <IconBell />
+            </button>
+            {showAlarm && <Alarm onClose={toggleAlarm} />}
+          </BellWrapper>
 
-            <FixedChat>
-              <ChatBotButton onClick={handleChat} />
-            </FixedChat>
-            {showChat && <ChatBot onClose={handleCloseChat} />}
-          </>
-        )}
+          <FixedChat>
+            <ChatBotButton onClick={handleChat} />
+          </FixedChat>
+          {showChat && <ChatBot onClose={handleCloseChat} />}
+        </>
+      )}
       {showTopBtn && (
         <FixedBtn onClick={scrollToTop} $show={showTopBtn}>
           <img src={topImg} alt="Top" />

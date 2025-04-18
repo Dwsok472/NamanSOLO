@@ -119,9 +119,12 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
           <Box id={albumData.id}>
             <TopBar>
               <div className="date">{albumData.addDate}</div>
-              <StarButtonWrapper>
-                <StarButton albumId={albumData.id} />
-              </StarButtonWrapper>
+              {currentUser != albumData.username && (
+                <StarButtonWrapper>
+                  <StarButton albumId={albumData.id} />
+                </StarButtonWrapper>
+              )
+              }
             </TopBar>
             {multipleImages && (
               <img
