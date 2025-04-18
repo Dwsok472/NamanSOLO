@@ -190,22 +190,25 @@ const NextButtonWrapper = styled.div`
 `;
 
 function RegisterStep1({ onNext }) {
-  const { formData, setFormData } = useRegisterStore();
+  const { setFormData } = useRegisterStore();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [matchpassword, setmatchpassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [buttonText, setButtonText] = useState("중복확인");
-  const handleChange = () => {
-    setIsChecked(!isChecked); // 체크된 상태를 반전
-  };
-  const navigate = useNavigate();
+
   const usernameRef = useRef();
   const pwdRef = useRef();
   const matchPwdRef = useRef();
+  const navigate = useNavigate();
+
+  const handleChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   async function handleCheckUsername() {
     try {
-      const isAvaliable = await checkUsernameDuplicate(formData.username);
-
+      const isAvaliable = await checkUsernameDuplicate(username);
       if (isAvaliable) {
         setButtonText("사용 가능");
       } else {
@@ -224,8 +227,8 @@ function RegisterStep1({ onNext }) {
       return;
     }
 
-    if (matchpassword !== formData.password) {
-      alert("비밀번호가 일치하는지 확인하세요.")
+    if (matchpassword !== password) {
+      alert("비밀번호가 일치하는지 확인하세요.");
       return;
     }
 
@@ -235,7 +238,6 @@ function RegisterStep1({ onNext }) {
       return;
     }
 
-    // 유효성 검사 통과 후 다음 스텝으로 이동
     onNext();
   };
 
@@ -244,7 +246,7 @@ function RegisterStep1({ onNext }) {
       <H1>회원가입</H1>
       <CardWrap>
         <Card>
-          <Top>
+            <Top>
             <div className="agree_box_title">이용약관</div>
             <div className="agree_box">
               <div className="agree_box_text">
@@ -331,14 +333,17 @@ function RegisterStep1({ onNext }) {
                   type="text"
                   maxLength={12}
                   placeholder="아이디를 입력해주세요"
-                  autoComplete="off" // 자동완성 기능 끄기
-                  value={formData.username}
-                  onChange={(e) => setFormData({ username: e.target.value.replace(/[^a-zA-Z.0-9-_]/g, '') })}
+                  autoComplete="off"
+                  value={username}
+                  onChange={(e) => {
+                    const clean = e.target.value.replace(/[^a-zA-Z.0-9-_]/g, '');
+                    setUsername(clean);
+                    setFormData({ username: clean });
+                  }}
                 />
-
                 <button onClick={handleCheckUsername}>{buttonText}</button>
               </SmallBox>
-              <GuideText $isError={formData.username.length >= 0 && formData.username.length < 6}>
+              <GuideText $isError={username.length >= 0 && username.length < 6}>
                 6~12자의 영문 또는 숫자를 입력해주세요.
               </GuideText>
               <SmallBox>
@@ -349,14 +354,17 @@ function RegisterStep1({ onNext }) {
                   type="password"
                   placeholder="비밀번호를 입력해주세요"
                   autoComplete="off"
-                  value={formData.password}
-                  onChange={(e) => setFormData({ password: e.target.value.replace(/[^a-z!-_A-Z0-9]/g, '') })}
+                  value={password}
+                  onChange={(e) => {
+                    const clean = e.target.value.replace(/[^a-z!-_A-Z0-9]/g, '');
+                    setPassword(clean);
+                    setFormData({ password: clean });
+                  }}
                 />
               </SmallBox>
-              <GuideText $isError={formData.password.length >= 0 && formData.password.length < 8}>
+              <GuideText $isError={password.length >= 0 && password.length < 8}>
                 숫자 1번부터 -까지의 특수문자, 영문, 숫자를 포함해 8자 이상 입력해주세요.
               </GuideText>
-
               <SmallBox>
                 <IconPassword />
                 <Input
@@ -368,14 +376,10 @@ function RegisterStep1({ onNext }) {
                   value={matchpassword}
                   onChange={(e) => setmatchpassword(e.target.value)}
                 />
-                {/* <button onClick={handleMatchPwd}>{matchText}</button> */}
               </SmallBox>
-              {formData.password.length > 0 &&
-                matchpassword.length > 0 &&
-                (formData.password !== matchpassword ? (
-                  <GuideText $isError={true}>
-                    비밀번호가 일치하지 않습니다.
-                  </GuideText>
+              {password.length > 0 && matchpassword.length > 0 &&
+                (password !== matchpassword ? (
+                  <GuideText $isError={true}>비밀번호가 일치하지 않습니다.</GuideText>
                 ) : (
                   <GuideText $isError={false}>비밀번호가 일치합니다.</GuideText>
                 ))}
