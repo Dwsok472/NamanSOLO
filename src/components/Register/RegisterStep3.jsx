@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import heartswithrate from "../img/heartswithrate1.png";
 import NextButton from "../Button/NextButton";
-import { IconBehind } from "../Icons";
 import { useRegisterStore } from "../api2";
 import CityDropdown from "./DropdownButton";
 
@@ -79,19 +78,11 @@ const ButtonWrap = styled.div`
   align-items: center;
 `;
 
-const Icon = styled.div`
-  position: fixed;
-  bottom: 145px;
-  right: 24px;
-  width: 50px;
-  cursor: pointer;
-`;
-
 const CityWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;      // 중앙 정렬
-  margin-top: 60px;         // 아래로 내리기
+  align-items: center;
+  margin-top: 60px;
 `;
 
 const Label = styled.label`
@@ -99,62 +90,39 @@ const Label = styled.label`
   margin-bottom: 10px;
 `;
 
-const CitySelect = styled.select`
-  padding: 5px 5px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  background-color: white;
-  cursor: pointer;
-  height: 50px;
-
-  option {
-    padding: 10px;
-  }
-`;
-
 function RegisterStep3({ onNext }) {
-  const { formData, setFormData, submitRegistration, deleteForm } = useRegisterStore(); // 여기에서 setFormData 받아와
-  const [dDay, setdDay] = useState("");
+  const { setFormData, submitRegistration, deleteForm } = useRegisterStore();
+  const [dDay, setDDay] = useState("");
   const [city, setCity] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
 
-  // const formatDateToYMD = (date) => {
-  //   const year = date.getFullYear();
-  //   const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  //   const day = `${date.getDate()}`.padStart(2, "0");
-  //   return `${year}-${month}-${day}`;
-  // };
-  // const dateOnly = formatDateToYMD(new Date(DDay));
+  const handleDateChange = (e) => {
+    const selected = e.target.value;
+    const selectedDate = new Date(selected);
+    const today = new Date();
+    selectedDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
 
-  useEffect(() => {
-    if (formData.dDay) {
-      const selectedDate = new Date(formData.dDay);
-      const today = new Date();
-      selectedDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
+    const diff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
+    setDaysDiff(diff >= 0 ? diff : null);
 
-      const timeDiff = today.getTime() - selectedDate.getTime();
-      const diffInDays = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    setDDay(selected);
+    setFormData({ dDay: selected });
+  };
 
-      setDaysDiff(diffInDays > 0 ? diffInDays : diffInDays < 0 ? null : 0); // 0일 미만이면 0일로 고정
-    } else {
-      setDaysDiff(null);
-    }
-  }, [formData.dDay]);
+  const handleCitySelect = (selectedCity) => {
+    setCity(selectedCity);
+    setFormData({ city: selectedCity });
+  };
 
   const handleSubmit = async () => {
-    if (!formData.dDay) {
+    if (!dDay) {
       alert("날짜를 선택해주세요.");
       return;
     }
 
-    setTimeout(async () => {
-      console.log("저장된 formData 확인", useRegisterStore.getState().formData);
-      await submitRegistration(useRegisterStore.getState().formData);
-    }, [formData]);
-
     try {
+      await submitRegistration({ dDay, city });
       deleteForm();
       setTimeout(() => {
         onNext();
@@ -163,14 +131,14 @@ function RegisterStep3({ onNext }) {
       console.error("회원가입 중 에러:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
     }
-};
+  };
 
   return (
     <Container>
       <H1>회원가입</H1>
       <CityWrapper>
         <Label>도시를 선택해주세요. 사용자맞춤 날씨 정보 제공 기반이 됩니다.</Label>
-        <CityDropdown onSelect={(e) => setFormData({city:e})} />
+        <CityDropdown onSelect={handleCitySelect} />
       </CityWrapper>
       <img
         src={heartswithrate}
@@ -179,16 +147,16 @@ function RegisterStep3({ onNext }) {
       />
       <h1 className="dday">
         {daysDiff !== null
-          ? `D-${daysDiff == 0 ? "DAY" : daysDiff}`
+          ? `D-${daysDiff === 0 ? "DAY" : daysDiff}`
           : "D-DAY를 계산해줍니다."}
       </h1>
       <div className="inputbox">
         <Input
           type="date"
-          placeholder="사귀기 시작한 날짜를 입력해주세요"
+          placeholder="사귄 날짜를 입력해주세요"
           autoComplete="off"
-          value={formData.dDay}
-          onChange={(e) => setFormData( {dDay : e.target.value} )}
+          value={dDay}
+          onChange={handleDateChange}
           max={new Date().toISOString().split("T")[0]}
         />
       </div>
@@ -200,12 +168,3 @@ function RegisterStep3({ onNext }) {
 }
 
 export default RegisterStep3;
-
-// async function onNext() {
-//   try {
-//     await registerCoupleDday(userId, dday);
-//     onNext(); // 회원가입 완료 or 메인 페이지 이동 등
-//   } catch (error) {
-//     alert("D-DAY 등록에 실패했습니다.");
-//   }
-// }
