@@ -11,7 +11,7 @@ import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
 import MySetting from "./MySetting";
 import Edit from "../img/edit.png";
-import { fetchUserMediaBlobUrl, getCurrentUser, updateUserData, uploadProfileImage } from "../api2";
+import { fetchAnniversaries, fetchTravels, fetchUserMediaBlobUrl, getCurrentUser, updateUserData, uploadProfileImage } from "../api2";
 
 const Container = styled.div`
   display: flex;
@@ -309,6 +309,7 @@ function MyPage() {
   const [editDateMode, setEditDateMode] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
+  const [events, setEvents] = useState([]);
 
   const handleButtonClick = (menu) => {
     setMenu(menu);
@@ -335,6 +336,16 @@ function MyPage() {
   const handleBoxClick = (option) => {
     setSelectedOption(option);
   };
+
+  // useEffect(() => {
+  //   const refetchAll = async () => {
+  //     const annivs = await fetchAnniversaries();
+  //     const travels = await fetchTravels();
+  //     setEvents([...annivs, ...travels]);
+  //   };
+  
+  //   refetchAll();
+  // }, [meetingDate]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -387,21 +398,27 @@ function MyPage() {
         // 업로드 -> 경로 받아오기
         uploadedImageUrl = await uploadProfileImage(selectedFile);
       }
-  
+
+      
       const updatedData = {
         realNameM: boyname,
         realNameF: girlname,
-        dDay: meetingDate,
+        dday: meetingDate,
         profileImageUrl: uploadedImageUrl, // 없으면 null로 전달
       };
-  
+      
       await updateUserData(updatedData);
-  
+      
       if (uploadedImageUrl) {
         const blobUrl = await fetchUserMediaBlobUrl(uploadedImageUrl);
         setImage(blobUrl); // 실제 이미지 반영
       }
-  
+      const [annivs, travels] = await Promise.all([
+        fetchAnniversaries(),
+        fetchTravels()
+      ]);
+      setEvents([...annivs, ...travels]);
+      
       setOriginalMeetingDate(meetingDate);
       setIsEditMode(false);
     } catch (err) {
