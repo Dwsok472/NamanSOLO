@@ -118,7 +118,9 @@ function EventModal({ onClose }) {
       dto.eventDate = newDate;
       dto.offsetDays = 0;
     } else if (selectedFilter === 'none-static') {
-      if (!newOffsetDays || isNaN(newOffsetDays)) {
+      const parsedOffset = parseInt(newOffsetDays, 10);
+
+      if (isNaN(parsedOffset)) {
         alert('며칠 후인지 숫자를 입력하세요!');
         return;
       }
@@ -129,7 +131,7 @@ function EventModal({ onClose }) {
       }
 
       dto.eventDate = new Date().toISOString().split('T')[0]; // 오늘 날짜
-      dto.offsetDays = parseInt(newOffsetDays, 10);
+      dto.offsetDays = parsedOffset;
     } else {
       alert('고정/유동 이벤트 중 하나를 선택하세요!');
       return;
@@ -255,7 +257,9 @@ function EventModal({ onClose }) {
         </ContentBox>
         {mode === '관리' &&
           <Footer>
-            <button onClick={() => setMode('추가')}>추가</button>
+            <button onClick={() => {
+              setMode('추가'); 
+              setSelectedFilter('static');}}>추가</button>
             <button onClick={onClose}>닫기</button>
           </Footer>
         }
