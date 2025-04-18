@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { fetchAllOffEvents, fetchNoneStaticOffEvents, fetchStaticOffEvents, saveOffEvent, updateOffEvent } from '../api2';
+import { fetchAllOffEvents, fetchNoneStaticOffEvents, fetchStaticOffEvents, saveOffEvent, updateOffEvent, deleteOffEvent } from '../api2';
 
 const Overlay = styled.div`
   position: fixed;
@@ -15,6 +15,11 @@ const Overlay = styled.div`
   z-index: 9999;
 `;
 
+const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 15px;
+`;
+
 const ModalBox = styled.div`
   background: white;
   padding: 30px;
@@ -22,25 +27,6 @@ const ModalBox = styled.div`
   width: 600px;
   max-width: 95%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-
-  h2 {
-    text-align: center;
-    margin-bottom: 15px;
-  }
-`;
-
-const TabBar = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-`;
-
-const TabButton = styled.button`
-  padding: 8px 16px;
-  font-weight: bold;
-  border: 1px solid #ccc;
-  background: ${({ active }) => (active ? '#e5ecff' : '#fff')};
-  cursor: pointer;
 `;
 
 const CheckboxRow = styled.div`
@@ -48,13 +34,6 @@ const CheckboxRow = styled.div`
   justify-content: center;
   gap: 80px;
   margin-bottom: 16px;
-  input {
-    outline:none;
-    margin-right: 5px;
-  }
-  label {
-    font-size: 1.1rem;
-  }
 `;
 
 const ContentBox = styled.div`
@@ -63,19 +42,37 @@ const ContentBox = styled.div`
   min-height: 200px;
   background: #f9f9f9;
   display: flex;
-  gap: 20px;
-`;
-
-const Column = styled.div`
-  flex: 1;
+  flex-direction: column;
+  gap: 10px;
 `;
 
 const Footer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
   margin-top: 20px;
 `;
+
+const ListItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  max-height: 30px;
+  background-color: ${({ selected }) => (selected ? '#eef6ff' : '#fff')};
+  cursor: pointer;
+`;
+
+const DeleteButton = styled.button`
+  border: none;
+  background: transparent;
+  color: #ff4d4f;
+  font-weight: bold;
+  cursor: pointer;
+`;
+
 
 function EventModal({ onClose }) {
   const [newTitle, setNewTitle] = useState("");
@@ -85,6 +82,8 @@ function EventModal({ onClose }) {
   const [editTarget, setEditTarget] = useState(null);
   const [allEvents, setAllEvents] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState('all');
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [hoveredId, setHoveredId] = useState(null);
 
   const loadEvents = async () => {
     try {
@@ -112,6 +111,15 @@ function EventModal({ onClose }) {
   useEffect(() => {
     loadEvents();
   }, [selectedFilter]);
+
+  const resetForm = () => {
+    setNewTitle('');
+    setNewDate('');
+    setNewOffsetDays('');
+    setSelectedFilter('all');
+    setEditTarget(null);
+    setSelectedItemId(null);
+  };
 
   const handleAdd = async () => {
     if (!newTitle) {
@@ -194,7 +202,7 @@ function EventModal({ onClose }) {
   const handleDelete = async (id) => {
     if (window.confirm("정말 삭제하시겠어요?")) {
       try {
-        await deleteOfficialEvent(id);
+        await deleteOffEvent(id);
         alert("삭제 완료!");
         await loadEvents();
       } catch (err) {
@@ -203,18 +211,12 @@ function EventModal({ onClose }) {
     }
   };
 
-  const resetForm = () => {
-    setNewTitle('');
-    setNewDate('');
-    setNewOffsetDays('');
-    setSelectedFilter('all');
-    setEditTarget(null);
-  };
-
   return (
     <Overlay>
       <ModalBox>
-        <h2>{mode === '관리' ? '이벤트 관리' : mode === '수정' ? '이벤트 수정' : '이벤트 추가'}</h2>
+        <Title>
+          {mode === '관리' ? '이벤트 관리' : mode === '수정' ? '이벤트 수정' : '이벤트 추가'}
+        </Title>
 
         {mode !== '수정' && (
           <CheckboxRow>
@@ -241,18 +243,25 @@ function EventModal({ onClose }) {
           {mode === '관리' && (
             <ul>
               {allEvents.map(event => (
-                <li key={event.id}>
-                  {event.title}
-                  <button onClick={() => {
-                    setEditTarget(event);
-                    setNewTitle(event.eventTitle);
-                    setNewDate(event.eventDate);
-                    setNewOffsetDays(event.offsetDays);
-                    setSelectedFilter(event.offsetDays > 0 ? 'none-static' : 'static');
-                    setMode('수정');
-                  }}>수정</button>
-                  <button onClick={() => handleDelete(event.id)}>삭제</button>
-                </li>
+                <ListItem
+                  key={event.id}
+                  onClick={() => setSelectedItemId(prev => (prev === event.id ? null : event.id))}
+                  onMouseEnter={() => setHoveredId(event.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  selected={selectedItemId === event.id}
+                >
+                  <span>{event.title}</span>
+                  {hoveredId === event.id && (
+                    <DeleteButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(event.id);
+                      }}
+                    >
+                      삭제
+                    </DeleteButton>
+                  )}
+                </ListItem>
               ))}
             </ul>
           )}
@@ -284,26 +293,56 @@ function EventModal({ onClose }) {
           )}
         </ContentBox>
 
-        <Footer>
+        <Footer style={{ justifyContent: 'flex-end' }}>
+          {selectedItemId && mode === '관리' && (
+            <button
+              onClick={() => {
+                const target = allEvents.find(e => e.id === selectedItemId);
+                if (!target) return;
+                setEditTarget(target);
+                setNewTitle(target.eventTitle);
+                setNewDate(target.eventDate);
+                setNewOffsetDays(target.offsetDays);
+                setSelectedFilter(target.offsetDays > 0 ? 'none-static' : 'static');
+                setMode('수정');
+              }}
+            >
+              수정
+            </button>
+          )}
+
           {mode === '관리' && (
             <>
-              <button onClick={() => {
-                setMode('추가');
-                setSelectedFilter('static');
-              }}>추가</button>
+              <button
+                onClick={() => {
+                  setMode('추가');
+                  setSelectedFilter('static');
+                  resetForm();
+                }}
+              >
+                추가
+              </button>
               <button onClick={onClose}>닫기</button>
             </>
           )}
+
           {mode === '추가' && (
             <>
               <button onClick={handleAdd}>추가</button>
-              <button onClick={() => { setMode('관리'); resetForm(); }}>취소</button>
+              <button onClick={() => {
+                setMode('관리');
+                resetForm();
+              }}>취소</button>
             </>
           )}
+
           {mode === '수정' && (
             <>
               <button onClick={handleUpdate}>수정 완료</button>
-              <button onClick={() => { setMode('관리'); resetForm(); }}>취소</button>
+              <button onClick={() => {
+                setMode('관리');
+                resetForm();
+              }}>취소</button>
             </>
           )}
         </Footer>
