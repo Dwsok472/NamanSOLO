@@ -6,6 +6,8 @@ import mystory from '../img/mystory.png';
 import storyall from '../img/storyall.png';
 import maincallender from '../img/maincallender.png';
 import { Link } from 'react-router-dom';
+import { useUserStore } from '../Login/Login';
+import { useNavigate } from 'react-router-dom';
 
 const BubbleSectionWrapper = styled.section`
   width: 100%;
@@ -45,6 +47,17 @@ const CardGrid = styled.div`
 `;
 
 const StoryMenuBubbles = () => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useUserStore();
+
+  const handleClick = (path) => {
+    if (isLoggedIn) {
+      navigate(path);
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <BubbleSectionWrapper>
       <TextGroup>
@@ -62,16 +75,17 @@ const StoryMenuBubbles = () => {
             $backColor="#744ed3"
           />
         </Link>
-        <Link to="/mypage/story">
+        <div onClick={() => handleClick("/mypage/story")}>
           <BubbleCard
             icon={mystory}
             title="우리의 추억,<br />하나 하나 놓치지 마세요!"
             meta="나의 스토리"
-            bgColor="#67d3c4"
-            backColor="#5dbfaf"
+            $bgColor="#67d3c4"
+            $backColor="#5dbfaf"
           />
-        </Link>
-        <Link to="/mypage/todo">
+        </div>
+
+        <div onClick={() => handleClick("/mypage/todo")}>
           <BubbleCard
             icon={maincallender}
             title="너와 나의 기념일,<br />꼭 기억해요 💌"
@@ -79,7 +93,7 @@ const StoryMenuBubbles = () => {
             $bgColor="#ffa51d"
             $backColor="#fa9427"
           />
-        </Link>
+        </div>
         <Link to="/map">
           <BubbleCard
             icon={mainmap}
