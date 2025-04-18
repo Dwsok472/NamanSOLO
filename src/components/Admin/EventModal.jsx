@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { fetchAllOffEvents, fetchDynamicOffEvents, fetchStaticOffEvents } from '../api2';
 
 const Overlay = styled.div`
   position: fixed;
@@ -65,32 +66,10 @@ const Footer = styled.div`
 `;
 
 function EventModal({ onClose }) {
-  const [mode, setMode] = useState('관리');
-  const [selectedType, setSelectedType] = useState(null);
-  const [selectedAddType, setSelectedAddType] = useState(null);
+  const [mode, setMode] = useState("관리");
+  const [allEvents, setAllEvents] = useState([]);
   const [selectedEvents, setSelectedEvents] = useState([]);
-
-  const allEvents = [
-    { id: 1, title: '크리스마스', type: 'official' },
-    { id: 2, title: '100일', type: 'unofficial' },
-    { id: 3, title: '발렌타인데이', type: 'official' },
-    { id: 4, title: '1주년년', type: 'unofficial' },
-  ];
-
-  const allAddableEvents = [
-    { title: '2주년 이벤트', type: 'official' },
-    { title: '3주년 이벤트', type: 'official' },
-    { title: '200일 기념', type: 'unofficial' },
-    { title: '300일 기념', type: 'unofficial' },
-  ];
-
-  const filteredEvents = selectedType
-    ? allEvents.filter(event => event.type === selectedType)
-    : [];
-
-  const filteredAddable = selectedAddType
-    ? allAddableEvents.filter(event => event.type === selectedAddType)
-    : [];
+  const [selectedFilter, setSelectedFilter] = useState('all');
 
   const toggleEventSelection = (title) => {
     setSelectedEvents((prev) =>
@@ -108,6 +87,35 @@ function EventModal({ onClose }) {
     }
   };
 
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        let events = [];
+        if (selectedFilter === 'static') {
+          events = await fetchStaticOffEvents();
+        } else if (selectedFilter === 'dynamic') {
+          events = await fetchDynamicOffEvents();
+        } else {
+          events = await fetchAllOffEvents();
+        }
+
+        const mapped = events.map(e => ({
+          ...e,
+          title: e.eventTitle,
+          type: e.offsetDays > 0 ? 'dynamic' : 'static'
+        }));
+
+        setAllEvents(mapped);
+      } catch (err) {
+        console.error('공식 이벤트 로딩 실패', err);
+      }
+    };
+
+    loadEvents();
+  }, [selectedFilter]);
+
+  const filteredEvents = allEvents;
+
   return (
     <Overlay>
       <ModalBox>
@@ -122,90 +130,74 @@ function EventModal({ onClose }) {
           </TabButton>
         </TabBar>
 
-        {(mode === '관리' || mode === '추가') && (
-          <CheckboxRow>
-            <label>
-              <input
-                type="checkbox"
-                checked={
-                  (mode === '관리' && selectedType === 'official') ||
-                  (mode === '추가' && selectedAddType === 'official')
-                }
-                onChange={() => {
-                  if (mode === '관리') {
-                    setSelectedType(prev => (prev === 'official' ? null : 'official'));
-                  } else {
-                    setSelectedAddType(prev => (prev === 'official' ? null : 'official'));
-                  }
-                }}
-              />
-              공식
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={
-                  (mode === '관리' && selectedType === 'unofficial') ||
-                  (mode === '추가' && selectedAddType === 'unofficial')
-                }
-                onChange={() => {
-                  if (mode === '관리') {
-                    setSelectedType(prev => (prev === 'unofficial' ? null : 'unofficial'));
-                  } else {
-                    setSelectedAddType(prev => (prev === 'unofficial' ? null : 'unofficial'));
-                  }
-                }}
-              />
-              비공식
-            </label>
-          </CheckboxRow>
-        )}
+        <CheckboxRow>
+          <label>
+            <input
+              type="checkbox"
+              checked={selectedFilter === 'static'}
+              onChange={() =>
+                setSelectedFilter(prev => (prev === 'static' ? 'all' : 'static'))
+              }
+            />
+            고정 이벤트
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={selectedFilter === 'dynamic'}
+              onChange={() =>
+                setSelectedFilter(prev => (prev === 'dynamic' ? 'all' : 'dynamic'))
+              }
+            />
+            유동 이벤트
+          </label>
+        </CheckboxRow>
 
-        {mode === '관리' && (
-          <ContentBox>
+        <ContentBox>
+          {mode === '관리' && (
             <ul>
               {filteredEvents.length > 0 ? (
                 filteredEvents.map(event => (
-                  <li key={event.id}> {event.title}</li>
+                  <li key={event.id}>{event.title}</li>
                 ))
               ) : (
                 <li>표시할 이벤트 없음</li>
               )}
             </ul>
-          </ContentBox>
-        )}
+          )}
 
-        {mode === '추가' && (
-          <ContentBox>
-            <Column>
-              <strong> 이벤트 목록</strong>
-              <ul>
-                {filteredAddable.map(event => (
-                  <li key={event.title}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={selectedEvents.includes(event.title)}
-                        onChange={() => toggleEventSelection(event.title)}
-                      />
-                      {event.title}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </Column>
-            <Column>
-              <strong> 선택된 이벤트</strong>
-              <ul>
-                {selectedEvents.length > 0 ? (
-                  selectedEvents.map((title) => <li key={title}> {title}</li>)
-                ) : (
-                  <li>선택된 항목 없음</li>
-                )}
-              </ul>
-            </Column>
-          </ContentBox>
-        )}
+          {mode === '추가' && (
+            <>
+              <Column>
+                <strong> 이벤트 목록</strong>
+                <ul>
+                  {filteredEvents.map(event => (
+                    <li key={event.title}>
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={selectedEvents.includes(event.title)}
+                          onChange={() => toggleEventSelection(event.title)}
+                        />
+                        {event.title}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </Column>
+              <Column>
+                <strong> 선택된 이벤트</strong>
+                <ul>
+                  {selectedEvents.length > 0 ? (
+                    selectedEvents.map((title) => <li key={title}> {title}</li>)
+                  ) : (
+                    <li>선택된 항목 없음</li>
+                  )}
+                </ul>
+              </Column>
+            </>
+          )}
+        </ContentBox>
 
         <Footer>
           {mode === '추가' && (

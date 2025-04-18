@@ -423,3 +423,32 @@ export const uploadProfileImage = async (file) => {
     return null;
   }
 };
+
+const off_url = '/officialevent'
+
+export const fetchAllOffEvents = async () => {
+  try {
+  const response = await axios.get(`${BASE_URL}${off_url}/all`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  return response.data;
+  } catch (e) {
+    console.error(e);
+    alert("액세스 실패!");
+  }
+}
+
+export const fetchStaticOffEvents = async () => {
+  const response = await axios.get(`${BASE_URL}${off_url}/static`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
+
+export const fetchDynamicOffEvents = async () => {
+  const response = await axios.get(`${BASE_URL}${off_url}/none-static`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
+};
