@@ -216,8 +216,8 @@ function EventModal({ onClose }) {
   };
 
   return (
-    <Overlay>
-      <ModalBox>
+    <Overlay onClick={onClose}>
+      <ModalBox onClick={(e) => e.stopPropagation()}>
         <Title>
           {mode === '관리' ? '이벤트 관리' : mode === '수정' ? '이벤트 수정' : '이벤트 추가'}
         </Title>
