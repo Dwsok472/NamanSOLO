@@ -10,6 +10,9 @@ import {
   deleteRecommendPlace,
   updateRecommendPlace
 } from "../api1";
+import { useUserStore } from "../Login/Login";
+import axios from "axios";
+import { registerCategoryMapping } from "../api1";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -222,6 +225,36 @@ const ModalWrapper = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 `;
 
+const CategoryCheckboxGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+`;
+
+const CategoryCheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+`;
+
+const CategoryFilterGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+`;
+
+const CategoryButton = styled.button`
+  padding: 6px 12px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  background: ${({ $active }) => ($active ? "#ffebee" : "#eee")};
+  color: ${({ $active }) => ($active ? "#ff5777" : "#333")};
+`;
 
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
@@ -237,6 +270,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [address, setAddress] = useState("");
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
+  const { user } = useUserStore();
+  const isAdmin = user?.authority === "ROLE_ADMIN";
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
 
   const [newPlace, setNewPlace] = useState({
@@ -299,11 +335,11 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   
     if (activeCategory === "전체") {
       getPlacesByRegion(selectedRegion).then((data) => {
-        setFilteredPlaces(data);
+        setFilteredPlaces(removeDuplicatesById(data));
       });
     } else {
       getPlacesByRegionAndCategory(selectedRegion, activeCategory).then((data) => {
-        setFilteredPlaces(data);
+        setFilteredPlaces(removeDuplicatesById(data));
       });
     }
   }, [selectedRegion, activeCategory]);
@@ -322,12 +358,13 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   }, [selectedRegion]);
 
   const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) {
+      setImages(files); // ⬅️ 여러 이미지 저장
       setNewPlace((prev) => ({
         ...prev,
-        image: file,
-        preview: URL.createObjectURL(file),
+        image: files[0], // 썸네일용 대표 이미지
+        preview: URL.createObjectURL(files[0]),
       }));
     }
   };
@@ -343,6 +380,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
   const handleEdit = (place) => {
     setEditingId(place.id);
+    setSelectedCategories(place.categories || []);
     setShowForm(true); 
     setNewPlace({
       name: place.name,
@@ -428,13 +466,13 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     }
   };
   
-
-  const fetchAll = async () => {
-    const res = await getAllRecommendPlaces();
-    console.log("📦 응답 데이터:", res);
-
-    const realData = Array.isArray(res) ? res : res.data;
-    setPlaces(realData);
+  const removeDuplicatesById = (arr) => {
+    const seen = new Set();
+    return arr.filter((item) => {
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
   };
 
   const handleRegister = async () => {
@@ -443,27 +481,31 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         alert("이미지를 업로드해주세요.");
         return;
       }
-
+  
       const placeDTO = {
         name: newPlace.name,
         address: newPlace.address,
         description: newPlace.description,
-        category: newPlace.category,
-        city: selectedRegion, 
+        category: selectedCategories[0] || "", // 대표 카테고리 하나만 백업용
+        city: selectedRegion,
         latitude: 0,
         longitude: 0,
       };
-
-      await uploadRecommendPlaceImages(placeDTO, [newPlace.image]);
-
+  
+      const savedPlace = await uploadRecommendPlaceImages(placeDTO, [newPlace.image]);
+  
+  
+      if (savedPlace?.id && selectedCategories.length > 0) {
+        await registerCategoryMapping(savedPlace.id, selectedCategories);
+  
       const updatedPlaces = await getPlacesByRegion(selectedRegion);
       setRegionPlaces((prev) => ({
         ...prev,
         [selectedRegion]: updatedPlaces,
       }));
-
+  
       alert(" 등록 성공!");
-
+  
       setNewPlace({
         name: "",
         category: "",
@@ -473,11 +515,12 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         preview: "",
       });
       setShowForm(false);
+    }
     } catch (err) {
       console.error("등록 실패:", err);
-      alert("등록 실패 ");
     }
   };
+  
 
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
 
@@ -485,36 +528,21 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     <Wrapper>
       <RegionTitle>{selectedRegion} 장소</RegionTitle>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-          marginBottom: "12px",
-          flexWrap: "wrap",
-        }}
-      >
+      <CategoryFilterGroup>
         {["전체", ...categories].map((cat) => (
-          <button
+          <CategoryButton
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            style={{
-              padding: "6px 12px",
-              border: "none",
-              borderRadius: "20px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              background: activeCategory === cat ? "#ffebee" : "#eee",
-              color: activeCategory === cat ? "#ff5777" : "#333",
-            }}
+            $active={activeCategory === cat}
           >
             {cat}
-          </button>
+          </CategoryButton>
         ))}
-      </div>
-
+      </CategoryFilterGroup>
+          
       <ListContainer>
         {filteredPlaces?.map((place) => (
-          <React.Fragment key={place.id}>
+          <React.Fragment key={`place-${place.id}`}>
             <Card
               onClick={() =>
                 setSelectedId(selectedId === place.id ? null : place.id)
@@ -539,25 +567,34 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               <Detail>
                 <CloseBtn onClick={() => setSelectedId(null)}>✖</CloseBtn>
                 <DetailText>{place.description}</DetailText>
-                <Thumbnail
-                  className="large"
-                  src={
-                    place.mediaUrl && place.mediaUrl.length > 0
-                      ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
-                      : "https://via.placeholder.com/300x200?text=No+Image"
-                  }
-                  alt="썸네일"
-                />
+                {place.mediaUrl && place.mediaUrl.length > 0 ? (
+                  place.mediaUrl.map((img, idx) => (
+                    <Thumbnail
+                      key={idx}
+                      className="large"
+                      src={`http://localhost:8082${img.mediaUrl}`}
+                      alt={`썸네일 ${idx + 1}`}
+                    />
+                  ))
+                ) : (
+                  <Thumbnail
+                    className="large"
+                    src="https://via.placeholder.com/300x200?text=No+Image"
+                    alt="기본 이미지"
+                  />
+                )}
                 <ButtonGroup>
                   <SmallBtn
                     onClick={() => handleShowMap(place.id, place.address)}
                   >
                     지도 보기
                   </SmallBtn>
-                  <SmallBtn onClick={() => handleEdit(place)}>✏ 수정</SmallBtn>
-                  <SmallBtn onClick={() => handleDelete(place.id)}>
-                    🗑 삭제
-                  </SmallBtn>
+                  {isAdmin && (
+                    <>
+                      <SmallBtn onClick={() => handleEdit(place)}>✏ 수정</SmallBtn>
+                      <SmallBtn onClick={() => handleDelete(place.id)}>🗑 삭제</SmallBtn>
+                    </>
+                  )}
                 </ButtonGroup>
 
                 {mapId === place.id && (
@@ -571,7 +608,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               </Detail>
             )}
 
-            {editingId === place.id && (
+            {isAdmin && editingId === place.id && (
               <Form>
                 <CloseBtn
                   onClick={() => {
@@ -588,17 +625,25 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 >
                   ✖
                 </CloseBtn>
-                <select
-                  value={newPlace.category}
-                  onChange={(e) =>
-                    setNewPlace({ ...newPlace, category: e.target.value })
-                  }
-                >
-                  <option value="">카테고리 선택</option>
-                  {categories.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
+                <CategoryCheckboxGroup>
+                    {categories.map((cat) => (
+                      <CategoryCheckboxLabel key={cat}>
+                        <input
+                          type="checkbox"
+                          value={cat}
+                          checked={selectedCategories.includes(cat)}
+                          onChange={(e) => {
+                            const checked = e.target.checked;
+                            const value = e.target.value;
+                            setSelectedCategories((prev) =>
+                              checked ? Array.from(new Set([...prev, value])) : prev.filter((c) => c !== value)
+                            );
+                          }}
+                        />
+                        {cat}
+                      </CategoryCheckboxLabel>
+                    ))}
+                  </CategoryCheckboxGroup>
                   <AddressRow>
                     <input
                       type="text"
@@ -661,10 +706,17 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           </React.Fragment>
         ))}
       </ListContainer>
-      {!showForm && (
-        <AddButton onClick={() => setShowForm(true)}>+ 장소 추가</AddButton>
+      {isAdmin && !showForm && (
+        <AddButton 
+        onClick={() => {
+          setShowForm(true)
+          setSelectedId(null);
+          setEditingId(null);
+
+        }}
+        >+ 장소 추가</AddButton>
       )}
-      {showForm && editingId === null && (
+      {isAdmin && showForm && editingId === null && (
         <Form>
           <CloseBtn onClick={() => setShowForm(false)}>✖</CloseBtn>
           <input
@@ -673,17 +725,26 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
             value={newPlace.name}
             onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
           />
-          <select
-            value={newPlace.category}
-            onChange={(e) =>
-              setNewPlace({ ...newPlace, category: e.target.value })
-            }
-          >
-            <option value="">카테고리 선택</option>
-            {categories.map((c) => (
-              <option key={c}>{c}</option>
+          <CategoryCheckboxGroup>
+            {categories.map((cat) => (
+              <CategoryCheckboxLabel key={cat}>
+                <input
+                  type="checkbox"
+                  value={cat}
+                  checked={selectedCategories.includes(cat)}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    const value = e.target.value;
+                    setSelectedCategories((prev) =>
+                      checked ? Array.from(new Set([...prev, value])) : prev.filter((c) => c !== value)
+                    );
+                  }}
+                />
+                {cat}
+              </CategoryCheckboxLabel>
             ))}
-          </select>
+          </CategoryCheckboxGroup>
+
           <AddressRow>
             <input
               type="text"

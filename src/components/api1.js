@@ -107,4 +107,32 @@ export const getAllUsers = async () => {
 };
 
 
+export const registerCategoryMapping = async (placeId, categoryIds) => {
+  const token = sessionStorage.getItem("jwt-token");
 
+  const res = await axios.post(
+    "http://localhost:8082/api/categoryplace/add",
+    {
+      recommendPlaceId: placeId,
+      categoryIds,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    }
+  );
+
+  return res.data;
+};
+
+// export const registerCategoryUpdate = async (placeId, categoryList) => {
+//   return await axios.post("/api/categoryplace/update", {
+//     recommendPlaceId: placeId,
+//     categoryIds: categoryList,
+//   });
+// };
+
+export default api;
