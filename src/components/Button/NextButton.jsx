@@ -20,10 +20,10 @@ const Button = styled.button`
   }
 `;
 
-function NextButton({ onClick }) {
+function NextButton({ onClick, text = "다음" }) {
   return (
     <div>
-      <Button onClick={onClick}>다음</Button>
+      <Button onClick={onClick}>{text}</Button>
     </div>
   );
 }

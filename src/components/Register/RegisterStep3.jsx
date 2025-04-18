@@ -193,7 +193,7 @@ function RegisterStep3({ onNext }) {
         />
       </div>
       <ButtonWrap>
-        <NextButton onClick={handleSubmit} />
+        <NextButton onClick={handleSubmit} text="가입하기" />
       </ButtonWrap>
     </Container>
   );
