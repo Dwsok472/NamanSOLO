@@ -12,47 +12,47 @@ import Setting from "./Setting";
 import { useAlarmList } from "./alarmList";
 
 // OpenWeatherMap API 키
-const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
+// const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
 
-// 대한민국 주요 도시 목록
-const cities = [
-  "Seoul",
-  "Busan",
-  "Incheon",
-  "Daegu",
-  "Daejeon",
-  "Gwangju",
-  "Ulsan",
-  "Ungsang",
-  "Jeonju",
-  "Changwon",
-  "Suwon",
-  "Sokcho",
-  "Yangyang",
-  "Cheongjusi",
-  "Boryeong",
-  "Kimje",
-];
+// // 대한민국 주요 도시 목록
+// const cities = [
+//   "Seoul",
+//   "Busan",
+//   "Incheon",
+//   "Daegu",
+//   "Daejeon",
+//   "Gwangju",
+//   "Ulsan",
+//   "Ungsang",
+//   "Jeonju",
+//   "Changwon",
+//   "Suwon",
+//   "Sokcho",
+//   "Yangyang",
+//   "Cheongjusi",
+//   "Boryeong",
+//   "Kimje",
+// ];
 
-// 도시 이름과 한국어 매핑 객체
-const cityTranslations = {
-  Seoul: "서울",
-  Busan: "부산",
-  Incheon: "인천",
-  Daegu: "대구",
-  Daejeon: "대전",
-  Gwangju: "광주",
-  Ulsan: "울산",
-  Ungsang: "울진",
-  Jeonju: "전주",
-  Changwon: "창원",
-  Suwon: "수원",
-  Sokcho: "속초",
-  Yangyang: "양양",
-  Cheongjusi: "청주",
-  Boryeong: "보령",
-  Kimje: "김제",
-};
+// // 도시 이름과 한국어 매핑 객체
+// const cityTranslations = {
+//   Seoul: "서울",
+//   Busan: "부산",
+//   Incheon: "인천",
+//   Daegu: "대구",
+//   Daejeon: "대전",
+//   Gwangju: "광주",
+//   Ulsan: "울산",
+//   Ungsang: "울진",
+//   Jeonju: "전주",
+//   Changwon: "창원",
+//   Suwon: "수원",
+//   Sokcho: "속초",
+//   Yangyang: "양양",
+//   Cheongjusi: "청주",
+//   Boryeong: "보령",
+//   Kimje: "김제",
+// };
 
 const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
@@ -103,52 +103,52 @@ const CloseButton = styled.button`
 `;
 
 // 스타일링된 select 요소
-const DropdownWrapper = styled.div`
-  position: relative;
-  margin-left: auto;
-`;
+// const DropdownWrapper = styled.div`
+//   position: relative;
+//   margin-left: auto;
+// `;
 
-const DropdownButton = styled.button`
-  width: 50px;
-  height: 30px;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f8f8f8;
-  cursor: pointer;
-  display: flex;
-  align-items: center; // 세로 중앙
-  justify-content: center; // 가로 중앙
-`;
+// const DropdownButton = styled.button`
+//   width: 50px;
+//   height: 30px;
+//   font-size: 13px;
+//   font-weight: 700;
+//   padding: 8px;
+//   border: 1px solid #ccc;
+//   border-radius: 5px;
+//   background-color: #f8f8f8;
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center; // 세로 중앙
+//   justify-content: center; // 가로 중앙
+// `;
 
-const DropdownList = styled.ul`
-  position: absolute;
-  right: 0;
-  top: 40px;
-  width: 70px;
-  font-size: 12px;
-  font-weight: 700;
-  max-height: 150px; /*  여기서 높이 제한 */
-  overflow-y: auto; /*  스크롤 가능 */
-  border: 1px solid #ccc;
-  background-color: #fff;
-  border-radius: 5px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  z-index: 100;
-`;
+// const DropdownList = styled.ul`
+//   position: absolute;
+//   right: 0;
+//   top: 40px;
+//   width: 70px;
+//   font-size: 12px;
+//   font-weight: 700;
+//   max-height: 150px; /*  여기서 높이 제한 */
+//   overflow-y: auto; /*  스크롤 가능 */
+//   border: 1px solid #ccc;
+//   background-color: #fff;
+//   border-radius: 5px;
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+//   z-index: 100;
+// `;
 
-const DropdownItem = styled.li`
-  padding: 8px;
-  cursor: pointer;
+// const DropdownItem = styled.li`
+//   padding: 8px;
+//   cursor: pointer;
 
-  &:hover {
-    background-color: #eee;
-  }
-`;
+//   &:hover {
+//     background-color: #eee;
+//   }
+// `;
 
 const ContainerMain = styled.div`
   width: 90%;
@@ -166,22 +166,22 @@ const ContainerMain = styled.div`
   }
 `;
 
-const Content = styled.div`
-  width: 100%;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  font-weight: 700;
-  font-size: 15px;
-  display: flex;
+// const Content = styled.div`
+//   width: 100%;
+//   padding: 15px;
+//   border-bottom: 1px solid #eee;
+//   font-weight: 700;
+//   font-size: 15px;
+//   display: flex;
 
-  align-items: center;
-`;
+//   align-items: center;
+// `;
 
-const Show = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+// const Show = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
 
 const Img = styled.img`
   width: 30px;
@@ -244,9 +244,9 @@ const Backdrop = styled.div`
 function Alarm({ onClose /*, isOpen*/ }) {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [expandedId, setExpandedId] = useState(null); // 펼쳐진 알림 ID
-  const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
-  const [weather, setWeather] = useState(null); // 날씨 상태
-  const [loading, setLoading] = useState(true); // 로딩 상태
+  // const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
+  // const [weather, setWeather] = useState(null); // 날씨 상태
+  // const [loading, setLoading] = useState(true); // 로딩 상태
   const [isDraggingAlarm, setIsDraggingAlarm] = useState(false); // Alarm 모달만 위한 드래그 상태
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // 마우스 위치
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
@@ -259,31 +259,31 @@ function Alarm({ onClose /*, isOpen*/ }) {
   // const userId = 1; // 실제 로그인 유저 ID 넣기
 
   // 날씨 정보를 가져오는 함수
-  const fetchWeather = async (cityName) => {
-    setLoading(true); // 데이터 로딩 시작
-    try {
-      const response = await fetch(
-        `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=kr`
-      );
-      const data = await response.json();
-      if (data.weather && data.weather[0]) {
-        setWeather({
-          description: data.weather[0].description,
-          temperature: data.main.temp,
-          icon: data.weather[0].icon,
-        });
-      }
-    } catch (error) {
-      console.error("날씨 데이터를 가져오는 데 오류가 발생했습니다.", error);
-    } finally {
-      setLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 변경
-    }
-  };
+  // const fetchWeather = async (cityName) => {
+  //   setLoading(true); // 데이터 로딩 시작
+  //   try {
+  //     const response = await fetch(
+  //       `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=kr`
+  //     );
+  //     const data = await response.json();
+  //     if (data.weather && data.weather[0]) {
+  //       setWeather({
+  //         description: data.weather[0].description,
+  //         temperature: data.main.temp,
+  //         icon: data.weather[0].icon,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error("날씨 데이터를 가져오는 데 오류가 발생했습니다.", error);
+  //   } finally {
+  //     setLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 변경
+  //   }
+  // };
 
   // 도시가 변경될 때마다 날씨 정보 새로 가져오기
-  useEffect(() => {
-    fetchWeather(city);
-  }, [city]);
+  // useEffect(() => {
+  //   fetchWeather(city);
+  // }, [city]);
 
   // 마우스를 누를 때, 드래그 시작
   const handleMouseDownAlarm = (e) => {
@@ -468,7 +468,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
 
           <ContainerMain>
             {/* 날씨 정보 표시 */}
-            <Content>
+            {/* <Content>
               {loading ? (
                 <span>날씨 정보를 불러오는 중...</span>
               ) : weather ? (
@@ -484,9 +484,9 @@ function Alarm({ onClose /*, isOpen*/ }) {
                 </>
               ) : (
                 <span>날씨 정보를 불러오는 데 실패했습니다.</span>
-              )}
-              {/* 도시 선택 드롭다운 */}
-              <DropdownWrapper>
+              )} */}
+            {/* 도시 선택 드롭다운 */}
+            {/* <DropdownWrapper>
                 <DropdownButton onClick={() => setIsOpen((prev) => !prev)}>
                   {cityTranslations[city] || city}
                 </DropdownButton>
@@ -506,8 +506,8 @@ function Alarm({ onClose /*, isOpen*/ }) {
                     ))}
                   </DropdownList>
                 )}
-              </DropdownWrapper>
-            </Content>
+              </DropdownWrapper> 
+            </Content>*/}
 
             {/* 알람 항목들 */}
             {alarmList.map((alarm) => {
