@@ -453,9 +453,26 @@ export const fetchNoneStaticOffEvents = async () => {
   return response.data;
 };
 
-export const saveOffEventToUsersForTodos = async (dto) => {
+export const updateOffEvent = async (id, dto) => {
+  const res = await axios.put(`${BASE_URL}${off_url}/update/${id}`, dto, {
+    headers : { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}
+
+export const saveOffEvent = async (dto) => {
   const res = await axios.post(`${BASE_URL}${off_url}/save`, dto, {
     headers : { Authorization: `Bearer ${token}` },
   });
   return res.data;
+}
+
+export const deleteOffEvent = async (id) => {
+  try {
+    const res = await axios.delete(`${BASE_URL}${off_url}/delete/${id}`, {
+      headers : { Authorization: `Bearer ${token}` },
+    });
+  } catch (e) {
+    console.error("공식 일정 삭제 중 에러 발생 : " + e);
+  }
 }
