@@ -5,6 +5,7 @@ import ChatBotButton from "./ChatBot/ChatBotButton";
 import ChatBot from "./ChatBot/ChatBot";
 import Alarm from "./MyPage/alarm/Alarm";
 import { IconBell } from "./Icons";
+import { useUserStore } from "./Login/Login";
 
 const FooterWrapper = styled.footer`
   width: 100%;
@@ -177,6 +178,7 @@ const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showAlarm, setShowAlarm] = useState(false);
+  const { isLoggedIn } = useUserStore();
   // 알람 버튼 클릭
   const toggleAlarm = () => {
     if (showAlarm) {
@@ -253,16 +255,21 @@ const Footer = () => {
           </FooterGrid>
         </FooterInner>
       </FooterWrapper>
-      <BellWrapper>
-        <button className="button" onClick={toggleAlarm}>
-          <IconBell />
-        </button>
-        {showAlarm && <Alarm onClose={toggleAlarm} />}
-      </BellWrapper>
-      <FixedChat>
-        <ChatBotButton onClick={handleChat} />
-      </FixedChat>
-      {showChat && <ChatBot onClose={handleCloseChat} />}
+      {isLoggedIn && (
+          <>
+            <BellWrapper>
+              <button className="button" onClick={toggleAlarm}>
+                <IconBell />
+              </button>
+              {showAlarm && <Alarm onClose={toggleAlarm} />}
+            </BellWrapper>
+
+            <FixedChat>
+              <ChatBotButton onClick={handleChat} />
+            </FixedChat>
+            {showChat && <ChatBot onClose={handleCloseChat} />}
+          </>
+        )}
       {showTopBtn && (
         <FixedBtn onClick={scrollToTop} $show={showTopBtn}>
           <img src={topImg} alt="Top" />
