@@ -342,7 +342,7 @@ const ImgWrap = styled.div`
 const Icon = styled.div`
   position: absolute;
   bottom: 40px;
-  right: 50px;
+  right: 40px;
   width: 40px;
   height: 40px;
   cursor: pointer;
