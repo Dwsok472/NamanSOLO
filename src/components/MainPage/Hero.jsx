@@ -6,7 +6,9 @@ import couple4 from '../img/22222.png';
 import couple5 from '../img/33333.png';
 import star from '../img/star.png';
 import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import BookSection from './BookSection';
+import { useUserStore } from '../Login/Login';
 
 const float = keyframes`
   0%, 100% { transform: translateY(0); }
@@ -155,6 +157,17 @@ const Star = styled.img`
 `;
 
 function Hero({ scrollToStory }) {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useUserStore();
+
+  const handleSaveClick = () => {
+    if (isLoggedIn) {
+      navigate("/mypage/story");
+    } else {
+      navigate("/login");
+    }
+  };
+  
   return (
     <HeroWrapper>
       <FloatingTopLeft src={couple3} alt="커플풍선" />
@@ -173,9 +186,9 @@ function Hero({ scrollToStory }) {
         <br />
         <strong>WeARE가 함께할게요.</strong>
       </HeroDesc>
-      <Link to="/mypage/story">
-        <CTAButton>지금 바로 담아두기</CTAButton>
-      </Link>
+      <CTAButton onClick={handleSaveClick}>
+      지금 바로 담아두기
+    </CTAButton>
 
       <VisualRow>
         <FloatImage src={couple2} alt="커플 이미지 1" className="couple2" />
