@@ -578,7 +578,7 @@ function MyPage() {
           <Routes>
             <Route path="/myalbum" element={<MyAlbum />} />
             <Route path="/comment" element={<CommentPage />} />
-            <Route path="/todo" element={<Todo />} />
+            <Route path="/todo" element={<Todo meetingDate={meetingDate}/>} />
             <Route path="/other" element={<Other />} />
           </Routes>
         </BottomSection>
@@ -586,7 +586,10 @@ function MyPage() {
       {showCoupleProfile && (
         <>
           <ModalWrapper>
-            <CoupleProfile onClose={() => setShowCoupleProfile(false)} />
+            <CoupleProfile onClose={() => setShowCoupleProfile(false)} onUpdateNames={(girl, boy) => {
+              setGirlname(girl);
+              setBoyname(boy);
+            }} />
           </ModalWrapper>
           <Backdrop onClick={() => setShowCoupleProfile(false)} />
         </>

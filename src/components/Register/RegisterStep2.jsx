@@ -100,22 +100,6 @@ function RegisterStep2({ onNext }) {
     phone: "",
   });
 
-  useEffect(() => {
-    setProfileF({
-      name: formData.realNameF || "",
-      birthday: formData.birthF || "",
-      email: formData.emailF || "",
-      phone: formData.phoneNumberF || "",
-    });
-
-    setProfileM({
-      name: formData.realNameM || "",
-      birthday: formData.birthM || "",
-      email: formData.emailM || "",
-      phone: formData.phoneNumberM || "",
-    });
-  }, []);
-
   const isValidProfile = (profile) => {
     const nameValid = profile.name.trim().length > 0;
     const birthdayValid = profile.birthday !== "";

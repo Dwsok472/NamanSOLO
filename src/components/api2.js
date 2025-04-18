@@ -465,6 +465,16 @@ export const fetchAllOffEvents = async () => {
   }
 }
 
+export const deleteOffEvent = async (id) => {
+  try {
+    await axios.delete(`${BASE_URL}${off_url}/delete/${id}`, {
+      headers : { Authorization: `Bearer ${token}` },
+    });
+  } catch (e) {
+    console.error("공식 일정 삭제 중 에러 발생 : " + e);
+  }
+}
+
 export const fetchStaticOffEvents = async () => {
   const response = await axios.get(`${BASE_URL}${off_url}/static`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -479,9 +489,16 @@ export const fetchNoneStaticOffEvents = async () => {
   return response.data;
 };
 
-export const saveOffEventToUsersForTodos = async () => {
+export const saveOffEvent = async () => {
   const res = await axios.post(`${BASE_URL}${off_url}/save`, {
     headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}
+
+export const updateOffEvent = async (id, dto) => {
+  const res = await axios.put(`${BASE_URL}${off_url}/update/${id}`, dto, {
+    headers : { Authorization: `Bearer ${token}` },
   });
   return res.data;
 }

@@ -106,7 +106,7 @@ const ControlButtons = styled.div`
   }
 `;
 
-function CoupleProfile({ onClose }) {
+function CoupleProfile({ onClose, onUpdateNames }) {
   const [isEditable, setIsEditable] = useState(false);
 
   const [city, setCity] = useState("");
@@ -171,6 +171,7 @@ function CoupleProfile({ onClose }) {
       };
   
       await updateUserData(updatedUser);
+      onUpdateNames(profileF.name, profileM.name);
       alert("저장되었습니다!");
       setIsEditable(false);
     } catch (err) {

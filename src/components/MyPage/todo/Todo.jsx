@@ -373,7 +373,7 @@ const ListDate = styled.div`
   color: #999;
 `;
 
-function Todo() {
+function Todo({ meetingDate }) {
   // const { user, setEvents } = useUserStore();
 
   // useEffect(() => {
@@ -414,6 +414,17 @@ function Todo() {
     loadEvents();
   }, []);
   
+  useEffect(() => {
+    const loadEvents = async () => {
+      const annivs = await fetchAnniversaries();
+      const travels = await fetchTravels();
+      setEvents([...annivs, ...travels]);
+    }
+    if (meetingDate) {
+      loadEvents();
+    }
+  }, [meetingDate]);
+
   // const [events, setEvents] = useState([
   //   { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary', editable:true },
   //   { id:2, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', editable:false },
