@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { fetchAllOffEvents, fetchDynamicOffEvents, fetchStaticOffEvents } from '../api2';
+import { fetchAllOffEvents, fetchNoneStaticOffEvents, fetchStaticOffEvents } from '../api2';
 
 const Overlay = styled.div`
   position: fixed;
@@ -22,6 +22,11 @@ const ModalBox = styled.div`
   width: 600px;
   max-width: 95%;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 15px;
+  }
 `;
 
 const TabBar = styled.div`
@@ -40,9 +45,16 @@ const TabButton = styled.button`
 
 const CheckboxRow = styled.div`
   display: flex;
-  align-items: center;
-  gap: 20px;
+  justify-content: center;
+  gap: 80px;
   margin-bottom: 16px;
+  input {
+    outline:none;
+    margin-right: 5px;
+  }
+  label {
+    font-size: 1.1rem;
+  }
 `;
 
 const ContentBox = styled.div`
@@ -93,8 +105,8 @@ function EventModal({ onClose }) {
         let events = [];
         if (selectedFilter === 'static') {
           events = await fetchStaticOffEvents();
-        } else if (selectedFilter === 'dynamic') {
-          events = await fetchDynamicOffEvents();
+        } else if (selectedFilter === 'none-static') {
+          events = await fetchNoneStaticOffEvents();
         } else {
           events = await fetchAllOffEvents();
         }
@@ -102,7 +114,7 @@ function EventModal({ onClose }) {
         const mapped = events.map(e => ({
           ...e,
           title: e.eventTitle,
-          type: e.offsetDays > 0 ? 'dynamic' : 'static'
+          type: e.offsetDays > 0 ? 'none-static' : 'static'
         }));
 
         setAllEvents(mapped);
@@ -135,9 +147,9 @@ function EventModal({ onClose }) {
           <label>
             <input
               type="checkbox"
-              checked={selectedFilter === 'dynamic'}
+              checked={selectedFilter === 'none-static'}
               onChange={() =>
-                setSelectedFilter(prev => (prev === 'dynamic' ? 'all' : 'dynamic'))
+                setSelectedFilter(prev => (prev === 'none-static' ? 'all' : 'none-static'))
               }
             />
             유동 이벤트
@@ -160,7 +172,7 @@ function EventModal({ onClose }) {
           {mode === '추가' && (
             <>
               <Column>
-                <strong> 이벤트 목록</strong>
+                <input type='text' placeholder='추가할 공식 이벤트명을 입력해주세요.'></input>
                 <ul>
                   {filteredEvents.map(event => (
                     <li key={event.title}>

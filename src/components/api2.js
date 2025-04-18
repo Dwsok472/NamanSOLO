@@ -446,7 +446,7 @@ export const fetchStaticOffEvents = async () => {
   return response.data;
 };
 
-export const fetchDynamicOffEvents = async () => {
+export const fetchNoneStaticOffEvents = async () => {
   const response = await axios.get(`${BASE_URL}${off_url}/none-static`, {
     headers: { Authorization: `Bearer ${token}` },
   });
