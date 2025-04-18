@@ -245,30 +245,36 @@ export const fetchMediaBlobUrls = async (mediaList) => {
 
 const present_url = '/event_present';
 
-export const fetchPresents = async() => {
-  try { const res = await axios.get(`${BASE_URL}${present_url}/all`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }); return res.data; }
+export const fetchPresents = async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}${present_url}/all`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }); return res.data;
+  }
   catch (e) { console.error('전체 선물 조회 실패', err); throw err }
 };
 
 export const fetchMalePresents = async () => {
-  try { const res = await axios.get(`${BASE_URL}${present_url}/male`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }); return res.data; }
+  try {
+    const res = await axios.get(`${BASE_URL}${present_url}/male`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }); return res.data;
+  }
   catch (err) { console.error('❌ 남성 선물 불러오기 실패:', err); throw err; }
 };
 
 export const fetchFemalePresents = async () => {
-  try { const res = await axios.get(`${BASE_URL}${present_url}/female`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }); return res.data; } 
+  try {
+    const res = await axios.get(`${BASE_URL}${present_url}/female`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }); return res.data;
+  }
   catch (err) { console.error('여성 선물 불러오기 실패:', err); throw err; }
 };
 
@@ -310,7 +316,7 @@ export const useRegisterStore = create(
         recommendAlert: true,
         recommentAlert: true,
         todoAlert: true,
-        mediaDTO: {id:1},
+        mediaDTO: { id: 1 },
       },
 
       setFormData: (data) => set((state) => ({
@@ -334,7 +340,7 @@ export const useRegisterStore = create(
         }
       },
 
-      deleteForm: () => { 
+      deleteForm: () => {
         const storage = createJSONStorage(() => sessionStorage);
         storage.removeItem?.("register-storage");
       }
@@ -356,8 +362,28 @@ export async function checkUsernameDuplicate(username) {
   }
 }
 
-export const getCurrentUser = async () => { 
-    const res = await axios.get(`${BASE_URL}${user_url}/me`, {
+export async function checkEmailDuplicate(email) {
+  try {
+    const response = await axios.get(`${BASE_URL}${user_url}/check-email/${email}`);
+    return !response.data; // false면 사용 가능이니까 결과 반전해서 true 리턴
+  } catch (error) {
+    console.error("중복 확인 실패:", error);
+    throw error;
+  }
+}
+export async function checkPhoneDuplicate(phone) {
+  try {
+    const response = await axios.get(`${BASE_URL}${user_url}/check-phone/${phone}`);
+    return !response.data; // false면 사용 가능이니까 결과 반전해서 true 리턴
+  } catch (error) {
+    console.error("중복 확인 실패:", error);
+    throw error;
+  }
+}
+
+
+export const getCurrentUser = async () => {
+  const res = await axios.get(`${BASE_URL}${user_url}/me`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -380,34 +406,34 @@ export const uploadProfileImage = async (file) => {
   return response.data.mediaUrl;
 };
 
-  export const updateUserData = async (data) => {
-    try {
-      const res = await axios.put(`${BASE_URL}${user_url}/user-data`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      return res.data;
-    } catch (e) {
-      console.error("유저 데이터 업데이트 실패:", e);
-      throw e;
-    }
-  };
-
-  export const updateUserProfileImage = async (mediaUrl) => {
-    const res = await axios.put(`${BASE_URL}${user_url}/user-data`, {
-      profileImageUrl: mediaUrl,
-    }, {
+export const updateUserData = async (data) => {
+  try {
+    const res = await axios.put(`${BASE_URL}${user_url}/user-data`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
     });
-  
     return res.data;
-  };
+  } catch (e) {
+    console.error("유저 데이터 업데이트 실패:", e);
+    throw e;
+  }
+};
 
-  export const fetchUserMediaBlobUrl = async (mediaUrl) => {
+export const updateUserProfileImage = async (mediaUrl) => {
+  const res = await axios.put(`${BASE_URL}${user_url}/user-data`, {
+    profileImageUrl: mediaUrl,
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data;
+};
+
+export const fetchUserMediaBlobUrl = async (mediaUrl) => {
   try {
     const res = await fetch(`${BASE_URL}${user_url}/download/${mediaUrl.split('/').slice(-2).join('/')}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -428,11 +454,11 @@ const off_url = '/officialevent'
 
 export const fetchAllOffEvents = async () => {
   try {
-  const response = await axios.get(`${BASE_URL}${off_url}/all`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+    const response = await axios.get(`${BASE_URL}${off_url}/all`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  return response.data;
+    return response.data;
   } catch (e) {
     console.error(e);
     alert("액세스 실패!");
@@ -453,26 +479,9 @@ export const fetchNoneStaticOffEvents = async () => {
   return response.data;
 };
 
-export const updateOffEvent = async (id, dto) => {
-  const res = await axios.put(`${BASE_URL}${off_url}/update/${id}`, dto, {
-    headers : { Authorization: `Bearer ${token}` },
+export const saveOffEventToUsersForTodos = async () => {
+  const res = await axios.post(`${BASE_URL}${off_url}/save`, {
+    headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
-}
-
-export const saveOffEvent = async (dto) => {
-  const res = await axios.post(`${BASE_URL}${off_url}/save`, dto, {
-    headers : { Authorization: `Bearer ${token}` },
-  });
-  return res.data;
-}
-
-export const deleteOffEvent = async (id) => {
-  try {
-    const res = await axios.delete(`${BASE_URL}${off_url}/delete/${id}`, {
-      headers : { Authorization: `Bearer ${token}` },
-    });
-  } catch (e) {
-    console.error("공식 일정 삭제 중 에러 발생 : " + e);
-  }
 }
