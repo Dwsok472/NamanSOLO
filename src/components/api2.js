@@ -453,8 +453,8 @@ export const fetchNoneStaticOffEvents = async () => {
   return response.data;
 };
 
-export const saveOffEventToUsersForTodos = async () => {
-  const res = await axios.post(`${BASE_URL}${off_url}/save`, {
+export const saveOffEventToUsersForTodos = async (dto) => {
+  const res = await axios.post(`${BASE_URL}${off_url}/save`, dto, {
     headers : { Authorization: `Bearer ${token}` },
   });
   return res.data;

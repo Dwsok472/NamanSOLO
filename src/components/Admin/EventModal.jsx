@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { fetchAllOffEvents, fetchNoneStaticOffEvents, fetchStaticOffEvents } from '../api2';
+import { fetchAllOffEvents, fetchNoneStaticOffEvents, fetchStaticOffEvents, saveOffEventToUsersForTodos } from '../api2';
 
 const Overlay = styled.div`
   position: fixed;
@@ -78,6 +78,9 @@ const Footer = styled.div`
 `;
 
 function EventModal({ onClose }) {
+  const [newTitle, setNewTitle] = useState("");
+  const [newDate, setNewDate] = useState("");
+  const [newOffsetDays, setNewOffsetDays] = useState("");
   const [mode, setMode] = useState("관리");
   const [allEvents, setAllEvents] = useState([]);
   const [selectedEvents, setSelectedEvents] = useState([]);
@@ -89,13 +92,60 @@ function EventModal({ onClose }) {
     );
   };
 
-  const handleAdd = () => {
-    if (selectedEvents.length === 0) {
-      alert('추가할 이벤트를 선택하세요!');
+  const handleAdd = async () => {
+    if (!newTitle) {
+      alert('이벤트 제목을 입력하세요!');
+      return;
+    }
+  
+    let dto = {
+      eventTitle: newTitle,
+      editable: false,
+    };
+  
+    if (selectedFilter === 'static') {
+      if (!newDate) {
+        alert('날짜를 입력하세요!');
+        return;
+      }
+
+      const inputDate = new Date(newDate);
+      if (isNaN(inputDate.getTime())) {
+        alert('유효한 날짜를 입력하세요!');
+        return;
+      }
+
+      dto.eventDate = newDate;
+      dto.offsetDays = 0;
+    } else if (selectedFilter === 'none-static') {
+      if (!newOffsetDays || isNaN(newOffsetDays)) {
+        alert('며칠 후인지 숫자를 입력하세요!');
+        return;
+      }
+
+      if (parsedOffset <= 0) {
+        alert('유동 기념일의 숫자는 0 이하로 설정할 수 없습니다!');
+        return;
+      }
+
+      dto.eventDate = new Date().toISOString().split('T')[0]; // 오늘 날짜
+      dto.offsetDays = parseInt(newOffsetDays, 10);
     } else {
-      alert('이벤트가 추가되었습니다');
-      console.log('추가된 이벤트:', selectedEvents);
-      setSelectedEvents([]);
+      alert('고정/유동 이벤트 중 하나를 선택하세요!');
+      return;
+    }
+
+    try {
+      await saveOffEventToUsersForTodos(dto);
+      alert('이벤트가 성공적으로 추가되었습니다!');
+      setMode('관리');
+      setNewTitle('');
+      setNewDate('');
+      setNewOffsetDays('');
+      setSelectedFilter('all');
+    } catch (err) {
+      console.error('저장 실패:', err);
+      alert('이벤트 저장 중 오류가 발생했습니다.');
     }
   };
 
@@ -169,45 +219,52 @@ function EventModal({ onClose }) {
             </ul>
           )}
 
-          {mode === '추가' && (
-            <>
-              <Column>
-                <input type='text' placeholder='추가할 공식 이벤트명을 입력해주세요.'></input>
-                <ul>
-                  {filteredEvents.map(event => (
-                    <li key={event.title}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={selectedEvents.includes(event.title)}
-                          onChange={() => toggleEventSelection(event.title)}
-                        />
-                        {event.title}
-                      </label>
-                    </li>
-                  ))}
-                </ul>
-              </Column>
-              <Column>
-                <strong> 선택된 이벤트</strong>
-                <ul>
-                  {selectedEvents.length > 0 ? (
-                    selectedEvents.map((title) => <li key={title}> {title}</li>)
-                  ) : (
-                    <li>선택된 항목 없음</li>
-                  )}
-                </ul>
-              </Column>
-            </>
+          {mode === '추가' &&
+            selectedFilter === 'static' && (
+              <>
+                <input
+                  type="text"
+                  placeholder="이벤트 제목"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
+                <input
+                  type="date"
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                />
+              </>
+            )}
+          {mode === '추가' &&
+            selectedFilter === 'none-static' && (
+              <>
+                <input
+                  type="text"
+                  placeholder="이벤트 제목"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
+                <input
+                  type="number"
+                  placeholder="며칠 후인지 입력"
+                  value={newOffsetDays}
+                  onChange={(e) => setNewOffsetDays(e.target.value)}
+                />
+              </>
           )}
         </ContentBox>
-
-        <Footer>
-          {mode === '추가' && (
+        {mode === '관리' &&
+          <Footer>
+            <button onClick={() => setMode('추가')}>추가</button>
+            <button onClick={onClose}>닫기</button>
+          </Footer>
+        }
+        {mode === '추가' &&
+          <Footer>
             <button onClick={handleAdd}>추가</button>
-          )}
-          <button onClick={onClose}>닫기</button>
-        </Footer>
+            <button onClick={()=> setMode('관리')}>취소</button>
+          </Footer>
+        }
       </ModalBox>
     </Overlay>
   );
