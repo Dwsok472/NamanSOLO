@@ -452,3 +452,10 @@ export const fetchDynamicOffEvents = async () => {
   });
   return response.data;
 };
+
+export const saveOffEventToUsersForTodos = async () => {
+  const res = await axios.post(`${BASE_URL}${off_url}/save`, {
+    headers : { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
+}

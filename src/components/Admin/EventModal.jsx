@@ -121,15 +121,6 @@ function EventModal({ onClose }) {
       <ModalBox>
         <h2>{mode === '관리' ? '이벤트 관리' : '이벤트 추가'}</h2>
 
-        <TabBar>
-          <TabButton active={mode === '관리'} onClick={() => setMode('관리')}>
-            이벤트 관리
-          </TabButton>
-          <TabButton active={mode === '추가'} onClick={() => setMode('추가')}>
-            이벤트 추가
-          </TabButton>
-        </TabBar>
-
         <CheckboxRow>
           <label>
             <input
