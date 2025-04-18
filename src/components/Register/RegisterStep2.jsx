@@ -84,6 +84,8 @@ const Icon = styled.div`
 `;
 
 function RegisterStep2({ onNext }) {
+  const [validFStatus, setValidFStatus] = useState({ emailStatus: false, phoneStatus: false });
+  const [validMStatus, setValidMStatus] = useState({ emailStatus: false, phoneStatus: false });
   const { formData, setFormData } = useRegisterStore();
   const [profileF, setProfileF] = useState({
     name: "",
@@ -105,7 +107,7 @@ function RegisterStep2({ onNext }) {
       email: formData.emailF || "",
       phone: formData.phoneNumberF || "",
     });
-  
+
     setProfileM({
       name: formData.realNameM || "",
       birthday: formData.birthM || "",
@@ -120,7 +122,7 @@ function RegisterStep2({ onNext }) {
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email);
     const phoneValid = /^\d{3}-\d{3,4}-\d{4}$/.test(profile.phone);
     console.log("유효성 체크 - name:", nameValid, "birthday:", birthdayValid, "email:", emailValid, "phone:", phoneValid);
-  
+
     return nameValid && birthdayValid && emailValid && phoneValid;
   };
 
@@ -129,12 +131,20 @@ function RegisterStep2({ onNext }) {
       alert("여자쪽 정보가 올바르지 않아요!");
       return;
     }
-  
+
     if (!isValidProfile(profileM)) {
       alert("남자쪽 정보가 올바르지 않아요!");
       return;
     }
-  
+    if (!validFStatus.emailStatus || !validFStatus.phoneStatus) {
+      alert("여자쪽 이메일 또는 전화번호가 중복확인되지 않았습니다.");
+      return;
+    }
+    if (!validMStatus.emailStatus || !validMStatus.phoneStatus) {
+      alert("남자쪽 이메일 또는 전화번호가 중복확인되지 않았습니다.");
+      return;
+    }
+
     // 유효할 경우 저장
     setFormData({
       realNameF: profileF.name,
@@ -153,14 +163,6 @@ function RegisterStep2({ onNext }) {
     }, 50);
   };
 
-  // async function handleNextStep() {
-  //     try {
-  //       await registerCoupleProfile(profileF, profileM);
-  //       onNext(); // 다음 단계로 이동
-  //     } catch (error) {
-  //       alert("커플 프로필 등록 중 문제가 발생했습니다.");
-  //     }
-  //   }
   return (
     <Container>
       <H1>회원가입</H1>
@@ -181,6 +183,7 @@ function RegisterStep2({ onNext }) {
             cardbackground="#e0f7fa"
             isProfilePage={false}
             isSignUpPage={true}
+            onStatusChange={(status) => setValidFStatus(status)}
           />
         </GenderWrapper>
         <img src={rate} className="heartRate" />
@@ -202,6 +205,7 @@ function RegisterStep2({ onNext }) {
             imgheight="120px"
             isProfilePage={false}
             isSignUpPage={true}
+            onStatusChange={(status) => setValidMStatus(status)}
           />
         </GenderWrapper>
       </Content>

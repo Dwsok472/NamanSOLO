@@ -29,23 +29,11 @@ const CardWrap = styled.div`
 const Card = styled.div`
   width: 550px;
   height: 620px;
-  /* background-color: #ffdcd6;
-  clip-path: polygon(
-    10% 0%,
-    90% 0%,
-    120% 25%,
-    120% 75%,
-    90% 100%,
-    10% 100%,
-    0% 90%,
-    0% 10%
-  ); */
   margin: 0 auto;
 `;
 
 const Top = styled.div`
   width: 100%;
-  /* padding-top: 40px; */
   .agree_box {
     width: 450px;
     height: 180px;
@@ -57,6 +45,13 @@ const Top = styled.div`
     overflow: scroll;
     overflow-x: hidden;
     border: 1px solid #1a1a1a33;
+    &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 핸들의 색상 */
+    border-radius: 10px;
+  }
   }
   .agree_box_title {
     width: 450px;
@@ -112,6 +107,12 @@ const Top = styled.div`
     margin-right: 50px;
     font-size: 1rem;
     font-weight: 700;
+    position: relative;
+   .agree_guide{
+    position: absolute;
+    top: 0;
+    right: 15%;
+   }
   }
 `;
 const SmallBox = styled.div`
@@ -120,12 +121,11 @@ const SmallBox = styled.div`
   border: 1px solid #02020233;
   border-radius: 10px;
   background-color: white;
-  padding-left: 10px;
+  padding-left: 5px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: 15px;
   height: 70px;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -159,11 +159,9 @@ const ButtomWrap = styled.div`
 `;
 const Buttom = styled.div`
   width: 100%;
-  /* border: 1px solid #1a1a1a33; */
   background-color: white;
   border-radius: 50px;
   margin: 0 auto;
-  /* gap: 10px; */
   padding-top: 15px;
   padding-bottom: 15px;
   height: 80%;
@@ -183,20 +181,12 @@ const GuideText = styled.div`
     $isError === true
       ? "#d32f2f" // 에러 - 빨간색
       : $isError === false
-      ? "#2e7d32" // 성공 - 초록색
-      : "#888"}; // 기본 회색 or 안내 메시지용
+        ? "#2e7d32" // 성공 - 초록색
+        : "#888"}; // 기본 회색 or 안내 메시지용
   display: ${({ $hide }) => ($hide ? "none" : "block")};
 `;
 const NextButtonWrapper = styled.div`
-  margin-top: 30px;
-`;
-
-const Icon = styled.div`
-  position: fixed; // 화면 기준 고정
-  bottom: 145px;
-  right: 24px;
-  width: 50px;
-  cursor: pointer;
+  margin-top: 10px;
 `;
 
 function RegisterStep1({ onNext }) {
@@ -204,7 +194,6 @@ function RegisterStep1({ onNext }) {
   const [matchpassword, setmatchpassword] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [buttonText, setButtonText] = useState("중복확인");
-  const [matchText, setmatchText] = useState("확인");
   const handleChange = () => {
     setIsChecked(!isChecked); // 체크된 상태를 반전
   };
@@ -228,47 +217,24 @@ function RegisterStep1({ onNext }) {
     }
   }
 
-
-  // async function handleCheckUsername() {
-  //   try {
-  //     const isAvailable = await checkUsernameDuplicate(username);
-  //     if (isAvailable) {
-  //       setButtonText("사용 가능");
-  //     } else {
-  //       alert("이미 등록된 아이디입니다");
-  //     }
-  //   } catch (error) {
-  //     alert("중복 확인 중 오류가 발생했습니다");
-  //   }
-  // }
-
-  async function handleMatchPwd() {
-    if (formData.password === matchpassword) {
-      setmatchText("완료");
-    } else {
-      alert("입력하신 비밀번호가 일치하지 않습니다");
-      return;
-    }
-  }
-
   const handleNextStep = () => {
     if (buttonText !== "사용 가능") {
       alert("아이디가 중복되는지 확인해주세요.");
       usernameRef.current.focus();
       return;
     }
-    
-    if (matchText !=="완료") {
+
+    if (matchpassword !== formData.password) {
       alert("비밀번호가 일치하는지 확인하세요.")
       return;
     }
-  
+
     if (!isChecked) {
       alert("약관에 동의해주세요.");
       document.getElementById("agree").focus();
       return;
     }
-  
+
     // 유효성 검사 통과 후 다음 스텝으로 이동
     onNext();
   };
@@ -351,8 +317,8 @@ function RegisterStep1({ onNext }) {
                 onChange={handleChange}
               />
               <label htmlFor="agree">동의</label>
-              <GuideText $isError={!isChecked} $alignRight={true} $hide={isChecked === true}>
-                해당 약관에 동의하셔야 다음으로 진행이 가능합니다.
+              <GuideText $isError={!isChecked} $alignRight={true} $hide={isChecked === true} className="agree_guide">
+                해당 약관에 동의하셔야  진행이 가능합니다.
               </GuideText>
             </div>
           </Top>
@@ -367,7 +333,7 @@ function RegisterStep1({ onNext }) {
                   placeholder="아이디를 입력해주세요"
                   autoComplete="off" // 자동완성 기능 끄기
                   value={formData.username}
-                  onChange={(e) => setFormData({ username : e.target.value.replace(/[^a-zA-Z.0-9-_]/g, '') })}
+                  onChange={(e) => setFormData({ username: e.target.value.replace(/[^a-zA-Z.0-9-_]/g, '') })}
                 />
 
                 <button onClick={handleCheckUsername}>{buttonText}</button>
@@ -384,7 +350,7 @@ function RegisterStep1({ onNext }) {
                   placeholder="비밀번호를 입력해주세요"
                   autoComplete="off"
                   value={formData.password}
-                  onChange={(e) => setFormData({ password : e.target.value.replace(/[^a-z!-_A-Z0-9]/g, '') })}
+                  onChange={(e) => setFormData({ password: e.target.value.replace(/[^a-z!-_A-Z0-9]/g, '') })}
                 />
               </SmallBox>
               <GuideText $isError={formData.password.length >= 0 && formData.password.length < 8}>
@@ -402,8 +368,7 @@ function RegisterStep1({ onNext }) {
                   value={matchpassword}
                   onChange={(e) => setmatchpassword(e.target.value)}
                 />
-
-                <button onClick={handleMatchPwd}>{matchText}</button>
+                {/* <button onClick={handleMatchPwd}>{matchText}</button> */}
               </SmallBox>
               {formData.password.length > 0 &&
                 matchpassword.length > 0 &&

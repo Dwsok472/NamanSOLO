@@ -273,7 +273,7 @@ const Container = styled.div`
   }
 `;
 const H1 = styled.h1`
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   font-weight: 700;
   text-align: center;
   color: #202020;
@@ -282,7 +282,7 @@ const H1 = styled.h1`
 const CardWrap = styled.div`
   width: 550px;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 20px;
 `;
 const Top = styled.div`
   width: 100%;
@@ -360,7 +360,6 @@ const SmallBox = styled.div`
 `;
 const GuideText = styled.div`
   font-size: 0.75rem;
-  margin: 5px 0 10px 10px;
   text-align: ${({ $alignRight }) => ($alignRight ? "right" : "center")};
   color: ${({ $isError }) =>
         $isError === true
