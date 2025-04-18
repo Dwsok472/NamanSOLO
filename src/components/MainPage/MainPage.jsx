@@ -5,6 +5,7 @@ import Intro from "./Intro";
 import BookSection from "./BookSection";
 import Hero from "./Hero";
 import StoryMenuBubbles from "./StoryMenuBubbles";
+import MainPopup from "./MainPopup";
 
 const PageContainer = styled.div`
   position: relative;
@@ -127,6 +128,7 @@ function MainPage() {
 
   return (
     <>
+    <MainPopup />
       <Header
         logoRef={logoRef}
         showLogo={showLogo}
