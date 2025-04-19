@@ -11,7 +11,7 @@ import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
 import MySetting from "./MySetting";
 import Edit from "../img/edit.png";
-import { fetchAnniversaries, fetchTravels, fetchUserMediaBlobUrl, getCurrentUser, updateUserData, uploadProfileImage } from "../api2";
+import { fetchAnniversaries, fetchTravels, getCurrentUser, updateUserData, uploadProfileImage } from "../api2";
 
 const Container = styled.div`
   display: flex;
@@ -293,7 +293,6 @@ function MyPage() {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [originalMeetingDate, setOriginalMeetingDate] = useState(null);
-  const [mediaId, setMediaId] = useState(null);
   const pathname = location.pathname;
   const imgRef = useRef(null);
   const [image, setImage] = useState();
@@ -349,34 +348,27 @@ function MyPage() {
   }, [meetingDate]);
 
   useEffect(() => {
-    const waitForJWT = async () => {
-      const fetchUser = async () => {
-        try {
-          const data = await getCurrentUser();
-      
-          console.log("🔥 키 리스트:", Object.keys(data)); 
-          setGirlname(data.realNameF);
-          setBoyname(data.realNameM);
-          setMeetingDate(data.dDay);
-          setOriginalMeetingDate(data.dDay);
-          const mediaUrl = data.mediaDTO?.mediaUrl;
+    const fetchUser = async () => {
+      try {
+        const data = await getCurrentUser();
+        console.log(data);
+    
+        console.log("🔥 키 리스트:", Object.keys(data)); 
+        setGirlname(data.realNameF);
+        setBoyname(data.realNameM);
+        setMeetingDate(data.dDay);
+        setOriginalMeetingDate(data.dDay);
+        const mediaUrl = [data.mediaDTO.mediaUrl];
+        setImage(mediaUrl);
 
-          if (mediaUrl) {
-            const blobUrl = await fetchUserMediaBlobUrl(mediaUrl);
-            setImage(blobUrl); // ✅ blobUrl을 바로 이미지로 사용
-          }
-
-          setLoading(false);
-        } catch (err) {
-          console.error("유저 불러오기 실패", err);
-          return;
-        }
-      };
-
-      fetchUser();
+        setLoading(false);
+      } catch (err) {
+        console.error("유저 불러오기 실패", err);
+        return;
+      }
     };
 
-    waitForJWT();
+    fetchUser();
   }, []);
 
   useEffect(() => {
@@ -411,15 +403,17 @@ function MyPage() {
       const updatedData = {
         realNameM: boyname,
         realNameF: girlname,
-        dday: meetingDate,
-        profileImageUrl: uploadedImageUrl, // 없으면 null로 전달
+        dday: meetingDate, // 없으면 null로 전달
       };
+
+      if (uploadedImageUrl) {
+        updatedData.profileImageUrl = uploadedImageUrl;
+      }
       
       await updateUserData(updatedData);
       
       if (uploadedImageUrl) {
-        const blobUrl = await fetchUserMediaBlobUrl(uploadedImageUrl);
-        setImage(blobUrl); // 실제 이미지 반영
+        setImage(uploadedImageUrl); // 실제 이미지 반영
       }
       const [annivs, travels] = await Promise.all([
         fetchAnniversaries(),

@@ -433,22 +433,22 @@ export const updateUserProfileImage = async (mediaUrl) => {
   return res.data;
 };
 
-export const fetchUserMediaBlobUrl = async (mediaUrl) => {
-  try {
-    const res = await fetch(`${BASE_URL}${user_url}/download/${mediaUrl.split('/').slice(-2).join('/')}`, {
-      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
-    });
+// export const fetchUserMediaBlobUrl = async (mediaUrl) => {
+//   try {
+//     const res = await fetch(`${BASE_URL}${user_url}/download/${mediaUrl.split('/').slice(-2).join('/')}`, {
+//       headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
+//     });
 
-    if (!res.ok) throw new Error('미디어 fetch 실패');
+//     if (!res.ok) throw new Error('미디어 fetch 실패');
 
-    const blob = await res.blob();
-    console.log("Fetch response:", blob);
-    return URL.createObjectURL(blob);
-  } catch (e) {
-    console.error('이미지 다운로드 실패:', mediaUrl, e);
-    return null;
-  }
-};
+//     const blob = await res.blob();
+//     console.log("Fetch response:", blob);
+//     return URL.createObjectURL(blob);
+//   } catch (e) {
+//     console.error('이미지 다운로드 실패:', mediaUrl, e);
+//     return null;
+//   }
+// };
 
 const off_url = '/officialevent'
 
