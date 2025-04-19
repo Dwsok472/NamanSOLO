@@ -393,16 +393,6 @@ function Todo({ meetingDate, events }) {
       fetchFallbackEvents();
     }
   }, []);
-
-  useEffect(() => {
-    console.log("로딩된 이벤트:", events);
-    events.forEach(e => {
-      if (!e.id) {
-        console.warn("이 이벤트에는 ID가 없음 ❌", e);
-      }
-    });
-    setLocalEvents(events);
-  }, [events]);
   const [showAllEvents, setShowAllEvents] = useState(false);
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -417,8 +407,8 @@ function Todo({ meetingDate, events }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary', editable:true });
-  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [], editable:true });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'ANNIVERSARY', editable:true });
+  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', start_date: '', end_date: '', color: '#87cefa', type:'TRAVEL', images: [], editable:true });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
   const [viewTravelEvent, setViewTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
@@ -431,7 +421,7 @@ function Todo({ meetingDate, events }) {
   const handleUpdate = async (updatedEvent) => {
     try {
       let updated;
-      if (updatedEvent.type.toLowerCase() === "anniversary") {
+      if (updatedEvent.type.toUpperCase() === "ANNIVERSARY") {
         updated = await updateAnniversary(updatedEvent.id, updatedEvent);
       } else {
         updated = await handleUpdateTravelMedia(updatedEvent.id, updatedEvent);
@@ -445,17 +435,18 @@ function Todo({ meetingDate, events }) {
   };
 
   const handleDelete = async (eventToDelete) => {
+    console.log("삭제할 이벤트", eventToDelete)
     console.log("삭제할 이벤트의 id 값" + eventToDelete.id);
-    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toLowerCase() === 'anniversary' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
+    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toUpperCase() === 'ANNIVERSARY' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
     console.log("삭제할 ID 타입:", typeof eventToDelete.id, eventToDelete.id);
 
     try {
-      if (eventToDelete.type.toLowerCase() === 'anniversary') {
+      if (eventToDelete.type.toUpperCase() === 'ANNIVERSARY') {
         
-        await deleteAnniversary(Number(eventToDelete.id));
+        await deleteAnniversary(eventToDelete.id);
       } else {
-        await deleteTravelMedia(Number(eventToDelete.id));
+        await deleteTravelMedia(eventToDelete.id);
       }
       setLocalEvents(prev => prev.filter(ev => ev.id !== eventToDelete.id));
     } catch (e) {
@@ -501,11 +492,11 @@ function Todo({ meetingDate, events }) {
 
     const cellDateStr = formatDate(date); // 🧠 요거!
 
-    const matching = localEvents.filter((event) => {
-      if (!showAllEvents && event.type.toLowerCase() !== activeSection) return false;
+    const matching = localEvents.filter((localEvent) => {
+      if (!showAllEvents && localEvent.type.toUpperCase() !== activeSection) return false;
 
-      const eventStart = event.start_date;
-      const eventEnd = event.end_date;
+      const eventStart = localEvent.start_date;
+      const eventEnd = localEvent.end_date;
 
       const isMatch = (
         eventStart <= cellDateStr &&
@@ -524,7 +515,7 @@ function Todo({ meetingDate, events }) {
     return Math.floor((event_date - today) / (1000 * 60 * 60 * 24));
   };
 
-  const [activeSection, setActiveSection] = useState('anniversary');
+  const [activeSection, setActiveSection] = useState('ANNIVERSARY');
 
   return (
     <>
@@ -590,13 +581,13 @@ function Todo({ meetingDate, events }) {
                               <EventBox
                                 key={i}
                                 color={localEvent.color}
-                                className={`${localEvent.type.toLowerCase()}${localEvent.id}`}
+                                className={`${localEvent.type.toUpperCase()}${localEvent.id}`}
                                 onMouseEnter={() => setHoveringEventId(localEvent.id)}
                                 onMouseLeave={() => setHoveringEventId(null)}
-                                $isHovered={hoveringEventId === event.id}
-                                onClick={() => localEvent.type.toLowerCase() === 'anniversary' ? (localEvent.editable ? setViewTodoEvent(localEvent) : null) : setViewTravelEvent(localEvent) }
+                                $isHovered={hoveringEventId === localEvent.id}
+                                onClick={() => localEvent.type.toUpperCase() === 'ANNIVERSARY' ? (localEvent.editable ? setViewTodoEvent(localEvent) : null) : setViewTravelEvent(localEvent) }
                               >
-                                <div title={localEvent.type.toLowerCase() === 'travel' ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}` : (!localEvent.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${localEvent.title} ${localEvent.start_date}`)}>{localEvent.title}</div>
+                                <div title={localEvent.type.toUpperCase() === 'TRAVEL' ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}` : (!localEvent.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${localEvent.title} ${localEvent.start_date}`)}>{localEvent.title}</div>
                               </EventBox>
                             ))}
                           </StyledTd>
@@ -613,31 +604,31 @@ function Todo({ meetingDate, events }) {
             
 
             <SectionH3>
-              {showAllEvents ? '전체 일정' : (activeSection === 'anniversary' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} 
+              {showAllEvents ? '전체 일정' : (activeSection === 'ANNIVERSARY' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} 
                 onClick={() => {
                   if (!showAllEvents) {
-                    setActiveSection(activeSection === 'anniversary' ? 'travel' : 'anniversary');
+                    setActiveSection(activeSection === 'ANNIVERSARY' ? 'TRAVEL' : 'ANNIVERSARY');
                   }
                 }}/>}
             </SectionH3>
 
             <List>
-              {(showAllEvents ? localEvents : localEvents.filter(e => e.type.toLowerCase() === activeSection)).map((event, idx) => {
+              {(showAllEvents ? localEvents : localEvents.filter(e => e.type.toUpperCase() === activeSection)).map((localEvent, idx) => {
 
                 const diffDays = getDiffInDays(
-                  event.type.toLowerCase() === 'anniversary' ? event.start_date : event.start_date
+                  localEvent.type.toUpperCase() === 'ANNIVERSARY' ? localEvent.start_date : localEvent.start_date
                 );
 
                 return (
                   <ListItem
-                    title={`${ event.type.toLowerCase() === 'anniversary'?
-                    (!event.editable ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : event.title + ' ' + event.start_date) 
-                    : event.title + ' ' + event.start_date+' ~ '+event.end_date }`}
+                    title={`${ localEvent.type.toUpperCase() === 'ANNIVERSARY'?
+                    (!localEvent.editable ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : localEvent.title + ' ' + localEvent.start_date) 
+                    : localEvent.title + ' ' + localEvent.start_date+' ~ '+localEvent.end_date }`}
                     key={idx}
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    <div className='eventTitle'>{event.title}</div>
+                    <div className='eventTitle'>{localEvent.title}</div>
                     <div className='day'>
                       <div className='diff'>
                         {diffDays >= 0
@@ -647,22 +638,22 @@ function Todo({ meetingDate, events }) {
                           : `D +${Math.abs(diffDays)}`}
                       </div>
                       <ListDate>
-                        {event.type.toLowerCase() === 'anniversary'
-                          ? event.start_date
-                          : <> {event.start_date} <br />~ {event.end_date} </> }
+                        {localEvent.type.toUpperCase() === 'ANNIVERSARY'
+                          ? localEvent.start_date
+                          : <> {localEvent.start_date} <br />~ {localEvent.end_date} </> }
                       </ListDate>
                     </div>
 
-                    {hoveredItem === idx && event.editable && (
+                    {hoveredItem === idx && localEvent.editable && (
                       <>
-                        <IconButton onClick={() => handleDelete(event)}>
+                        <IconButton onClick={() => handleDelete(localEvent)}>
                           <IconClose />
                         </IconButton>
                         <EditButton
                           onClick={() =>
-                            event.type.toLowerCase() === 'anniversary'
-                              ? setEditingTodoEvent({ ...event })
-                              : setEditingTravelEvent({ ...event })
+                            localEvent.type.toUpperCase() === 'ANNIVERSARY'
+                              ? setEditingTodoEvent({ ...localEvent })
+                              : setEditingTravelEvent({ ...localEvent })
                           }
                         >
                           <IconEdit />
@@ -676,7 +667,7 @@ function Todo({ meetingDate, events }) {
             </List>
             {!showAllEvents && (
               <AddButton onClick={() => {
-                activeSection === 'anniversary'
+                activeSection === 'ANNIVERSARY'
                   ? setIsModalOpen(true)
                   : setIsTravelModalOpen(true)
               }}>
@@ -685,7 +676,7 @@ function Todo({ meetingDate, events }) {
             )}
             <ViewAllButton onClick={() => setShowAllEvents(prev => !prev)}>
               {showAllEvents
-                ? `${activeSection === 'anniversary' ? '기념일' : '데이트'} 보기`
+                ? `${activeSection === 'ANNIVERSARY' ? '기념일' : '데이트'} 보기`
                 : '전체보기'}
             </ViewAllButton>
           </AnniversarySection>
