@@ -23,7 +23,8 @@ export const fetchAnniversaries = async () => {
       start_date: item.startDate,
       end_date: item.endDate,
       editable: item.editable,
-      type: 'anniversary'
+      type: 'anniversary',
+      color: item.color,
     }));
   } catch (e) {
     handleError('fetchAnniversaries', e);
@@ -40,7 +41,8 @@ export const fetchTravels = async () => {
       start_date: item.startDate,
       end_date: item.endDate,
       editable: true,
-      type: 'travel'
+      type: 'travel',
+      color: item.color,
     }));
   } catch (e) {
     handleError('fetchTravels', e);

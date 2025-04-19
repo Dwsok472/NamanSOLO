@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { IconClose, IconEdit } from '../../Icons';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
-import { fetchMediaBlobUrls } from '../../api2';
 
 const CardWrap = styled.div`
   width: 500px;
@@ -121,8 +120,7 @@ function DetailTravel({ event, onClose, onEdit }) {
   useEffect(() => {
     const fetchImages = async () => {
       if (event.mediaUrl?.length > 0) {
-        const blobUrls = await fetchMediaBlobUrls(event.mediaUrl);
-        setImageUrls(blobUrls);
+        setImageUrls(event.url.map((media)=>media.mediaUrl));
       }
     };
     fetchImages();

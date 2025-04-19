@@ -374,29 +374,39 @@ const ListDate = styled.div`
 `;
 
 function Todo({ meetingDate, events }) {
-  // const { user, setEvents } = useUserStore();
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const annivs = await api2.fetchAnniversaries();
-  //       const travels = await api2.fetchTravels();
-  //       setEvents([...annivs, ...travels]);
-  //     } catch (e) {
-  //       console.error('초기 데이터 로딩 실패:', e);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []); // 빈 배열이면 최초 로드 시 한 번 실행됨
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const [localEvents, setLocalEvents] = useState(events || []);
+  useEffect(() => {
+    if (!events || events.length === 0) {
+      const fetchFallbackEvents = async () => {
+        try {
+          const annivs = await fetchAnniversaries();
+          const travels = await fetchTravels();
+          
+          setLocalEvents([...annivs, ...travels]);
+          
+        } catch (err) {
+          console.error("🛑 Todo 컴포넌트에서 이벤트 직접 로딩 실패:", err);
+        }
+      };
+      fetchFallbackEvents();
+    }
+  }, []);
 
+  useEffect(() => {
+    console.log("로딩된 이벤트:", events);
+    events.forEach(e => {
+      if (!e.id) {
+        console.warn("이 이벤트에는 ID가 없음 ❌", e);
+      }
+    });
+    setLocalEvents(events);
+  }, [events]);
   const [showAllEvents, setShowAllEvents] = useState(false);
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  // const [events, setEvents] = useState([]);
   useEffect(() => {
     console.log("이벤트 목록:", events);
   }, []);
@@ -404,16 +414,11 @@ function Todo({ meetingDate, events }) {
   useEffect(() => {
     console.log("변경된 이벤트 확인! ", events);
   }, [meetingDate]);
-
-  // const [events, setEvents] = useState([
-  //   { id:1, title: '첫 데이트', start_date: '2025-04-02', color: '#ffb6c1', type:'anniversary', editable:true },
-  //   { id:2, title: '100일', start_date: '2025-07-07', color: '#ffc0cb', type:'anniversary', editable:false },
-  // ]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary', editable:true });
-  const [newTravelEvent, setNewTravelEvent] = useState({ id: events.length+1, title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [], editable:true });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'anniversary', editable:true });
+  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', start_date: '', end_date: '', color: '#87cefa', type:'travel', images: [], editable:true });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
   const [viewTravelEvent, setViewTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
@@ -431,7 +436,7 @@ function Todo({ meetingDate, events }) {
       } else {
         updated = await handleUpdateTravelMedia(updatedEvent.id, updatedEvent);
       }
-      setEvents(events.map(event => event.id === updated.id ? updated : event));
+      setLocalEvents(localEvents.map(event => event.id === updated.id ? updated : event));
       setEditingTodoEvent(null);
       setEditingTravelEvent(null);
     } catch (e) {
@@ -440,16 +445,19 @@ function Todo({ meetingDate, events }) {
   };
 
   const handleDelete = async (eventToDelete) => {
+    console.log("삭제할 이벤트의 id 값" + eventToDelete.id);
     const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toLowerCase() === 'anniversary' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
+    console.log("삭제할 ID 타입:", typeof eventToDelete.id, eventToDelete.id);
 
     try {
       if (eventToDelete.type.toLowerCase() === 'anniversary') {
-        await deleteAnniversary(eventToDelete.id);
+        
+        await deleteAnniversary(Number(eventToDelete.id));
       } else {
-        await deleteTravelMedia(eventToDelete.id);
+        await deleteTravelMedia(Number(eventToDelete.id));
       }
-      setEvents(events.filter(event => event !== eventToDelete));
+      setLocalEvents(prev => prev.filter(ev => ev.id !== eventToDelete.id));
     } catch (e) {
       console.error('삭제 실패:', e);
     }
@@ -493,7 +501,7 @@ function Todo({ meetingDate, events }) {
 
     const cellDateStr = formatDate(date); // 🧠 요거!
 
-    const matching = events.filter((event) => {
+    const matching = localEvents.filter((event) => {
       if (!showAllEvents && event.type.toLowerCase() !== activeSection) return false;
 
       const eventStart = event.start_date;
@@ -578,17 +586,17 @@ function Todo({ meetingDate, events }) {
                         return (
                           <StyledTd key={dIdx} $isToday={isToday}>
                             <DayCell>{date.getDate()}</DayCell>
-                            {getEventsForDay(date).map((event, i) => (
+                            {getEventsForDay(date).map((localEvent, i) => (
                               <EventBox
                                 key={i}
-                                color={event.color}
-                                className={`${event.type.toLowerCase()}${event.id}`}
-                                onMouseEnter={() => setHoveringEventId(event.id)}
+                                color={localEvent.color}
+                                className={`${localEvent.type.toLowerCase()}${localEvent.id}`}
+                                onMouseEnter={() => setHoveringEventId(localEvent.id)}
                                 onMouseLeave={() => setHoveringEventId(null)}
                                 $isHovered={hoveringEventId === event.id}
-                                onClick={() => event.type.toLowerCase() === 'anniversary' ? (event.editable ? setViewTodoEvent(event) : null) : setViewTravelEvent(event) }
+                                onClick={() => localEvent.type.toLowerCase() === 'anniversary' ? (localEvent.editable ? setViewTodoEvent(localEvent) : null) : setViewTravelEvent(localEvent) }
                               >
-                                <div title={event.type.toLowerCase() === 'travel' ? `${event.title} ${event.start_date} ~ ${event.end_date}` : (!event.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${event.title} ${event.start_date}`)}>{event.title}</div>
+                                <div title={localEvent.type.toLowerCase() === 'travel' ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}` : (!localEvent.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${localEvent.title} ${localEvent.start_date}`)}>{localEvent.title}</div>
                               </EventBox>
                             ))}
                           </StyledTd>
@@ -614,7 +622,7 @@ function Todo({ meetingDate, events }) {
             </SectionH3>
 
             <List>
-              {(showAllEvents ? events : events.filter(e => e.type.toLowerCase() === activeSection)).map((event, idx) => {
+              {(showAllEvents ? localEvents : localEvents.filter(e => e.type.toLowerCase() === activeSection)).map((event, idx) => {
 
                 const diffDays = getDiffInDays(
                   event.type.toLowerCase() === 'anniversary' ? event.start_date : event.start_date
@@ -685,7 +693,7 @@ function Todo({ meetingDate, events }) {
 
         {viewTodoEvent && (
           <DetailTodo
-            event={viewTodoEvent}
+            localEvent={viewTodoEvent}
             onClose={() => setViewTodoEvent(null)}
             onEdit={() => {
               setEditingTodoEvent(viewTodoEvent);
@@ -719,7 +727,7 @@ function Todo({ meetingDate, events }) {
             
               try {
                 const created = await createAnniversary(eventToAdd);
-                setEvents([...events, created]);
+                setLocalEvents(prev=>[...prev, created]);
                 setNewAnniversaryEvent({ title: '', start_date: '', end_date:'', color: '#ffc0cb', type: 'ANNIVERSARY' });
                 setIsModalOpen(false);
                 setAnniversaryPaletteOpen(false);
@@ -733,7 +741,7 @@ function Todo({ meetingDate, events }) {
 
         {editingTodoEvent && (
           <Edittodo
-            event={editingTodoEvent}
+            localEvent={editingTodoEvent}
             setEvent={setEditingTodoEvent}
             onClose={() => setEditingTodoEvent(null)}
             onSubmit={(e) => {
@@ -754,7 +762,7 @@ function Todo({ meetingDate, events }) {
 
         {viewTravelEvent && (
           <DetailTravel
-            event={viewTravelEvent}
+            localEvent={viewTravelEvent}
             onClose={() => setViewTravelEvent(null)}
             onEdit={() => {
               setEditingTravelEvent(viewTravelEvent);
@@ -765,7 +773,7 @@ function Todo({ meetingDate, events }) {
 
         {editingTravelEvent && (
           <Edittravel
-            event={editingTravelEvent}
+            localEvent={editingTravelEvent}
             setEvent={setEditingTravelEvent}
             onClose={() => setEditingTravelEvent(null)}
             onSubmit={
@@ -782,7 +790,7 @@ function Todo({ meetingDate, events }) {
               
                 try {
                   const updated = await handleUpdateTravelMedia(editingTravelEvent.id, editingTravelEvent);
-                  setEvents(events.map(ev => ev.id === updated.id ? updated : ev));
+                  setLocalEvents(prev => prev.map(event => event.id === updated.id ? updated : event));
                   setEditingTravelEvent(null);
                 } catch (err) {
                   console.error('🚨 여행 일정 수정 실패:', err);
@@ -818,7 +826,7 @@ function Todo({ meetingDate, events }) {
 
               try {
                 const created = await handleCreateTravelMedia(newTravelEvent);
-                setEvents([...events, created]);
+                setLocalEvents([...localEvents, created]);
 
                 setNewTravelEvent({
                   title: '',

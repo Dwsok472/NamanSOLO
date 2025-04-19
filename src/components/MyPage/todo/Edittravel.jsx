@@ -232,7 +232,7 @@ const SubmitButton = styled.button`
 `;
 
 function Edittravel({
-  event,
+  localEvent,
   setEvent,
   paletteOpen,
   setPaletteOpen,
@@ -240,7 +240,7 @@ function Edittravel({
   onClose,
   onSubmit
 }) {
-  if (!event) return null;
+  if (!localEvent) return null;
   const [blobUrls, setBlobUrls] = useState([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -248,10 +248,10 @@ function Edittravel({
 
   const totalImages = [
     ...blobUrls,
-    ...(event.images || []),
+    ...(localEvent.images || []),
   ];
 
-  const isFileImage = (index) => index >= (event.mediaUrl?.length || 0);
+  const isFileImage = (index) => index >= (localEvent.mediaUrl?.length || 0);
 
   const currentImage = totalImages[currentIndex];
 
@@ -263,22 +263,24 @@ function Edittravel({
     setCurrentIndex((prev) => (prev + 1) % totalImages.length);
   };
 
+  const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
-    const fetchBlobs = async () => {
-      const urls = await fetchMediaBlobUrls(event.mediaUrl || []);
-      setBlobUrls(urls.filter(Boolean)); // null 제거
+    const fetchImages = async () => {
+      if (localEvent.mediaUrl?.length) {
+        setImageUrls(localEvent.mediaUrl.map((media)=>media.mediaUrl));
+      }
     };
   
-    fetchBlobs();
-  }, [event.mediaUrl]);
+    fetchImages();
+  }, [localEvent.mediaUrl]);
   
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     setEvent({
-      ...event,
-      id: event.id,
-      images: [...(event.images || []), ...files],
+      ...localEvent,
+      id: localEvent.id,
+      images: [...(localEvent.images || []), ...files],
     });
   };
 
@@ -287,14 +289,14 @@ function Edittravel({
     if (!confirmDel) return;
 
     if (isFileImage(currentIndex)) {
-      const idx = currentIndex - (event.mediaUrl?.length || 0);
-      const updatedImages = [...event.images];
+      const idx = currentIndex - (localEvent.mediaUrl?.length || 0);
+      const updatedImages = [...localEvent.images];
       updatedImages.splice(idx, 1);
-      setEvent({ ...event, images: updatedImages });
+      setEvent({ ...localEvent, images: updatedImages });
     } else {
-      const updatedMedia = [...event.mediaUrl];
+      const updatedMedia = [...localEvent.mediaUrl];
       updatedMedia.splice(currentIndex, 1);
-      setEvent({ ...event, mediaUrl: updatedMedia });
+      setEvent({ ...localEvent, mediaUrl: updatedMedia });
     }
 
     setCurrentIndex((prev) => Math.max(0, prev - 1));
@@ -309,7 +311,7 @@ function Edittravel({
         </Top>
         <Bottom>
           <ImagePreviewContainer>
-            {totalImages.length > 0 ? (
+            {imageUrls.length > 0 ? (
               <>
                 <PreviewImage
                   src={
@@ -320,7 +322,7 @@ function Edittravel({
                   onClick={() => fileInputRef.current.click()}
                   alt="미리보기"
                 />
-                {totalImages.length > 1 && (
+                {imageUrls.length > 1 && (
                   <>
                     <PrevButton onClick={handlePrev}><img src={LeftKey} alt="prev"/></PrevButton>
                     <NextButton onClick={handleNext}><img src={RightKey} alt="next"/></NextButton>
@@ -346,29 +348,29 @@ function Edittravel({
             <Input
               type="text"
               placeholder="제목을 입력해주세요"
-              value={event.title || ''}
-              onChange={(e) => setEvent({ ...event, title: e.target.value })}
+              value={localEvent.title || ''}
+              onChange={(e) => setEvent({ ...localEvent, title: e.target.value })}
               required
             />
 
             <Row>
               <Input
                 type="date"
-                value={event.start_date || ''}
-                onChange={(e) => setEvent({ ...event, start_date: e.target.value })}
+                value={localEvent.start_date || ''}
+                onChange={(e) => setEvent({ ...localEvent, start_date: e.target.value })}
                 required
               />
               <Input
                 type="date"
-                value={event.end_date || ''}
-                onChange={(e) => setEvent({ ...event, end_date: e.target.value })}
+                value={localEvent.end_date || ''}
+                onChange={(e) => setEvent({ ...localEvent, end_date: e.target.value })}
                 required
               />
             </Row>
 
             <Label>색상</Label>
             <ColorSection onClick={() => setPaletteOpen(prev => !prev)}>
-              <SelectedColorPreview color={event.color} />
+              <SelectedColorPreview color={localEvent.color} />
             </ColorSection>
 
             {paletteOpen && (
@@ -378,7 +380,7 @@ function Edittravel({
                     key={color}
                     color={color}
                     onClick={() => {
-                      setEvent({ ...event, color });
+                      setEvent({ ...localEvent, color });
                       setPaletteOpen(false);
                     }}
                   />

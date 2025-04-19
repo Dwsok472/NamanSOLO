@@ -72,8 +72,8 @@ const SelectedColorPreview = styled.div`
   border: 2px solid #ccc;
 `;
 
-function DetailTodo({ event, onClose, onEdit }) {
-  if (!event) return null;
+function DetailTodo({ localEvent, onClose, onEdit }) {
+  if (!localEvent) return null;
 
   return (
     <CardWrap 
@@ -90,10 +90,10 @@ function DetailTodo({ event, onClose, onEdit }) {
         </Top>
 
         <Bottom>
-          <Info>{event.title}</Info>
-          <Info>{event.start_date}</Info>
+          <Info>{localEvent.title}</Info>
+          <Info>{localEvent.start_date}</Info>
           <ColorSection>
-            <SelectedColorPreview color={event.color} />
+            <SelectedColorPreview color={localEvent.color} />
           </ColorSection>
         </Bottom>
       </Card>

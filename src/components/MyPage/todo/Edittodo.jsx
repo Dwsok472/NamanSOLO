@@ -122,7 +122,7 @@ const Button = styled.button`
 `;
 
 function Edittodo({
-  event,
+  localEvent,
   setEvent,
   paletteOpen,
   setPaletteOpen,
@@ -130,7 +130,7 @@ function Edittodo({
   onClose,
   onSubmit
 }) {
-  if (!event) return null;
+  if (!localEvent) return null;
 
   return (
     <CardWrap 
@@ -145,21 +145,21 @@ function Edittodo({
             <Input
               type="text"
               placeholder="기념일 제목"
-              value={event.title || ''}
-              onChange={(e) => setEvent({ ...event, title: e.target.value })}
+              value={localEvent.title || ''}
+              onChange={(e) => setEvent({ ...localEvent, title: e.target.value })}
               required
             />
 
             <Input
               type="date"
-              value={event.start_date || ''}
-              onChange={(e) => setEvent({ ...event, start_date: e.target.value, end_date: e.target.value, type:"ANNIVERSARY" })}
+              value={localEvent.start_date || ''}
+              onChange={(e) => setEvent({ ...localEvent, start_date: e.target.value, end_date: e.target.value, type:"ANNIVERSARY" })}
               required
             />
 
             <Label>색상</Label>
             <ColorSection onClick={() => setPaletteOpen((prev) => !prev)}>
-              <SelectedColorPreview color={event.color} />
+              <SelectedColorPreview color={localEvent.color} />
             </ColorSection>
 
             {paletteOpen && (
@@ -169,7 +169,7 @@ function Edittodo({
                     key={color}
                     color={color}
                     onClick={() => {
-                      setEvent({ ...event, color });
+                      setEvent({ ...localEvent, color });
                       setPaletteOpen(false);
                     }}
                   />
