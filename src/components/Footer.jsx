@@ -6,6 +6,7 @@ import ChatBot from "./ChatBot/ChatBot";
 import Alarm from "./MyPage/alarm/Alarm";
 import { IconBell } from "./Icons";
 import { useUserStore } from "./Login/Login";
+import { useAlarmList } from "./MyPage/alarm/alarmList";
 
 const FooterWrapper = styled.footer`
   width: 100%;
@@ -174,11 +175,27 @@ const BellWrapper = styled.div`
   }
 `;
 
+const Badge = styled.div`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: ${({ visible }) => (visible ? "flex" : "none")};
+  align-items: center;
+  justify-content: center;
+`;
+
 const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [showAlarm, setShowAlarm] = useState(false);
   const { isLoggedIn } = useUserStore();
+  const unreadCount = useAlarmList((state) => state.unreadCount);
   // 알람 버튼 클릭
   const toggleAlarm = () => {
     if (showAlarm) {
@@ -260,6 +277,7 @@ const Footer = () => {
           <BellWrapper>
             <button className="button" onClick={toggleAlarm}>
               <IconBell />
+              <Badge visible={unreadCount > 0}>{unreadCount}</Badge>
             </button>
             {showAlarm && <Alarm onClose={toggleAlarm} />}
           </BellWrapper>

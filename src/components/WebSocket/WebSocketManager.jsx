@@ -26,9 +26,13 @@ function WebSocketManager() {
       const saved = localStorage.getItem(`alarms-${user.username}`);
       if (saved) {
         const parsed = JSON.parse(saved);
+        const alarms = parsed.alarmList || [];
+
+        const unread = alarms.filter((a) => !a.isRead).length;
+
         useAlarmList.setState({
-          alarmList: parsed.alarmList || [],
-          unreadCount: parsed.unreadCount || 0,
+          alarmList: alarms,
+          unreadCount: unread,
         });
       }
     }

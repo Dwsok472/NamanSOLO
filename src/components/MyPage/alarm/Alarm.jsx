@@ -5,6 +5,7 @@ import { IconClose } from "../../Icons";
 import { useNavigate } from "react-router-dom";
 import Setting from "./Setting";
 import { useAlarmList } from "./alarmList";
+import { useUserStore } from "../../Login/Login";
 
 const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
@@ -207,18 +208,35 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const [overflowingItems, setOverflowingItems] = useState({});
   const textRefs = useRef({});
   const [isOpen, setIsOpen] = useState(false);
+  // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
+  const alarmList = useAlarmList((state) => state.alarmList);
+
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
   // const [alarmList, setAlarmList] = useState([]);
   // const userId = 1; // 실제 로그인 유저 ID 넣기
 
   useEffect(() => {
-    if (alarmList.length > 0) {
-      alarmList.forEach((alarm) => {
-        useAlarmList.getState().markAsRead(alarm.id); // 읽음 처리
-      });
+    const unread = alarmList.filter((alarm) => !alarm.isRead);
+    unread.forEach((alarm) => {
+      useAlarmList.getState().markAsRead(alarm.id);
+    });
+
+    useAlarmList.getState().resetUnreadCount(); // 읽음 처리 이후 숫자 초기화
+
+    const currentUser = useUserStore.getState().user?.username;
+    if (currentUser) {
+      const updatedList = useAlarmList.getState().alarmList;
+      const updatedUnread = updatedList.filter((a) => !a.isRead).length;
+      localStorage.setItem(
+        `alarms-${currentUser}`,
+        JSON.stringify({
+          alarmList: updatedList,
+          unreadCount: updatedUnread,
+        })
+      );
     }
-  }, [alarmList]);
+  }, []);
 
   // 날씨 정보를 가져오는 함수
   const fetchWeather = async (cityName) => {
@@ -292,9 +310,6 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const toggleSetting = () => {
     setShowSetting((prev) => !prev);
   };
-
-  // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
-  const alarmList = useAlarmList((state) => state.alarmList);
 
   // 일정 기반 알림 가져오기
   // useEffect(() => {
