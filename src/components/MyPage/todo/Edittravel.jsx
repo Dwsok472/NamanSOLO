@@ -241,32 +241,27 @@ function Edittravel({
   onSubmit
 }) {
   if (!localEvent) return null;
-  const [blobUrls, setBlobUrls] = useState([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const fileInputRef = useRef(null);
 
-  const totalImages = [
-    ...blobUrls,
-    ...(localEvent.images || []),
-  ];
-
   const isFileImage = (index) => index >= (localEvent.mediaUrl?.length || 0);
 
-  const currentImage = totalImages[currentIndex];
+  const currentImage = localEvent.mediaUrl[currentIndex];
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + totalImages.length) % totalImages.length);
+    setCurrentIndex((prev) => (prev - 1 + localEvent.mediaUrl.length) % localEvent.mediaUrl.length);
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % totalImages.length);
+    setCurrentIndex((prev) => (prev + 1) % localEvent.mediaUrl.length);
   };
 
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchImages = async () => {
+      console.log(localEvent.mediaUrl)
       if (localEvent.mediaUrl?.length) {
         setImageUrls(localEvent.mediaUrl.map((media)=>media.mediaUrl));
       }
@@ -280,7 +275,7 @@ function Edittravel({
     setEvent({
       ...localEvent,
       id: localEvent.id,
-      images: [...(localEvent.images || []), ...files],
+      images: [...(localEvent.mediaUrl || []), ...files],
     });
   };
 

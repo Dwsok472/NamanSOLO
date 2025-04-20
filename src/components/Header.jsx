@@ -106,7 +106,7 @@ function Header({
           {!isLoginPage && (
             <>
               {isLoggedIn ? (
-                <button onClick={logout} className='logout'>로그아웃</button>
+                <button onClick={()=>{navigate("/"); logout();}} className='logout'>로그아웃</button>
               ) : (
                 <>
                   <LoginButton type="navigate" />

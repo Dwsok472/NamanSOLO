@@ -110,23 +110,23 @@ const Info = styled.div`
   word-break: break-all;
 `;
 
-function DetailTravel({ event, onClose, onEdit }) {
-  if (!event) return null;
+function DetailTravel({ localEvent, onClose, onEdit }) {
+  if (!localEvent) return null;
 
-  console.log("🧾 받은 event:", event); 
+  console.log("🧾 받은 event:", localEvent); 
 
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchImages = async () => {
-      if (event.mediaUrl?.length > 0) {
-        setImageUrls(event.url.map((media)=>media.mediaUrl));
+      if (localEvent.mediaUrl?.length > 0) {
+        setImageUrls(localEvent.mediaUrl.map((media)=>media.mediaUrl));
       }
     };
     fetchImages();
-  }, [event]);
+  }, [localEvent]);
 
-  const media = event.mediaUrl || [];
+  const media = localEvent.mediaUrl || [];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const currentImage = imageUrls[currentImageIndex];
   console.log("🎞 media 배열:", media);
@@ -174,10 +174,10 @@ function DetailTravel({ event, onClose, onEdit }) {
         )}
 
         <Bottom>
-          <Info><strong>{event.title}</strong></Info>
-          <Info>{event.start_date} ~ {event.end_date}</Info>
+          <Info><strong>{localEvent.title}</strong></Info>
+          <Info>{localEvent.start_date} ~ {localEvent.end_date}</Info>
           <ColorSection>
-            <SelectedColorPreview color={event.color} />
+            <SelectedColorPreview color={localEvent.color} />
           </ColorSection>
         </Bottom>
       </Card>
