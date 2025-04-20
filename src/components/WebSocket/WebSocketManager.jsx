@@ -3,6 +3,10 @@ import { useUserStore } from "../Login/Login";
 import SockJS from "sockjs-client";
 import * as Stomp from "@stomp/stompjs";
 import { useAlarmList } from "../MyPage/alarm/alarmList";
+import heart from "../img/heart.png";
+import group from "../img/group.png";
+import message from "../img/messenger.png";
+import firework from "../img/firework.png";
 
 function WebSocketManager() {
   const { user, isLoggedIn } = useUserStore();
@@ -12,10 +16,23 @@ function WebSocketManager() {
     console.log("웹소켓 : ");
     console.log(isLoggedIn);
     const token = sessionStorage.getItem("jwt-token");
-    if (token) {
+    if (token && isLoggedIn) {
       connect(token);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, user?.username]);
+
+  useEffect(() => {
+    if (user?.username) {
+      const saved = localStorage.getItem(`alarms-${user.username}`);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        useAlarmList.setState({
+          alarmList: parsed.alarmList || [],
+          unreadCount: parsed.unreadCount || 0,
+        });
+      }
+    }
+  }, [user?.username]);
 
   function connect(token) {
     // 웹소켓 연결(=엔드포인트) 설정
@@ -44,46 +61,61 @@ function WebSocketManager() {
 
   function onNotificationReceived(notification) {
     const raw = JSON.parse(notification.body);
+    console.log("수신된 알림:", raw);
 
     const addAlarm = useAlarmList.getState().addAlarm;
+    const type = raw.alarmType || raw.type || "UNKNOWN";
 
-    // 실제 UI에 맞는 구조로 변환
-    const newAlarm = {
-      id: Date.now(), // 또는 uuid
-      text: raw.message,
-      img: resolveImage(raw.type), // 타입에 따라 아이콘 선택
-      alt: raw.type,
-      link: resolveLink(raw.type),
-    };
+    let newAlarm;
+
+    if (raw.iconCode) {
+      // 날씨 알림
+      newAlarm = {
+        id: Date.now(),
+        text: raw.message,
+        img: `http://openweathermap.org/img/w/${raw.iconCode}.png`,
+        alt: "WEATHER",
+        link: "/weather",
+      };
+    } else {
+      // 일반 알림
+      const type = raw.alarmType || raw.type || "UNKNOWN";
+      newAlarm = {
+        id: Date.now(),
+        text: raw.message,
+        img: resolveImage(type),
+        alt: type,
+        link: resolveLink(type),
+      };
+    }
 
     addAlarm(newAlarm);
   }
 
-  return null;
-}
-
-function resolveImage(type) {
-  switch (type) {
-    case "COMMENT":
-    case "LIKE":
-      return "/img/heart.png";
-    case "FOLLOW":
-      return "/img/group.png";
-    case "RECOMMEND":
-      return "/img/place.png";
-    default:
-      return "/img/firework.png";
+  function resolveImage(type) {
+    switch (type) {
+      case "COMMENT":
+      case "RECOMMENT":
+        return message;
+      case "GREAT":
+        return heart;
+      case "FOLLOW":
+        return group;
+      default:
+        return firework;
+    }
   }
-}
 
-function resolveLink(type) {
-  switch (type) {
-    case "COMMENT":
-      return "/mypage/story";
-    case "FOLLOW":
-      return "/mypage/follower";
-    default:
-      return "/";
+  function resolveLink(type) {
+    switch (type) {
+      case "COMMENT":
+      case "RECOMMENT":
+        return "/mypage/story";
+      case "FOLLOW":
+        return "/mypage/follower";
+      default:
+        return "/";
+    }
   }
 }
 

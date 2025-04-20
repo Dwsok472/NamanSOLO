@@ -1,58 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import settings from "../../img/settings.png";
-import firework from "../../img/firework.png";
-import add from "../../img/add.png";
-import place from "../../img/place.png";
-import heart from "../../img/heart.png";
-import group from "../../img/group.png";
 import { IconClose } from "../../Icons";
 import { useNavigate } from "react-router-dom";
 import Setting from "./Setting";
 import { useAlarmList } from "./alarmList";
-
-// OpenWeatherMap API 키
-// const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
-
-// // 대한민국 주요 도시 목록
-// const cities = [
-//   "Seoul",
-//   "Busan",
-//   "Incheon",
-//   "Daegu",
-//   "Daejeon",
-//   "Gwangju",
-//   "Ulsan",
-//   "Ungsang",
-//   "Jeonju",
-//   "Changwon",
-//   "Suwon",
-//   "Sokcho",
-//   "Yangyang",
-//   "Cheongjusi",
-//   "Boryeong",
-//   "Kimje",
-// ];
-
-// // 도시 이름과 한국어 매핑 객체
-// const cityTranslations = {
-//   Seoul: "서울",
-//   Busan: "부산",
-//   Incheon: "인천",
-//   Daegu: "대구",
-//   Daejeon: "대전",
-//   Gwangju: "광주",
-//   Ulsan: "울산",
-//   Ungsang: "울진",
-//   Jeonju: "전주",
-//   Changwon: "창원",
-//   Suwon: "수원",
-//   Sokcho: "속초",
-//   Yangyang: "양양",
-//   Cheongjusi: "청주",
-//   Boryeong: "보령",
-//   Kimje: "김제",
-// };
 
 const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
@@ -103,52 +55,52 @@ const CloseButton = styled.button`
 `;
 
 // 스타일링된 select 요소
-// const DropdownWrapper = styled.div`
-//   position: relative;
-//   margin-left: auto;
-// `;
+const DropdownWrapper = styled.div`
+  position: relative;
+  margin-left: auto;
+`;
 
-// const DropdownButton = styled.button`
-//   width: 50px;
-//   height: 30px;
-//   font-size: 13px;
-//   font-weight: 700;
-//   padding: 8px;
-//   border: 1px solid #ccc;
-//   border-radius: 5px;
-//   background-color: #f8f8f8;
-//   cursor: pointer;
-//   display: flex;
-//   align-items: center; // 세로 중앙
-//   justify-content: center; // 가로 중앙
-// `;
+const DropdownButton = styled.button`
+  width: 60px;
+  height: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  display: flex;
+  align-items: center; // 세로 중앙
+  justify-content: center; // 가로 중앙
+`;
 
-// const DropdownList = styled.ul`
-//   position: absolute;
-//   right: 0;
-//   top: 40px;
-//   width: 70px;
-//   font-size: 12px;
-//   font-weight: 700;
-//   max-height: 150px; /*  여기서 높이 제한 */
-//   overflow-y: auto; /*  스크롤 가능 */
-//   border: 1px solid #ccc;
-//   background-color: #fff;
-//   border-radius: 5px;
-//   list-style: none;
-//   padding: 0;
-//   margin: 0;
-//   z-index: 100;
-// `;
+const DropdownList = styled.ul`
+  position: absolute;
+  right: 0;
+  top: 40px;
+  width: 70px;
+  font-size: 12px;
+  font-weight: 700;
+  max-height: 150px; /*  여기서 높이 제한 */
+  overflow-y: auto; /*  스크롤 가능 */
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+`;
 
-// const DropdownItem = styled.li`
-//   padding: 8px;
-//   cursor: pointer;
+const DropdownItem = styled.li`
+  padding: 8px;
+  cursor: pointer;
 
-//   &:hover {
-//     background-color: #eee;
-//   }
-// `;
+  &:hover {
+    background-color: #eee;
+  }
+`;
 
 const ContainerMain = styled.div`
   width: 90%;
@@ -166,22 +118,22 @@ const ContainerMain = styled.div`
   }
 `;
 
-// const Content = styled.div`
-//   width: 100%;
-//   padding: 15px;
-//   border-bottom: 1px solid #eee;
-//   font-weight: 700;
-//   font-size: 15px;
-//   display: flex;
+const Content = styled.div`
+  width: 100%;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
 
-//   align-items: center;
-// `;
+  align-items: center;
+`;
 
-// const Show = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-// `;
+const Show = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Img = styled.img`
   width: 30px;
@@ -244,9 +196,9 @@ const Backdrop = styled.div`
 function Alarm({ onClose /*, isOpen*/ }) {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [expandedId, setExpandedId] = useState(null); // 펼쳐진 알림 ID
-  // const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
-  // const [weather, setWeather] = useState(null); // 날씨 상태
-  // const [loading, setLoading] = useState(true); // 로딩 상태
+  const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
+  const [weather, setWeather] = useState(null); // 날씨 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
   const [isDraggingAlarm, setIsDraggingAlarm] = useState(false); // Alarm 모달만 위한 드래그 상태
   const [offset, setOffset] = useState({ x: 0, y: 0 }); // 마우스 위치
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
@@ -255,35 +207,45 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const [overflowingItems, setOverflowingItems] = useState({});
   const textRefs = useRef({});
   const [isOpen, setIsOpen] = useState(false);
+  const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
+
   // const [alarmList, setAlarmList] = useState([]);
   // const userId = 1; // 실제 로그인 유저 ID 넣기
 
+  useEffect(() => {
+    if (alarmList.length > 0) {
+      alarmList.forEach((alarm) => {
+        useAlarmList.getState().markAsRead(alarm.id); // 읽음 처리
+      });
+    }
+  }, [alarmList]);
+
   // 날씨 정보를 가져오는 함수
-  // const fetchWeather = async (cityName) => {
-  //   setLoading(true); // 데이터 로딩 시작
-  //   try {
-  //     const response = await fetch(
-  //       `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=kr`
-  //     );
-  //     const data = await response.json();
-  //     if (data.weather && data.weather[0]) {
-  //       setWeather({
-  //         description: data.weather[0].description,
-  //         temperature: data.main.temp,
-  //         icon: data.weather[0].icon,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.error("날씨 데이터를 가져오는 데 오류가 발생했습니다.", error);
-  //   } finally {
-  //     setLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 변경
-  //   }
-  // };
+  const fetchWeather = async (cityName) => {
+    setLoading(true); // 데이터 로딩 시작
+    try {
+      const response = await fetch(
+        `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=kr`
+      );
+      const data = await response.json();
+      if (data.weather && data.weather[0]) {
+        setWeather({
+          description: data.weather[0].description,
+          temperature: data.main.temp,
+          icon: data.weather[0].icon,
+        });
+      }
+    } catch (error) {
+      console.error("날씨 데이터를 가져오는 데 오류가 발생했습니다.", error);
+    } finally {
+      setLoading(false); // 데이터 로딩 완료 후 로딩 상태를 false로 변경
+    }
+  };
 
   // 도시가 변경될 때마다 날씨 정보 새로 가져오기
-  // useEffect(() => {
-  //   fetchWeather(city);
-  // }, [city]);
+  useEffect(() => {
+    fetchWeather(city);
+  }, [city]);
 
   // 마우스를 누를 때, 드래그 시작
   const handleMouseDownAlarm = (e) => {
@@ -468,7 +430,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
 
           <ContainerMain>
             {/* 날씨 정보 표시 */}
-            {/* <Content>
+            <Content>
               {loading ? (
                 <span>날씨 정보를 불러오는 중...</span>
               ) : weather ? (
@@ -484,9 +446,9 @@ function Alarm({ onClose /*, isOpen*/ }) {
                 </>
               ) : (
                 <span>날씨 정보를 불러오는 데 실패했습니다.</span>
-              )} */}
-            {/* 도시 선택 드롭다운 */}
-            {/* <DropdownWrapper>
+              )}
+              {/* 도시 선택 드롭다운 */}
+              <DropdownWrapper>
                 <DropdownButton onClick={() => setIsOpen((prev) => !prev)}>
                   {cityTranslations[city] || city}
                 </DropdownButton>
@@ -506,8 +468,8 @@ function Alarm({ onClose /*, isOpen*/ }) {
                     ))}
                   </DropdownList>
                 )}
-              </DropdownWrapper> 
-            </Content>*/}
+              </DropdownWrapper>
+            </Content>
 
             {/* 알람 항목들 */}
             {alarmList.map((alarm) => {
@@ -542,5 +504,324 @@ function Alarm({ onClose /*, isOpen*/ }) {
     </>
   );
 }
+
+// OpenWeatherMap API 키
+const API_KEY = "2e1e70c1aa8c4ea567aa7ab322820ca7"; // 발급받은 API 키를 여기 넣으세요.
+
+// 대한민국 주요 도시 목록
+const cities = [
+  "Seoul",
+  "Busan",
+  "Daegu",
+  "Incheon",
+  "Gwangju",
+  "Daejeon",
+  "Ulsan",
+  "Sejong",
+  "Suwon",
+  "Yongin",
+  "Seongnam",
+  "Goyang",
+  "Bucheon",
+  "Ansan",
+  "Anyang",
+  "Namyangju",
+  "Hwaseong",
+  "Pyeongtaek",
+  "Uijeongbu",
+  "Siheung",
+  "Gwangmyeong",
+  "Gwangju-si",
+  "Hanam",
+  "Gunpo",
+  "Icheon",
+  "Anseong",
+  "Osan",
+  "Yangju",
+  "Paju",
+  "Dongducheon",
+  "Guri",
+  "Gapyeong",
+  "Yangpyeong",
+  "Yeoncheon",
+  "Pocheon",
+  "Chuncheon",
+  "Wonju",
+  "Gangneung",
+  "Donghae",
+  "Samcheok",
+  "Taebaek",
+  "Sokcho",
+  "Hongcheon",
+  "Hoengseong",
+  "Pyeongchang",
+  "Jeongseon",
+  "Cheorwon",
+  "Hwacheon",
+  "Yanggu",
+  "Inje",
+  "Goseong_Gangwon",
+  "Yangyang",
+  "Cheongju",
+  "Chungju",
+  "Jecheon",
+  "Boeun",
+  "Okcheon",
+  "Yeongdong",
+  "Jincheon",
+  "Goesan",
+  "Eumseong",
+  "Danyang",
+  "Jeungpyeong",
+  "Cheonan",
+  "Asan",
+  "Gongju",
+  "Boryeong",
+  "Seosan",
+  "Nonsan",
+  "Gyeryong",
+  "Dangjin",
+  "Geumsan",
+  "Buyeo",
+  "Seocheon",
+  "Cheongyang",
+  "Hongseong",
+  "Yesan",
+  "Taean",
+  "Jeonju",
+  "Gunsan",
+  "Iksan",
+  "Namwon",
+  "Gimje",
+  "Jeongeup",
+  "Wanju",
+  "Jinan",
+  "Muju",
+  "Jangsu",
+  "Imsil",
+  "Sunchang",
+  "Gochang",
+  "Buan",
+  "Mokpo",
+  "Suncheon",
+  "Yeosu",
+  "Naju",
+  "Gwangyang",
+  "Damyang",
+  "Gokseong",
+  "Gurye",
+  "Goheung",
+  "Boseong",
+  "Hwasun",
+  "Jangheung",
+  "Gangjin",
+  "Haenam",
+  "Yeongam",
+  "Muan",
+  "Hampyeong",
+  "Yeonggwang",
+  "Jangseong",
+  "Wando",
+  "Jindo",
+  "Sinan",
+  "Pohang",
+  "Gyeongju",
+  "Gimcheon",
+  "Andong",
+  "Gumi",
+  "Yeongju",
+  "Yeongcheon",
+  "Sangju",
+  "Mungyeong",
+  "Gyeongsan",
+  "Uljin",
+  "Uiseong",
+  "Yeongyang",
+  "Yeongdeok",
+  "Bonghwa",
+  "Cheongsong",
+  "Seongju",
+  "Chilgok",
+  "Gunwi",
+  "Cheongdo",
+  "Changwon",
+  "Jinju",
+  "Tongyeong",
+  "Sacheon",
+  "Gimhae",
+  "Miryang",
+  "Geoje",
+  "Yangsan",
+  "Uiryeong",
+  "Haman",
+  "Changnyeong",
+  "Goseong_Gyeongnam",
+  "Namhae",
+  "Hadong",
+  "Sancheong",
+  "Hamyang",
+  "Geochang",
+  "Hapcheon",
+  "Jeju",
+  "Seogwipo",
+];
+
+// 도시 이름과 한국어 매핑 객체
+const cityTranslations = {
+  Seoul: "서울",
+  Busan: "부산",
+  Daegu: "대구",
+  Incheon: "인천",
+  Gwangju: "광주",
+  Daejeon: "대전",
+  Ulsan: "울산",
+  Sejong: "세종",
+  Suwon: "수원",
+  Yongin: "용인",
+  Seongnam: "성남",
+  Goyang: "고양",
+  Bucheon: "부천",
+  Ansan: "안산",
+  Anyang: "안양",
+  Namyangju: "남양주",
+  Hwaseong: "화성",
+  Pyeongtaek: "평택",
+  Uijeongbu: "의정부",
+  Siheung: "시흥",
+  Gwangmyeong: "광명",
+  "Gwangju-si": "광주",
+  Hanam: "하남",
+  Gunpo: "군포",
+  Icheon: "이천",
+  Anseong: "안성",
+  Osan: "오산",
+  Yangju: "양주",
+  Paju: "파주",
+  Dongducheon: "동두천",
+  Guri: "구리",
+  Gapyeong: "가평",
+  Yangpyeong: "양평",
+  Yeoncheon: "연천",
+  Pocheon: "포천",
+  Chuncheon: "춘천",
+  Wonju: "원주",
+  Gangneung: "강릉",
+  Donghae: "동해",
+  Samcheok: "삼척",
+  Taebaek: "태백",
+  Sokcho: "속초",
+  Hongcheon: "홍천",
+  Hoengseong: "횡성",
+  Pyeongchang: "평창",
+  Jeongseon: "정선",
+  Cheorwon: "철원",
+  Hwacheon: "화천",
+  Yanggu: "양구",
+  Inje: "인제",
+  Goseong_Gangwon: "고성",
+  Yangyang: "양양",
+  Cheongju: "청주",
+  Chungju: "충주",
+  Jecheon: "제천",
+  Boeun: "보은",
+  Okcheon: "옥천",
+  Yeongdong: "영동",
+  Jincheon: "진천",
+  Goesan: "괴산",
+  Eumseong: "음성",
+  Danyang: "단양",
+  Jeungpyeong: "증평",
+  Cheonan: "천안",
+  Asan: "아산",
+  Gongju: "공주",
+  Boryeong: "보령",
+  Seosan: "서산",
+  Nonsan: "논산",
+  Gyeryong: "계룡",
+  Dangjin: "당진",
+  Geumsan: "금산",
+  Buyeo: "부여",
+  Seocheon: "서천",
+  Cheongyang: "청양",
+  Hongseong: "홍성",
+  Yesan: "예산",
+  Taean: "태안",
+  Jeonju: "전주",
+  Gunsan: "군산",
+  Iksan: "익산",
+  Namwon: "남원",
+  Gimje: "김제",
+  Jeongeup: "정읍",
+  Wanju: "완주",
+  Jinan: "진안",
+  Muju: "무주",
+  Jangsu: "장수",
+  Imsil: "임실",
+  Sunchang: "순창",
+  Gochang: "고창",
+  Buan: "부안",
+  Mokpo: "목포",
+  Suncheon: "순천",
+  Yeosu: "여수",
+  Naju: "나주",
+  Gwangyang: "광양",
+  Damyang: "담양",
+  Gokseong: "곡성",
+  Gurye: "구례",
+  Goheung: "고흥",
+  Boseong: "보성",
+  Hwasun: "화순",
+  Jangheung: "장흥",
+  Gangjin: "강진",
+  Haenam: "해남",
+  Yeongam: "영암",
+  Muan: "무안",
+  Hampyeong: "함평",
+  Yeonggwang: "영광",
+  Jangseong: "장성",
+  Wando: "완도",
+  Jindo: "진도",
+  Sinan: "신안",
+  Pohang: "포항",
+  Gyeongju: "경주",
+  Gimcheon: "김천",
+  Andong: "안동",
+  Gumi: "구미",
+  Yeongju: "영주",
+  Yeongcheon: "영천",
+  Sangju: "상주",
+  Mungyeong: "문경",
+  Gyeongsan: "경산",
+  Uljin: "울진",
+  Uiseong: "의성",
+  Yeongyang: "영양",
+  Yeongdeok: "영덕",
+  Bonghwa: "봉화",
+  Cheongsong: "청송",
+  Seongju: "성주",
+  Chilgok: "칠곡",
+  Gunwi: "군위",
+  Cheongdo: "청도",
+  Changwon: "창원",
+  Jinju: "진주",
+  Tongyeong: "통영",
+  Sacheon: "사천",
+  Gimhae: "김해",
+  Miryang: "밀양",
+  Geoje: "거제",
+  Yangsan: "양산",
+  Uiryeong: "의령",
+  Haman: "함안",
+  Changnyeong: "창녕",
+  Goseong_Gyeongnam: "고성",
+  Namhae: "남해",
+  Hadong: "하동",
+  Sancheong: "산청",
+  Hamyang: "함양",
+  Geochang: "거창",
+  Hapcheon: "합천",
+  Jeju: "제주",
+  Seogwipo: "서귀포",
+};
 
 export default Alarm;
