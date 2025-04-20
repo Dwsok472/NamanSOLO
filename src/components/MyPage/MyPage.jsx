@@ -419,7 +419,6 @@ function MyPage() {
         fetchAnniversaries(),
         fetchTravels()
       ]);
-      setEvents([...annivs, ...travels]);
       
       setOriginalMeetingDate(meetingDate);
       setIsEditMode(false);
@@ -584,11 +583,7 @@ function MyPage() {
           <Routes>
             <Route path="/myalbum" element={<MyAlbum />} />
             <Route path="/comment" element={<CommentPage />} />
-            <Route path="/todo" element={events ? (
-              <Todo meetingDate={meetingDate} events={events} />
-            ) : (
-              <div>로딩 중...</div>
-            )} />
+            <Route path="/todo" element={<Todo originalMeetingDate={originalMeetingDate} />} />
             <Route path="/other" element={<Other />} />
           </Routes>
         </BottomSection>

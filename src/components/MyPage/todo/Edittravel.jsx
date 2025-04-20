@@ -275,7 +275,7 @@ function Edittravel({
     setEvent({
       ...localEvent,
       id: localEvent.id,
-      images: [...(localEvent.mediaUrl || []), ...files],
+      mediaUrl: [...(localEvent.mediaUrl || []), ...files]
     });
   };
 
@@ -285,9 +285,9 @@ function Edittravel({
 
     if (isFileImage(currentIndex)) {
       const idx = currentIndex - (localEvent.mediaUrl?.length || 0);
-      const updatedImages = [...localEvent.images];
+      const updatedImages = [...localEvent.imageUrl];
       updatedImages.splice(idx, 1);
-      setEvent({ ...localEvent, images: updatedImages });
+      setEvent({ ...localEvent, mediaUrl: updatedImages });
     } else {
       const updatedMedia = [...localEvent.mediaUrl];
       updatedMedia.splice(currentIndex, 1);
@@ -312,7 +312,7 @@ function Edittravel({
                   src={
                     currentImage instanceof File
                       ? URL.createObjectURL(currentImage)
-                      : currentImage
+                      : currentImage.mediaUrl
                   }
                   onClick={() => fileInputRef.current.click()}
                   alt="미리보기"

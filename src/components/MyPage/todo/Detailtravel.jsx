@@ -110,23 +110,23 @@ const Info = styled.div`
   word-break: break-all;
 `;
 
-function DetailTravel({ localEvent, onClose, onEdit }) {
-  if (!localEvent) return null;
+function DetailTravel({ event, onClose, onEdit }) {
+  if (!event) return null;
 
-  console.log("🧾 받은 event:", localEvent); 
+  console.log("🧾 받은 event:", event); 
 
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchImages = async () => {
-      if (localEvent.mediaUrl?.length > 0) {
-        setImageUrls(localEvent.mediaUrl.map((media)=>media.mediaUrl));
+      if (event.mediaUrl?.length > 0) {
+        setImageUrls(event.mediaUrl.map((media)=>media.mediaUrl));
       }
     };
     fetchImages();
-  }, [localEvent]);
+  }, [event]);
 
-  const media = localEvent.mediaUrl || [];
+  const media = event.mediaUrl || [];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const currentImage = imageUrls[currentImageIndex];
   console.log("🎞 media 배열:", media);
@@ -153,10 +153,10 @@ function DetailTravel({ localEvent, onClose, onEdit }) {
           여행 일정
         </Top>
 
-        {currentImage && (
+        {event.mediaUrl && (
           <ImagePreviewContainer>
             <PreviewImage
-              src={`${currentImage}`}
+              src={`${imageUrls[currentImageIndex]}`}
               alt="대표 이미지"
               style={{ width: '100%', maxHeight: '200px', objectFit: 'contain' }}
             />
@@ -174,10 +174,10 @@ function DetailTravel({ localEvent, onClose, onEdit }) {
         )}
 
         <Bottom>
-          <Info><strong>{localEvent.title}</strong></Info>
-          <Info>{localEvent.start_date} ~ {localEvent.end_date}</Info>
+          <Info><strong>{event.title}</strong></Info>
+          <Info>{event.start_date} ~ {event.end_date}</Info>
           <ColorSection>
-            <SelectedColorPreview color={localEvent.color} />
+            <SelectedColorPreview color={event.color} />
           </ColorSection>
         </Bottom>
       </Card>

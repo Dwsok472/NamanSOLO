@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Addtodo from './Addtodo';
 import Addtravel from './Addtravel';
@@ -373,10 +373,13 @@ const ListDate = styled.div`
   color: #999;
 `;
 
-function Todo({ meetingDate, events }) {
+function Todo({ originalMeetingDate }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const [localEvents, setLocalEvents] = useState(events || []);
+  const [events, setEvents] = useState([]);
+  const [originDate, setOriginDate] = useState(null);
+  const originDateRef = useRef(null); // 최초 null, 내부에서 직접 할당
+
   useEffect(() => {
     if (!events || events.length === 0) {
       const fetchFallbackEvents = async () => {
@@ -384,8 +387,8 @@ function Todo({ meetingDate, events }) {
           const annivs = await fetchAnniversaries();
           const travels = await fetchTravels();
           
-          setLocalEvents([...annivs, ...travels]);
-          
+          setEvents([...annivs, ...travels]);
+          setOriginDate(originalMeetingDate); // 초기화
         } catch (err) {
           console.error("🛑 Todo 컴포넌트에서 이벤트 직접 로딩 실패:", err);
         }
@@ -393,17 +396,26 @@ function Todo({ meetingDate, events }) {
       fetchFallbackEvents();
     }
   }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const annivs = await fetchAnniversaries();
+        const travels = await fetchTravels();
+        setEvents([...annivs, ...travels]);
+      } catch (err) {
+        console.error("❌ 이벤트 새로 불러오기 실패", err);
+      }
+    };
+  
+    fetchData();
+  }, [originalMeetingDate]);
+
   const [showAllEvents, setShowAllEvents] = useState(false);
 
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-  useEffect(() => {
-    console.log("이벤트 목록:", events);
-  }, []);
-  
-  useEffect(() => {
-    console.log("변경된 이벤트 확인! ", events);
-  }, [meetingDate]);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
@@ -426,7 +438,7 @@ function Todo({ meetingDate, events }) {
       } else {
         updated = await handleUpdateTravelMedia(updatedEvent.id, updatedEvent);
       }
-      setLocalEvents(localEvents.map(event => event.id === updated.id ? updated : event));
+      setEvents(events.map(event => event.id === updated.id ? updated : event));
       setEditingTodoEvent(null);
       setEditingTravelEvent(null);
     } catch (e) {
@@ -448,7 +460,7 @@ function Todo({ meetingDate, events }) {
       } else {
         await deleteTravelMedia(eventToDelete.id);
       }
-      setLocalEvents(prev => prev.filter(ev => ev.id !== eventToDelete.id));
+      setEvents(prev => prev.filter(ev => ev.id !== eventToDelete.id));
     } catch (e) {
       console.error('삭제 실패:', e);
     }
@@ -492,7 +504,7 @@ function Todo({ meetingDate, events }) {
 
     const cellDateStr = formatDate(date); // 🧠 요거!
 
-    const matching = localEvents.filter((localEvent) => {
+    const matching = events.filter((localEvent) => {
       if (!showAllEvents && localEvent.type.toUpperCase() !== activeSection) return false;
 
       const eventStart = localEvent.start_date;
@@ -613,7 +625,7 @@ function Todo({ meetingDate, events }) {
             </SectionH3>
 
             <List>
-              {(showAllEvents ? localEvents : localEvents.filter(e => e.type.toUpperCase() === activeSection)).map((localEvent, idx) => {
+              {(showAllEvents ? events : events.filter(e => e.type.toUpperCase() === activeSection)).map((localEvent, idx) => {
 
                 const diffDays = getDiffInDays(
                   localEvent.type.toUpperCase() === 'ANNIVERSARY' ? localEvent.start_date : localEvent.start_date
@@ -718,7 +730,7 @@ function Todo({ meetingDate, events }) {
             
               try {
                 const created = await createAnniversary(eventToAdd);
-                setLocalEvents(prev=>[...prev, created]);
+                setEvents(prev=>[...prev, created]);
                 setNewAnniversaryEvent({ title: '', start_date: '', end_date:'', color: '#ffc0cb', type: 'ANNIVERSARY' });
                 setIsModalOpen(false);
                 setAnniversaryPaletteOpen(false);
@@ -753,7 +765,7 @@ function Todo({ meetingDate, events }) {
 
         {viewTravelEvent && (
           <DetailTravel
-            localEvent={viewTravelEvent}
+            event={viewTravelEvent}
             onClose={() => setViewTravelEvent(null)}
             onEdit={() => {
               setEditingTravelEvent(viewTravelEvent);
@@ -781,7 +793,7 @@ function Todo({ meetingDate, events }) {
               
                 try {
                   const updated = await handleUpdateTravelMedia(editingTravelEvent.id, editingTravelEvent);
-                  setLocalEvents(prev => prev.map(event => event.id === updated.id ? updated : event));
+                  setEvents(prev => prev.map(event => event.id === updated.id ? updated : event));
                   setEditingTravelEvent(null);
                 } catch (err) {
                   console.error('🚨 여행 일정 수정 실패:', err);
@@ -817,7 +829,7 @@ function Todo({ meetingDate, events }) {
 
               try {
                 const created = await handleCreateTravelMedia(newTravelEvent);
-                setLocalEvents([...localEvents, created]);
+                setEvents([...events, created]);
 
                 setNewTravelEvent({
                   title: '',
