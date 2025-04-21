@@ -282,6 +282,12 @@ const DateInputRow = styled.div`
 
   button {
     position: absolute;
+    bottom: 487.8px; 
+    right: 80px;
+    width: 55px;
+    height: 36px;
+    max-height: 36px;
+    padding: 5px 12px;
     bottom: 488px; // 인풋보다 살짝 아래
     right: 60px; // 우측으로 살짝
    color: white;
@@ -289,6 +295,7 @@ const DateInputRow = styled.div`
     border: none;
     background-color: #000000;
     border-radius: 6px;
+    font-size: 1rem;
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
