@@ -19,6 +19,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   background-image: linear-gradient(45deg, #fff, #e21b36c6, #fff);
+
 `;
 const BannerBox = styled.div`
 width: 100vw;
@@ -45,7 +46,7 @@ const Focus = styled.button`
   font-size: 1rem;
   font-weight: 700;
   color: white;
-  background: linear-gradient(to right ,#ce000e, #fdecec);
+  background: #8c0d17;
   border-radius: 30px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   &:focus {

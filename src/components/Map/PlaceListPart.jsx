@@ -23,8 +23,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  border-radius: 30px;
-  background-color: white;
+  border-radius: 10px;
+
   position: relative;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
@@ -36,11 +36,12 @@ const Wrapper = styled.div`
 `;
 
 const RegionTitle = styled.h3`
-  font-size: 2rem;
+  font-size: 3rem;
   text-align: center;
   font-weight: 700;
   margin-bottom: 15px;
   margin-top: 15px;
+  color: white;
 `;
 
 const AddButton = styled.button`
@@ -95,11 +96,12 @@ const ListContainer = styled.div`
 `;
 
 const Card = styled.div`
-  background: white;
+  background: #ffffff;
   padding: 12px;
   display: flex;
   gap: 10px;
   align-items: center;
+  border-radius: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   cursor: pointer;
 `;
@@ -344,7 +346,6 @@ const CategoryFilterGroup = styled.div`
   margin-bottom: 12px;
   flex-wrap: wrap;
   width: 95%;
-  border-bottom: 1px solid #afafaf;
   margin: 0 auto;
 `;
 
