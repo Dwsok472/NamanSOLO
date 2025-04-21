@@ -62,21 +62,30 @@ const GiftItem = styled.li`
   background: #ffffffee;
   box-shadow: 0 2px 6px rgba(200, 200, 200, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-direction: column;
 
   &:hover {
-    font-weight: 700;
     text-decoration: underline;
   }
 
-
+  a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+      &:hover {
+      font-weight: 700;
+    }
+  }
   img {
     width: 100%;
+    min-height: 280px;
     max-height: 280px;
     object-fit: cover;
     border-radius: 12px;
   }
 
   h3 {
+    height: 72px;
     font-size: 1rem;
     margin: 12px 0 8px;
     color: #333;
@@ -84,6 +93,7 @@ const GiftItem = styled.li`
 
   p {
     font-size: 0.95rem;
+    margin-top: auto;
     color: #666;
   }
 `;
