@@ -280,7 +280,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     category: "",
     address: "",
     description: "",
-    image: null,
+    images: [],
     preview: "",
   });
 
@@ -360,10 +360,10 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const handleImage = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      setImages(files); // ⬅️ 여러 이미지 저장
+      setImages(files); // 여러 이미지 저장
       setNewPlace((prev) => ({
         ...prev,
-        image: files[0], // 썸네일용 대표 이미지
+        images: files, // 썸네일용 대표 이미지
         preview: URL.createObjectURL(files[0]),
       }));
     }
@@ -477,7 +477,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
   const handleRegister = async () => {
     try {
-      if (!newPlace.image) {
+      if (!newPlace.images || newPlace.images.length === 0) {
         alert("이미지를 업로드해주세요.");
         return;
       }
@@ -492,7 +492,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         longitude: 0,
       };
   
-      const savedPlace = await uploadRecommendPlaceImages(placeDTO, [newPlace.image]);
+      const savedPlace = await uploadRecommendPlaceImages(placeDTO, newPlace.images);
   
   
       if (savedPlace?.id && selectedCategories.length > 0) {
@@ -682,7 +682,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                     setNewPlace({ ...newPlace, description: e.target.value })
                   }
                 />
-                <input type="file" onChange={handleImage} />
+                <input type="file" multiple onChange={handleImage} />
                 {newPlace.preview && (
                   <img
                     className="preview"
@@ -785,7 +785,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               setNewPlace({ ...newPlace, description: e.target.value })
             }
           />
-          <input type="file" onChange={handleImage} />
+          <input type="file" multiple onChange={handleImage} />
           {newPlace.preview && (
             <img className="preview" src={newPlace.preview} alt="미리보기" />
           )}
