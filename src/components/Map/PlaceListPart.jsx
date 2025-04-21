@@ -172,9 +172,19 @@ const Form = styled.div`
   margin-bottom: 20px;
 
   input,
-  select,
+  input,
+  select {
+    width: 100%;
+    margin: 6px 0;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
   textarea {
     width: 100%;
+    height: 120px;
+    resize: none; 
     margin: 6px 0;
     padding: 6px 10px;
     border: 1px solid #ddd;
@@ -256,6 +266,30 @@ const CategoryButton = styled.button`
   color: ${({ $active }) => ($active ? "#ff5777" : "#333")};
 `;
 
+const FixedSizeImage = styled.img`
+  width: 500px;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+`;
+
+const SliderWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 10px auto;
+`;
+
+const SliderControls = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+`;
+
+
+
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -273,7 +307,23 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const { user } = useUserStore();
   const isAdmin = user?.authority === "ROLE_ADMIN";
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [activeImageIndex, setActiveImageIndex] = useState({});
 
+  const showPrevImage = (placeId, total) => {
+    const currentIndex = activeImageIndex[placeId] || 0;
+    setActiveImageIndex((prev) => ({
+      ...prev,
+      [placeId]: (currentIndex - 1 + total) % total,
+    }));
+  };
+  
+  const showNextImage = (placeId, total) => {
+    const currentIndex = activeImageIndex[placeId] || 0;
+    setActiveImageIndex((prev) => ({
+      ...prev,
+      [placeId]: (currentIndex + 1) % total,
+    }));
+  };
 
   const [newPlace, setNewPlace] = useState({
     name: "",
@@ -568,14 +618,18 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 <CloseBtn onClick={() => setSelectedId(null)}>✖</CloseBtn>
                 <DetailText>{place.description}</DetailText>
                 {place.mediaUrl && place.mediaUrl.length > 0 ? (
-                  place.mediaUrl.map((img, idx) => (
-                    <Thumbnail
-                      key={idx}
-                      className="large"
-                      src={`http://localhost:8082${img.mediaUrl}`}
-                      alt={`썸네일 ${idx + 1}`}
+                  <SliderWrapper>
+                    <FixedSizeImage
+                      src={`http://localhost:8082${place.mediaUrl[activeImageIndex[place.id] || 0]?.mediaUrl}`}
+                      alt="장소 이미지"
                     />
-                  ))
+                    {place.mediaUrl.length > 1 && (
+                      <SliderControls>
+                        <SmallBtn onClick={() => showPrevImage(place.id, place.mediaUrl.length)}>← 이전</SmallBtn>
+                        <SmallBtn onClick={() => showNextImage(place.id, place.mediaUrl.length)}>다음 →</SmallBtn>
+                      </SliderControls>
+                    )}
+                  </SliderWrapper>
                 ) : (
                   <Thumbnail
                     className="large"
@@ -787,7 +841,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           />
           <input type="file" multiple onChange={handleImage} />
           {newPlace.preview && (
-            <img className="preview" src={newPlace.preview} alt="미리보기" />
+            <FixedSizeImage src={newPlace.preview} alt="미리보기" />
           )}
           <AddButton onClick={handleRegister}>등록하기</AddButton>
         </Form>
