@@ -86,15 +86,23 @@ const GiftItem = styled.li`
 
   h3 {
     height: 72px;
-    font-size: 1rem;
+    font-size: 1.0rem;
     margin: 12px 0 8px;
     color: #333;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis; 
   }
 
   p {
     font-size: 0.95rem;
     margin-top: auto;
     color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 
