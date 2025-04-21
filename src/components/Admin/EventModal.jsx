@@ -216,6 +216,12 @@ function EventModal({ onClose }) {
     }
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const paginatedEvents = allEvents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(allEvents.length / itemsPerPage);
+
   return (
     <Overlay onClick={onClose}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
@@ -247,7 +253,7 @@ function EventModal({ onClose }) {
         <ContentBox>
           {mode === '관리' && (
             <ul>
-              {allEvents.map(event => (
+              {paginatedEvents.map(event => (
                 <ListItem
                   key={event.id}
                   onClick={() => setSelectedItemId(prev => (prev === event.id ? null : event.id))}
@@ -295,6 +301,27 @@ function EventModal({ onClose }) {
                 />
               )}
             </>
+          )}
+
+          {mode === '관리' && totalPages > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', flexWrap: 'wrap', gap: '6px' }}>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    backgroundColor: currentPage === i + 1 ? '#007bff' : '#fff',
+                    color: currentPage === i + 1 ? '#fff' : '#000',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
           )}
         </ContentBox>
 

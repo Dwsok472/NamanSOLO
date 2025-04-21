@@ -509,8 +509,8 @@ export const fetchNoneStaticOffEvents = async () => {
   return response.data;
 };
 
-export const saveOffEvent = async () => {
-  const res = await axios.post(`${BASE_URL}${off_url}/save`, {
+export const saveOffEvent = async (dto) => {
+  const res = await axios.post(`${BASE_URL}${off_url}/save`, dto, {
     headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` },
   });
   return res.data;
