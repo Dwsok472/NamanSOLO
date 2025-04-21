@@ -45,7 +45,7 @@ const LeftWrapper = styled.div`
   }
 
   .button:before {
-    border: 4px solid #f0eeef;
+    border: 4px solid #8c0d17;
     transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
       transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
   }
@@ -87,7 +87,7 @@ const LeftWrapper = styled.div`
     height: 20px;
     margin: 17px 18px 0 18px;
     transform: rotate(180deg);
-    fill: #f0eeef;
+    fill: #8c0d17;
   }
 
   .button:hover .button-box,
