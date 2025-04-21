@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import background from "../img/backgroundMap.png";
 import place from "../img/place.png";
 import question from "../img/question.png";
 import heart from "../img/heart.png";
@@ -19,8 +18,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-    /* background-image: linear-gradient(45deg, #fff, #ffc6cf, #fff); */
-/* background-color: #8c0d17; */
+  background-image: linear-gradient(45deg, #fff, #af162ac8, #fff);
 `;
 const BannerBox = styled.div`
 width: 100vw;
@@ -84,10 +82,10 @@ const NavButton = styled.button`
 
 const ContentBox = styled.div`
   display: flex;
-  width: 70%;
+  width: 100%;
   height: calc(100vh - 60px); /* 뷰포트 기준 높이 설정 */
   justify-content: space-evenly;
-  background-color: white;
+  /* background-color: white; */
   /* border: 1px solid black; */
   @media (max-width: 768px) {
     flex-direction: column;
@@ -101,7 +99,6 @@ const LeftBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 1px solid #c0c0c0;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -116,6 +113,7 @@ const RightBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: white;
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
@@ -126,7 +124,6 @@ const RightBox = styled.div`
 const InnerBox = styled.div`
   width: 100%;
   box-sizing: border-box;
-
   @media (max-width: 768px) {
     margin-left: 0;
   }
@@ -136,12 +133,11 @@ const Wrap = styled.div`
   width: 100%;
   height: 100%;
   padding: 10px;
-  margin-left: 80px;
   display: flex;
   flex-direction: column;
-
+  margin-left: 150px;
   h1 {
-    font-size: 3.5rem;
+    font-size: 4.5rem;
     font-weight: 700;
   }
 
@@ -150,12 +146,11 @@ const Wrap = styled.div`
     padding: 8px;
     text-decoration: underline;
     text-decoration-color: #f73434;
-    text-decoration-thickness: 2px;
-    /* text-align: start; */
+    text-decoration-thickness: 1px;
+    
   }
-
   .highlight {
-    color: #ff0a85;
+    color: #fff;
     text-decoration: none;
   }
 `;
@@ -166,13 +161,14 @@ const HashWrap = styled.div`
   margin-top: 10px;
   flex-wrap: wrap;
   justify-content: start;
+  
 `;
 
 const BoxWrap = styled.div`
   padding: 10px;
   align-items: center;
   margin-top: 150px;
-  margin-left: 80px;
+  margin-left: 150px;
 `;
 
 const Box = styled.div`
@@ -210,34 +206,6 @@ function MainMap() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const categories = ["전체", "맛집", "카페", "호텔", "관광지", "포토존"];
   const [regionPlaces, setRegionPlaces] = useState({});
-  // const [regionPlaces, setRegionPlaces] = useState({
-  //   충청남도: [
-  //     {
-  //       id: 1,
-  //       name: "로보쿡 둔산점",
-  //       category: "맛집",
-  //       address: "대전 서구 둔산로 221",
-  //       description: "로봇 테마 맛집",
-  //       thumbnail: course1,
-  //     },
-  //     {
-  //       id: 2,
-  //       name: "카페라떼온더문",
-  //       category: "카페",
-  //       address: "대전 서구 월평동 123-4",
-  //       description: "달빛 분위기 카페",
-  //       thumbnail: course2,
-  //     },
-  //     {
-  //       id: 3,
-  //       name: "스윗포토존",
-  //       category: "포토존",
-  //       address: "대전 서구 탄방동 77",
-  //       description: "감성 포토존",
-  //       thumbnail: course3,
-  //     },
-  //   ],
-  // });
 
   const slides = [
     { label: "데이트 코스 1", image: course1 },
