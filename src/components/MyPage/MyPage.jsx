@@ -18,6 +18,7 @@ import {
   updateUserData,
   uploadProfileImage,
 } from "../api2";
+import { IconEdit } from "../Icons";
 
 const Container = styled.div`
   display: flex;
@@ -27,9 +28,10 @@ const Container = styled.div`
   padding: 20px;
   /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff); */
-  background: linear-gradient(to bottom, #ffb3ae, #ffe2e2, #f2ebdc);
+  /* background: linear-gradient(to bottom, #ffb3ae, #ffe2e2, #f2ebdc); */
   /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
+  background: linear-gradient(to bottom, #ffe3e3, #fff, #ffe3e3);
 `;
 
 const ProfileCard = styled.div`
@@ -193,13 +195,17 @@ const EditButton = styled.button`
   top: 25px;
   right: 18px;
   padding: 5px 12px;
-  font-size: 0.9rem;
-  border: 1px solid #aaa;
-  background-color: white;
+  /* font-size: 0.9rem; */
+  /* border: 1px solid #aaa; */
+  /* background-color: white; */
   border-radius: 6px;
   cursor: pointer;
   &:hover {
     background-color: #f2f2f2;
+  }
+  svg {
+    width: 15px;
+    height: 15px;
   }
 `;
 const ModalWrapper = styled.div`
@@ -464,7 +470,7 @@ function MyPage() {
                 setIsEditMode((prev) => !prev);
               }}
             >
-              {isEditMode ? "완료" : "수정"}
+              {isEditMode ? "완료" : <IconEdit />}
             </EditButton>
             <PhotoSection>
               {isEditMode ? (
