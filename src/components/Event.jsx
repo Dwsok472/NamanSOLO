@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { fetchFemalePresents, fetchMalePresents } from './api2';
 
 const Container = styled.div`
+  background: linear-gradient(to bottom, #b92330, #ffe3e3, #fff);
   padding: 40px 20px;
 `;
 
@@ -89,6 +90,7 @@ const GiftItem = styled.li`
     font-size: 1.0rem;
     margin: 12px 0 8px;
     color: #333;
+    text-align: center;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -146,10 +148,10 @@ function Event() {
 
   return (
     <Container>
-      <Title>남자/여자 선물 Best 20</Title>
+      <Title>BEST 선물</Title>
       <CategoryContainer>
         <Category $gender="male">
-          <SubTitle $gender="male">남자 선물 Top 20</SubTitle>
+          <SubTitle $gender="male">남자 선물</SubTitle>
           <GiftList>
             {Array.isArray(maleGifts) && maleGifts.map((gift, index) => (
               <GiftItem key={index} title={stripHTML(gift.title)}>
@@ -164,7 +166,7 @@ function Event() {
         </Category>
 
         <Category $gender="female">
-          <SubTitle $gender="female">여자 선물 Top 20</SubTitle>
+          <SubTitle $gender="female">여자 선물</SubTitle>
           <GiftList>
             {Array.isArray(femaleGifts) && femaleGifts.map((gift, index) => (
               <GiftItem key={index} title={stripHTML(gift.title)}>
