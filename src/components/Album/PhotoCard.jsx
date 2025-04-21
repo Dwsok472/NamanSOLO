@@ -8,9 +8,9 @@ import StarButton from "./StarButton";
 const PhotoCard = ({
   src,
   rotate = 0,
-  offsetY = 0,
-  pinColor = "",
-  title = "",
+  $offsetY,
+  $pinColor,
+  title,
   colSpan,
   rowSpan,
   onClick,
@@ -43,11 +43,11 @@ const PhotoCard = ({
   return (
     <CardWrapper
       rotate={rotate}
-      offsetY={offsetY}
+      $offsetY={$offsetY}
       colSpan={colSpan}
       rowSpan={rowSpan}
       onClick={onClick}
-      pinColor={pinColor}
+      $pinColor={$pinColor}
       draggable={draggable}
       onDragStart={(e) => {
         e.stopPropagation(); // 드래그 시 클릭 이벤트 방지
@@ -55,7 +55,7 @@ const PhotoCard = ({
       }}
       columns={columns}
     >
-      <Pin><img src={pinColor} className="pin" /></Pin>
+      <Pin><img src={$pinColor} className="pin" /></Pin>
       {multipleImages && (
         <img
           src={leftkey}
@@ -90,8 +90,8 @@ const CardWrapper = styled.div`
   padding: 10px;
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
-  transform: ${({ rotate, offsetY }) =>
-    `rotate(${rotate}deg) translateY(${offsetY}px)`}; /* rotate와 translateY 적용 */
+  transform: ${({ rotate, $offsetY }) =>
+    `rotate(${rotate}deg) translateY(${$offsetY}px)`}; /* rotate와 translateY 적용 */
   transition: transform 0.3s;
   position: relative;
   text-align: center;

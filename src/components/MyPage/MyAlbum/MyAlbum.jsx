@@ -150,8 +150,8 @@ const MyAlbum = () => {
               src={album.url.map((media) => media.mediaUrl)}
               title={album.title}
               rotate={Math.floor(Math.random() * 6 - 3)}
-              offsetY={Math.floor(Math.random() * 20 - 10)}
-              pinColor={pin[idx % pin.length]}
+              $offsetY={Math.floor(Math.random() * 20 - 10)}
+              $pinColor={pin[idx % pin.length]}
               //디테일 창 볼 수 있도록 처리
               onClick={() => handleCardClick(album)}
               draggable

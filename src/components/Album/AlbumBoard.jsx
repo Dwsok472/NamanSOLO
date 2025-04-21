@@ -176,8 +176,8 @@ const AlbumBoard = () => {
               key={album.id}
               src={album.url.map((media) => media.mediaUrl)} // 이미지 배열
               rotate={rotation} // 회전 값
-              pinColor={pinColor} // pin 색상
-              offsetY={offsetY} // 수직 오프셋
+              $pinColor={pinColor} // pin 색상
+              $offsetY={offsetY} // 수직 오프셋
               title={album.title} // 제목
               // colSpan={colSpan} // colSpan 값
               // rowSpan={rowSpan} // rowSpan 값
