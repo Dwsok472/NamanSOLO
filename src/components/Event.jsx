@@ -3,14 +3,13 @@ import styled from 'styled-components';
 import { fetchFemalePresents, fetchMalePresents } from './api2';
 
 const Container = styled.div`
-  background: linear-gradient(to bottom, #b92330, #ffe3e3, #fff);
   padding: 40px 20px;
 `;
 
 const Title = styled.h1`
   text-align: center;
   font-size: 2rem;
-  color : #C6B8E7;
+  color : #f6a5c0;
   margin-bottom: 40px;
 `;
 
@@ -27,18 +26,17 @@ const Category = styled.div`
   height: fit-content;
   border-radius: 20px;
   padding: 28px 24px;
-  background-color: #ffffffcc;
-  border: 2px solid ${(props) => (props.$gender === 'male' ? '#a3c8f2' : '#ffc9d9')};
-  box-shadow: 0 6px 16px rgba(200, 200, 200, 0.15);
+  background-color: none;
+  box-shadow: 0 3px 10px rgba(200, 200, 200, 0.15);
 `;
 
 const SubTitle = styled.h2`
   font-size: 1.4rem;
   margin-bottom: 20px;
   color: ${(props) =>
-    props.$gender === 'male' ? '#66b' : '#f013' };
+    props.$gender === 'male' ? '#a1a1d192' : '#f3878e75' };
   text-align: center;
-  background-color: #ffffffcc;
+  background-color: none;
   padding: 8px 12px;
   border-radius: 12px;
 `;
