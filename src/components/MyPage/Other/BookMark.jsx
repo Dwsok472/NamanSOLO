@@ -143,7 +143,7 @@ const ContainerMain = styled.div`
   border-radius: 30px;
   padding-top: 10px;
   background-color: #c0c0c09e;
-  background: linear-gradient(to bottom, #f8e7e7, #fee2e0, #f8e7e7);
+  /* background: linear-gradient(to bottom, #f8e7e7, #fee2e0, #f8e7e7); */
   height: 540px;
 `;
 
