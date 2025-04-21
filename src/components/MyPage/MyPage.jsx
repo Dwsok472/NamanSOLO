@@ -185,7 +185,7 @@ const Left = styled.div`
 
 const EditButton = styled.button`
   position: absolute;
-  top: 10px;
+  top: 25px;
   right: 10px;
   padding: 5px 12px;
   font-size: 0.9rem;
@@ -273,13 +273,13 @@ const DateInputRow = styled.div`
 
   button {
     position: absolute;
-    bottom: 65px;    // 인풋보다 살짝 아래
-    right: -10px;    // 우측으로 살짝
+    bottom: 488px;    // 인풋보다 살짝 아래
+    right: 60px;    // 우측으로 살짝
+    width: 52.5px;
     padding: 6px 12px;
     border: none;
     background-color: #eb2230;
     border-radius: 6px;
-    font-weight: bold;
     font-size: 0.9rem;
     cursor: pointer;
     &:hover {
