@@ -166,8 +166,8 @@ const AlbumBoard = () => {
           // 수직 오프셋 값
           const offsetY = Math.floor(Math.random() * 30) - 14;
           // 랜덤 colSpan, rowSpan 값
-          const colSpan = Math.floor(Math.random() * 1) + 1; // 1~2
-          const rowSpan = Math.floor(Math.random() * 3) + 1; // 1~3
+          // const colSpan = Math.floor(Math.random() * 1) + 1; // 1~2
+          // const rowSpan = Math.floor(Math.random() * 3) + 1; // 1~3
 
           items.push(
             <PhotoCard
@@ -177,8 +177,8 @@ const AlbumBoard = () => {
               pinColor={pinColor} // pin 색상
               offsetY={offsetY} // 수직 오프셋
               title={album.title} // 제목
-              colSpan={colSpan} // colSpan 값
-              rowSpan={rowSpan} // rowSpan 값
+              // colSpan={colSpan} // colSpan 값
+              // rowSpan={rowSpan} // rowSpan 값
               onClick={() => handleSelectedAlbum(album)} // 앨범 클릭 시 이벤트
             />
           );
@@ -281,7 +281,7 @@ const BoardFrame = styled.div`
 
 const PhotoArea = styled.div`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 24px; /* 아이템 간 간격 */
   width: 70%;

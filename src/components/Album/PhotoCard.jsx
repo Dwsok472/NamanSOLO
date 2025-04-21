@@ -85,8 +85,8 @@ export default PhotoCard;
 
 
 const CardWrapper = styled.div`
-  width: ${({ columns }) => (columns === 3 ? "500px" : "280px")};
-  height: ${({ columns }) => (columns === 3 ? "500px" : "300px")};
+  width: ${({ columns }) => (columns === 3 ? "500px" : "300px")};
+  height: ${({ columns }) => (columns === 3 ? "500px" : "350px")};
   padding: 10px;
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
@@ -132,8 +132,8 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: ${({ columns }) => (columns === 3 ? "430px" : "250px")};
-  height: ${({ columns }) => (columns === 3 ? "430px" : "230px")};
+  width: ${({ columns }) => (columns === 3 ? "430px" : "280px")};
+  height: ${({ columns }) => (columns === 3 ? "430px" : "280px")};
   object-fit: cover;
   pointer-events: none;
 `;
