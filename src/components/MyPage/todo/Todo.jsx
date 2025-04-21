@@ -384,13 +384,16 @@ function Todo({ originalMeetingDate }) {
 
   useEffect(() => {
     if (!events || events.length === 0) {
+      
       const fetchFallbackEvents = async () => {
         try {
           const annivs = await fetchAnniversaries();
           const travels = await fetchTravels();
-          
+
+          const base = new Date();
+          const formatted = formatDate(base);
+
           setEvents([...annivs, ...travels]);
-          setOriginDate(originalMeetingDate); // 초기화
         } catch (err) {
           console.error("🛑 Todo 컴포넌트에서 이벤트 직접 로딩 실패:", err);
         }
