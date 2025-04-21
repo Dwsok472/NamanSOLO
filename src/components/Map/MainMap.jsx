@@ -18,7 +18,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: linear-gradient(45deg, #fff, #af162ac8, #fff);
+  background-image: linear-gradient(45deg, #fff, #e21b36c6, #fff);
 `;
 const BannerBox = styled.div`
 width: 100vw;
