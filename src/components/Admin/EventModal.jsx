@@ -43,7 +43,8 @@ const CheckboxRow = styled.div`
 const ContentBox = styled.div`
   border: 1px solid #ddd;
   padding: 20px;
-  min-height: 200px;
+  min-height: 400px;
+  max-height: 400px;
   background: #f9f9f9;
   display: flex;
   flex-direction: column;
