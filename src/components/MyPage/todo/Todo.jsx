@@ -12,7 +12,7 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
-import { createAnniversary, deleteAnniversary, deleteTravelMedia, fetchAnniversaries, fetchTravels, handleCreateTravelMedia, handleUpdateTravelMedia, updateAnniversary } from '../../api2';
+import { createAnniversary, deleteAnniversary, deleteTravelMedia, fetchAnniversaries, fetchTravels, handleCreateTravelMedia, handleUpdateTravelMedia, updateAnniversary, uploadTravelMedia } from '../../api2';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -792,18 +792,39 @@ function Todo({ originalMeetingDate }) {
                 }
               
                 try {
-                  const updated = await handleUpdateTravelMedia(editingTravelEvent.id, editingTravelEvent);
-                  setEvents(prev => prev.map(event => event.id === updated.id ? updated : event));
+                  const existingMedia = (editingTravelEvent.mediaUrl || []).filter(
+                    (item) => !(item instanceof File)
+                  );
+                  const newFiles = (editingTravelEvent.mediaUrl || []).filter(
+                    (item) => item instanceof File
+                  );
+            
+                  let uploadedMedia = [];
+                  if (newFiles.length > 0) {
+                    uploadedMedia = await uploadTravelMedia(editingTravelEvent.title, newFiles);
+                  }
+            
+                  const payloadToUpdate = {
+                    ...editingTravelEvent,
+                    mediaUrl: [...existingMedia, ...uploadedMedia],
+                  };
+            
+                  const updated = await handleUpdateTravelMedia(editingTravelEvent.id, payloadToUpdate);
+            
+                  setEvents((prev) =>
+                    prev.map((event) => (event.id === updated.id ? updated : event))
+                  );
+            
                   setEditingTravelEvent(null);
                 } catch (err) {
                   console.error('🚨 여행 일정 수정 실패:', err);
                   alert('수정 중 오류 발생!');
                 }
               }}
-            paletteOpen={travelPaletteOpen}
-            setPaletteOpen={setTravelPaletteOpen}
-            colorSamples={colorSamples}
-          />
+              paletteOpen={travelPaletteOpen}
+              setPaletteOpen={setTravelPaletteOpen}
+              colorSamples={colorSamples}
+            />
         )}  
 
         {isTravelModalOpen && (
