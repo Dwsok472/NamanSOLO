@@ -207,7 +207,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
               <input
                 type="text"
                 className="tags"
-                placeholder="태그를 입력하시면 아래에 태그 목록이 반영됩니다"
+                placeholder="태그를 입력 후 SPACE 버튼을 누르면 아래에 태그 목록이 반영됩니다"
                 onKeyUp={handleTagChange}
               />
               <div className="tags-list">
@@ -346,6 +346,7 @@ const Box = styled.div`
       left: 10px;
       top: 50%;
       opacity: 0.8;
+      cursor: pointer;
     }
     .rightkey {
       object-fit: cover;
@@ -355,6 +356,7 @@ const Box = styled.div`
       right: 10px;
       top: 50%;
       opacity: 0.8;
+      cursor: pointer;
     }
     .fileinput {
       position: absolute;
@@ -362,6 +364,7 @@ const Box = styled.div`
       right: 0;
       padding-right: 5px;
       z-index: 400;
+      cursor: pointer;
     }
   }
   .inputinfo {
@@ -385,6 +388,10 @@ const Box = styled.div`
     .tags {
       font-size: 0.7rem;
       color: #b1b1b1;
+      &::placeholder{
+        font-weight: 700;
+        text-decoration: underline;
+      }
     }
     .map {
       display: flex;

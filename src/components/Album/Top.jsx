@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useUserStore } from '../Login/Login';
 
@@ -13,10 +13,10 @@ function Top({ filter, onFilterChange }) {
   const [selected, setSelected] = useState('최신순');
   const navigate = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
-  // const [updatingUser, setUpdatingUser] = useState(null); // 팔로우 중인 유저 username
-  const username = useUserStore((state) => state.user?.username);
+  const currentUser = useUserStore((state) => state.user?.username);
   const location = useLocation(); // 현재 경로 가져오기
   const isUserStoryPage = location.pathname.startsWith('/user/story/');
+  const { username } = useParams();
 
   async function handleSearch() {
     try {
@@ -65,7 +65,7 @@ function Top({ filter, onFilterChange }) {
       return;
     }
     const newFollow = {
-      follower: username,
+      follower: currentUser,
       following: targetUsername,
     };
     try {
@@ -161,94 +161,105 @@ function Top({ filter, onFilterChange }) {
           댓글순
         </button>
       </TopBox>
+      {isUserStoryPage && (
+        <>
+          <NameBox>
+            <h1>{username}</h1><span>의 앨범</span>
+          </NameBox>
+          <div></div>
+        </>
+      )}
       {!isUserStoryPage && (
-        <MiddleBox>
-          <SearchBox ref={searchBoxRef}>
-            <div className="InputContainer">
-              <input
-                placeholder="USERNAME을 입력해주세요"
-                id="input"
-                className="input"
-                name="text"
-                type="text"
-                value={inputKeyword}
-                onChange={(e) => setInputKeyword(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+        <>
+          <div></div>
+          <MiddleBox>
+            <SearchBox ref={searchBoxRef}>
+              <div className="InputContainer">
+                <input
+                  placeholder="USERNAME을 입력해주세요"
+                  id="input"
+                  className="input"
+                  name="text"
+                  type="text"
+                  value={inputKeyword}
+                  onChange={(e) => setInputKeyword(e.target.value)}
+                  onFocus={() => setIsFocused(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      inputKeyword
+                        ? SearchUser(inputKeyword)
+                        : alert('검색어를 입력해주세요');
+                    }
+                  }}
+                />
+                <label
+                  className="labelforsearch"
+                  htmlFor="input"
+                  onClick={() => {
                     inputKeyword
                       ? SearchUser(inputKeyword)
                       : alert('검색어를 입력해주세요');
-                  }
-                }}
-              />
-              <label
-                className="labelforsearch"
-                htmlFor="input"
-                onClick={() => {
-                  inputKeyword
-                    ? SearchUser(inputKeyword)
-                    : alert('검색어를 입력해주세요');
-                }}
-              >
-                <svg className="searchIcon" viewBox="0 0 512 512">
-                  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
-                </svg>
-              </label>
-            </div>
-          </SearchBox>
+                  }}
+                >
+                  <svg className="searchIcon" viewBox="0 0 512 512">
+                    <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                  </svg>
+                </label>
+              </div>
+            </SearchBox>
 
-          {showResults && (
-            <SearchResults
-              ref={searchResultsRef}
-              className={showResults ? 'show' : ''}
-            >
-              <Wrap>
-                <ul>
-                  {searchResults.map((user) => (
-                    <li key={user.username}>
-                      <Block>
-                        <img src={user.profileUrl} alt="profile" />
-                        <div
-                          className="username"
-                          onClick={() =>
-                            navigate(`/user/story/${user.username}`)
-                          }
-                        >
-                          {user.username}
-                        </div>
-                        <button
-                          className={`follow ${user.relation === 'FRIEND'
+            {showResults && (
+              <SearchResults
+                ref={searchResultsRef}
+                className={showResults ? 'show' : ''}
+              >
+                <Wrap>
+                  <ul>
+                    {searchResults.map((user) => (
+                      <li key={user.username}>
+                        <Block>
+                          <img src={user.profileUrl} alt="profile" />
+                          <div
+                            className="username"
+                            onClick={() =>
+                              navigate(`/user/story/${user.username}`)
+                            }
+                          >
+                            {user.username}
+                          </div>
+                          <button
+                            className={`follow ${user.relation === 'FRIEND'
                               ? 'friend'
                               : user.relation === 'FOLLOWING'
                                 ? 'following'
                                 : user.relation === 'FOLLOWER'
                                   ? 'follower'
                                   : 'none'
-                            }`}
-                          onClick={() => {
-                            if (
-                              user.relation === 'FOLLOWER' ||
-                              user.relation === 'NONE'
-                            ) {
-                              addFollow(user.username);
-                            }
-                          }}
-                        >
-                          {' '}
-                          {user.relation === 'FRIEND' && '맞팔 중'}
-                          {user.relation === 'FOLLOWING' && '팔로우 중'}
-                          {user.relation === 'FOLLOWER' && '맞팔하기'}
-                          {user.relation === 'NONE' && '팔로우하기'}
-                        </button>
-                      </Block>
-                    </li>
-                  ))}
-                </ul>
-              </Wrap>
-            </SearchResults>
-          )}
-        </MiddleBox>
+                              }`}
+                            onClick={() => {
+                              if (
+                                user.relation === 'FOLLOWER' ||
+                                user.relation === 'NONE'
+                              ) {
+                                addFollow(user.username);
+                              }
+                            }}
+                          >
+                            {' '}
+                            {user.relation === 'FRIEND' && '맞팔 중'}
+                            {user.relation === 'FOLLOWING' && '팔로우 중'}
+                            {user.relation === 'FOLLOWER' && '맞팔하기'}
+                            {user.relation === 'NONE' && '팔로우하기'}
+                          </button>
+                        </Block>
+                      </li>
+                    ))}
+                  </ul>
+                </Wrap>
+              </SearchResults>
+            )}
+          </MiddleBox>
+        </>
       )}
     </Container>
   );
@@ -336,27 +347,13 @@ const Block = styled.div`
     background-color: #000000;
   }
 `;
-
-//   useEffect(() => {
-//     const allUser = async () => {
-//       try {
-//         const response = await getAllUsername();
-//         if (response && response.length > 0) {
-//           setAllUsers(response); // 전체 유저 목록을 상태에 저장
-//         }
-//       } catch (error) {
-//         console.log('전체 유저를 가져오는 중 오류 발생', error);
-//       }
-//     };
-//     allUser();
-//   }, []);
-
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   padding-top: 10px;
+  margin-bottom: 25px;
 `;
 const TopBox = styled.div`
   width: 100%;
@@ -368,13 +365,11 @@ const TopBox = styled.div`
 
   button {
     font-weight: 700;
-    font-size: 0.9rem; /* 더 큰 글씨 */
-    line-height: 1.2; /* 줄 간격 조정 */
+    font-size: 0.8rem; /* 더 큰 글씨 */
     background-color: #ffffff;
     color: #2b2b2b;
     border-radius: 20px;
-    width: 100px; /* 조금 더 넓게 */
-    height: 35px; /* 고정 높이 */
+    width: 90px; /* 조금 더 넓게 */
     margin: 5px;
     transition: all 0.2s;
     cursor: pointer;
@@ -391,7 +386,20 @@ const TopBox = styled.div`
     color: white;
   }
 `;
-
+const NameBox = styled.div`
+    width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   font-weight: 700;
+  h1{
+    color: white;
+  }
+  span{   
+      color: black;
+      font-size: 2.5rem;
+  }
+`
 const MiddleBox = styled.div`
   width: 100%;
   height: auto;
@@ -407,7 +415,6 @@ const SearchBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-top: 20px; */
 
   .InputContainer {
     height: 40px;

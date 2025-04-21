@@ -24,6 +24,7 @@ import { Button as LeftButton } from './LeftButton';
 import { Button as RightButton } from './RightButton';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { useUserStore } from '../Login/Login';
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const AlbumBoard = () => {
@@ -39,6 +40,7 @@ const AlbumBoard = () => {
   const location = useLocation();
   const itemsRef = useRef([]);
   const isUserStoryPage = location.pathname.startsWith('/user/story/');
+  const isLoggedIn = useUserStore((state) => state?.isLoggedIn);
 
   async function GetAllAlbum() {
     try {
@@ -223,7 +225,7 @@ const AlbumBoard = () => {
         <EraserWrapper>
           <RightButton onClick={handleNextPage} />
         </EraserWrapper>
-        {!isUserStoryPage && (
+        {!isUserStoryPage && isLoggedIn && (
           <>
             <AddButton onClick={handleOpenAddAlbum} title="Add New">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
