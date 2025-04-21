@@ -284,14 +284,16 @@ const DateInputRow = styled.div`
 
   button {
     position: absolute;
-    bottom: 488px; // 인풋보다 살짝 아래
-    right: 60px; // 우측으로 살짝
-    width: 52.5px;
-    padding: 6px 12px;
+    bottom: 487.8px; 
+    right: 80px;
+    width: 55px;
+    height: 36px;
+    max-height: 36px;
+    padding: 5px 12px;
     border: none;
     background-color: #ffc0bc;
     border-radius: 6px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     &:hover {
       background-color: #ffe2e2;
