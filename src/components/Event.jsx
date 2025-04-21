@@ -85,8 +85,8 @@ const GiftItem = styled.li`
   }
 
   h3 {
-    height: 76px;
-    font-size: 1.1rem;
+    height: 72px;
+    font-size: 1.0rem;
     margin: 12px 0 8px;
     color: #333;
     display: -webkit-box;
