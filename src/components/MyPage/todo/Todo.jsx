@@ -12,7 +12,7 @@ import Edittodo from './Edittodo';
 import Edittravel from './Edittravel'
 import DetailTravel from './Detailtravel';
 import Rotate from '../../img/rotate.png';
-import { createAnniversary, deleteAnniversary, deleteTravelMedia, fetchAnniversaries, fetchTravels, handleCreateTravelMedia, handleUpdateTravelMedia, updateAnniversary, uploadTravelMedia } from '../../api2';
+import { createAnniversary, deleteAnniversary, deleteTravelMedia, fetchAllTodos, fetchAnniversaries, fetchTravels, handleCreateTravelMedia, handleUpdateTravelMedia, updateAnniversary, uploadTravelMedia } from '../../api2';
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -377,8 +377,10 @@ function Todo({ originalMeetingDate }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const [events, setEvents] = useState([]);
-  const [originDate, setOriginDate] = useState(null);
+  const [originDate, setOriginDate] = useState("");
   const originDateRef = useRef(null); // 최초 null, 내부에서 직접 할당
+
+  
 
   useEffect(() => {
     if (!events || events.length === 0) {
@@ -396,6 +398,7 @@ function Todo({ originalMeetingDate }) {
       fetchFallbackEvents();
     }
   }, []);
+
 
 
   useEffect(() => {
@@ -429,6 +432,23 @@ function Todo({ originalMeetingDate }) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [yearRangeStart, setYearRangeStart] = useState(currentYear - 2);
+
+  useEffect(() => {
+    const loadAllEvents = async () => {
+      if (showAllEvents) {
+        try {
+          const base = new Date(); // 또는 다른 기준일
+          const formatted = formatDate(base); // yyyy-MM-dd
+          const sortedTodos = await fetchAllTodos();
+          setEvents(sortedTodos);
+        } catch (e) {
+          console.error("전체 일정 불러오기 실패", e);
+        }
+      }
+    };
+  
+    loadAllEvents();
+  }, [showAllEvents]);
 
   const handleUpdate = async (updatedEvent) => {
     try {

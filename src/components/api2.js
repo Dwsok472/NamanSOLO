@@ -13,6 +13,24 @@ const handleError = (methodName, error) => {
   throw error;
 };
 
+export const fetchAllTodos = async () => {
+  try {
+    const res = await axios.get(`${BASE_URL}${todo_url}/all`, {
+      headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}` }
+    });
+    return res.data.map(item => ({
+      ...item,
+      start_date: item.startDate,
+      end_date: item.endDate,
+      editable: item.editable,
+      type: item.type,
+      color: item.color,
+    }));
+  } catch (e) {
+    handleError('fetchAnniversaries', e);
+  }
+}
+
 export const fetchAnniversaries = async () => {
   try {
     const res = await axios.get(`${BASE_URL}${todo_url}/anniversary/all`, {
