@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import left from '../img/leftkey.png';
+import right from '../img/rightkey.png';
 import { fetchAllOffEvents, fetchNoneStaticOffEvents, fetchStaticOffEvents, saveOffEvent, updateOffEvent, deleteOffEvent } from '../api2';
 
 const Overlay = styled.div`
@@ -33,22 +35,69 @@ const CheckboxRow = styled.div`
   display: flex;
   justify-content: center;
   gap: 80px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 
   input {
-    margin-right: 10px;
+    margin-right: 5px;
   }
+`;
+
+const FormInput = styled.input`
+  width: 100%;
+  height: 40px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
 `;
 
 const ContentBox = styled.div`
   border: 1px solid #ddd;
   padding: 20px;
-  min-height: 400px;
-  max-height: 400px;
+  height: ${({ compact }) => (compact ? '150px' : '450px')};
   background: #f9f9f9;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  justify-content: space-between;
+`;
+
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`;
+
+const PageButton = styled.button`
+  font-size: 0.9rem;
+  padding: 4px 8px;
+  background-color: ${({ active }) => (active ? '#007bff' : '#fefefe')};
+  color: ${({ active }) => (active ? '#fefefe' : '#222')};
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const IconButton = styled.button`
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+
+  &.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  img {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+  }
 `;
 
 const Footer = styled.div`
@@ -218,10 +267,19 @@ function EventModal({ onClose }) {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const pagesPerGroup = 5;
 
   const paginatedEvents = allEvents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const totalPages = Math.ceil(allEvents.length / itemsPerPage);
 
+  const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+  const startPage = (currentGroup - 1) * pagesPerGroup + 1;
+  const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
+  
+  const pageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pageNumbers.push(i);
+  }
   return (
     <Overlay onClick={onClose}>
       <ModalBox onClick={(e) => e.stopPropagation()}>
@@ -250,7 +308,7 @@ function EventModal({ onClose }) {
           </CheckboxRow>
         )}
 
-        <ContentBox>
+        <ContentBox compact={mode === '추가'|| mode === '수정'}>
           {mode === '관리' && (
             <ul>
               {paginatedEvents.map(event => (
@@ -278,50 +336,55 @@ function EventModal({ onClose }) {
           )}
 
           {(mode === '추가' || mode === '수정') && (
-            <>
-              <input
+            <div>
+              <FormInput
                 type="text"
                 placeholder="이벤트 제목"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
               />
               {selectedFilter === 'static' && (
-                <input
+                <FormInput
                   type="date"
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
                 />
               )}
               {selectedFilter === 'none-static' && (
-                <input
+                <FormInput
                   type="number"
-                  placeholder="며칠 후인지 입력"
+                  placeholder="며칠 후"
                   value={newOffsetDays}
                   onChange={(e) => setNewOffsetDays(e.target.value)}
                 />
               )}
-            </>
+            </div>
           )}
 
           {mode === '관리' && totalPages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px', flexWrap: 'wrap', gap: '6px' }}>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    backgroundColor: currentPage === i + 1 ? '#007bff' : '#fff',
-                    color: currentPage === i + 1 ? '#fff' : '#000',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
+            <PaginationWrapper>
+            {currentGroup > 1 && (
+              <IconButton onClick={() => setCurrentPage(startPage - 1)}>
+                <img src={left} alt="이전" />
+              </IconButton>
+            )}
+        
+            {pageNumbers.map((page) => (
+              <PageButton
+                key={page}
+                onClick={() => setCurrentPage(page)}
+                active={currentPage === page}
+              >
+                {page}
+              </PageButton>
+            ))}
+        
+            {endPage < totalPages && (
+              <IconButton onClick={() => setCurrentPage(endPage + 1)}>
+                <img src={right} alt="다음" />
+              </IconButton>
+            )}
+          </PaginationWrapper>
           )}
         </ContentBox>
 
@@ -349,7 +412,6 @@ function EventModal({ onClose }) {
                 onClick={() => {
                   setMode('추가');
                   setSelectedFilter('static');
-                  resetForm();
                 }}
               >
                 추가
