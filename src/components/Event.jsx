@@ -9,7 +9,7 @@ const Container = styled.div`
 const Title = styled.h1`
   text-align: center;
   font-size: 2rem;
-  color : #f6a5c0;
+  color : #ff6b6bd8;
   margin-bottom: 40px;
 `;
 
@@ -34,7 +34,7 @@ const SubTitle = styled.h2`
   font-size: 1.4rem;
   margin-bottom: 20px;
   color: ${(props) =>
-    props.$gender === 'male' ? '#a1a1d192' : '#f3878e75' };
+    props.$gender === 'male' ? '#4a91e294' : '#f884799b' };
   text-align: center;
   background-color: none;
   padding: 8px 12px;
