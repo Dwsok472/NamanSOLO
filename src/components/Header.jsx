@@ -53,7 +53,7 @@ function Header({
         subMenuRef.current &&
         !subMenuRef.current.contains(e.target)
       ) {
-        setSubOpen(false); // 여기서 false로 바뀌면 위 useEffect가 실행됨
+        // setSubOpen(false); // 여기서 false로 바뀌면 위 useEffect가 실행됨
       }
     };
 
@@ -133,13 +133,16 @@ function Header({
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
       <Sidebar $open={isSidebarOpen}>
         <ul>
-          {menuItems.map(({ to, label }) => (
-            <li key={to}>
-              <Link to={to} onClick={closeSidebar}>
-                {label}
-              </Link>
-            </li>
-          ))}
+          {menuItems.map(({ to, label }) => {
+            const isProtected = to === "/events"; // 이벤트만 로그인 필요
+
+            return (
+              <li key={to}>
+                <Link to={isLoggedIn || !isProtected ? to : "login"} onClick={closeSidebar}>
+                  {label}
+                </Link>
+              </li>
+          )})}
           {user?.authority === "ROLE_ADMIN" ? (
             <li>
               <Link to="/admin/users" onClick={closeSidebar}>
@@ -148,7 +151,7 @@ function Header({
             </li>
           ) : (
             <>
-              <li onClick={toggleSubMenu}>
+              <li onClick={()=>{if (!isLoggedIn) {return navigate("/login")} return toggleSubMenu();}}>
                 <span>마이페이지 {isSubOpen ? "▲" : "▼"}</span>
               </li>
               {isSubOpen &&
@@ -161,14 +164,6 @@ function Header({
                 ))}
             </>
           )}
-          {isSubOpen &&
-            subMenuItems.map(({ to, label }) => (
-              <li key={to}>
-                <Link to={to} onClick={closeSidebar}>
-                  {label}
-                </Link>
-              </li>
-            ))}
           {!isLoginPage && (
             <>
               {isLoggedIn ? (
