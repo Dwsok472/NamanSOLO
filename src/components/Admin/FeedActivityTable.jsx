@@ -8,6 +8,7 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  margin-top: 50px;
 `;
 
 const Title = styled.h3`
@@ -45,10 +46,12 @@ const FeedActivityTable = () => {
 
   useEffect(() => {
     getUserLastActivity()
-      .then(res => setUsers(res))
+      .then(res => {
+        const sorted = res.sort((a, b) => new Date(a.lastLogin) - new Date(b.lastLogin));
+        setUsers(sorted);
+      })
       .catch(err => console.error('유저 활동 정보 로딩 실패', err));
   }, []);
-
   return (
     <Container>
       <Title>유저별 마지막 활동 기록</Title>
