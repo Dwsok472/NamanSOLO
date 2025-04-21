@@ -1,19 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import LoginButton from './Button/LoginButton';
-import RegisterButton from './Button/RegisterButton';
-import { useNavigate } from 'react-router-dom';
-import logo2 from './img/logo2.png';
-import { useUserStore } from './Login/Login';
-
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import LoginButton from "./Button/LoginButton";
+import RegisterButton from "./Button/RegisterButton";
+import { useNavigate } from "react-router-dom";
+import logo2 from "./img/logo2.png";
+import { useUserStore } from "./Login/Login";
 
 function Header({
-  logoText = 'WeARE',
+  logoText = "WeARE",
   menuItems = [],
   subMenuItems = [],
-  loginText = '로그인',
-  signupText = '회원가입',
+  loginText = "로그인",
+  signupText = "회원가입",
   logoRef,
   showLogo,
   onSubMenuToggle,
@@ -25,7 +24,7 @@ function Header({
   const subMenuRef = useRef(null);
   const location = useLocation();
   const isLoginPage =
-    location.pathname === '/login' || location.pathname === '/register';
+    location.pathname === "/login" || location.pathname === "/register";
 
   useEffect(() => {
     if (onSubMenuToggle) {
@@ -41,9 +40,9 @@ function Header({
 
   useEffect(() => {
     if (isSubOpen) {
-      document.body.classList.add('blur');
+      document.body.classList.add("blur");
     } else {
-      document.body.classList.remove('blur');
+      document.body.classList.remove("blur");
     }
   }, [isSubOpen]);
 
@@ -58,10 +57,9 @@ function Header({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSubOpen]);
-
 
   return (
     <>
@@ -73,40 +71,52 @@ function Header({
         </Link>
 
         <Nav>
-        {menuItems.map(({ to, label }) => {
-  const isProtected = to === "/events"; // 이벤트만 로그인 필요
+          {menuItems.map(({ to, label }) => {
+            const isProtected = to === "/events"; // 이벤트만 로그인 필요
 
-  return (
-    <Link key={to} to={isLoggedIn || !isProtected ? to : "/login"}>
-      {label}
-    </Link>
-  );
-})}
-  {user?.authority === "ROLE_ADMIN" ? (
-  <Link to="/admin/users">관리자 페이지</Link>
-) : (
-  <MenuWrapper ref={subMenuRef}>
-    <div onClick={() => isLoggedIn ? toggleSubMenu() : navigate("/login")}>
-      마이페이지 <ToggleArrow $open={isSubOpen}>▼</ToggleArrow>
-    </div>
-    {isSubOpen && isLoggedIn && (
-      <SubMenu>
-        {subMenuItems.map(({ to, label }) => (
-          <li key={to} onClick={toggleSubMenu}>
-            <Link to={to}>{label}</Link>
-          </li>
-        ))}
-      </SubMenu>
-    )}
-  </MenuWrapper>
-)}
-</Nav>
+            return (
+              <Link key={to} to={isLoggedIn || !isProtected ? to : "/login"}>
+                {label}
+              </Link>
+            );
+          })}
+          {user?.authority === "ROLE_ADMIN" ? (
+            <Link to="/admin/users">관리자 페이지</Link>
+          ) : (
+            <MenuWrapper ref={subMenuRef}>
+              <div
+                onClick={() =>
+                  isLoggedIn ? toggleSubMenu() : navigate("/login")
+                }
+              >
+                마이페이지 <ToggleArrow $open={isSubOpen}>▼</ToggleArrow>
+              </div>
+              {isSubOpen && isLoggedIn && (
+                <SubMenu>
+                  {subMenuItems.map(({ to, label }) => (
+                    <li key={to} onClick={toggleSubMenu}>
+                      <Link to={to}>{label}</Link>
+                    </li>
+                  ))}
+                </SubMenu>
+              )}
+            </MenuWrapper>
+          )}
+        </Nav>
 
         <ButtonGroup>
           {!isLoginPage && (
             <>
               {isLoggedIn ? (
-                <button onClick={()=>{navigate("/"); logout();}} className='logout'>로그아웃</button>
+                <button
+                  onClick={() => {
+                    navigate("/");
+                    logout();
+                  }}
+                  className="logout"
+                >
+                  로그아웃
+                </button>
               ) : (
                 <>
                   <LoginButton type="navigate" />
@@ -131,26 +141,26 @@ function Header({
             </li>
           ))}
           {user?.authority === "ROLE_ADMIN" ? (
-  <li>
-    <Link to="/admin/users" onClick={closeSidebar}>
-      관리자 페이지
-    </Link>
-  </li>
-) : (
-  <>
-    <li onClick={toggleSubMenu}>
-      <span>마이페이지 {isSubOpen ? '▲' : '▼'}</span>
-    </li>
-    {isSubOpen &&
-      subMenuItems.map(({ to, label }) => (
-        <li key={to}>
-          <Link to={to} onClick={closeSidebar}>
-            {label}
-          </Link>
-        </li>
-      ))}
-  </>
-)}
+            <li>
+              <Link to="/admin/users" onClick={closeSidebar}>
+                관리자 페이지
+              </Link>
+            </li>
+          ) : (
+            <>
+              <li onClick={toggleSubMenu}>
+                <span>마이페이지 {isSubOpen ? "▲" : "▼"}</span>
+              </li>
+              {isSubOpen &&
+                subMenuItems.map(({ to, label }) => (
+                  <li key={to}>
+                    <Link to={to} onClick={closeSidebar}>
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+            </>
+          )}
           {isSubOpen &&
             subMenuItems.map(({ to, label }) => (
               <li key={to}>
@@ -162,7 +172,12 @@ function Header({
           {!isLoginPage && (
             <>
               {isLoggedIn ? (
-                <li onClick={() => { logout(); closeSidebar(); }}>
+                <li
+                  onClick={() => {
+                    logout();
+                    closeSidebar();
+                  }}
+                >
                   <span>로그아웃</span>
                 </li>
               ) : (
@@ -192,7 +207,7 @@ export default Header;
 const ToggleArrow = styled.span`
   display: inline-block;
   transition: 0.2s;
-  transform: ${({ $open }) => ($open ? 'rotate(180deg)' : 'none')};
+  transform: ${({ $open }) => ($open ? "rotate(180deg)" : "none")};
 `;
 
 const Container = styled.header`
@@ -236,6 +251,10 @@ const Nav = styled.nav`
     transition: all 0.25s ease-in-out;
     transform-origin: center;
     display: inline-block;
+    &:hover {
+      color: #dcbdb8;
+      /* transform: scale(1.05); */
+    }
   }
 
   @media (max-width: 768px) {
@@ -295,21 +314,21 @@ const ButtonGroup = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
-  .logout{
-  /* width: 100px; */
-  border-radius: 10px;
-  background-color: #ffffff;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #8c0d17;
-  cursor: pointer;
-  &:hover {
-    color: #000000;
-    border: 1px solid #3333;
-  }
-  &:focus {
-    outline: none;
-  }
+  .logout {
+    /* width: 100px; */
+    border-radius: 10px;
+    background-color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #8c0d17;
+    cursor: pointer;
+    &:hover {
+      color: #000000;
+      border: 1px solid #3333;
+    }
+    &:focus {
+      outline: none;
+    }
   }
 `;
 
@@ -332,7 +351,7 @@ const Hamburger = styled.button`
 const Sidebar = styled.div`
   position: fixed;
   top: 0;
-  left: ${({ $open }) => ($open ? '0' : '-300px')};
+  left: ${({ $open }) => ($open ? "0" : "-300px")};
   width: 280px;
   height: 100%;
   background-color: #bf1f3c;
@@ -359,7 +378,7 @@ const Sidebar = styled.div`
 `;
 
 const Overlay = styled.div`
-  display: ${({ $open }) => ($open ? 'block' : 'none')};
+  display: ${({ $open }) => ($open ? "block" : "none")};
   position: fixed;
   top: 0;
   left: 0;
