@@ -8,8 +8,9 @@ const Container = styled.div`
 
 const Title = styled.h1`
   text-align: center;
-  font-size: 2rem;
-  color : #ff6b6bd8;
+  font-size: 4rem;
+  color : #1f0606;
+  margin-top: 40px;
   margin-bottom: 40px;
 `;
 
@@ -26,15 +27,17 @@ const Category = styled.div`
   height: fit-content;
   border-radius: 20px;
   padding: 28px 24px;
-  background-color: none;
+  background-color: ${(props) =>
+    props.$gender === 'male' ? '#9dc4ff7d' : '#ffd7cc99' };
   box-shadow: 0 3px 10px rgba(200, 200, 200, 0.15);
 `;
 
 const SubTitle = styled.h2`
   font-size: 1.4rem;
   margin-bottom: 20px;
+  font-weight: 500;
   color: ${(props) =>
-    props.$gender === 'male' ? '#4a91e294' : '#f884799b' };
+    props.$gender === 'male' ? '#3c97ff' : '#f88479' };
   text-align: center;
   background-color: none;
   padding: 8px 12px;
@@ -146,7 +149,7 @@ function Event() {
 
   return (
     <Container>
-      <Title>BEST 선물</Title>
+      <Title>선물 랭킹</Title>
       <CategoryContainer>
         <Category $gender="male">
           <SubTitle $gender="male">남자 선물</SubTitle>
