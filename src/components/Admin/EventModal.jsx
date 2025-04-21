@@ -35,18 +35,27 @@ const CheckboxRow = styled.div`
   display: flex;
   justify-content: center;
   gap: 80px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 
   input {
-    margin-right: 10px;
+    margin-right: 5px;
   }
+`;
+
+const FormInput = styled.input`
+  width: 100%;
+  height: 40px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
 `;
 
 const ContentBox = styled.div`
   border: 1px solid #ddd;
   padding: 20px;
-  min-height: 450px;
-  max-height: 450px;
+  height: ${({ compact }) => (compact ? '150px' : '450px')};
   background: #f9f9f9;
   display: flex;
   flex-direction: column;
@@ -299,7 +308,7 @@ function EventModal({ onClose }) {
           </CheckboxRow>
         )}
 
-        <ContentBox>
+        <ContentBox compact={mode === '추가'|| mode === '수정'}>
           {mode === '관리' && (
             <ul>
               {paginatedEvents.map(event => (
@@ -327,29 +336,29 @@ function EventModal({ onClose }) {
           )}
 
           {(mode === '추가' || mode === '수정') && (
-            <>
-              <input
+            <div>
+              <FormInput
                 type="text"
                 placeholder="이벤트 제목"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
               />
               {selectedFilter === 'static' && (
-                <input
+                <FormInput
                   type="date"
                   value={newDate}
                   onChange={(e) => setNewDate(e.target.value)}
                 />
               )}
               {selectedFilter === 'none-static' && (
-                <input
+                <FormInput
                   type="number"
-                  placeholder="며칠 후인지 입력"
+                  placeholder="며칠 후"
                   value={newOffsetDays}
                   onChange={(e) => setNewOffsetDays(e.target.value)}
                 />
               )}
-            </>
+            </div>
           )}
 
           {mode === '관리' && totalPages > 1 && (
@@ -403,7 +412,6 @@ function EventModal({ onClose }) {
                 onClick={() => {
                   setMode('추가');
                   setSelectedFilter('static');
-                  resetForm();
                 }}
               >
                 추가
