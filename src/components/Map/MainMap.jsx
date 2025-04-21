@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-import background from "../img/back2.jpg";
+import background from "../img/backgroundMap.png";
 import place from "../img/place.png";
 import question from "../img/question.png";
 import heart from "../img/heart.png";
@@ -19,35 +19,22 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+    /* background-image: linear-gradient(45deg, #fff, #ffc6cf, #fff); */
+/* background-color: #8c0d17; */
 `;
-
-const BackgroundImage = styled.img`
-  width: 100%;
-  position: absolute;
-  top: 150px;
-  left: 0;
-  z-index: -1;
-  opacity: 0.3;
-`;
-
 const BannerBox = styled.div`
-  width: 100vw;
-  position: relative;
-  top: 0;
-  z-index: 1;
+width: 100vw;
 `;
 
 const SlideImage = styled.div`
   position: relative;
   width: 100%;
   background-color: #ffffff;
-
   .image {
     width: 100%;
-    height: 350px;
+    height: 400px;
     object-fit: cover;
-    opacity: 0.8;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
 `;
 
@@ -60,24 +47,22 @@ const Focus = styled.button`
   font-size: 1rem;
   font-weight: 700;
   color: white;
-  background-color: #ff9996;
+  background: linear-gradient(to right ,#ce000e, #fdecec);
   border-radius: 30px;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
   &:focus {
     outline: none;
   }
   &:hover {
-    background-color: white;
-    border: 1px solid #ff9996;
-    color: #141414;
+    color: white;
+    opacity: 0.8;
   }
 `;
 
 const NavButton = styled.button`
   position: absolute;
-  bottom: 16px;
+  bottom: 50%;
   border: none;
-  font-size: 1.2rem;
   padding: 8px 12px;
   border-radius: 50%;
   cursor: pointer;
@@ -88,10 +73,10 @@ const NavButton = styled.button`
 
   img {
     object-fit: cover;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
+    opacity:0.5;
   }
-
   &:focus {
     outline: none;
   }
@@ -99,10 +84,11 @@ const NavButton = styled.button`
 
 const ContentBox = styled.div`
   display: flex;
-  width: 100%;
+  width: 70%;
   height: calc(100vh - 60px); /* 뷰포트 기준 높이 설정 */
-  flex-direction: row;
-
+  justify-content: space-evenly;
+  background-color: white;
+  /* border: 1px solid black; */
   @media (max-width: 768px) {
     flex-direction: column;
     height: auto;
@@ -112,41 +98,33 @@ const ContentBox = styled.div`
 const LeftBox = styled.div`
   width: 50%;
   height: 100%;
-  background-color: #fff0f0;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 2px dashed #ffa8a8;
+  border-right: 1px solid #c0c0c0;
 
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
     border-right: none;
-    border-bottom: 2px dashed #ffa8a8;
   }
 `;
 
 const RightBox = styled.div`
   width: 50%;
   height: 100%;
-  background-color: #75c7c3;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-left: 2px dashed #75c7c3;
-
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
     border-left: none;
-    border-top: 2px dashed #75c7c3;
   }
 `;
 
 const InnerBox = styled.div`
   width: 100%;
-  max-width: 600px;
-  padding: 40px;
   box-sizing: border-box;
 
   @media (max-width: 768px) {
@@ -158,27 +136,26 @@ const Wrap = styled.div`
   width: 100%;
   height: 100%;
   padding: 10px;
-  margin-left: 130px;
+  margin-left: 80px;
   display: flex;
   flex-direction: column;
 
   h1 {
     font-size: 3.5rem;
     font-weight: 700;
-    /* text-align: start; */
   }
 
   .hash {
     font-weight: 700;
     padding: 8px;
     text-decoration: underline;
-    text-decoration-color: #ffa8a8;
+    text-decoration-color: #f73434;
     text-decoration-thickness: 2px;
     /* text-align: start; */
   }
 
   .highlight {
-    color: #ff1778;
+    color: #ff0a85;
     text-decoration: none;
   }
 `;
@@ -194,8 +171,8 @@ const HashWrap = styled.div`
 const BoxWrap = styled.div`
   padding: 10px;
   align-items: center;
-  margin-top: 160px;
-  margin-left: 110px;
+  margin-top: 150px;
+  margin-left: 80px;
 `;
 
 const Box = styled.div`
@@ -309,8 +286,6 @@ function MainMap() {
 
   return (
     <Container>
-      <BackgroundImage src={background} alt="background" />
-
       <BannerBox>
         <SlideImage>
           <Focus onClick={scrollToContent}>보러가기▶</Focus>

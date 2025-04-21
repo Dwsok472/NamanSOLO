@@ -1,17 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 import koreaMap from '../img/map1.png';
-import krMap from '../img/map2.png';
+import krMap from '../img/map4.png';
+import picker from '../img/place.png';
 
 const MapWrapper = styled.div`
   width: 100%;
-  max-width: 600px;
   height: auto;
   position: relative;
+  display: flex;
+  justify-content: center;
 `;
 
 const MapImage = styled.img`
-  width: 100%;
+  width: 550px;
   height: auto;
   object-fit: contain;
   margin-left: -7.1%;
@@ -21,29 +23,53 @@ const RegionLabel = styled.div`
   position: absolute;
   transform: translate(-50%, -50%);
   z-index: 3;
-  background: rgba(255,255,255,0.8);
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
   cursor: pointer;
   pointer-events: auto;
   font-weight: 700;
-  &:hover {
-    background: #32eb1ac5;
+  .picker{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    &:hover {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  }
+  .tooltip {
+    position: absolute;
+    bottom: 100%; /* picker 위에 */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(77, 77, 77, 0.9);
     color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover .tooltip {
+    opacity: 1;
   }
 `;
 
 const regions = [
-  { name: '인천,서울,경기', top: 30, left: 38 },
-  { name: '강원도', top: 35, left: 63 },
-  { name: '충청남도', top: 48, left: 32 },
-  { name: '충청북도', top: 45, left: 50 },
-  { name: '전라북도', top: 58, left: 35 },
-  { name: '전라남도', top: 67, left: 31 },
-  { name: '경상북도', top: 50, left: 65 },
-  { name: '경상남도', top: 61, left: 57 },
-  { name: '제주도', top: 86, left: 24 },
+  { name: '인천,서울,경기', top: 15, left: 35 },
+  { name: '강원도', top: 15, left: 55 },
+  { name: '충청남도', top: 38, left: 28 },
+  { name: '충청북도', top: 34, left: 45 },
+  { name: '전라북도', top: 52, left: 35 },
+  { name: '전라남도', top: 67, left: 28 },
+  { name: '경상북도', top: 40, left: 65 },
+  { name: '경상남도', top: 60, left: 55 },
+  { name: '제주도', top: 94, left: 23 },
 ];
 
 function ImageMapMapPart({ onRegionClick }) {
@@ -56,7 +82,8 @@ function ImageMapMapPart({ onRegionClick }) {
           style={{ top: `${region.top}%`, left: `${region.left}%` }}
           onClick={() => onRegionClick(region.name)}
         >
-          {region.name}
+          <img src={picker} alt="picker" className='picker' />
+          <div className="tooltip">{region.name}</div>
         </RegionLabel>
       ))}
     </MapWrapper>
