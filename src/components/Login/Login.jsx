@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { IconPassword, IconUser } from "../Icons";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import LoginButton from "../Button/LoginButton";
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { useRef, useState } from "react";
-import Find from "../FindIdAndPwd/Find";
-import { UserLogin } from "../api";
-import WeARE from "../img/weare.png";
-import WeARE1 from "../img/weare1.png";
-import { IconBehind } from "../Icons";
-import RegisterStep1 from "../Register/RegisterStep1";
-import axios from "axios";
-import { getCurrentUser } from "../api1";
-import FindIdOrPwd from "../FindIdAndPwd/FindIdOrPwd";
+import React, { useEffect } from 'react';
+import { IconPassword, IconUser } from '../Icons';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import LoginButton from '../Button/LoginButton';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { useRef, useState } from 'react';
+import Find from '../FindIdAndPwd/Find';
+import { UserLogin } from '../api';
+import WeARE from '../img/weare.png';
+import WeARE1 from '../img/weare1.png';
+import { IconBehind } from '../Icons';
+import RegisterStep1 from '../Register/RegisterStep1';
+import axios from 'axios';
+import { getCurrentUser } from '../api1';
+import FindIdOrPwd from '../FindIdAndPwd/FindIdOrPwd';
 
 export const useUserStore = create(
   persist(
@@ -23,33 +23,33 @@ export const useUserStore = create(
       isLoggedIn: false,
       login: (user) => set({ user, isLoggedIn: true }), // 로그인 처리
       logout: () => {
-        sessionStorage.removeItem("jwt-token"); // 토큰 삭제
+        sessionStorage.removeItem('jwt-token'); // 토큰 삭제
         set({ user: null, isLoggedIn: false }); // 상태 초기화
       },
     }),
     {
-      name: "user-storage", // sessionStorage에 저장될 키 이름
+      name: 'user-storage', // sessionStorage에 저장될 키 이름
       storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
 const images = [WeARE, WeARE1];
 function Login() {
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const { login, user, isLoggedIn } = useUserStore();
   const navigate = useNavigate();
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const view = searchParams.get("view") || "login";
+  const view = searchParams.get('view') || 'login';
 
   const handleViewChange = (targetView) => {
     navigate(`/login?view=${targetView}`);
   };
 
   const handleGoMain = () => {
-    navigate("/"); // MainPage 이동
+    navigate('/'); // MainPage 이동
   };
 
   async function handleSubmit() {
@@ -60,20 +60,20 @@ function Login() {
         authority: userData.authority,
         token: userData.token,
       }); // Zustand 상태에 로그인 정보 저장
-      setUsername(""); // 입력 필드 초기화
-      setPassword(""); // 입력 필드 초기화
+      setUsername(''); // 입력 필드 초기화
+      setPassword(''); // 입력 필드 초기화
 
       await getCurrentUser(); //마지막 로그인 기록을 위한 호출
 
-      navigate("/"); // 로그인 후 메인으로 이동
+      navigate('/'); // 로그인 후 메인으로 이동
     } catch (error) {
-      alert("로그인 실패! 다시 시도해주세요.");
+      alert('로그인 실패! 다시 시도해주세요.');
     }
   }
   async function UserLogin(username, password) {
     try {
       const response = await axios.post(
-        "/api/authenticate",
+        '/api/authenticate',
         {
           username,
           password,
@@ -82,11 +82,11 @@ function Login() {
           withCredentials: true,
         }
       );
-      console.log("로그인 성공:", response.data);
-      sessionStorage.setItem("jwt-token", response.data.token);
+      console.log('로그인 성공:', response.data);
+      sessionStorage.setItem('jwt-token', response.data.token);
       return response.data;
     } catch (error) {
-      console.error("로그인 실패:", error.response?.data || error.message);
+      console.error('로그인 실패:', error.response?.data || error.message);
       throw error;
     }
   }
@@ -106,7 +106,7 @@ function Login() {
       <ImgWrap onClick={handleGoMain}>
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
-      {view === "login" && (
+      {view === 'login' && (
         <CardWrap>
           <Card>
             <Top>
@@ -135,13 +135,13 @@ function Login() {
                 </SmallBox>
 
                 <FindBox>
-                  <StyledButton onClick={() => handleViewChange("find-id")}>
+                  <StyledButton onClick={() => handleViewChange('find-id')}>
                     아이디 찾기
                   </StyledButton>
-                  <StyledButton onClick={() => handleViewChange("find-pwd")}>
+                  <StyledButton onClick={() => handleViewChange('find-pwd')}>
                     비밀번호 찾기
                   </StyledButton>
-                  <StyledButton onClick={() => handleViewChange("register")}>
+                  <StyledButton onClick={() => handleViewChange('register')}>
                     회원가입
                   </StyledButton>
                 </FindBox>
@@ -155,21 +155,21 @@ function Login() {
         </CardWrap>
       )}
 
-      {view === "find-id" && (
+      {view === 'find-id' && (
         <FindIdCardWrap>
           <FindIdOrPwd isFindId={true} />
         </FindIdCardWrap>
       )}
 
-      {view === "find-pwd" && (
+      {view === 'find-pwd' && (
         <FindIdCardWrap>
           <FindIdOrPwd isFindId={false} />
         </FindIdCardWrap>
       )}
 
-      {view === "register" && (
+      {view === 'register' && (
         <FindIdCardWrap>
-          <RegisterStep1 onNext={() => navigate("/register")} />
+          <RegisterStep1 onNext={() => navigate('/register')} />
         </FindIdCardWrap>
       )}
       <Icon onClick={() => navigate(-1)}>
