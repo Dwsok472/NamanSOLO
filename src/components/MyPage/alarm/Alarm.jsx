@@ -11,7 +11,7 @@ const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */
   bottom: 50px; /* 버튼 아래 여백 */
   right: 100px; /* 오른쪽 정렬 */
-  z-index: 9999;
+  z-index: 20000;
 `;
 
 const ModalContainer = styled.div`
@@ -496,7 +496,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
                   onClick={() => handleAlarmClick(alarm)}
                   isExpanded={isExpanded}
                 >
-                  <Img src={alarm.img} alt={alarm.alt} />
+                  <Img src={alarm.img || undefined} alt={alarm.alt || "알림"} />
                   <TextWrapper
                     isExpanded={isExpanded}
                     ref={(el) => (textRefs.current[alarm.id] = el)} // ref 설정

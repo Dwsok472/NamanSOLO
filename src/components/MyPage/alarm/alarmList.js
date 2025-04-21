@@ -33,6 +33,30 @@ export const useAlarmList = create(
             alarm.id === id ? { ...alarm, isRead: true } : alarm
           ),
         })),
+      removeAlarm: (id) =>
+        set((state) => {
+          const currentUser = useUserStore.getState().user?.username;
+          const updatedAlarmList = state.alarmList.filter(
+            (alarm) => alarm.id !== id
+          );
+          const updatedUnread = updatedAlarmList.filter(
+            (a) => !a.isRead
+          ).length;
+
+          const updated = {
+            alarmList: updatedAlarmList,
+            unreadCount: updatedUnread,
+          };
+
+          if (currentUser) {
+            localStorage.setItem(
+              `alarms-${currentUser}`,
+              JSON.stringify(updated)
+            );
+          }
+
+          return updated;
+        }),
     }),
     {
       name: "alarm-storage", // 기본 저장소 (로그인 상태 확인용으로는 사용해도 무방)

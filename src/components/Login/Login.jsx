@@ -13,7 +13,7 @@ import WeARE1 from "../img/weare1.png";
 import { IconBehind } from "../Icons";
 import RegisterStep1 from "../Register/RegisterStep1";
 import axios from "axios";
-import { getCurrentUser } from '../api1';
+import { getCurrentUser } from "../api1";
 import FindIdOrPwd from "../FindIdAndPwd/FindIdOrPwd";
 
 export const useUserStore = create(
@@ -58,7 +58,7 @@ function Login() {
       login({
         username: userData.username,
         authority: userData.authority,
-        token: userData.token
+        token: userData.token,
       }); // Zustand 상태에 로그인 정보 저장
       setUsername(""); // 입력 필드 초기화
       setPassword(""); // 입력 필드 초기화
@@ -90,7 +90,6 @@ function Login() {
       throw error;
     }
   }
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -180,7 +179,6 @@ function Login() {
   );
 }
 export default Login;
-
 
 const FindIdCardWrap = styled.div`
   width: 550px;
@@ -366,4 +364,3 @@ const Container = styled.div`
   /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
   /* background: linear-gradient(to right, #7b1e3c, #ffb3b3, #ffe3e3); */
 `;
-
