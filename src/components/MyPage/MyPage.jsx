@@ -195,9 +195,7 @@ const EditButton = styled.button`
   top: 25px;
   right: 18px;
   padding: 5px 12px;
-  /* font-size: 0.9rem; */
-  /* border: 1px solid #aaa; */
-  /* background-color: white; */
+  font-weight: 700;
   border-radius: 6px;
   cursor: pointer;
   &:hover {
@@ -286,12 +284,13 @@ const DateInputRow = styled.div`
     position: absolute;
     bottom: 488px; // 인풋보다 살짝 아래
     right: 60px; // 우측으로 살짝
-    width: 52.5px;
+   color: white;
     padding: 6px 12px;
     border: none;
-    background-color: #ffc0bc;
+    background-color: #000000;
     border-radius: 6px;
     font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
     &:hover {
       background-color: #ffe2e2;
