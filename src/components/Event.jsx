@@ -3,84 +3,89 @@ import styled from 'styled-components';
 import { fetchFemalePresents, fetchMalePresents } from './api2';
 
 const Container = styled.div`
-padding: 40px 20px;
+  padding: 40px 20px;
 `;
 
 const Title = styled.h1`
-text-align: center;
-font-size: 2rem;
-color : #C6B8E7;
-margin-bottom: 40px;
+  text-align: center;
+  font-size: 2rem;
+  color : #C6B8E7;
+  margin-bottom: 40px;
 `;
 
 const CategoryContainer = styled.div`
-display: flex;
-justify-content: center;
-gap: 32px;
-flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
 `;
 
 const Category = styled.div`
-width: 100%;
-max-width: 480px;
-height: fit-content;
-border-radius: 20px;
-padding: 28px 24px;
-background-color: ${(props) =>
-  props.$gender === 'male' ? '#eef6ff' : '#fff0f5'};
-border: 2px solid ${(props) => (props.$gender === 'male' ? '#a3c8f2' : '#ffc9d9')};
-box-shadow: 0 6px 16px rgba(200, 200, 200, 0.15);
+  width: 100%;
+  max-width: 800px;
+  height: fit-content;
+  border-radius: 20px;
+  padding: 28px 24px;
+  background-color: #ffffffcc;
+  border: 2px solid ${(props) => (props.$gender === 'male' ? '#a3c8f2' : '#ffc9d9')};
+  box-shadow: 0 6px 16px rgba(200, 200, 200, 0.15);
 `;
 
 const SubTitle = styled.h2`
-font-size: 1.4rem;
-margin-bottom: 20px;
-color: ${(props) =>
-  props.$gender === 'male' ? '#66b' : '#f013' };
-text-align: center;
-background-color: #ffffffcc;
-padding: 8px 12px;
-border-radius: 12px;
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+  color: ${(props) =>
+    props.$gender === 'male' ? '#66b' : '#f013' };
+  text-align: center;
+  background-color: #ffffffcc;
+  padding: 8px 12px;
+  border-radius: 12px;
 `;
 
 const GiftList = styled.ul`
-list-style: none;
-padding: 0;
-margin: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
 `;
 
 const GiftItem = styled.li`
-border: 1px solid #e3e3e3;
-border-radius: 12px;
-margin-bottom: 18px;
-padding: 12px;
-text-align: center;
-background: #ffffff;
-box-shadow: 0 2px 6px rgba(200, 200, 200, 0.1);
-transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-&:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(150, 150, 150, 0.2);
-}
-
-img {
-  width: 100%;
-  max-height: 280px;
-  object-fit: cover;
+  width: 48%;
+  border: 1px solid #e3e3e3;
   border-radius: 12px;
-}
+  margin-bottom: 18px;
+  padding: 12px;
+  text-align: center;
+  background: #ffffffee;
+  box-shadow: 0 2px 6px rgba(200, 200, 200, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
-h3 {
-  font-size: 1rem;
-  margin: 12px 0 8px;
-  color: #333;
-}
+  &:hover {
+    font-weight: 700;
+    text-decoration: underline;
+  }
 
-p {
-  font-size: 0.95rem;
-  color: #666;
-}
+
+  img {
+    width: 100%;
+    max-height: 280px;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin: 12px 0 8px;
+    color: #333;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: #666;
+  }
 `;
 
 function Event() {
@@ -123,10 +128,10 @@ function Event() {
 
   return (
     <Container>
-      <Title>남자/여자 선물 추천 탑 10</Title>
+      <Title>남자/여자 선물 Best 20</Title>
       <CategoryContainer>
         <Category $gender="male">
-          <SubTitle $gender="male">남자 선물 추천</SubTitle>
+          <SubTitle $gender="male">남자 선물 Top 20</SubTitle>
           <GiftList>
             {Array.isArray(maleGifts) && maleGifts.map((gift, index) => (
               <GiftItem key={index} title={stripHTML(gift.title)}>
@@ -141,7 +146,7 @@ function Event() {
         </Category>
 
         <Category $gender="female">
-          <SubTitle $gender="female">여자 선물 추천</SubTitle>
+          <SubTitle $gender="female">여자 선물 Top 20</SubTitle>
           <GiftList>
             {Array.isArray(femaleGifts) && femaleGifts.map((gift, index) => (
               <GiftItem key={index} title={stripHTML(gift.title)}>
