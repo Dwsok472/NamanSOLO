@@ -11,6 +11,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 50px;
 `;
 
 const Title = styled.h3`
@@ -40,8 +41,8 @@ function FeedAvgBox() {
       if (avgUser && avgUser.lastLogin) {
         const avgDate = new Date(avgUser.lastLogin + "T00:00:00");
         const today = new Date();
-        const diff = Math.floor((today - avgDate) / (1000 * 60 * 60 * 24));
-        setAverageDays(diff);
+        const diffInDays = (today - avgDate) / (1000 * 60 * 60 * 24);
+        setAverageDays(diffInDays);
       }
     });
   }, []);
@@ -49,7 +50,7 @@ function FeedAvgBox() {
   return (
     <Container>
       <Title>유저별 마지막 활동 평균</Title>
-      <Number>{averageDays ?? "-"}</Number>
+      <Number>{averageDays !== null ? averageDays.toFixed(1) : "-"}</Number>
       <Unit>일 전</Unit>
     </Container>
   );

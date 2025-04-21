@@ -1,9 +1,15 @@
-// 지금은 시각화만 하기 위한 코드입니다. 통계랑은 별개입니다 그래프만 따옴
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
 } from 'recharts';
+import { getUserJoinDates } from '../api1';
 
 const ChartWrapper = styled.div`
   width: 100%;
@@ -19,25 +25,90 @@ const Title = styled.h3`
   font-size: 1.1rem;
 `;
 
-const dummyData = [
-  { date: '04-01', count: 5 },
-  { date: '04-02', count: 8 },
-  { date: '04-03', count: 2 },
-  { date: '04-04', count: 10 },
-  { date: '04-05', count: 6 },
-  { date: '04-06', count: 3 },
-  { date: '04-07', count: 9 },
-  { date: '04-08', count: 15 },
-  { date: '04-09', count: 19 },
-  { date: '04-10', count: 11 },
-];
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+`;
+
+const NavBtn = styled.button`
+  background: #f2f2f2;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ddd;
+  }
+`;
+
 
 function UserJoinChart() {
+  const [chartData, setChartData] = useState([]);
+  const [endDate, setEndDate] = useState(new Date()); 
+
+  const handlePrev = () => {
+    const newEnd = new Date(endDate);
+    newEnd.setDate(endDate.getDate() - 10);
+    setEndDate(newEnd);
+  };
+  
+  const handleNext = () => {
+    const newEnd = new Date(endDate);
+    newEnd.setDate(endDate.getDate() + 10);
+    setEndDate(newEnd);
+  };
+  
+
+  useEffect(() => {
+    getUserJoinDates().then(data => {
+      const grouped = {};
+  
+      const fromDate = new Date(endDate);
+      fromDate.setDate(endDate.getDate() - 9); // 총 10일
+  
+      data.forEach(user => {
+        const dateStr = user.addDate;
+        if (!dateStr) return;
+  
+        const date = new Date(dateStr);
+        if (date >= fromDate && date <= endDate) {
+          const key = dateStr.slice(5);
+          grouped[key] = (grouped[key] || 0) + 1;
+        }
+      });
+  
+      const days = [];
+      for (let i = 9; i >= 0; i--) {
+        const d = new Date(endDate);
+        d.setDate(endDate.getDate() - i);
+        const key = d.toISOString().slice(5, 10);
+        days.push(key);
+      }
+  
+      const formatted = days.map(date => ({
+        date,
+        count: grouped[date] || 0,
+      }));
+  
+      setChartData(formatted);
+    });
+  }, [endDate]);
+  
+  
+
   return (
     <ChartWrapper>
       <Title>📅 일별 유저 가입 통계</Title>
+      <ButtonGroup>
+        <NavBtn onClick={handlePrev}>이전</NavBtn>
+        <NavBtn onClick={handleNext}>다음</NavBtn>
+      </ButtonGroup>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={dummyData}>
+        <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis allowDecimals={false} />
