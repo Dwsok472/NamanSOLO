@@ -5,8 +5,8 @@ import img from '../img/1.jpg'
 const PopupWrapper = styled.div`
   position: fixed;
   bottom: 300px;
-  left: 50%;
-  z-index: 9999;
+  left: 75%;
+  z-index: 1;
 `;
 
 const PopupContainer = styled.div`

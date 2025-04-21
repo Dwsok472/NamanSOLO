@@ -128,7 +128,6 @@ function MainPage() {
 
   return (
     <>
-    <MainPopup />
       <Header
         logoRef={logoRef}
         showLogo={showLogo}
@@ -159,6 +158,7 @@ function MainPage() {
             slideOut={slideOut}
           />
         )}
+    {showMain && <MainPopup />}
 
         <MainContent
           id="main-content"
