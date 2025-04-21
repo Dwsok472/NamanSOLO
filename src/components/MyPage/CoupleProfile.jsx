@@ -14,7 +14,6 @@ const ModalWrapper = styled.div`
   /* padding: 10px; */
   border-radius: 8px;
   max-height: 90vh;
-  overflow-y: auto;
 `;
 
 const Top = styled.div`
@@ -31,9 +30,9 @@ const Top = styled.div`
 const CityWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;      // 중앙 정렬
-  margin-top: -15px;         // 아래로 내리기
-  margin-right: 8px;
+  align-items: center; // 중앙 정렬
+  margin-top: 10px; // 아래로 내리기
+  width: 100%;
 `;
 
 const CloseButton = styled.button`
@@ -87,7 +86,7 @@ const ProfileBox = styled.div`
 const ControlButtons = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 15px;
   margin-bottom: 25px;
   gap: 20px;
 
@@ -125,15 +124,15 @@ function CoupleProfile({ onClose, onUpdateNames }) {
     phone: "",
   });
 
-  useEffect(()=> {
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
         setCity(data.city);
 
         setProfileF({
-          name:data.realNameF,
-          birthday:data.birthF,
+          name: data.realNameF,
+          birthday: data.birthF,
           email: data.emailF,
           phone: data.phoneNumberF,
         });
@@ -144,11 +143,11 @@ function CoupleProfile({ onClose, onUpdateNames }) {
           phone: data.phoneNumberF,
         });
       } catch (e) {
-        console.error("정보를 제대로 불러오지 못했습니다: " +e)
+        console.error("정보를 제대로 불러오지 못했습니다: " + e);
       }
-    }
+    };
     fetchUser();
-  }, [])
+  }, []);
 
   const handleChange = (type, field, value) => {
     if (type === "M") {
@@ -169,7 +168,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
         phoneNumberF: profileF.phone,
         city: city,
       };
-  
+
       await updateUserData(updatedUser);
       onUpdateNames(profileF.name, profileM.name);
       alert("저장되었습니다!");
@@ -190,7 +189,6 @@ function CoupleProfile({ onClose, onUpdateNames }) {
       </Top>
 
       <Content>
-        
         {/* 남자 프로필 */}
         <ProfileBox>
           <h3>남자 정보</h3>
@@ -211,9 +209,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
             )
           )}
         </ProfileBox>
-        <CityWrapper>
-          <CityDropdown value={city} isEditable={isEditable} onSelect={(e) => setCity(e)} />
-        </CityWrapper>
+
         {/* 여자 프로필 */}
         <ProfileBox>
           <h3>여자 정보</h3>
@@ -235,7 +231,13 @@ function CoupleProfile({ onClose, onUpdateNames }) {
           )}
         </ProfileBox>
       </Content>
-
+      <CityWrapper>
+        <CityDropdown
+          value={city}
+          isEditable={isEditable}
+          onSelect={(e) => setCity(e)}
+        />
+      </CityWrapper>
       <ControlButtons>
         {isEditable ? (
           <button onClick={handleSave}>저장</button>

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import star from '../../img/star.png';
-import { IconClose } from '../../Icons';
-import { useUserStore } from '../../Login/Login';
-import axios from 'axios';
-import qs from 'qs';
-import AlbumDetailModal from '../../Album/AlbumDetailModal';
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import styled from "styled-components";
+import star from "../../img/star.png";
+import { IconClose } from "../../Icons";
+import { useUserStore } from "../../Login/Login";
+import axios from "axios";
+import qs from "qs";
+import AlbumDetailModal from "../../Album/AlbumDetailModal";
 
 function BookMark() {
   const currentUser = useUserStore((state) => state.user?.username);
@@ -14,7 +14,7 @@ function BookMark() {
   const [loading, setLoading] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
-  const urlKeyword = new URLSearchParams(location.search).get('userName');
+  const urlKeyword = new URLSearchParams(location.search).get("userName");
   const [selectedAlbum, setSelectedAlbum] = useState(null);
 
   const handleDelete = (id) => {
@@ -30,7 +30,7 @@ function BookMark() {
   };
 
   async function GetAllBookmark() {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) {
       return;
     }
@@ -39,26 +39,26 @@ function BookMark() {
     console.log(stored);
     try {
       // 서버로 중복 확인 요청
-      const response = await axios.get('/api/album/ids', {
+      const response = await axios.get("/api/album/ids", {
         params: {
           id: parsed,
         },
         paramsSerializer: {
           serialize: (params) =>
-            qs.stringify(params, { arrayFormat: 'repeat' }), // 핵심
+            qs.stringify(params, { arrayFormat: "repeat" }), // 핵심
         },
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response || response.length === 0) {
-        console.log('즐겨찾기 데이터를 가져오지 못했습니다.');
+        console.log("즐겨찾기 데이터를 가져오지 못했습니다.");
         return;
       }
       setData(response.data);
       setLoading(false);
     } catch (error) {
-      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
       throw error; // 에러 처리
     }
   }
@@ -71,15 +71,15 @@ function BookMark() {
     try {
       const response = await axios.get(`/api/album/id/${id}`);
       console.log(response.data);
-      console.log(response.data.greats.length)
+      console.log(response.data.greats.length);
       if (!response || response.length === 0) {
         console.log("앨범 데이터를 가져오지 못했습니다.");
         return;
       }
       setSelectedAlbum(response.data);
-      console.log(selectedAlbum)
+      console.log(selectedAlbum);
     } catch (error) {
-      console.error('앨범 정보 불러오기 실패:', error);
+      console.error("앨범 정보 불러오기 실패:", error);
     }
   };
   useEffect(() => {
@@ -119,7 +119,12 @@ function BookMark() {
             ))
           )}
         </ContentBox>
-        {showDetail && selectedAlbum && (<AlbumDetailModal albumData={selectedAlbum} onClose={() => setShowDetail(false)} />)}
+        {showDetail && selectedAlbum && (
+          <AlbumDetailModal
+            albumData={selectedAlbum}
+            onClose={() => setShowDetail(false)}
+          />
+        )}
       </ContainerMain>
     </Container>
   );
@@ -138,6 +143,7 @@ const ContainerMain = styled.div`
   border-radius: 30px;
   padding-top: 10px;
   background-color: #c0c0c09e;
+  /* background: linear-gradient(to bottom, #ffe2e2, #efc9c7, #ffe2e2); */
   height: 540px;
 `;
 
