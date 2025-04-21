@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import koreaMap from '../img/map1.png';
-import krMap from '../img/map4.png';
+import krMap from '../img/map5.png';
 import picker from '../img/place.png';
 
 const MapWrapper = styled.div`
@@ -63,12 +63,12 @@ const RegionLabel = styled.div`
 const regions = [
   { name: '인천,서울,경기', top: 15, left: 35 },
   { name: '강원도', top: 15, left: 55 },
-  { name: '충청남도', top: 38, left: 28 },
+  { name: '충청남도', top: 40, left: 33 },
   { name: '충청북도', top: 34, left: 45 },
-  { name: '전라북도', top: 52, left: 35 },
-  { name: '전라남도', top: 67, left: 28 },
-  { name: '경상북도', top: 40, left: 65 },
-  { name: '경상남도', top: 60, left: 55 },
+  { name: '전라북도', top: 59, left: 35 },
+  { name: '전라남도', top: 73, left: 28 },
+  { name: '경상북도', top: 45, left: 58 },
+  { name: '경상남도', top: 67, left: 55 },
   { name: '제주도', top: 94, left: 23 },
 ];
 

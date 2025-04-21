@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { IconFollowing, IconSearch, IconUsers } from '../Icons';
-import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useUserStore } from '../Login/Login';
+import React, { useEffect, useState } from "react";
+import { IconFollowing, IconSearch, IconUsers } from "../Icons";
+import styled from "styled-components";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useUserStore } from "../Login/Login";
 
 function Follow({ type }) {
-  const [inputKeyword, setInputKeyword] = useState('');
+  const [inputKeyword, setInputKeyword] = useState("");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const currentUser = useUserStore((state) => state.user?.username);
 
   const navigate = useNavigate();
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
-  const urlKeyword = new URLSearchParams(location.search).get('username');
+  const urlKeyword = new URLSearchParams(location.search).get("username");
 
   async function GetAllFollower() {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) {
       return;
     }
     try {
       // 서버로 중복 확인 요청
-      const response = await axios.get('/api/follow/all/followers');
+      const response = await axios.get("/api/follow/all/followers");
       if (!response || response.length === 0) {
-        console.log('팔로워 데이터를 가져오지 못했습니다.');
+        console.log("팔로워 데이터를 가져오지 못했습니다.");
         return;
       }
       setData(response.data);
       setLoading(false);
     } catch (error) {
-      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
       throw error; // 에러 처리
     }
   }
@@ -41,7 +41,7 @@ function Follow({ type }) {
     <Container>
       <Top>
         <IconUsers />
-        <h1>{type === 'follower' ? '팔로워' : '팔로윙'}</h1>
+        <h1>{type === "follower" ? "팔로워" : "팔로윙"}</h1>
       </Top>
       <ContainerMain>
         <SearchBox>
@@ -56,7 +56,7 @@ function Follow({ type }) {
               onClick={() => {
                 inputKeyword
                   ? navigate(`/search?username=${inputKeyword}`)
-                  : alert('검색어를 입력해주세요');
+                  : alert("검색어를 입력해주세요");
               }}
             />
           </InputBox>
@@ -73,12 +73,12 @@ function Follow({ type }) {
                 </Left>
                 <Right>
                   <TopButton>
-                    {' '}
-                    {type === 'follower' ? '차단' : '피드 구경가기'}
+                    {" "}
+                    {type === "follower" ? "차단" : "피드 구경가기"}
                   </TopButton>
                   <ButtomButton>
-                    {' '}
-                    {type === 'follower' ? '팔로우 하기' : '팔로우 취소'}
+                    {" "}
+                    {type === "follower" ? "팔로우 하기" : "팔로우 취소"}
                   </ButtomButton>
                 </Right>
               </SmallBox>
@@ -102,7 +102,7 @@ const ContainerMain = styled.div`
   width: 100%;
   border-radius: 30px;
   padding-top: 10px;
-  background-color: #c0c0c09e;
+  /* background-color: #c0c0c09e; */
   height: 480px;
 `;
 

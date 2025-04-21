@@ -11,7 +11,13 @@ import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
 import MySetting from "./MySetting";
 import Edit from "../img/edit.png";
-import { fetchAnniversaries, fetchTravels, getCurrentUser, updateUserData, uploadProfileImage } from "../api2";
+import {
+  fetchAnniversaries,
+  fetchTravels,
+  getCurrentUser,
+  updateUserData,
+  uploadProfileImage,
+} from "../api2";
 
 const Container = styled.div`
   display: flex;
@@ -99,7 +105,6 @@ const MeetingDate = styled.div`
   font-size: 1.2rem;
   color: ${({ color }) => color || "#1f1f1f"};
   button {
-
   }
 `;
 const EditIcon = styled.img`
@@ -186,7 +191,7 @@ const Left = styled.div`
 const EditButton = styled.button`
   position: absolute;
   top: 25px;
-  right: 10px;
+  right: 18px;
   padding: 5px 12px;
   font-size: 0.9rem;
   border: 1px solid #aaa;
@@ -263,31 +268,30 @@ const DateInputRow = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 12px;
 
   input {
     text-align: center;
-    font-size:1rem;
+    font-size: 1rem;
     width: 140px;
   }
 
   button {
     position: absolute;
-    bottom: 488px;    // 인풋보다 살짝 아래
-    right: 60px;    // 우측으로 살짝
+    bottom: 488px; // 인풋보다 살짝 아래
+    right: 60px; // 우측으로 살짝
     width: 52.5px;
     padding: 6px 12px;
     border: none;
-    background-color: #eb2230;
+    background-color: #ffc0bc;
     border-radius: 6px;
     font-size: 0.9rem;
     cursor: pointer;
     &:hover {
-      background-color: #ff2164d2;
+      background-color: #ffe2e2;
     }
   }
 `;
-
 
 function MyPage() {
   const location = useLocation();
@@ -343,7 +347,7 @@ function MyPage() {
       const travels = await fetchTravels();
       setEvents([...annivs, ...travels]);
     };
-  
+
     refetchAll();
   }, [meetingDate]);
 
@@ -352,8 +356,8 @@ function MyPage() {
       try {
         const data = await getCurrentUser();
         console.log(data);
-    
-        console.log("🔥 키 리스트:", Object.keys(data)); 
+
+        console.log("🔥 키 리스트:", Object.keys(data));
         setGirlname(data.realNameF);
         setBoyname(data.realNameM);
         setMeetingDate(data.dDay);
@@ -385,21 +389,20 @@ function MyPage() {
 
     const timeDiff = date2 - date1;
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-    if (daysDiff<1) {
+    if (daysDiff < 1) {
       setDaysSince("오늘");
-    } 
+    }
     setDaysSince(daysDiff);
   };
   const handleCompleteEdit = async () => {
     try {
       let uploadedImageUrl = null;
-  
+
       if (selectedFile) {
         // 업로드 -> 경로 받아오기
         uploadedImageUrl = await uploadProfileImage(selectedFile);
       }
 
-      
       const updatedData = {
         realNameM: boyname,
         realNameF: girlname,
@@ -409,17 +412,17 @@ function MyPage() {
       if (uploadedImageUrl) {
         updatedData.profileImageUrl = uploadedImageUrl;
       }
-      
+
       await updateUserData(updatedData);
-      
+
       if (uploadedImageUrl) {
         setImage(uploadedImageUrl); // 실제 이미지 반영
       }
       const [annivs, travels] = await Promise.all([
         fetchAnniversaries(),
-        fetchTravels()
+        fetchTravels(),
       ]);
-      
+
       setOriginalMeetingDate(meetingDate);
       setIsEditMode(false);
     } catch (err) {
@@ -446,26 +449,40 @@ function MyPage() {
   return (
     <Container>
       <ProfileCard>
-      {loading ? (
-        <div style={{ marginTop: "200px", fontSize: "1.5rem" }}>불러오는 중...</div>
-      ) : ( <><MySetting onClick={() => setShowCoupleProfile(true)} />
-            <EditButton onClick={() => {
-              if (isEditMode) {
-                handleCompleteEdit();
-              }
-              setIsEditMode((prev) => !prev)
-              }}>
+        {loading ? (
+          <div style={{ marginTop: "200px", fontSize: "1.5rem" }}>
+            불러오는 중...
+          </div>
+        ) : (
+          <>
+            <MySetting onClick={() => setShowCoupleProfile(true)} />
+            <EditButton
+              onClick={() => {
+                if (isEditMode) {
+                  handleCompleteEdit();
+                }
+                setIsEditMode((prev) => !prev);
+              }}
+            >
               {isEditMode ? "완료" : "수정"}
             </EditButton>
-              <PhotoSection>
-                {isEditMode ? ( 
-                <Img src={tempImage||image} alt="profile" style={{cursor: "pointer"}} onClick={() => {
-                  imgRef.current.click();
-                }} />
-              ) : (<Img src={image} alt="profile"/>)
-              }
+            <PhotoSection>
+              {isEditMode ? (
+                <Img
+                  src={tempImage || image}
+                  alt="profile"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    imgRef.current.click();
+                  }}
+                />
+              ) : (
+                <Img src={image} alt="profile" />
+              )}
               {isEditMode && (
-                <FileButton onClick={()=>imgRef.current &&imgRef.current.click()}>
+                <FileButton
+                  onClick={() => imgRef.current && imgRef.current.click()}
+                >
                   <IconImage />
                 </FileButton>
               )}
@@ -492,13 +509,17 @@ function MyPage() {
                         onChange={(e) => setMeetingDate(e.target.value)}
                         max={new Date().toISOString().split("T")[0]}
                       />
-                      <button onClick={() => {
-                        setEditDateMode(false);
-                        setTempImage(null); 
-                        setSelectedFile(null);
-                        setIsEditMode(false);
-                        setMeetingDate(originalMeetingDate);
-                      }}>취소</button>
+                      <button
+                        onClick={() => {
+                          setEditDateMode(false);
+                          setTempImage(null);
+                          setSelectedFile(null);
+                          setIsEditMode(false);
+                          setMeetingDate(originalMeetingDate);
+                        }}
+                      >
+                        취소
+                      </button>
                     </DateInputRow>
                   ) : (
                     <>
@@ -524,7 +545,10 @@ function MyPage() {
             </DateInfo>
 
             <NameHeartSection>
-              <div className="girl" onChange={(e) => setGirlname(e.target.value)}>
+              <div
+                className="girl"
+                onChange={(e) => setGirlname(e.target.value)}
+              >
                 {boyname || "박서진"}
               </div>
               <img src={heart} className="heart" />
@@ -532,8 +556,8 @@ function MyPage() {
                 {girlname || "김동인"}
               </div>
             </NameHeartSection>
-        </>
-      )}
+          </>
+        )}
       </ProfileCard>
 
       <RightProfileCard>
@@ -583,7 +607,10 @@ function MyPage() {
           <Routes>
             <Route path="/myalbum" element={<MyAlbum />} />
             <Route path="/comment" element={<CommentPage />} />
-            <Route path="/todo" element={<Todo originalMeetingDate={originalMeetingDate} />} />
+            <Route
+              path="/todo"
+              element={<Todo originalMeetingDate={originalMeetingDate} />}
+            />
             <Route path="/other" element={<Other />} />
           </Routes>
         </BottomSection>
@@ -591,10 +618,13 @@ function MyPage() {
       {showCoupleProfile && (
         <>
           <ModalWrapper>
-            <CoupleProfile onClose={() => setShowCoupleProfile(false)} onUpdateNames={(girl, boy) => {
-              setGirlname(girl);
-              setBoyname(boy);
-            }} />
+            <CoupleProfile
+              onClose={() => setShowCoupleProfile(false)}
+              onUpdateNames={(girl, boy) => {
+                setGirlname(girl);
+                setBoyname(boy);
+              }}
+            />
           </ModalWrapper>
           <Backdrop onClick={() => setShowCoupleProfile(false)} />
         </>
