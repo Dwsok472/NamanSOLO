@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import MapPicker from "../Story/MapPicker";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import MapPicker from '../Story/MapPicker';
 import {
   uploadRecommendPlaceImages,
   saveRecommendPlace,
@@ -8,12 +8,12 @@ import {
   getPlacesByRegion,
   getPlacesByRegionAndCategory,
   deleteRecommendPlace,
-  updateRecommendPlace
-} from "../api1";
-import { useUserStore } from "../Login/Login";
-import axios from "axios";
-import { registerCategoryMapping } from "../api1";
-import { IconClose, IconImage } from "../Icons";
+  updateRecommendPlace,
+} from '../api1';
+import { useUserStore } from '../Login/Login';
+import axios from 'axios';
+import { registerCategoryMapping } from '../api1';
+import { IconClose, IconImage } from '../Icons';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -42,6 +42,8 @@ const RegionTitle = styled.h3`
   margin-bottom: 15px;
   margin-top: 15px;
   color: white;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+    1px 1px 0 black;
 `;
 
 const AddButton = styled.button`
@@ -128,7 +130,6 @@ const Info = styled.div`
   .category {
     color: #ffffff;
     font-size: 1rem;
-  
   }
   .title {
     font-weight: bold;
@@ -144,6 +145,11 @@ const Detail = styled.div`
   background: #ffffff;
   padding: 12px 16px;
   position: relative;
+  .close {
+    position: absolute;
+    top: 0;
+    bottom: -100px;
+  }
 `;
 
 const DetailText = styled.p`
@@ -191,18 +197,17 @@ const Form = styled.div`
   padding-bottom: 40px;
   input,
   input,
-  select{
+  select {
     width: 100%;
     margin: 6px 0;
     padding: 6px 10px;
     border: 1px solid #ddd;
     border-radius: 6px;
-
   }
   textarea {
     width: 100%;
     height: 120px;
-    resize: none; 
+    resize: none;
     margin: 6px 0;
     padding: 6px 10px;
     border: 1px solid #ddd;
@@ -210,17 +215,17 @@ const Form = styled.div`
     outline: none;
   }
   #file-upload {
-      display: none;
-    }
-    #file-uploads {
-      display: none;
-    }
+    display: none;
+  }
+  #file-uploads {
+    display: none;
+  }
   img.preview {
     width: 100%;
     border-radius: 8px;
     margin-top: 10px;
   }
-  .imgwrap{
+  .imgwrap {
     width: 100%;
     position: relative;
     border-radius: 8px;
@@ -233,7 +238,7 @@ const Form = styled.div`
       cursor: pointer;
     }
   }
-  .edit{
+  .edit {
     position: absolute;
     bottom: 10px;
     left: 40%;
@@ -243,11 +248,12 @@ const Form = styled.div`
     color: white;
     font-size: 0.8rem;
     height: 30px;
-    &:hover{
+    &:hover {
       color: #ddd;
     }
   }
-  .imgwraps{
+
+  .imgwraps {
     width: 100%;
     height: 350px;
     position: relative;
@@ -261,28 +267,27 @@ const Form = styled.div`
       z-index: 400;
       cursor: pointer;
     }
-    .fixed{
+    .fixed {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border:none;
+      border: none;
     }
   }
-  .addbtn{
-      position: absolute;
-      bottom: 5px;
-      left: 40%;
-      font-weight: 700;
-      background-color: black;
+  .addbtn {
+    position: absolute;
+    bottom: 5px;
+    left: 40%;
+    font-weight: 700;
+    background-color: black;
     width: 100px;
     color: white;
     font-size: 0.8rem;
     height: 30px;
-    &:hover{
+    &:hover {
       color: #ddd;
     }
-    }
-
+  }
 `;
 
 const AddressRow = styled.div`
@@ -335,7 +340,7 @@ const CategoryCheckboxLabel = styled.label`
   align-items: center;
   gap: 4px;
   font-size: 0.85rem;
-  input{
+  input {
     width: 50px;
   }
 `;
@@ -356,8 +361,8 @@ const CategoryButton = styled.button`
   width: 80px;
   font-weight: bold;
   cursor: pointer;
-  background: ${({ $active }) => ($active ? "#8c0d17" : "#ffffff")};
-  color: ${({ $active }) => ($active ? "#fff" : "#333")};
+  background: ${({ $active }) => ($active ? '#8c0d17' : '#ffffff')};
+  color: ${({ $active }) => ($active ? '#fff' : '#333')};
 `;
 
 const FixedSizeImage = styled.img`
@@ -381,24 +386,22 @@ const SliderControls = styled.div`
   margin-top: 8px;
 `;
 
-
-
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  const [mapAddress, setMapAddress] = useState("");
+  const [mapAddress, setMapAddress] = useState('');
   const [showMap, setShowMap] = useState(false);
   const [googleLoaded, setGoogleLoaded] = useState(false);
   const [mapId, setMapId] = useState(null);
   const [images, setImages] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [showMapPicker, setShowMapPicker] = useState(false);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
   const { user } = useUserStore();
-  const isAdmin = user?.authority === "ROLE_ADMIN";
+  const isAdmin = user?.authority === 'ROLE_ADMIN';
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [activeImageIndex, setActiveImageIndex] = useState({});
 
@@ -419,29 +422,29 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   };
 
   const [newPlace, setNewPlace] = useState({
-    name: "",
-    category: "",
-    address: "",
-    description: "",
+    name: '',
+    category: '',
+    address: '',
+    description: '',
     images: [],
-    preview: "",
+    preview: '',
   });
 
   const getFileName = (url) => {
-    if (!url) return "";
-    const parts = url.split("/");
-    return parts[parts.length - 1]?.trim() || "";
+    if (!url) return '';
+    const parts = url.split('/');
+    return parts[parts.length - 1]?.trim() || '';
   };
 
   let places = null;
-  const categories = ["맛집", "카페", "호텔", "관광지", "포토존"];
-  const [activeCategory, setActiveCategory] = useState("전체");
+  const categories = ['맛집', '카페', '호텔', '관광지', '포토존'];
+  const [activeCategory, setActiveCategory] = useState('전체');
 
   useEffect(() => {
     if (window.google) {
       setGoogleLoaded(true);
     } else {
-      const script = document.createElement("script");
+      const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
       script.async = true;
       script.defer = true;
@@ -457,7 +460,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       if (!mapDiv) return;
 
       geocoder.geocode({ address: mapAddress }, (results, status) => {
-        if (status === "OK") {
+        if (status === 'OK') {
           const map = new window.google.maps.Map(mapDiv, {
             center: results[0].geometry.location,
             zoom: 15,
@@ -476,22 +479,23 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   useEffect(() => {
     if (!selectedRegion) return;
 
-    if (activeCategory === "전체") {
+    if (activeCategory === '전체') {
       getPlacesByRegion(selectedRegion).then((data) => {
         setFilteredPlaces(removeDuplicatesById(data));
       });
     } else {
-      getPlacesByRegionAndCategory(selectedRegion, activeCategory).then((data) => {
-        setFilteredPlaces(removeDuplicatesById(data));
-      });
+      getPlacesByRegionAndCategory(selectedRegion, activeCategory).then(
+        (data) => {
+          setFilteredPlaces(removeDuplicatesById(data));
+        }
+      );
     }
   }, [selectedRegion, activeCategory]);
-
 
   useEffect(() => {
     if (selectedRegion) {
       getPlacesByRegion(selectedRegion).then((data) => {
-        console.log("📡 지역 장소 데이터 받아옴:", selectedRegion, data);
+        console.log('📡 지역 장소 데이터 받아옴:', selectedRegion, data);
         setRegionPlaces((prev) => ({
           ...prev,
           [selectedRegion]: data,
@@ -517,7 +521,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     setMapAddress(address);
     setTimeout(() => {
       const el = document.getElementById(`map-${id}`);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }, 300);
   };
 
@@ -533,7 +537,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       preview:
         place.mediaUrl && place.mediaUrl.length > 0
           ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
-          : "",
+          : '',
       mediaUrl: place.mediaUrl || [],
     });
   };
@@ -559,12 +563,11 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         } else {
           await updateRecommendPlace(updatedDTO); // 이미지 변경 없을 때
         }
-        alert("수정 성공");
+        alert('수정 성공');
       } else {
         await saveRecommendPlace(placeDTO);
-        alert("등록 성공");
+        alert('등록 성공');
       }
-
 
       const updatedPlaces = await getPlacesByRegion(selectedRegion);
       setRegionPlaces((prev) => ({
@@ -574,26 +577,25 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       setFilteredPlaces(updatedPlaces);
 
       setNewPlace({
-        name: "",
-        category: "",
-        address: "",
-        description: "",
+        name: '',
+        category: '',
+        address: '',
+        description: '',
         image: null,
-        preview: "",
+        preview: '',
       });
       setEditingId(null);
       setShowForm(false);
     } catch (err) {
-      console.error("저장 실패:", err);
-      alert("저장 실패!");
+      console.error('저장 실패:', err);
+      alert('저장 실패!');
     }
   };
 
-
   const handleDelete = async (id) => {
-    console.log(" 삭제 요청 ID:", id);
+    console.log(' 삭제 요청 ID:', id);
     try {
-      if (window.confirm("정말 삭제하시겠습니까?")) {
+      if (window.confirm('정말 삭제하시겠습니까?')) {
         await deleteRecommendPlace(id);
         const updated = await getPlacesByRegion(selectedRegion);
         setRegionPlaces((prev) => ({
@@ -601,11 +603,11 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           [selectedRegion]: updated,
         }));
         setFilteredPlaces(updated);
-        alert("삭제 완료!");
+        alert('삭제 완료!');
       }
     } catch (error) {
-      console.error("삭제 실패:", error);
-      alert("삭제 중 오류 발생!");
+      console.error('삭제 실패:', error);
+      alert('삭제 중 오류 발생!');
     }
   };
 
@@ -628,7 +630,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const handleRegister = async () => {
     try {
       if (!newPlace.images || newPlace.images.length === 0) {
-        alert("이미지를 업로드해주세요.");
+        alert('이미지를 업로드해주세요.');
         return;
       }
 
@@ -636,14 +638,16 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         name: newPlace.name,
         address: newPlace.address,
         description: newPlace.description,
-        category: selectedCategories[0] || "", // 대표 카테고리 하나만 백업용
+        category: selectedCategories[0] || '', // 대표 카테고리 하나만 백업용
         city: selectedRegion,
         latitude: 0,
         longitude: 0,
       };
 
-      const savedPlace = await uploadRecommendPlaceImages(placeDTO, newPlace.images);
-
+      const savedPlace = await uploadRecommendPlaceImages(
+        placeDTO,
+        newPlace.images
+      );
 
       if (savedPlace?.id && selectedCategories.length > 0) {
         await registerCategoryMapping(savedPlace.id, selectedCategories);
@@ -654,23 +658,22 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           [selectedRegion]: updatedPlaces,
         }));
 
-        alert(" 등록 성공!");
+        alert(' 등록 성공!');
 
         setNewPlace({
-          name: "",
-          category: "",
-          address: "",
-          description: "",
+          name: '',
+          category: '',
+          address: '',
+          description: '',
           image: null,
-          preview: "",
+          preview: '',
         });
         setShowForm(false);
       }
     } catch (err) {
-      console.error("등록 실패:", err);
+      console.error('등록 실패:', err);
     }
   };
-
 
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
 
@@ -679,7 +682,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       <RegionTitle>{selectedRegion} 장소</RegionTitle>
 
       <CategoryFilterGroup>
-        {["전체", ...categories].map((cat) => (
+        {['전체', ...categories].map((cat) => (
           <CategoryButton
             key={cat}
             onClick={() => setActiveCategory(cat)}
@@ -702,7 +705,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 src={
                   place.mediaUrl && place.mediaUrl.length > 0
                     ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
-                    : "https://via.placeholder.com/60?text=No+Image"
+                    : 'https://via.placeholder.com/60?text=No+Image'
                 }
                 alt={place.name}
               />
@@ -715,18 +718,35 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
             {selectedId === place.id && (
               <Detail>
-                <CloseBtn onClick={() => setSelectedId(null)}><IconClose /></CloseBtn>
+                <CloseBtn onClick={() => setSelectedId(null)}>
+                  <IconClose />
+                </CloseBtn>
                 <DetailText>{place.description}</DetailText>
                 {place.mediaUrl && place.mediaUrl.length > 0 ? (
                   <SliderWrapper>
                     <FixedSizeImage
-                      src={`http://localhost:8082${place.mediaUrl[activeImageIndex[place.id] || 0]?.mediaUrl}`}
+                      src={`http://localhost:8082${
+                        place.mediaUrl[activeImageIndex[place.id] || 0]
+                          ?.mediaUrl
+                      }`}
                       alt="장소 이미지"
                     />
                     {place.mediaUrl.length > 1 && (
                       <SliderControls>
-                        <SmallBtn onClick={() => showPrevImage(place.id, place.mediaUrl.length)}>← 이전</SmallBtn>
-                        <SmallBtn onClick={() => showNextImage(place.id, place.mediaUrl.length)}>다음 →</SmallBtn>
+                        <SmallBtn
+                          onClick={() =>
+                            showPrevImage(place.id, place.mediaUrl.length)
+                          }
+                        >
+                          ← 이전
+                        </SmallBtn>
+                        <SmallBtn
+                          onClick={() =>
+                            showNextImage(place.id, place.mediaUrl.length)
+                          }
+                        >
+                          다음 →
+                        </SmallBtn>
                       </SliderControls>
                     )}
                   </SliderWrapper>
@@ -745,15 +765,19 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                   </SmallBtn>
                   {isAdmin && (
                     <>
-                      <SmallBtn onClick={() => handleEdit(place)}>✏ 수정</SmallBtn>
-                      <SmallBtn onClick={() => handleDelete(place.id)}>🗑 삭제</SmallBtn>
+                      <SmallBtn onClick={() => handleEdit(place)}>
+                        ✏ 수정
+                      </SmallBtn>
+                      <SmallBtn onClick={() => handleDelete(place.id)}>
+                        🗑 삭제
+                      </SmallBtn>
                     </>
                   )}
                 </ButtonGroup>
 
                 {mapId === place.id && (
                   <>
-                    <CloseBtn onClick={() => setMapId(null)}>
+                    <CloseBtn onClick={() => setMapId(null)} className="close">
                       ✖ 지도 닫기
                     </CloseBtn>
                     <MapWrapper id={`map-${place.id}`} />
@@ -768,12 +792,12 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                   onClick={() => {
                     setEditingId(null);
                     setNewPlace({
-                      name: "",
-                      category: "",
-                      address: "",
-                      description: "",
+                      name: '',
+                      category: '',
+                      address: '',
+                      description: '',
                       image: null,
-                      preview: "",
+                      preview: '',
                     });
                   }}
                 >
@@ -790,7 +814,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                           const checked = e.target.checked;
                           const value = e.target.value;
                           setSelectedCategories((prev) =>
-                            checked ? Array.from(new Set([...prev, value])) : prev.filter((c) => c !== value)
+                            checked
+                              ? Array.from(new Set([...prev, value]))
+                              : prev.filter((c) => c !== value)
                           );
                         }}
                       />
@@ -807,7 +833,10 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                       setNewPlace({ ...newPlace, address: e.target.value })
                     }
                   />
-                  <SearchButton type="button" onClick={() => setShowMapPicker(true)}>
+                  <SearchButton
+                    type="button"
+                    onClick={() => setShowMapPicker(true)}
+                  >
                     장소검색
                   </SearchButton>
                 </AddressRow>
@@ -836,7 +865,12 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                     setNewPlace({ ...newPlace, description: e.target.value })
                   }
                 />
-                <input type="file" id="file-upload" multiple onChange={handleImage} />
+                <input
+                  type="file"
+                  id="file-upload"
+                  multiple
+                  onChange={handleImage}
+                />
                 {newPlace.preview && (
                   <div className="imgwrap">
                     <img
@@ -848,7 +882,6 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                       <IconImage />
                     </div>
                   </div>
-
                 )}
                 <AddButton
                   onClick={() => {
@@ -858,8 +891,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                       handleRegister();
                     }
                   }}
-                  className="edit" >
-                  {editingId ? "수정하기" : "등록하기"}
+                  className="edit"
+                >
+                  {editingId ? '수정하기' : '등록하기'}
                 </AddButton>
               </Form>
             )}
@@ -869,19 +903,20 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       {isAdmin && !showForm && (
         <AddButton
           onClick={() => {
-            setShowForm(true)
+            setShowForm(true);
             setSelectedId(null);
             setEditingId(null);
-
           }}
-        ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
               d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
               strokeWidth="1.5"
             />
             <path d="M8 12H16" strokeWidth="1.5" />
             <path d="M12 16V8" strokeWidth="1.5" />
-          </svg></AddButton>
+          </svg>
+        </AddButton>
       )}
       {isAdmin && showForm && editingId === null && (
         <Form>
@@ -903,7 +938,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                     const checked = e.target.checked;
                     const value = e.target.value;
                     setSelectedCategories((prev) =>
-                      checked ? Array.from(new Set([...prev, value])) : prev.filter((c) => c !== value)
+                      checked
+                        ? Array.from(new Set([...prev, value]))
+                        : prev.filter((c) => c !== value)
                     );
                   }}
                 />
@@ -952,14 +989,21 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               setNewPlace({ ...newPlace, description: e.target.value })
             }
           />
-          <input type="file" id="file-uploads" multiple onChange={handleImage} />
+          <input
+            type="file"
+            id="file-uploads"
+            multiple
+            onChange={handleImage}
+          />
           <div className="imgwraps">
             <FixedSizeImage src={newPlace.preview} className="fixed" />
             <div className="fileinput" onClick={FileInputs}>
               <IconImage />
             </div>
           </div>
-          <AddButton onClick={handleRegister} className="addbtn">등록하기</AddButton>
+          <AddButton onClick={handleRegister} className="addbtn">
+            등록하기
+          </AddButton>
         </Form>
       )}
     </Wrapper>

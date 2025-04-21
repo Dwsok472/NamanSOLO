@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import koreaMap from '../img/map1.png';
-import krMap from '../img/map5.png';
+import krMap from '../img/map3.png';
 import picker from '../img/place.png';
 
 const MapWrapper = styled.div`
@@ -13,7 +13,7 @@ const MapWrapper = styled.div`
 `;
 
 const MapImage = styled.img`
-  width: 550px;
+  width: 800px;
   height: auto;
   object-fit: contain;
   margin-left: -7.1%;
@@ -29,15 +29,15 @@ const RegionLabel = styled.div`
   cursor: pointer;
   pointer-events: auto;
   font-weight: 700;
-  .picker{
+  .picker {
     width: 40px;
     height: 40px;
     object-fit: cover;
     &:hover {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-  }
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
   }
   .tooltip {
     position: absolute;
@@ -61,15 +61,15 @@ const RegionLabel = styled.div`
 `;
 
 const regions = [
-  { name: '인천,서울,경기', top: 15, left: 35 },
+  { name: '인천,서울,경기', top: 15, left: 38 },
   { name: '강원도', top: 15, left: 55 },
-  { name: '충청남도', top: 40, left: 33 },
+  { name: '충청남도', top: 40, left: 35 },
   { name: '충청북도', top: 34, left: 45 },
-  { name: '전라북도', top: 59, left: 35 },
-  { name: '전라남도', top: 73, left: 28 },
+  { name: '전라북도', top: 50, left: 38 },
+  { name: '전라남도', top: 63, left: 38 },
   { name: '경상북도', top: 45, left: 58 },
-  { name: '경상남도', top: 67, left: 55 },
-  { name: '제주도', top: 94, left: 23 },
+  { name: '경상남도', top: 58, left: 51 },
+  { name: '제주도', top: 94, left: 30 },
 ];
 
 function ImageMapMapPart({ onRegionClick }) {
@@ -82,7 +82,7 @@ function ImageMapMapPart({ onRegionClick }) {
           style={{ top: `${region.top}%`, left: `${region.left}%` }}
           onClick={() => onRegionClick(region.name)}
         >
-          <img src={picker} alt="picker" className='picker' />
+          <img src={picker} alt="picker" className="picker" />
           <div className="tooltip">{region.name}</div>
         </RegionLabel>
       ))}

@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
-import place from "../img/place.png";
-import question from "../img/question.png";
-import heart from "../img/heart.png";
-import course1 from "../img/banner1.jpg";
-import course2 from "../img/banner2.jpg";
-import course3 from "../img/banner3.jpg";
-import leftkey from "../img/leftkey.png";
-import rightkey from "../img/rightkey.png";
+import place from '../img/place.png';
+import question from '../img/question.png';
+import heart from '../img/heart.png';
+import course1 from '../img/banner1.jpg';
+import course2 from '../img/banner2.jpg';
+import course3 from '../img/banner3.jpg';
+import leftkey from '../img/leftkey.png';
+import rightkey from '../img/rightkey.png';
 
-import ImageMapMapPart from "./ImageMapMapPart";
-import PlaceListPart from "./PlaceListPart";
+import ImageMapMapPart from './ImageMapMapPart';
+import PlaceListPart from './PlaceListPart';
 
 const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: linear-gradient(45deg, #fff, #e21b36c6, #fff);
-
+  /* background-image: linear-gradient(45deg, #fff, #e21b36c6, #fff); */
+  background-color: #ffe1df;
 `;
 const BannerBox = styled.div`
-width: 100vw;
+  width: 100vw;
 `;
 
 const SlideImage = styled.div`
@@ -74,7 +74,7 @@ const NavButton = styled.button`
     object-fit: cover;
     width: 30px;
     height: 30px;
-    opacity:0.5;
+    opacity: 0.5;
   }
   &:focus {
     outline: none;
@@ -145,14 +145,13 @@ const Wrap = styled.div`
   .hash {
     font-weight: 700;
     padding: 8px;
-    text-decoration: underline;
-    text-decoration-color: #f73434;
-    text-decoration-thickness: 1px;
-    
+    color: black;
   }
   .highlight {
     color: #fff;
     text-decoration: none;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+      1px 1px 0 black;
   }
 `;
 
@@ -162,13 +161,12 @@ const HashWrap = styled.div`
   margin-top: 10px;
   flex-wrap: wrap;
   justify-content: start;
-  
 `;
 
 const BoxWrap = styled.div`
   padding: 10px;
   align-items: center;
-  margin-top: 150px;
+  margin-top: 100px;
   margin-left: 150px;
 `;
 
@@ -178,7 +176,6 @@ const Box = styled.div`
   align-items: center;
   padding: 10px;
   margin-bottom: 20px;
-
   .place,
   .question,
   .heart {
@@ -189,7 +186,7 @@ const Box = styled.div`
 `;
 
 const Text = styled.div`
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 700;
   padding-left: 10px;
 `;
@@ -205,17 +202,17 @@ const ScrollWrapper = styled.div`
 function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
-  const categories = ["전체", "맛집", "카페", "호텔", "관광지", "포토존"];
+  const categories = ['전체', '맛집', '카페', '호텔', '관광지', '포토존'];
   const [regionPlaces, setRegionPlaces] = useState({});
 
   const slides = [
-    { label: "데이트 코스 1", image: course1 },
-    { label: "데이트 코스 2", image: course2 },
-    { label: "데이트 코스 3", image: course3 },
+    { label: '데이트 코스 1', image: course1 },
+    { label: '데이트 코스 2', image: course2 },
+    { label: '데이트 코스 3', image: course3 },
   ];
 
   const scrollToContent = () => {
-    const element = document.getElementById("contentBox");
+    const element = document.getElementById('contentBox');
     if (element) {
       const elementPosition = element.offsetTop;
       const offsetPosition = elementPosition - 78;
@@ -255,7 +252,7 @@ function MainMap() {
 
   return (
     <Container>
-      <BannerBox>
+      {/* <BannerBox>
         <SlideImage>
           <Focus onClick={scrollToContent}>보러가기▶</Focus>
           <NavButton
@@ -280,7 +277,7 @@ function MainMap() {
             <img src={rightkey} alt="next" />
           </NavButton>
         </SlideImage>
-      </BannerBox>
+      </BannerBox> */}
 
       <ContentBox id="contentBox">
         <LeftBox>
