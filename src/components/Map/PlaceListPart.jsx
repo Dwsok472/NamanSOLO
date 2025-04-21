@@ -172,9 +172,19 @@ const Form = styled.div`
   margin-bottom: 20px;
 
   input,
-  select,
+  input,
+  select {
+    width: 100%;
+    margin: 6px 0;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+  }
+
   textarea {
     width: 100%;
+    height: 120px;
+    resize: none; 
     margin: 6px 0;
     padding: 6px 10px;
     border: 1px solid #ddd;
