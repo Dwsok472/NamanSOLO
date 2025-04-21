@@ -106,6 +106,12 @@ export const getAllUsers = async () => {
   return res.data;
 };
 
+export const getUserJoinDates = async () => {
+  const res = await api.get('/user/admin/all/add-date');
+  return res.data;
+};
+
+
 
 export const registerCategoryMapping = async (placeId, categoryIds) => {
   const token = sessionStorage.getItem("jwt-token");
