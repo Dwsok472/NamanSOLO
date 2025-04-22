@@ -58,7 +58,7 @@ const BookIntroBox = styled.div`
     color: #bf1f3c;
     font-size: 4rem;
     font-weight: 700;
-    background: linear-gradient(to right, #a10000, #ffd271, #bf1f3c);
+    background: linear-gradient(to right, #a10000, #cf8a8a, #dbb0b0);
     -webkit-background-clip: text;
     color: transparent;
   }
@@ -70,8 +70,8 @@ const BookIntroBox = styled.div`
   .highlight {
     display: inline-block;
     font-weight: 600;
-    color: #ffffff;
-    background: #ffbebe;
+    color: #c51414;
+    background: #ffffff;
     padding: 3px 8px;
     border-radius: 10px;
     margin: 0 2px;
