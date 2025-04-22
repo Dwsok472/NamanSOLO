@@ -18,7 +18,7 @@ const PhotoCard = ({
   columns,
 }) => {
   const [imageIndex, setImageIndex] = useState(0);
-
+  console.log(src);
   // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
   const prevImage = () => {
     setImageIndex((prevIndex) =>
@@ -38,6 +38,8 @@ const PhotoCard = ({
   // }
   const currentImg = src?.[imageIndex];
   const multipleImages = src?.length > 1;
+  console.log('currentImg', currentImg);
+  console.log('multipleImages', multipleImages);
 
   return (
     <CardWrapper
@@ -66,20 +68,22 @@ const PhotoCard = ({
         />
       )}
 
-      {currentImg && currentImg.type === 'PICTURE' ? (
-        <Image
-          src={currentImg.url}
-          alt="album"
-          columns={columns}
-          key={imageIndex}
-        />
-      ) : (
+      {currentImg && currentImg.type === 'VIDEO' ? (
         <video
           muted
           autoPlay
           controls
           className="current-video"
-          src={currentImg.url}
+          src={currentImg?.url}
+          columns={columns}
+          key={imageIndex}
+        />
+      ) : (
+        <Image
+          src={currentImg?.url}
+          alt="album"
+          columns={columns}
+          key={imageIndex}
         />
       )}
 

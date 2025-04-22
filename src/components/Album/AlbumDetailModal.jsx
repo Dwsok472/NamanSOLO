@@ -355,7 +355,7 @@ const EditButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
-
+  z-index: 100;
   &:hover {
     background-color: #fff;
     color: #000;

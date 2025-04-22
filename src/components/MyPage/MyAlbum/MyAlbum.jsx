@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import PhotoCard from "../../Album/PhotoCard";
-import AlbumDetailModal from "../../Album/AlbumDetailModal";
-import AddAlbum from "../../Album/AddAlbum";
-import tape1 from "../../img/tape1.png";
-import tape2 from "../../img/tape2.png";
-import tape3 from "../../img/tape3.png";
-import tape4 from "../../img/tape4.png";
-import tape5 from "../../img/tape5.png";
-import tape6 from "../../img/tape6.png";
-import tape7 from "../../img/tape7.png";
-import DeleteButton from "./DeleteButton";
-import { useUserStore } from "../../Login/Login";
-import axios from "axios";
-import ModifyAlbumAndDetail from "./ModifyAlbumAndDetail";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import PhotoCard from '../../Album/PhotoCard';
+import AlbumDetailModal from '../../Album/AlbumDetailModal';
+import AddAlbum from '../../Album/AddAlbum';
+import tape1 from '../../img/tape1.png';
+import tape2 from '../../img/tape2.png';
+import tape3 from '../../img/tape3.png';
+import tape4 from '../../img/tape4.png';
+import tape5 from '../../img/tape5.png';
+import tape6 from '../../img/tape6.png';
+import tape7 from '../../img/tape7.png';
+import DeleteButton from './DeleteButton';
+import { useUserStore } from '../../Login/Login';
+import axios from 'axios';
+import ModifyAlbumAndDetail from './ModifyAlbumAndDetail';
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const MyAlbum = () => {
   const username = useUserStore((state) => state.user?.username); //현재 유저
   const [selectedPost, setSelectedPost] = useState(null); // 선택된 앨범
   const [isModalOpen, setIsModalOpen] = useState(false); // 디테일 오픈
-  const [sortOption, setSortOption] = useState("최신순"); // 옵션들
+  const [sortOption, setSortOption] = useState('최신순'); // 옵션들
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // 앨범 추가 열기
   const [editingPost, setEditingPost] = useState(null); // 수정할 데이터 값들
   const [draggedId, setDraggedId] = useState(null); // 드래그 값
@@ -30,7 +30,7 @@ const MyAlbum = () => {
 
   // 내 앨범 가지고 오기!!!!!
   async function GetMyAlbum() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
       return;
     }
@@ -42,12 +42,12 @@ const MyAlbum = () => {
         },
       });
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setMyPosts(response.data);
     } catch (error) {
-      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
@@ -62,11 +62,11 @@ const MyAlbum = () => {
 
   // 필터링 및 정렬 로직
   const filteredData = [...myPosts].sort((a, b) => {
-    if (sortOption === "좋아요순") return b.greats.length - a.greats.length;
-    if (sortOption === "댓글순") return b.comments.length - a.comments.length;
+    if (sortOption === '좋아요순') return b.greats.length - a.greats.length;
+    if (sortOption === '댓글순') return b.comments.length - a.comments.length;
     return new Date(b.addDate) - new Date(a.addDate); // 기본 최신순
   });
-
+  console.log(filteredData);
   //내 앨범 클릭 시, 디테일 창 보이게
   const handleCardClick = (post) => {
     setSelectedPost(post);
@@ -93,7 +93,7 @@ const MyAlbum = () => {
   };
   // 앨범 삭제
   async function deleteMyAlbum(id) {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
       // 서버로 중복 확인 요청
@@ -122,7 +122,7 @@ const MyAlbum = () => {
         <HeaderBox>
           {/* 필터링 */}
           <FilterBox>
-            {["최신순", "좋아요순", "댓글순"].map((label) => (
+            {['최신순', '좋아요순', '댓글순'].map((label) => (
               <FilterButton
                 key={label}
                 $active={sortOption === label}
@@ -147,7 +147,10 @@ const MyAlbum = () => {
           {filteredData.map((album, idx) => (
             <PhotoCard
               key={album.id}
-              src={album.url.map((media) => media.mediaUrl)}
+              src={album.url.map((media) => ({
+                url: media.mediaUrl,
+                type: media.mediaType,
+              }))}
               title={album.title}
               rotate={Math.floor(Math.random() * 6 - 3)}
               $offsetY={Math.floor(Math.random() * 20 - 10)}
@@ -256,8 +259,8 @@ const FilterButton = styled.button`
   border: none;
   font-weight: 700;
   font-size: 0.8rem;
-  background-color: ${({ $active }) => ($active ? "#8c0d17" : "white")};
-  color: ${({ $active }) => ($active ? "#fff" : "#333")};
+  background-color: ${({ $active }) => ($active ? '#8c0d17' : 'white')};
+  color: ${({ $active }) => ($active ? '#fff' : '#333')};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: all 0.2s;
   cursor: pointer;
