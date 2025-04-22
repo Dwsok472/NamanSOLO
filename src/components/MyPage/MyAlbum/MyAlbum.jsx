@@ -24,7 +24,7 @@ const MyAlbum = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false); // 앨범 추가 열기
   const [editingPost, setEditingPost] = useState(null); // 수정할 데이터 값들
   const [draggedId, setDraggedId] = useState(null); // 드래그 값
-  const [columns, setColumns] = useState(5); // 기본값: 5개 보기
+  const [$columns, setColumns] = useState(5); // 기본값: 5개 보기
   const [isTrashDragOver, setIsTrashDragOver] = useState(false);
   const [myPosts, setMyPosts] = useState([]); // 나의 포스트들~~
 
@@ -143,7 +143,7 @@ const MyAlbum = () => {
         </HeaderBox>
         {/* 선택된 컬럼 수에 따라서 다르게 화면 렌더링 */}
         {/* filteredData: 필터된 조건에 따라서 다르게 렌더링 */}
-        <PhotoGrid columns={columns}>
+        <PhotoGrid $columns={$columns}>
           {filteredData.map((album, idx) => (
             <PhotoCard
               key={album.id}
@@ -157,7 +157,7 @@ const MyAlbum = () => {
               draggable
               //드래그하면 해당 앨범 아이디 저장
               onDragStart={() => setDraggedId(album.id)}
-              columns={columns}
+              $columns={$columns}
             />
           ))}
         </PhotoGrid>
@@ -311,7 +311,7 @@ const AddButton = styled.button`
 `;
 const PhotoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(${({ columns }) => columns}, minmax(0, 1fr));
+  grid-template-columns: repeat(${({ $columns }) => $columns}, minmax(0, 1fr));
   gap: 40px;
   max-width: 1400px;
   padding: 0 20px;
