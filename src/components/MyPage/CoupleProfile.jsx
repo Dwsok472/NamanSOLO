@@ -220,7 +220,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
                 {isEditable && key !== "birthday" ? (
                   <input
                     type="text"
-                    value={()=>{console.log(profileF.phoneNumberF); return value;}}
+                    value={value}
                     onChange={(e) => handleChange("F", key, e.target.value)}
                   />
                 ) : (
