@@ -31,14 +31,16 @@ const Container = styled.div`
   /* background: linear-gradient(to bottom, #ffb3ae, #ffe2e2, #f2ebdc); */
   /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
-  background: linear-gradient(to bottom, #ffe3e3, #fff, #ffe3e3);
+  background: linear-gradient(45deg, #ffe3e3, #fff, #ffe3e3);
+  /* background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff); */
+
 `;
 
 const ProfileCard = styled.div`
   width: 100%;
   max-width: 380px;
   padding: 20px;
-  border: 1px solid #d2d2d2;
+  border-right: 1px solid #e2e2e2;
   /* border-radius: 10px; */
   text-align: center;
   background-color: ${({ bgColor }) => bgColor || "white"};
@@ -157,7 +159,7 @@ const RightProfileCard = styled.div`
   overflow: auto;
   max-width: 1100px;
   padding: 20px;
-  border: 1px solid #c9c9c9;
+  /* border: 1px solid #c9c9c9; */
   /* border-radius: 10px; */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
   display: flex;
@@ -577,6 +579,15 @@ function MyPage() {
           <Left>
             <Button
               onClick={() => {
+                handleButtonClick("커플 캘린더");
+                handleBoxClick("커플 캘린더");
+              }}
+              className={pathname.includes("/mypage/todo") ? "selected" : ""}
+            >
+              캘린더
+            </Button>
+            <Button
+              onClick={() => {
                 handleButtonClick("그 외");
                 handleBoxClick("그 외");
               }}
@@ -593,15 +604,7 @@ function MyPage() {
             >
               나의 댓글
             </Button>
-            <Button
-              onClick={() => {
-                handleButtonClick("커플 캘린더");
-                handleBoxClick("커플 캘린더");
-              }}
-              className={pathname.includes("/mypage/todo") ? "selected" : ""}
-            >
-              캘린더
-            </Button>
+
             <Button
               $isStory
               onClick={() => {
