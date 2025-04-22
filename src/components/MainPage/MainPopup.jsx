@@ -1,33 +1,54 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import img from '../img/1.jpg'
+
+import img1 from '../img/1.jpg';
+import img2 from '../img/11111.png';
+import img3 from '../img/3.jpg';
 
 const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 300px;
-  left: 75%;
-  z-index: 1;
+  bottom: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
 `;
 
 const PopupContainer = styled.div`
-  width: 350px;
+  width: 380px;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
   overflow: hidden;
+  font-family: sans-serif;
 `;
 
 const BannerImage = styled.img`
   width: 100%;
   display: block;
+  transition: opacity 0.5s ease-in-out;
+`;
+
+const IndicatorWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  gap: 6px;
+`;
+
+const Dot = styled.span`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ${({ active }) => (active ? "#000" : "#ccc")};
 `;
 
 const ControlBar = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 10px 15px;
   font-size: 0.9rem;
   align-items: center;
+  border-top: 1px solid #eee;
 `;
 
 const CloseButton = styled.button`
@@ -37,10 +58,12 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-
 const MainPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [dontShowToday, setDontShowToday] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const images = [img1, img2, img3];
 
   useEffect(() => {
     const hideUntil = localStorage.getItem("popup-hide-until");
@@ -48,8 +71,17 @@ const MainPopup = () => {
 
     if (hideUntil !== today) {
       setIsVisible(true);
-    }
+    } // 이거 주석하면 오늘하루 보지않기 기능 on
+
+    // setIsVisible(true);  // << 이거 주석해제하면 오늘하루보지않기 없음
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   const closePopup = () => {
     if (dontShowToday) {
@@ -64,7 +96,12 @@ const MainPopup = () => {
   return (
     <PopupWrapper>
       <PopupContainer>
-        <BannerImage src={img} alt="팝업 배너" />
+        <BannerImage src={images[imageIndex]} alt="팝업 배너" />
+        <IndicatorWrapper>
+          {images.map((_, idx) => (
+            <Dot key={idx} active={idx === imageIndex} />
+          ))}
+        </IndicatorWrapper>
         <ControlBar>
           <label>
             <input
