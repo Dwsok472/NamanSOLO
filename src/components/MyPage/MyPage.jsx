@@ -200,6 +200,7 @@ const EditButton = styled.button`
   padding: 5px 12px;
   font-weight: 700;
   border-radius: 6px;
+  background-color: transparent;
   cursor: pointer;
   &:hover {
     background-color: #f2f2f2;
