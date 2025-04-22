@@ -219,24 +219,41 @@ function Alarm({ onClose /*, isOpen*/ }) {
   // const userId = 1; // 실제 로그인 유저 ID 넣기
 
   useEffect(() => {
-    const unread = alarmList.filter((alarm) => !alarm.isRead);
-    unread.forEach((alarm) => {
-      useAlarmList.getState().markAsRead(alarm.id);
-    });
-
-    useAlarmList.getState().resetUnreadCount(); // 읽음 처리 이후 숫자 초기화
-
     const currentUser = useUserStore.getState().user?.username;
-    if (currentUser) {
-      const updatedList = useAlarmList.getState().alarmList;
-      const updatedUnread = updatedList.filter((a) => !a.isRead).length;
-      localStorage.setItem(
-        `alarms-${currentUser}`,
-        JSON.stringify({
-          alarmList: updatedList,
-          unreadCount: updatedUnread,
-        })
-      );
+    if (!currentUser) return;
+  
+    const stored = localStorage.getItem(`alarms-${currentUser}`);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      useAlarmList.setState({
+        alarmList: parsed.alarmList,
+        unreadCount: parsed.unreadCount,
+      });
+      console.log(" 로컬스토리지 알람 복원됨:", parsed);
+  
+      // 복원 성공 후 → 이때 초기화
+      const unread = parsed.alarmList.filter((alarm) => !alarm.isRead);
+      unread.forEach((alarm) => {
+        useAlarmList.getState().markAsRead(alarm.id);
+      });
+  
+      useAlarmList.getState().resetUnreadCount();
+    }
+  }, []);
+  
+
+  useEffect(() => {
+    const currentUser = useUserStore.getState().user?.username;
+    if (!currentUser) return;
+  
+    const stored = localStorage.getItem(`alarms-${currentUser}`);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      useAlarmList.setState({
+        alarmList: parsed.alarmList,
+        unreadCount: parsed.unreadCount,
+      });
+      console.log("✅ 로컬스토리지 알람 복원됨:", parsed);
     }
   }, []);
 
