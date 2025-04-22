@@ -142,14 +142,13 @@ flex-direction: column;
 position:fixed;
 right: 0;
 top: 20%;
-gap: 1px;
 button{
   font-size: 1rem;
   font-weight: 700;
-  border-radius: 10px;
+  border-radius: 0%;
   border: none;
   /* border: 1px solid #bdbdbd; */
-  background-color: #f0f0f0;
+  background-color: #ffffff;
   color: #202020;
 }
 .girl{
