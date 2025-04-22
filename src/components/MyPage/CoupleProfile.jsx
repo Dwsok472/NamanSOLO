@@ -231,6 +231,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
           )}
         </ProfileBox>
       </Content>
+      {isEditable ?
       <CityWrapper>
         <CityDropdown
           value={city}
@@ -238,6 +239,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
           onSelect={(e) => setCity(e)}
         />
       </CityWrapper>
+      : <CityWrapper><div>{city}</div></CityWrapper> }
       <ControlButtons>
         {isEditable ? (
           <button onClick={handleSave}>저장</button>
