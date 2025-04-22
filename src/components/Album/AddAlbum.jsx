@@ -27,7 +27,6 @@ function AddAlbum({ onClose, onAddAlbum }) {
     setShowMap(false);
   };
 
-
   async function submitAlbum() {
     const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
@@ -43,51 +42,63 @@ function AddAlbum({ onClose, onAddAlbum }) {
       return;
     }
     const formData = new FormData();
-    formData.append("title", title);
-    images.forEach((img) => formData.append("files", img.file)); // 파일들 업로드
+    images.forEach((img) => formData.append('files', img.file)); // 파일들 업로드
 
     try {
       // ✅ 1. 이미지 먼저 업로드
-      const uploadRes = await axios.post("/api/album/upload/multiple", formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const uploadRes = await axios.post(
+        '/api/album/upload/multiple',
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       const uploadedMedia = uploadRes.data; // MediaDTO 배열
+      console.log(uploadedMedia);
+      const convertedImages = uploadedMedia.map((media) => ({
+        id: media.id,
+        file: media.mediaUrl, // 이미지 URL 직접 사용
+        mediaType: media.mediaType,
+      }));
+
+      setImages(convertedImages);
+
       // ✅ 2. 업로드된 결과로 앨범 데이터 생성
       const newAlbum = {
         title,
-        visibility: isPublic ? "PUBLIC" : "PRIVATE",
+        visibility: isPublic ? 'PUBLIC' : 'PRIVATE',
         mediaUrl: uploadedMedia, // 여기에 서버로부터 받은 mediaUrl/mediaType을 그대로 사용
         latitude: selectedPlace?.lat || 0,
         longitude: selectedPlace?.lng || 0,
-        location: selectedPlace?.address || "",
+        location: selectedPlace?.address || '',
         tagList: tags.map((tag, index) => ({
           id: index,
           name: tag.text,
         })),
       };
       // ✅ 3. 앨범 저장
-      const albumRes = await axios.post("/api/album/save", newAlbum, {
+      const albumRes = await axios.post('/api/album/save', newAlbum, {
         headers: {
           Authorization: `Bearer ${jwt}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       if (albumRes.status === 200 || albumRes.status === 201) {
-        alert("앨범이 등록되었습니다.");
+        alert('앨범이 등록되었습니다.');
         onAddAlbum(newAlbum);
         window.location.reload();
         onClose();
       } else {
-        alert("앨범 등록 실패");
+        alert('앨범 등록 실패');
       }
     } catch (error) {
       console.error(error);
-      alert("서버와 통신 중 오류가 발생했습니다.");
+      alert('서버와 통신 중 오류가 발생했습니다.');
     }
   }
   const handleSwitchChange = () => {
@@ -97,8 +108,10 @@ function AddAlbum({ onClose, onAddAlbum }) {
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files).map((file) => ({
       file,
+      mediaType: file.type.startsWith('image/') ? 'PICTURE' : 'VIDEO', // 미디어 타입 구분
       id: Date.now() + Math.random(), // 고유한 ID 추가
     }));
+    console.log(files);
     setImages((prevImages) => [...prevImages, ...files]);
   };
   const prevImage = () => {
@@ -173,11 +186,21 @@ function AddAlbum({ onClose, onAddAlbum }) {
                   >
                     <IconClose />
                   </div>
-                  <img
-                    src={URL.createObjectURL(images[imageIndex].file)}
-                    alt={`image-${imageIndex}`}
-                    className="current-image"
-                  />
+                  {images[imageIndex].mediaType === 'PICTURE' ? (
+                    <img
+                      src={URL.createObjectURL(images[imageIndex].file)}
+                      alt={`media-${imageIndex}`}
+                      className="current-image"
+                    />
+                  ) : (
+                    <video
+                      muted
+                      autoPlay
+                      controls
+                      className="current-image"
+                      src={URL.createObjectURL(images[imageIndex].file)}
+                    />
+                  )}
                 </>
               )}
               <img
@@ -186,6 +209,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
                 className="rightkey"
                 onClick={nextImage}
               />
+
               <input
                 type="file"
                 multiple
@@ -388,7 +412,7 @@ const Box = styled.div`
     .tags {
       font-size: 0.7rem;
       color: #b1b1b1;
-      &::placeholder{
+      &::placeholder {
         font-weight: 700;
         text-decoration: underline;
       }

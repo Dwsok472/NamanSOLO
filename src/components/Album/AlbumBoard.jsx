@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import PhotoCard from "./PhotoCard";
-import couple1 from "../img/couple1.png";
-import couple2 from "../img/couple2.png";
-import couple3 from "../img/couple3.png";
-import couple4 from "../img/couple4.jpg";
-import tape1 from "../img/tape1.png";
-import tape2 from "../img/tape2.png";
-import tape3 from "../img/tape3.png";
-import tape4 from "../img/tape4.png";
-import tape5 from "../img/tape5.png";
-import tape6 from "../img/tape6.png";
-import tape7 from "../img/tape7.png";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import PhotoCard from './PhotoCard';
+import couple1 from '../img/couple1.png';
+import couple2 from '../img/couple2.png';
+import couple3 from '../img/couple3.png';
+import couple4 from '../img/couple4.jpg';
+import tape1 from '../img/tape1.png';
+import tape2 from '../img/tape2.png';
+import tape3 from '../img/tape3.png';
+import tape4 from '../img/tape4.png';
+import tape5 from '../img/tape5.png';
+import tape6 from '../img/tape6.png';
+import tape7 from '../img/tape7.png';
 
-import AlbumDetailModal from "./AlbumDetailModal";
-import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
-import axios from "axios";
+import AlbumDetailModal from './AlbumDetailModal';
+import { useNavigate } from 'react-router-dom';
+import { useRef } from 'react';
+import axios from 'axios';
 
-import Top from "./Top";
-import AddAlbum from "./AddAlbum";
-import { Button as LeftButton } from "./LeftButton";
-import { Button as RightButton } from "./RightButton";
-import { useParams } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useUserStore } from "../Login/Login";
+import Top from './Top';
+import AddAlbum from './AddAlbum';
+import { Button as LeftButton } from './LeftButton';
+import { Button as RightButton } from './RightButton';
+import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useUserStore } from '../Login/Login';
 
 const pin = [tape1, tape2, tape3, tape4, tape5, tape6, tape7];
 const AlbumBoard = () => {
@@ -34,32 +34,32 @@ const AlbumBoard = () => {
   const itemsPerPage = 8; // 한 페이지에 표시할 아이템 수
   const [selectedAlbum, setSelectedAlbum] = useState(null); //선택된 앨범 저장소!
   const [showDetail, setShowDetail] = useState(false); // 모달 창 열림/닫힘 상태
-  const [filter, setFilter] = useState("최신순"); // 필터용
+  const [filter, setFilter] = useState('최신순'); // 필터용
   const [showAddAlbum, setShowAddAlbum] = useState(false);
   const { username } = useParams();
   const location = useLocation();
   const itemsRef = useRef([]);
-  const isUserStoryPage = location.pathname.startsWith("/user/story/");
+  const isUserStoryPage = location.pathname.startsWith('/user/story/');
   const isLoggedIn = useUserStore((state) => state?.isLoggedIn);
 
   async function GetAllAlbum() {
     try {
       // 서버로 중복 확인 요청
-      const response = await axios.get("/api/album/all");
+      const response = await axios.get('/api/album/all');
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setData(response.data);
       setLoading(false);
     } catch (error) {
-      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
 
   async function GetAlbumByUsername() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
       // 서버로 중복 확인 요청
@@ -68,18 +68,18 @@ const AlbumBoard = () => {
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setData(response.data);
       setLoading(false);
     } catch (error) {
-      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
@@ -99,10 +99,10 @@ const AlbumBoard = () => {
 
   // 필터링 및 정렬 로직
   const sortedData = [...data].sort((a, b) => {
-    if (filter === "좋아요순") {
+    if (filter === '좋아요순') {
       return b.greats.length - a.greats.length;
     }
-    if (filter === "댓글순") {
+    if (filter === '댓글순') {
       return b.comments.length - a.comments.length;
     }
     return new Date(b.addDate) - new Date(a.addDate); // 기본 최신순
@@ -118,10 +118,10 @@ const AlbumBoard = () => {
   };
   const handleOpenAddAlbum = () => {
     // 열기 전에 알람/챗봇 닫기 요청
-    window.dispatchEvent(new Event("closeFooterModals"));
+    window.dispatchEvent(new Event('closeFooterModals'));
 
     // "AddAlbum이 열려 있었다"는 flag 설정
-    window.addEventListener("checkAddAlbumOpened", (e) => {
+    window.addEventListener('checkAddAlbumOpened', (e) => {
       e.detail.callback(true); // 알려주기
     });
 
@@ -136,8 +136,8 @@ const AlbumBoard = () => {
       setShowAddAlbum(false); // Footer에서 AddAlbum 닫기 요청 시 처리
     };
 
-    window.addEventListener("closeAddAlbum", handleClose);
-    return () => window.removeEventListener("closeAddAlbum", handleClose);
+    window.addEventListener('closeAddAlbum', handleClose);
+    return () => window.removeEventListener('closeAddAlbum', handleClose);
   }, []);
 
   useEffect(() => {
@@ -167,20 +167,18 @@ const AlbumBoard = () => {
           const pinColor = pin[i % pin.length];
           // 수직 오프셋 값
           const offsetY = Math.floor(Math.random() * 30) - 14;
-          // 랜덤 colSpan, rowSpan 값
-          // const colSpan = Math.floor(Math.random() * 1) + 1; // 1~2
-          // const rowSpan = Math.floor(Math.random() * 3) + 1; // 1~3
 
           items.push(
             <PhotoCard
               key={album.id}
-              src={album.url.map((media) => media.mediaUrl)} // 이미지 배열
+              src={album.url.map((media) => ({
+                url: media.mediaUrl,
+                type: media.mediaType,
+              }))} //  배열
               rotate={rotation} // 회전 값
               $pinColor={pinColor} // pin 색상
               $offsetY={offsetY} // 수직 오프셋
               title={album.title} // 제목
-              // colSpan={colSpan} // colSpan 값
-              // rowSpan={rowSpan} // rowSpan 값
               onClick={() => handleSelectedAlbum(album)} // 앨범 클릭 시 이벤트
             />
           );
@@ -217,7 +215,7 @@ const AlbumBoard = () => {
 
         <BoardInner>
           <PhotoArea>
-            {loading ? <p>LOADING...</p> : generateItems()}{" "}
+            {loading ? <p>LOADING...</p> : generateItems()}{' '}
             {/* 로딩 중일 때 메시지 */}
           </PhotoArea>
         </BoardInner>

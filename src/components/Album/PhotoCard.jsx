@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import leftkey from "../img/leftkey.png";
-import rightkey from "../img/rightkey.png";
-import StarButton from "./StarButton";
-
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import leftkey from '../img/leftkey.png';
+import rightkey from '../img/rightkey.png';
+import StarButton from './StarButton';
 
 const PhotoCard = ({
   src,
@@ -55,7 +54,9 @@ const PhotoCard = ({
       }}
       columns={columns}
     >
-      <Pin><img src={$pinColor} className="pin" /></Pin>
+      <Pin>
+        <img src={$pinColor} className="pin" />
+      </Pin>
       {multipleImages && (
         <img
           src={leftkey}
@@ -65,7 +66,22 @@ const PhotoCard = ({
         />
       )}
 
-      {currentImg && <Image src={currentImg} alt="album" columns={columns} key={imageIndex} />}
+      {currentImg && currentImg.type === 'PICTURE' ? (
+        <Image
+          src={currentImg.url}
+          alt="album"
+          columns={columns}
+          key={imageIndex}
+        />
+      ) : (
+        <video
+          muted
+          autoPlay
+          controls
+          className="current-video"
+          src={currentImg.url}
+        />
+      )}
 
       {multipleImages && (
         <img
@@ -83,10 +99,9 @@ const PhotoCard = ({
 
 export default PhotoCard;
 
-
 const CardWrapper = styled.div`
-  width: ${({ columns }) => (columns === 3 ? "500px" : "300px")};
-  height: ${({ columns }) => (columns === 3 ? "500px" : "350px")};
+  width: ${({ columns }) => (columns === 3 ? '500px' : '300px')};
+  height: ${({ columns }) => (columns === 3 ? '500px' : '350px')};
   padding: 10px;
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
@@ -116,6 +131,12 @@ const CardWrapper = styled.div`
     top: 40%;
     opacity: 0.3;
   }
+  .current-video {
+    width: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
+    height: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
+    object-fit: cover;
+    pointer-events: none;
+  }
 `;
 
 const Pin = styled.div`
@@ -132,8 +153,8 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: ${({ columns }) => (columns === 3 ? "430px" : "280px")};
-  height: ${({ columns }) => (columns === 3 ? "430px" : "280px")};
+  width: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
+  height: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
   object-fit: cover;
   pointer-events: none;
 `;

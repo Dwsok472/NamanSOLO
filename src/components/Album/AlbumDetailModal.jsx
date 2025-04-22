@@ -23,7 +23,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [commentCount, setCommentCount] = useState(albumData.comments.length);
   const currentUser = useUserStore((state) => state.user?.username);
   const location = useLocation();
-
+  console.log(albumData);
   const isMyPage = location.pathname.startsWith('/mypage/story');
   useEffect(() => {
     // 댓글 개수 업데이트
@@ -123,8 +123,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
                 <StarButtonWrapper>
                   <StarButton albumId={albumData.id} />
                 </StarButtonWrapper>
-              )
-              }
+              )}
             </TopBar>
             {multipleImages && (
               <img
@@ -138,7 +137,21 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
               {isMyPage && (
                 <EditButton onClick={() => onEdit(albumData)}>수정</EditButton>
               )}
-              <img src={currentMedia.mediaUrl} alt="image" className="image" />
+              {currentMedia.mediaType === 'PICTURE' ? (
+                <img
+                  src={currentMedia.mediaUrl}
+                  alt="image"
+                  className="image"
+                />
+              ) : (
+                <video
+                  muted
+                  autoPlay
+                  controls
+                  className="video"
+                  src={currentMedia.mediaUrl}
+                />
+              )}
             </div>
             {multipleImages && (
               <img
@@ -245,6 +258,11 @@ const Box = styled.div`
     padding-left: 10px;
   }
   .image {
+    width: 100%;
+    height: 550px;
+    object-fit: cover;
+  }
+  .video {
     width: 100%;
     height: 550px;
     object-fit: cover;
