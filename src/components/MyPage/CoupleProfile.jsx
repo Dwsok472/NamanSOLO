@@ -140,7 +140,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
           name: data.realNameM,
           birthday: data.birthM,
           email: data.emailM,
-          phone: data.phoneNumberF,
+          phone: data.phoneNumberM,
         });
       } catch (e) {
         console.error("정보를 제대로 불러오지 못했습니다: " + e);
@@ -164,8 +164,8 @@ function CoupleProfile({ onClose, onUpdateNames }) {
         realNameF: profileF.name,
         emailM: profileM.email,
         emailF: profileF.email,
-        phoneNumberM: profileM.phone,
-        phoneNumberF: profileF.phone,
+        phoneNumberM: profileM.phoneNumberM,
+        phoneNumberF: profileF.phoneNumberF,
         city: city,
       };
 
@@ -220,7 +220,7 @@ function CoupleProfile({ onClose, onUpdateNames }) {
                 {isEditable && key !== "birthday" ? (
                   <input
                     type="text"
-                    value={value}
+                    value={()=>{console.log(profileF.phoneNumberF); return value;}}
                     onChange={(e) => handleChange("F", key, e.target.value)}
                   />
                 ) : (
