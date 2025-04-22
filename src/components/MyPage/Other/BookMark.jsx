@@ -174,7 +174,6 @@ const ContentBox = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  cursor: pointer;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
   }
@@ -194,6 +193,7 @@ const SmallBox = styled.div`
   justify-content: flex-end;
   margin-bottom: 10px;
   background-color: white;
+  cursor: pointer;
 `;
 
 const DeleteButton = styled.button`
