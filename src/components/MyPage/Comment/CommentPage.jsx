@@ -237,9 +237,7 @@ const CommentPage = () => {
         <CloseBtn onClick={() => handleDelete(item.id, isReply)}>
           <IconClose />
         </CloseBtn>
-        {showDetail && (
-          <AlbumDetailModal onClose={toggleBack} albumData={selectedAlbum} />
-        )}
+      
       </Card>
     ));
 
@@ -268,6 +266,13 @@ const CommentPage = () => {
         </TopFixed>
         <ScrollSection>{renderList(replies, true)}</ScrollSection>
       </Column>
+      {showDetail && selectedAlbum && (
+  <AlbumDetailModal
+    onClose={toggleBack}
+    albumData={selectedAlbum}
+  />
+)}
+
     </Wrapper>
   );
 };
