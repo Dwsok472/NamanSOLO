@@ -42,7 +42,9 @@ const CategoryContainer = styled.div`
   gap: 32px;
   flex-wrap: wrap;
   overflow-y: auto;
-  height: 850px;
+  height: 800px;
+  width: 70%;
+  margin: 0 auto;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
   }
@@ -58,7 +60,8 @@ const Category = styled.div`
   height: fit-content;
   padding: 28px 24px;
   /* background-color: ${(props) =>
-    props.$gender === 'male' ? '#9dc4ff7d' : '#ffd7cc99'}; */
+    props.$gender === 'male' ? '#c6e2ff' : '#ffcece'};
+    border-radius: 30px; */
   box-shadow: 0 3px 10px rgba(200, 200, 200, 0.15);
 `;
 
@@ -81,6 +84,7 @@ const GiftList = styled.ul`
   justify-content: center;
   padding: 0;
   margin: 0;
+  
 `;
 
 const GiftItem = styled.li`
@@ -94,27 +98,24 @@ const GiftItem = styled.li`
   box-shadow: 0 2px 6px rgba(200, 200, 200, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   flex-direction: column;
-
   &:hover {
     text-decoration: underline;
   }
-
   a {
     display: flex;
     flex-direction: column;
-    height: 100%;
     &:hover {
       font-weight: 700;
     }
   }
   img {
     width: 100%;
+    height: 50%;
     object-fit: cover;
     border-radius: 12px;
   }
-
   h3 {
-    height: 72px;
+    height: 70px;
     font-size: 0.8rem;
     color: #333;
     text-align: center;
@@ -135,6 +136,34 @@ const GiftItem = styled.li`
   }
 `;
 
+const SidebarButtons = styled.div`
+display: flex;
+flex-direction: column;
+position:fixed;
+right: 0;
+top: 20%;
+gap: 1px;
+button{
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  /* border: 1px solid #bdbdbd; */
+  background-color: #f0f0f0;
+  color: #202020;
+}
+.girl{
+  border: none;
+    background-color: #ff8f98;
+    color: white;
+}
+.boy{
+   background-color: #aedbff;
+    color: white;
+    border: none;
+}
+`
+
 const images = [gift1, gift2, gift3];
 function Event() {
   const [maleGifts, setMaleGifts] = useState([]);
@@ -142,6 +171,7 @@ function Event() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
+  const [selectedGender, setSelectedGender] = useState("female");
 
   const stripHTML = (html) => {
     const div = document.createElement('div');
@@ -180,6 +210,8 @@ function Event() {
     return () => clearInterval(interval);
   }, []);
 
+  const giftsToDisplay = selectedGender === "male" ? maleGifts : femaleGifts;
+
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
@@ -189,45 +221,23 @@ function Event() {
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
       <Right>
-        <Title>선물 랭킹 TOP10</Title>
+        <SidebarButtons>
+          <button onClick={() => setSelectedGender("female")} className={selectedGender === 'female' ? 'girl' : ''}>여자</button>
+          <button onClick={() => setSelectedGender("male")} className={selectedGender === 'male' ? 'boy' : ''}>남자</button>
+        </SidebarButtons>
+        <Title>선물랭킹 TOP10</Title>
         <CategoryContainer>
-          <Category $gender="male">
-            {/* <SubTitle $gender="male">남자 선물</SubTitle> */}
+          <Category $gender={selectedGender === 'female' ? 'female' : 'male'}>
             <GiftList>
-              {Array.isArray(maleGifts) &&
-                maleGifts.map((gift, index) => (
-                  <GiftItem key={index} title={stripHTML(gift.title)}>
-                    <a
-                      href={gift.shoppingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
-                      <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
-                      <p>가격: {Number(gift.price).toLocaleString()}원</p>
-                    </a>
-                  </GiftItem>
-                ))}
-            </GiftList>
-          </Category>
-
-          <Category $gender="female">
-            {/* <SubTitle $gender="female">여자 선물</SubTitle> */}
-            <GiftList>
-              {Array.isArray(femaleGifts) &&
-                femaleGifts.map((gift, index) => (
-                  <GiftItem key={index} title={stripHTML(gift.title)}>
-                    <a
-                      href={gift.shoppingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
-                      <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
-                      <p>가격: {Number(gift.price).toLocaleString()}원</p>
-                    </a>
-                  </GiftItem>
-                ))}
+              {giftsToDisplay.map((gift, index) => (
+                <GiftItem key={index} title={stripHTML(gift.title)}>
+                  <a href={gift.shoppingUrl} target="_blank" rel="noopener noreferrer">
+                    <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
+                    <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
+                    <p>가격: {Number(gift.price).toLocaleString()}원</p>
+                  </a>
+                </GiftItem>
+              ))}
             </GiftList>
           </Category>
         </CategoryContainer>

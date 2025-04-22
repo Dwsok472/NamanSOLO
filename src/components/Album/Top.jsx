@@ -139,7 +139,7 @@ function Top({ filter, onFilterChange }) {
           최신순
         </button>
         <button
-          className={`${selected === '좋아요순' ? 'selected' : ''} ${filter === '좋아요순'? 'active' : ''}`}
+          className={`${selected === '좋아요순' ? 'selected' : ''} ${filter === '좋아요순' ? 'active' : ''}`}
           id="like"
           onClick={() => {
             onFilterChange('좋아요순');
