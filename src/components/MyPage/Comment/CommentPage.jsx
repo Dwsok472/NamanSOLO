@@ -294,7 +294,7 @@ const Column = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  height: 605px;
+  height: 630px;
 `;
 
 const TopFixed = styled.div`
@@ -308,8 +308,8 @@ const CountBox = styled.div`
   margin: 0 0 12px;
   span {
     text-align: center;
-    background: #f9f5f6;
-    color: #323232;
+    background: #323232;
+    color: #f9f5f6;
     font-size: 0.8rem;
     font-weight: 700;
     padding: 6px 12px;
@@ -420,7 +420,7 @@ const CloseBtn = styled.div`
 
 const ScrollSection = styled.div`
   flex: 1;
-  max-height: 475px;
+  max-height: 100%;
   min-height: 0;
   overflow-y: auto;
   padding-right: 8px;
