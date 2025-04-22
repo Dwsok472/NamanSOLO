@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import { IconClose } from '../../Icons';
-import leftkey from '../../img/leftkey.png';
-import AlbumDetailModal from '../../Album/AlbumDetailModal';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import axios from "axios";
+import { IconClose } from "../../Icons";
+import leftkey from "../../img/leftkey.png";
+import AlbumDetailModal from "../../Album/AlbumDetailModal";
 
 const CommentPage = () => {
   const [editingId, setEditingId] = useState(null);
-  const [editValue, setEditValue] = useState('');
+  const [editValue, setEditValue] = useState("");
   const [comments, setComments] = useState([]);
   const [replies, setReplies] = useState([]);
   const [showDetail, setShowDetail] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
 
   async function handleSelectedAlbum(albumId) {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) return;
 
     try {
@@ -27,8 +27,8 @@ const CommentPage = () => {
       setSelectedAlbum(response.data); // 전체 앨범 정보 저장
       setShowDetail(true); // 모달 열기
     } catch (error) {
-      console.error('앨범 정보 불러오기 실패:', error);
-      alert('앨범 정보를 불러오지 못했습니다.');
+      console.error("앨범 정보 불러오기 실패:", error);
+      alert("앨범 정보를 불러오지 못했습니다.");
     }
   }
 
@@ -42,11 +42,11 @@ const CommentPage = () => {
   }, []);
 
   async function getAllComment() {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) return;
 
     try {
-      const response = await axios.get('/api/comment/username', {
+      const response = await axios.get("/api/comment/username", {
         headers: { Authorization: `Bearer ${jwt}` },
       });
 
@@ -55,25 +55,25 @@ const CommentPage = () => {
           const album = await findAlbum(item.albumId);
           return {
             ...item,
-            albumTitle: album?.title || '제목 없음',
+            albumTitle: album?.title || "제목 없음",
             albumThumbnail:
-              album?.url?.[0]?.mediaUrl || '/default-thumbnail.png',
+              album?.url?.[0]?.mediaUrl || "/default-thumbnail.png",
           };
         })
       );
       setComments(commentsWithAlbum);
     } catch (error) {
-      alert('댓글 불러오기 중 오류 발생!');
+      alert("댓글 불러오기 중 오류 발생!");
     }
   }
 
   console.log(comments);
   async function getAllReComment() {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) return;
 
     try {
-      const response = await axios.get('/api/recomment/username', {
+      const response = await axios.get("/api/recomment/username", {
         headers: { Authorization: `Bearer ${jwt}` },
       });
 
@@ -82,44 +82,44 @@ const CommentPage = () => {
           const album = await findAlbum(item.albumId);
           return {
             ...item,
-            albumTitle: album?.title || '제목 없음',
+            albumTitle: album?.title || "제목 없음",
             albumThumbnail:
-              album?.url?.[0]?.mediaUrl || '/default-thumbnail.png',
+              album?.url?.[0]?.mediaUrl || "/default-thumbnail.png",
           };
         })
       );
       setReplies(repliesWithAlbum);
     } catch (error) {
-      alert('답글 불러오기 중 오류 발생!');
+      alert("답글 불러오기 중 오류 발생!");
     }
   }
 
   async function findAlbum(albumId) {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) return null;
 
     try {
       const response = await axios.get(`/api/album/id/${albumId}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       return response.data;
     } catch (error) {
-      console.error('앨범 정보 불러오기 실패', error);
+      console.error("앨범 정보 불러오기 실패", error);
       return null;
     }
   }
 
   const Update = async (id, isReply) => {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) {
-      alert('로그인이 필요합니다.');
+      alert("로그인이 필요합니다.");
       return;
     }
-    if (editValue.trim() === '') {
-      alert('공란으로는 저장할 수 없습니다.');
+    if (editValue.trim() === "") {
+      alert("공란으로는 저장할 수 없습니다.");
       return;
     }
 
@@ -137,11 +137,11 @@ const CommentPage = () => {
     }
 
     try {
-      const url = isReply ? '/api/recomment/update' : '/api/comment/update';
+      const url = isReply ? "/api/recomment/update" : "/api/comment/update";
       const response = await axios.put(url, contentValue, {
         headers: {
           Authorization: `Bearer ${jwt}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -151,27 +151,27 @@ const CommentPage = () => {
             item.id === id ? { ...item, content: editValue } : item
           );
         isReply ? setReplies(updater) : setComments(updater);
-        alert('정상적으로 수정되었습니다.');
+        alert("정상적으로 수정되었습니다.");
       } else {
-        alert('수정에 실패했습니다.');
+        alert("수정에 실패했습니다.");
       }
     } catch (error) {
-      alert('서버 통신 중 오류가 발생했습니다.');
+      alert("서버 통신 중 오류가 발생했습니다.");
     }
   };
 
   const handleSave = (id, isReply) => {
     Update(id, isReply);
     setEditingId(null);
-    setEditValue('');
+    setEditValue("");
   };
 
   async function deleteTarget(id, isReply) {
-    const jwt = sessionStorage.getItem('jwt-token');
+    const jwt = sessionStorage.getItem("jwt-token");
     if (!jwt) return;
 
     try {
-      const url = isReply ? '/api/recomment/id/' : '/api/comment/id/';
+      const url = isReply ? "/api/recomment/id/" : "/api/comment/id/";
       await axios.delete(`${url}${id}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -188,7 +188,7 @@ const CommentPage = () => {
   }
 
   const handleDelete = (id, isReply) => {
-    const confirmDelete = window.confirm('정말 삭제하시겠습니까?');
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (!confirmDelete) return;
     deleteTarget(id, isReply);
   };
@@ -283,7 +283,8 @@ const Wrapper = styled.div`
 
 const Column = styled.div`
   flex: 1;
-  background-color: #c0c0c09e;
+  background-color: #f2f2f2;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.05);
   padding: 20px;
   border-radius: 16px;
   display: flex;
@@ -302,8 +303,8 @@ const CountBox = styled.div`
   margin: 0 0 12px;
   span {
     text-align: center;
-    background: #000000;
-    color: white;
+    background: #f9f5f6;
+    color: #323232;
     font-size: 0.8rem;
     font-weight: 700;
     padding: 6px 12px;
