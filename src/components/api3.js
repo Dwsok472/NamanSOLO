@@ -232,3 +232,17 @@ export async function resetPassword({ username, email, newPassword }) {
     throw error;
   }
 }
+
+//  특정 도시의 N일 뒤 날씨 예보 가져오기
+export async function fetchFutureWeather(city, days) {
+  try {
+    const res = await axios.get(`/api/weather/forecast`, {
+      params: { city, days },
+    });
+    return res.data;
+  } catch (error) {
+    console.error("날씨 예보 불러오기 실패:", error);
+    return null;
+  }
+}
+

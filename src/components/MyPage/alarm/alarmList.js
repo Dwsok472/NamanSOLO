@@ -7,32 +7,41 @@ export const useAlarmList = create(
     (set) => ({
       alarmList: [],
       unreadCount: 0,
+
       addAlarm: (alarm) => {
         const currentUser = useUserStore.getState().user?.username;
+
+        // 💥 로그인된 사용자와 알람 대상자가 다르면 무시
+        if (alarm.username !== currentUser) return;
+
         const alarmWithDefaults = {
           ...alarm,
-          isRead: alarm.isRead ?? false, // 기본값 false
+          isRead: alarm.isRead ?? false,
         };
+
         const updated = {
-          alarmList: [alarm, ...useAlarmList.getState().alarmList],
+          alarmList: [alarmWithDefaults, ...useAlarmList.getState().alarmList],
           unreadCount: useAlarmList.getState().unreadCount + 1,
         };
+
         set(updated);
+
         if (currentUser) {
-          localStorage.setItem(
-            `alarms-${currentUser}`,
-            JSON.stringify(updated)
-          );
+          localStorage.setItem(`alarms-${currentUser}`, JSON.stringify(updated));
         }
-      },
+      }, // ✅ 이 콤마 추가해야 함
+
       resetUnreadCount: () => set((state) => ({ ...state, unreadCount: 0 })),
+
       resetAlarmList: () => set({ alarmList: [], unreadCount: 0 }),
+
       markAsRead: (id) =>
         set((state) => ({
           alarmList: state.alarmList.map((alarm) =>
             alarm.id === id ? { ...alarm, isRead: true } : alarm
           ),
         })),
+
       removeAlarm: (id) =>
         set((state) => {
           const currentUser = useUserStore.getState().user?.username;
@@ -59,9 +68,9 @@ export const useAlarmList = create(
         }),
     }),
     {
-      name: "alarm-storage", // 기본 저장소 (로그인 상태 확인용으로는 사용해도 무방)
+      name: "alarm-storage",
       getStorage: () => localStorage,
-      skipHydration: true, // 로그인 이후 커스텀 로딩을 위한 옵션
+      skipHydration: true,
     }
   )
 );

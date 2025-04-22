@@ -210,6 +210,8 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const [isOpen, setIsOpen] = useState(false);
   // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
   const alarmList = useAlarmList((state) => state.alarmList);
+  const currentUser = useUserStore.getState().user?.username;
+  const filteredAlarms = alarmList.filter((alarm) => alarm.username === currentUser);
 
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
@@ -487,7 +489,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
             </Content>
 
             {/* 알람 항목들 */}
-            {alarmList.map((alarm) => {
+            {filteredAlarms.map((alarm) => {
               const isExpanded = expandedId === alarm.id;
               const shouldShowToggle = isExpanded || overflowingItems[alarm.id];
               return (

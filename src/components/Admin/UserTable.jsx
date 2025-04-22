@@ -8,6 +8,7 @@ const TableWrapper = styled.div`
   border-radius: 12px;
   width: 100%;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-top: 30px;
 `;
 
 const HeaderRow = styled.div`
