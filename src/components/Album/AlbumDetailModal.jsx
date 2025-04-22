@@ -220,7 +220,7 @@ const Backdrop = styled.div`
 `;
 
 const BottomBox = styled.div`
-  width: ${(props) => (props.isCommentVisible ? '70%' : '35%')};
+  width: ${(props) => (props.$isCommentVisible ? '70%' : '35%')};
   border-radius: 16px;
   transition: margin-top 0.3s ease-out;
   background-color: #000000;
