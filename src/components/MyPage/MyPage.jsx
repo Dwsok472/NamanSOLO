@@ -39,7 +39,7 @@ const ProfileCard = styled.div`
   width: 100%;
   max-width: 380px;
   padding: 20px;
-  /* border-right: 1px solid #e2e2e2; */
+  border-right: 1px solid #e2e2e2;
   /* border-radius: 10px; */
   text-align: center;
   background-color: ${({ bgColor }) => bgColor || "white"};
@@ -156,11 +156,9 @@ const NameHeartSection = styled.div`
 
 const RightProfileCard = styled.div`
   width: 100%;
-  overflow: auto;
+  overflow-y: auto;
   max-width: 1100px;
   padding: 20px;
-  /* border: 1px solid #c9c9c9; */
-  /* border-radius: 10px; */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
   box-shadow: 5px 8px 8px -4px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -214,6 +212,7 @@ const ModalWrapper = styled.div`
   border-radius: 3px;
   max-height: 90vh;
   overflow-y: auto;
+  
 `;
 
 const Button = styled.button`

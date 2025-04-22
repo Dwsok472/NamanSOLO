@@ -6,8 +6,8 @@ import { IconEdit, IconClose } from "../../Icons";
 import DetailTodo from "./Detailtodo";
 import leftThought from "../../img/leftThought.png";
 import Plus from "../../img/add.png";
-import LeftKey from "../../img/leftkey.png";
-import RightKey from "../../img/rightkey.png";
+import LeftKey from "../../img/top11.png";
+import RightKey from "../../img/down11.png";
 import Edittodo from "./Edittodo";
 import Edittravel from "./Edittravel";
 import DetailTravel from "./Detailtravel";
@@ -26,7 +26,6 @@ import {
 } from "../../api2";
 
 const Wrapper = styled.div`
-  font-family: sans-serif;
   color: #333;
   max-width: 1200px;
   margin: 0 auto;
@@ -36,17 +35,25 @@ const Main = styled.main`
   display: flex;
   padding: 20px;
   gap: 20px;
-
   filter: ${({ $blur }) => ($blur ? "blur(3px)" : "none")};
   pointer-events: ${({ $blur }) => ($blur ? "none" : "auto")};
 `;
 
 const LeftPanel = styled.div`
-  max-height: 610px;
+  max-height: 620px;
   overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-right: 5px;
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 핸들의 색상 */
+    border-radius: 10px;
+  }
+
 `;
 
 const CalendarSection = styled.section`
@@ -55,19 +62,24 @@ const CalendarSection = styled.section`
   max-height: 650px;
   border-radius: 10px;
   position: relative;
+  background-color: #c01e3c; /*#fff0f2*/
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  /* animation: floatUpDown 2.5s ease-in-out infinite; */
 `;
 
 const CalendarHeader = styled.h3`
-  margin-bottom: 20px;
+  margin-top:5px ;
+  margin-bottom:5px ;
   display: flex;
   justify-content: center;
   align-items: baseline;
   gap: 6px;
   cursor: pointer;
   font-size: 22px;
-  /* transform: scale(0.9); */
   transition: 0.2s ease;
-
+  font-size: 1.5rem;
+  color: white;
   &:hover {
     transform: scale(1);
   }
@@ -75,44 +87,51 @@ const CalendarHeader = styled.h3`
 
 const YearPickerWrap = styled.div`
   margin-bottom: 20px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  background-color: #eeeeee;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  padding: 20px;
+  height: 270px;
 `;
 
 const YearButtons = styled.div`
   margin-bottom: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 5px;
+  margin-right: 15px;
 `;
 
 const YearArrow = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
-
   &:hover {
     transform: scale(1.1);
   }
 `;
 
 const YearButton = styled.button`
-  background-color: ${({ $active }) => ($active ? "#ffe4e6" : "#fff")};
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background-color: ${({ $active }) => ($active ? "#000000" : "#fff")};
+  color: ${({ $active }) => ($active ? "#fff" : "#000000")};
+  /* border: ${({ $active }) => ($active ? "none" : "1px solid #ddd;")}; */
+  border-radius: 6px;
   padding: 6px 12px;
   font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-
   &:hover {
-    background-color: #ffedf0;
+    background-color: #000000;
     font-weight: 600;
+    color: white;
+    border: none;
   }
-
   &:focus {
     outline: none;
   }
@@ -120,8 +139,9 @@ const YearButton = styled.button`
 
 const MonthGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
 `;
 
 const MonthBox = styled.div`
@@ -129,63 +149,55 @@ const MonthBox = styled.div`
   align-items: center;
   display: flex;
   padding: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: ${({ $active }) => ($active ? "#000000" : "#fff")};
+  color: ${({ $active }) => ($active ? "#fff" : "#000000")};
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  width: 50px;
   cursor: pointer;
   &:hover {
-    background-color: #ffedf0;
+    background-color: #000000;
     font-weight: 600;
+    color: white;
+    border: none;
   }
 `;
 
 const StyledTable = styled.table`
   width: 100%;
   table-layout: fixed;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   background-color: #fff;
-  border-radius: 6px;
   overflow: hidden;
-  border: 0.5px solid #6b5c5c;
+  
 
-  thead tr:first-child th:first-child {
-    border-top-left-radius: 6px;
-  }
-
-  thead tr:first-child th:last-child {
-    border-top-right-radius: 6px;
-  }
-
-  tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 6px;
-  }
-
-  tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 6px;
-  }
 `;
 
 const StyledTh = styled.th`
-  border: 0.5px solid #6b5c5c;
+  border:0.5px solid #838383 ;
   padding: 8px;
-  background-color: white; /*#fff0f2*/
-  color: #333;
+  color: #181818;
   text-align: center;
+  font-size: 1.2rem;
 `;
 
 const StyledTd = styled.td`
-  border: 0.5px solid #6b5c5c;
+  border: 0.1px solid #838383;
   padding: 4px;
-  height: 100px;
+  /* height: ${({ $rowCount }) => ($rowCount > 5 ? "86px" : "100px")}; */
+  height: 86px;
   vertical-align: top;
   text-align: center;
-  background-color: ${({ $isToday }) => ($isToday ? "#ffe4e6" : "#fff")};
+
 `;
 
 const DayCell = styled.div`
   text-align: right;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  color: ${({ $isToday }) => ($isToday ? "#eb0202" : "black")};
 `;
 
 const EventBox = styled.div`
@@ -195,62 +207,46 @@ const EventBox = styled.div`
   border-radius: 2px;
   font-size: 0.7rem;
   line-height: 0.8;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
+  color: white;
   div {
     ${({ $isHovered }) =>
-      $isHovered &&
-      `
-        color: #c900c9;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-decoration: underline;
+    $isHovered &&
+    `
+       font-weight: 700;
       `}
   }
-`;
-
-const TopArea = styled.div`
-  padding: 20px;
-  border-bottom: 1px solid #e0cfcf;
-  background-color: #ffeef0;
-  flex-shrink: 0;
 `;
 
 const AnniversarySection = styled.section`
   flex: 1 1 30%;
   min-width: 221px;
-  background-color: #ffeef0;
-  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid #8c0d17;
+  border-radius: 30px;
   padding: 20px;
   position: relative;
   overflow: auto;
   max-height: 610px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 
   img {
     width: 16px;
     height: 16px;
     cursor: pointer;
   }
+
 `;
 
-const BottomArea = styled.div`
-  padding: 10px 20px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #ffeef0;
-  flex-shrink: 0;
-`;
 
 const SectionH3 = styled.h3`
   cursor: ${({ activeSection }) =>
     activeSection != "anniversary" || "travel" ? "default" : "pointer"};
   text-align: center;
-  font-weight: bold;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.2rem;
   margin-bottom: 10px;
   user-select: none;
   transition: 0.2s;
@@ -266,7 +262,6 @@ const EditButton = styled.button`
   position: absolute;
   top: 0px;
   left: 8px;
-  background-color: #ffeef0;
   border: none;
   width: 10px;
   height: 10px;
@@ -293,12 +288,12 @@ const IconButton = styled(EditButton)`
 
 const AddButton = styled.button`
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  top: 20px;
+  right: 20px;
   width: 32px;
   height: 32px;
   padding: 0;
-  background-color: #ff7f7f;
+  background-color: #c50000;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -327,6 +322,16 @@ const AddButtonImage = styled.img`
 const List = styled.ul`
   list-style: none;
   padding-left: 0;
+  height: 440px;
+  overflow-y: auto;
+  padding-right: 3px;
+  &::-webkit-scrollbar {
+    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #727272; /* 핸들의 색상 */
+    border-radius: 10px;
+  }
 `;
 
 const ViewAllButton = styled.button`
@@ -338,7 +343,7 @@ const ViewAllButton = styled.button`
   border: 1px solid #c41c1c;
   border-radius: 8px;
   padding: 6px 12px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -365,7 +370,6 @@ const ListItem = styled.li`
     text-overflow: ellipsis;
     max-width: 100px;
   }
-
   div.day {
     display: flex;
     flex-direction: column;
@@ -389,8 +393,6 @@ function Todo({ originalMeetingDate }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const [events, setEvents] = useState([]);
-  const [originDate, setOriginDate] = useState("");
-  const originDateRef = useRef(null); // 최초 null, 내부에서 직접 할당
 
   useEffect(() => {
     if (!events || events.length === 0) {
@@ -398,9 +400,6 @@ function Todo({ originalMeetingDate }) {
         try {
           const annivs = await fetchAnniversaries();
           const travels = await fetchTravels();
-
-          const base = new Date();
-          const formatted = formatDate(base);
 
           setEvents([...annivs, ...travels]);
         } catch (err) {
@@ -424,9 +423,7 @@ function Todo({ originalMeetingDate }) {
 
     fetchData();
   }, [originalMeetingDate]);
-
   const [showAllEvents, setShowAllEvents] = useState(false);
-
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -463,8 +460,6 @@ function Todo({ originalMeetingDate }) {
     const loadAllEvents = async () => {
       if (showAllEvents) {
         try {
-          const base = new Date(); // 또는 다른 기준일
-          const formatted = formatDate(base); // yyyy-MM-dd
           const sortedTodos = await fetchAllTodos();
           setEvents(sortedTodos);
         } catch (e) {
@@ -498,8 +493,7 @@ function Todo({ originalMeetingDate }) {
     console.log("삭제할 이벤트", eventToDelete);
     console.log("삭제할 이벤트의 id 값" + eventToDelete.id);
     const confirmDelete = window.confirm(
-      `${eventToDelete.title} ${
-        eventToDelete.type.toUpperCase() === "ANNIVERSARY" ? "기념일" : "여행"
+      `${eventToDelete.title} ${eventToDelete.type.toUpperCase() === "ANNIVERSARY" ? "기념일" : "여행"
       } 일정을 정말 삭제하시겠어요?`
     );
     if (!confirmDelete) return;
@@ -518,14 +512,7 @@ function Todo({ originalMeetingDate }) {
   };
 
   const colorSamples = [
-    "#ffc0cb",
-    "#ffb6c1",
-    "#ffd700",
-    "#90ee90",
-    "#87cefa",
-    "#dda0dd",
-    "#ff7f50",
-    "#b0c4de",
+    "#ffc0cb", "#ffb6c1", "#ffd700", "#90ee90", "#87cefa", "#dda0dd", "#ff7f50", "#b0c4de",
   ];
 
   const generateCalendar = () => {
@@ -541,11 +528,9 @@ function Todo({ originalMeetingDate }) {
         (_, i) => new Date(currentYear, currentMonth, i + 1)
       ),
     ];
-
     while (calendarCells.length % 7 !== 0) {
       calendarCells.push(null);
     }
-
     return calendarCells.reduce((weeks, day, i) => {
       if (i % 7 === 0) weeks.push([]);
       weeks[weeks.length - 1].push(day);
@@ -688,15 +673,14 @@ function Todo({ originalMeetingDate }) {
                         const isToday =
                           dateStr === today.toISOString().split("T")[0];
                         return (
-                          <StyledTd key={dIdx} $isToday={isToday}>
+                          <StyledTd key={dIdx} $isToday={isToday} >
                             <DayCell>{date.getDate()}</DayCell>
                             {getEventsForDay(date).map((localEvent, i) => (
                               <EventBox
                                 key={i}
                                 color={localEvent.color}
-                                className={`${localEvent.type.toUpperCase()}${
-                                  localEvent.id
-                                }`}
+                                className={`${localEvent.type.toUpperCase()}${localEvent.id
+                                  }`}
                                 onMouseEnter={() =>
                                   setHoveringEventId(localEvent.id)
                                 }
@@ -704,7 +688,7 @@ function Todo({ originalMeetingDate }) {
                                 $isHovered={hoveringEventId === localEvent.id}
                                 onClick={() =>
                                   localEvent.type.toUpperCase() ===
-                                  "ANNIVERSARY"
+                                    "ANNIVERSARY"
                                     ? localEvent.editable
                                       ? setViewTodoEvent(localEvent)
                                       : null
@@ -716,8 +700,8 @@ function Todo({ originalMeetingDate }) {
                                     localEvent.type.toUpperCase() === "TRAVEL"
                                       ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}`
                                       : !localEvent.editable
-                                      ? `첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`
-                                      : `${localEvent.title} ${localEvent.start_date}`
+                                        ? `첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`
+                                        : `${localEvent.title} ${localEvent.start_date}`
                                   }
                                 >
                                   {localEvent.title}
@@ -739,8 +723,8 @@ function Todo({ originalMeetingDate }) {
               {showAllEvents
                 ? "전체 일정"
                 : activeSection === "ANNIVERSARY"
-                ? "기념일"
-                : "데이트"}{" "}
+                  ? "기념일"
+                  : "데이트"}{" "}
               {showAllEvents ? (
                 <></>
               ) : (
@@ -772,17 +756,16 @@ function Todo({ originalMeetingDate }) {
 
                 return (
                   <ListItem
-                    title={`${
-                      localEvent.type.toUpperCase() === "ANNIVERSARY"
-                        ? !localEvent.editable
-                          ? "첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다."
-                          : localEvent.title + " " + localEvent.start_date
-                        : localEvent.title +
-                          " " +
-                          localEvent.start_date +
-                          " ~ " +
-                          localEvent.end_date
-                    }`}
+                    title={`${localEvent.type.toUpperCase() === "ANNIVERSARY"
+                      ? !localEvent.editable
+                        ? "첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다."
+                        : localEvent.title + " " + localEvent.start_date
+                      : localEvent.title +
+                      " " +
+                      localEvent.start_date +
+                      " ~ " +
+                      localEvent.end_date
+                      }`}
                     key={idx}
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
@@ -842,9 +825,8 @@ function Todo({ originalMeetingDate }) {
             )}
             <ViewAllButton onClick={() => setShowAllEvents((prev) => !prev)}>
               {showAllEvents
-                ? `${
-                    activeSection === "ANNIVERSARY" ? "기념일" : "데이트"
-                  } 보기`
+                ? `${activeSection === "ANNIVERSARY" ? "기념일" : "데이트"
+                } 보기`
                 : "전체보기"}
             </ViewAllButton>
           </AnniversarySection>

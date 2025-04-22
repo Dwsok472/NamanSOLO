@@ -5,7 +5,7 @@ import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
 
 const CardWrap = styled.div`
-  width: 500px;
+    width: 400px;
   position: absolute;
   top: 53%;
   left: 50%;
@@ -15,8 +15,8 @@ const CardWrap = styled.div`
 
 const Card = styled.div`
   background-color: white;
-  border-radius: 50px;
-  border: 1px solid #3333;
+  border-radius: 15px;
+  border: 1px solid #94949433;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -24,13 +24,14 @@ const Card = styled.div`
 
 const Top = styled.div`
   height: 75px;
-  background-color: #ffdcd6;
+  background-color: #8c0d17;
   font-size: 1.5rem;
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  color: white;
 `;
 
 const IconWrap = styled.div`
@@ -42,6 +43,7 @@ const IconWrap = styled.div`
   svg {
     width: 15px;
     height: 15px;
+    filter: brightness(0) invert(1);
   }
 `;
 
@@ -113,14 +115,14 @@ const Info = styled.div`
 function DetailTravel({ event, onClose, onEdit }) {
   if (!event) return null;
 
-  console.log("🧾 받은 event:", event); 
+  console.log("🧾 받은 event:", event);
 
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchImages = async () => {
       if (event.mediaUrl?.length > 0) {
-        setImageUrls(event.mediaUrl.map((media)=>media.mediaUrl));
+        setImageUrls(event.mediaUrl.map((media) => media.mediaUrl));
       }
     };
     fetchImages();
@@ -140,7 +142,7 @@ function DetailTravel({ event, onClose, onEdit }) {
   };
 
   return (
-    <CardWrap 
+    <CardWrap
       onClick={(e) => e.stopPropagation()}>
       <Card>
         <Top>
