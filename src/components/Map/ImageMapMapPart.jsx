@@ -13,7 +13,7 @@ const MapWrapper = styled.div`
 `;
 
 const MapImage = styled.img`
-  width: 800px;
+  width: 750px;
   height: auto;
   object-fit: contain;
   margin-left: -7.1%;
@@ -69,7 +69,7 @@ const regions = [
   { name: '전라남도', top: 63, left: 38 },
   { name: '경상북도', top: 45, left: 58 },
   { name: '경상남도', top: 58, left: 51 },
-  { name: '제주도', top: 94, left: 30 },
+  { name: '제주도', top: 91, left: 30 },
 ];
 
 function ImageMapMapPart({ onRegionClick }) {

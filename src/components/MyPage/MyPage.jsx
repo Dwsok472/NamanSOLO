@@ -33,17 +33,17 @@ const Container = styled.div`
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
   background: linear-gradient(45deg, #ffe3e3, #fff, #ffe3e3);
   /* background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff); */
-
 `;
 
 const ProfileCard = styled.div`
   width: 100%;
   max-width: 380px;
   padding: 20px;
-  border-right: 1px solid #e2e2e2;
+  /* border-right: 1px solid #e2e2e2; */
   /* border-radius: 10px; */
   text-align: center;
   background-color: ${({ bgColor }) => bgColor || "white"};
+  box-shadow: -5px 8px 8px -4px rgba(0, 0, 0, 0.08);
   min-height: 600px;
   display: flex;
   flex-direction: column;
@@ -162,6 +162,7 @@ const RightProfileCard = styled.div`
   /* border: 1px solid #c9c9c9; */
   /* border-radius: 10px; */
   background-color: ${({ bgColor }) => bgColor || "#fff"};
+  box-shadow: 5px 8px 8px -4px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -199,6 +200,7 @@ const EditButton = styled.button`
   padding: 5px 12px;
   font-weight: 700;
   border-radius: 6px;
+  background-color: transparent;
   cursor: pointer;
   &:hover {
     background-color: #f2f2f2;
@@ -284,7 +286,7 @@ const DateInputRow = styled.div`
 
   button {
     position: absolute;
-    bottom: 487.8px; 
+    bottom: 487.8px;
     right: 80px;
     width: 55px;
     height: 36px;
@@ -292,7 +294,7 @@ const DateInputRow = styled.div`
     padding: 5px 12px;
     bottom: 488px; // 인풋보다 살짝 아래
     right: 60px; // 우측으로 살짝
-   color: white;
+    color: white;
     padding: 6px 12px;
     border: none;
     background-color: #000000;
