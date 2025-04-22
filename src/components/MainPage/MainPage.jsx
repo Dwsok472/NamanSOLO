@@ -6,6 +6,7 @@ import BookSection from "./BookSection";
 import Hero from "./Hero";
 import StoryMenuBubbles from "./StoryMenuBubbles";
 import MainPopup from "./MainPopup";
+import SearchFeatureSection from "./SearchFeatureSection";
 
 const PageContainer = styled.div`
   position: relative;
@@ -172,6 +173,7 @@ function MainPage() {
             togglePage={togglePage}
             bookRef={bookRef}
           />
+          <SearchFeatureSection />
           <StoryMenuBubbles />
         </MainContent>
         <CallToLoveSection>

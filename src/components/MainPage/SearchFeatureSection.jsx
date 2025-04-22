@@ -1,0 +1,154 @@
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import searchImg from '../img/1.jpg';
+import followImg from '../img/2.png';
+import storyImg from '../img/3.jpg';
+
+const Section = styled.section`
+  background: #fff9f9;
+  padding: 120px 20px;
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  gap: 60px;
+  padding: 0 80px;
+  flex-wrap: wrap;
+`;
+
+
+const Title = styled.h2`
+  text-align: center;
+  font-size: 2.6rem;
+  color: #8c0d17;
+  font-weight: bold;
+  margin-bottom: 80px;
+`;
+
+const Left = styled.div`
+  flex: 1;
+  min-width: 360px;
+  display: flex;
+  justify-content: center;
+`;
+
+const Right = styled.div`
+  flex: 1;
+  min-width: 700px;
+  display: flex;
+  justify-content: center;
+`;
+
+
+const LoopWrapper = styled.div`
+  position: relative;
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+  border-radius: 50%;
+  border: 2px dashed #d81b60;
+
+  transition: transform 0.9s ease;
+
+  &:hover {
+    transform: rotate(8deg);
+  }
+`;
+
+const Node = styled.div`
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: white;
+  border: 4px solid #d81b60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+  padding: 10px;
+
+  img {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    font-size: 1rem;
+    color: #8c0d17;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+  }
+`;
+
+const Slider = styled.div`
+  width: 600px;
+  height: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: opacity 0.5s ease-in-out;
+  }
+`;
+
+function SearchFeatureSection() {
+    const images = [searchImg, followImg, storyImg];
+    const [currentImage, setCurrentImage] = useState(0);
+
+    useEffect(() => {
+    const interval = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+    }, []);
+
+  return (
+    <Section>
+      <Title>우리 관계는 이렇게 이어졌어</Title>
+      <Container>
+        <Left>
+          <LoopWrapper>
+            <Node style={{ top: "-50px", left: "220px" }}>
+              <img src={searchImg} alt="검색" />
+              <h3>유저 검색</h3>
+              <p>처음 너를 찾아본 순간, 무심한 듯 설렘이 왔지.</p>
+            </Node>
+            <Node style={{ top: "330px", left: "-70px" }}>
+              <img src={followImg} alt="팔로우" />
+              <h3>팔로우</h3>
+              <p>서로를 구독하며 기억을 공유하게 되었어.</p>
+            </Node>
+            <Node style={{ top: "330px", left: "500px" }}>
+              <img src={storyImg} alt="스토리" />
+              <h3>스토리 보기</h3>
+              <p>너의 이야기를 들여다보며 내 마음도 기록했지.</p>
+            </Node>
+          </LoopWrapper>
+        </Left>
+        <Right>
+        <Slider>
+            <img src={images[currentImage]} alt={`slide-${currentImage}`} />
+        </Slider>
+        </Right>
+      </Container>
+    </Section>
+  );
+}
+
+export default SearchFeatureSection;
