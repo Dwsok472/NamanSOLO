@@ -72,11 +72,11 @@ const MainPopup = () => {
     const hideUntil = localStorage.getItem("popup-hide-until");
     const today = new Date().toISOString().split("T")[0];
 
-    // if (hideUntil !== today) {
-    //   setIsVisible(true);
-    // } // 이거 주석하면 오늘하루 보지않기 기능 on
+    if (hideUntil !== today) {
+      setIsVisible(true);
+    } // 이거 주석하면 오늘하루 보지않기 기능 on
 
-    setIsVisible(true);  // << 이거 주석해제하면 오늘하루보지않기 없음
+    // setIsVisible(true);  // << 이거 주석해제하면 오늘하루보지않기 없음
   }, []);
 
   useEffect(() => {
