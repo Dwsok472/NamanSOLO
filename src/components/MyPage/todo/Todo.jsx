@@ -93,7 +93,7 @@ const YearPickerWrap = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 0;
+  top: 10%;
   padding: 20px;
   height: 270px;
 `;
@@ -597,6 +597,9 @@ function Todo({ originalMeetingDate }) {
           if (editingTravelEvent) {
             setEditingTravelEvent(false);
           }
+          if (isPickerOpen) {
+            setIsPickerOpen(false);
+          }
         }}
       >
         <Main
@@ -606,7 +609,8 @@ function Todo({ originalMeetingDate }) {
             editingTodoEvent ||
             editingTravelEvent ||
             viewTodoEvent ||
-            viewTravelEvent
+            viewTravelEvent ||
+            isPickerOpen
           }
         >
           <LeftPanel>
@@ -614,46 +618,7 @@ function Todo({ originalMeetingDate }) {
               <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
                 {currentYear}년 {currentMonth + 1}월 {isPickerOpen ? "▲" : "▼"}
               </CalendarHeader>
-              {isPickerOpen && (
-                <YearPickerWrap>
-                  <YearButtons>
-                    <YearArrow
-                      src={LeftKey}
-                      onClick={() => setYearRangeStart(yearRangeStart - 5)}
-                    />
-                    {Array.from(
-                      { length: 5 },
-                      (_, i) => yearRangeStart + i
-                    ).map((year) => (
-                      <YearButton
-                        key={year}
-                        $active={year === selectedYear}
-                        onClick={() => setSelectedYear(year)}
-                      >
-                        {year}
-                      </YearButton>
-                    ))}
-                    <YearArrow
-                      src={RightKey}
-                      onClick={() => setYearRangeStart(yearRangeStart + 5)}
-                    />
-                  </YearButtons>
-                  <MonthGrid>
-                    {Array.from({ length: 12 }, (_, i) => (
-                      <MonthBox
-                        key={i}
-                        onClick={() => {
-                          setCurrentYear(selectedYear);
-                          setCurrentMonth(i);
-                          setIsPickerOpen(false);
-                        }}
-                      >
-                        {i + 1}월
-                      </MonthBox>
-                    ))}
-                  </MonthGrid>
-                </YearPickerWrap>
-              )}
+
               <StyledTable>
                 <thead>
                   <tr>
@@ -1023,6 +988,47 @@ function Todo({ originalMeetingDate }) {
               }
             }}
           />
+        )}
+
+        {isPickerOpen && (
+          <YearPickerWrap>
+            <YearButtons>
+              <YearArrow
+                src={LeftKey}
+                onClick={() => setYearRangeStart(yearRangeStart - 5)}
+              />
+              {Array.from(
+                { length: 5 },
+                (_, i) => yearRangeStart + i
+              ).map((year) => (
+                <YearButton
+                  key={year}
+                  $active={year === selectedYear}
+                  onClick={() => setSelectedYear(year)}
+                >
+                  {year}
+                </YearButton>
+              ))}
+              <YearArrow
+                src={RightKey}
+                onClick={() => setYearRangeStart(yearRangeStart + 5)}
+              />
+            </YearButtons>
+            <MonthGrid>
+              {Array.from({ length: 12 }, (_, i) => (
+                <MonthBox
+                  key={i}
+                  onClick={() => {
+                    setCurrentYear(selectedYear);
+                    setCurrentMonth(i);
+                    setIsPickerOpen(false);
+                  }}
+                >
+                  {i + 1}월
+                </MonthBox>
+              ))}
+            </MonthGrid>
+          </YearPickerWrap>
         )}
       </Wrapper>
     </>
