@@ -125,7 +125,7 @@ const MyAlbum = () => {
             {["최신순", "좋아요순", "댓글순"].map((label) => (
               <FilterButton
                 key={label}
-                active={sortOption === label}
+                $active={sortOption === label}
                 onClick={() => setSortOption(label)}
               >
                 {label}
@@ -213,7 +213,7 @@ const MyAlbum = () => {
           setIsTrashDragOver(false); // 드래그 종료 시 초기화
         }}
       >
-        <DeleteButton isDragOver={isTrashDragOver} />
+        <DeleteButton $isDragOver={isTrashDragOver} />
       </TrashZone>
       {/* 앨범을 끌고가서 쓰레기통에 버리기 끝 */}
     </AlbumWrapper>
@@ -256,8 +256,8 @@ const FilterButton = styled.button`
   border: none;
   font-weight: 700;
   font-size: 0.8rem;
-  background-color: ${({ active }) => (active ? "#8c0d17" : "white")};
-  color: ${({ active }) => (active ? "#fff" : "#333")};
+  background-color: ${({ $active }) => ($active ? "#8c0d17" : "white")};
+  color: ${({ $active }) => ($active ? "#fff" : "#333")};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: all 0.2s;
   cursor: pointer;

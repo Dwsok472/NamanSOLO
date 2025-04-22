@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 
 function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [imageIndex, setImageIndex] = useState(0);
-  const [isCommentVisible, setIsCommentVisible] = useState(false);
+  const [$isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
   const [likeCount, setLikeCount] = useState(albumData.greats.length); // 앨범의 초기 좋아요 수 설정
   const [userLikes, setUserLikes] = useState({}); // 유저별 좋아요 상태 관리
@@ -115,7 +115,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
     <>
       <Backdrop onClick={onClose} />
       <Container>
-        <BottomBox isCommentVisible={isCommentVisible}>
+        <BottomBox $isCommentVisible={$isCommentVisible}>
           <Box id={albumData.id}>
             <TopBar>
               <div className="date">{albumData.addDate}</div>
@@ -185,7 +185,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
             </div>
           </Box>
 
-          {isCommentVisible && selectedAlbumId === albumData.id && (
+          {$isCommentVisible && selectedAlbumId === albumData.id && (
             <CommentBox>
               <Comment albumData={albumData} onCommentAdd={handleNewComment} />
             </CommentBox>

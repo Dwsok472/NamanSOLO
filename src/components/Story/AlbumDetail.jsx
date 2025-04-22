@@ -104,7 +104,7 @@ const CommentBox = styled.div``;
 function AlbumDetail({ albumData }) {
   const [albumDetail, setAlbumDetail] = useState(albumData);
   const [imageIndex, setImageIndex] = useState(0);
-  const [isCommentVisible, setIsCommentVisible] = useState(false);
+  const [$isCommentVisible, setIsCommentVisible] = useState(false);
   const [selectedAlbumId, setSelectedAlbumId] = useState(null); // 선택된 앨범 ID
   const [likeCount, setLikeCount] = useState(albumData.likes); // 좋아요 수 상태 추가
 
@@ -196,7 +196,7 @@ function AlbumDetail({ albumData }) {
             )}
           </div>
         </Box>
-        {isCommentVisible && selectedAlbumId === albumDetail.id && (
+        {$isCommentVisible && selectedAlbumId === albumDetail.id && (
           <CommentBox>
             <Comment albumData={albumData} />
           </CommentBox>

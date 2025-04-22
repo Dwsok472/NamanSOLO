@@ -185,7 +185,7 @@ const Badge = styled.div`
   font-weight: bold;
   padding: 2px 6px;
   border-radius: 50%;
-  display: ${({ visible }) => (visible ? "flex" : "none")};
+  display: ${({ $visible }) => ($visible ? "flex" : "none")};
   align-items: center;
   justify-content: center;
 `;
@@ -277,7 +277,7 @@ const Footer = () => {
           <BellWrapper>
             <button className="button" onClick={toggleAlarm}>
               <IconBell />
-              <Badge visible={unreadCount > 0}>{unreadCount}</Badge>
+              <Badge $visible={unreadCount > 0}>{unreadCount}</Badge>
             </button>
             {showAlarm && <Alarm onClose={toggleAlarm} />}
           </BellWrapper>

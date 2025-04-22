@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
-const DeleteButton = ({ isDragOver }) => {
+const DeleteButton = ({ $isDragOver }) => {
   return (
-    <StyledWrapper isDragOver={isDragOver}>
+    <StyledWrapper $isDragOver={$isDragOver}>
       <div className="trash-inner">
         <button className="bin-button">
           {" "}
@@ -114,7 +114,7 @@ const StyledWrapper = styled.div`
     }
   }
   ${(props) =>
-    props.isDragOver &&
+    props.$isDragOver &&
     `
     .bin-top {
       transform: rotate(45deg);

@@ -12,7 +12,7 @@ import ImageSlider from './ImageSlider';
 
 function MyAlbumModal({ album, onClose }) {
   const [imageIndex, setImageIndex] = useState(0); // ✅ 이미지 넘기기
-  const [isCommentVisible, setIsCommentVisible] = useState(false);
+  const [$isCommentVisible, setIsCommentVisible] = useState(false);
   const [likeCount, setLikeCount] = useState(album?.likes?.length || 0);
   const [userLikes, setUserLikes] = useState({});
   const [commentCount, setCommentCount] = useState(album?.comments?.length || 0);
@@ -53,7 +53,7 @@ function MyAlbumModal({ album, onClose }) {
     <>
       <Backdrop onClick={onClose} />
       <Container>
-        <BottomBox $isCommentVisible={isCommentVisible}>
+        <BottomBox $isCommentVisible={$isCommentVisible}>
           <Box>
             <div className="date">{album?.date}</div>
             <ImageSlider imgurl={album?.imgurl} />
@@ -91,7 +91,7 @@ function MyAlbumModal({ album, onClose }) {
             </div>
           </Box>
 
-          {isCommentVisible && (
+          {$isCommentVisible && (
             <CommentBox>
               <Comment albumData={album} onCommentAdd={handleNewComment} />
             </CommentBox>

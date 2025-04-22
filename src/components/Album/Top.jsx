@@ -139,9 +139,8 @@ function Top({ filter, onFilterChange }) {
           최신순
         </button>
         <button
-          className={selected === '좋아요순' ? 'selected' : ''}
+          className={`${selected === '좋아요순' ? 'selected' : ''} ${filter === '좋아요순'? 'active' : ''}`}
           id="like"
-          active={filter === '좋아요순'}
           onClick={() => {
             onFilterChange('좋아요순');
             setSelected('좋아요순');
@@ -150,9 +149,8 @@ function Top({ filter, onFilterChange }) {
           좋아요순
         </button>
         <button
-          className={selected === '댓글순' ? 'selected' : ''}
+          className={`${selected === '댓글순' ? 'selected' : ''} ${filter === '댓글순'}`}
           id="comment"
-          active={filter === '댓글순'}
           onClick={() => {
             onFilterChange('댓글순');
             setSelected('댓글순');
