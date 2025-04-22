@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import img1 from '../img/1.jpg';
-import img2 from '../img/11111.png';
+import img2 from '../img/2.png';
 import img3 from '../img/3.jpg';
 
 const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 200px;
-  left: 50%;
+  bottom: 300px;
+  left: 90%;
   transform: translateX(-50%);
   z-index: 9999;
 `;
@@ -24,9 +24,12 @@ const PopupContainer = styled.div`
 
 const BannerImage = styled.img`
   width: 100%;
+  height: 400px; 
+  object-fit: cover; 
   display: block;
   transition: opacity 0.5s ease-in-out;
 `;
+
 
 const IndicatorWrapper = styled.div`
   display: flex;
@@ -69,11 +72,11 @@ const MainPopup = () => {
     const hideUntil = localStorage.getItem("popup-hide-until");
     const today = new Date().toISOString().split("T")[0];
 
-    if (hideUntil !== today) {
-      setIsVisible(true);
-    } // 이거 주석하면 오늘하루 보지않기 기능 on
+    // if (hideUntil !== today) {
+    //   setIsVisible(true);
+    // } // 이거 주석하면 오늘하루 보지않기 기능 on
 
-    // setIsVisible(true);  // << 이거 주석해제하면 오늘하루보지않기 없음
+    setIsVisible(true);  // << 이거 주석해제하면 오늘하루보지않기 없음
   }, []);
 
   useEffect(() => {
