@@ -140,9 +140,10 @@ const Container = styled.div`
 
 const ContainerMain = styled.div`
   width: 100%;
-  border-radius: 30px;
+  border-radius: 5px;
   padding-top: 10px;
-  background-color: #c0c0c09e;
+  background-color: #f9f5f6;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.05);
   /* background: linear-gradient(to bottom, #f8e7e7, #fee2e0, #f8e7e7); */
   height: 540px;
 `;

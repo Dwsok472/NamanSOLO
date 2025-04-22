@@ -1,18 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-import Addtodo from './Addtodo';
-import Addtravel from './Addtravel';
-import { IconEdit, IconClose } from '../../Icons';
-import DetailTodo from './Detailtodo';
-import leftThought from '../../img/leftThought.png';
-import Plus from '../../img/add.png';
-import LeftKey from '../../img/leftkey.png';
-import RightKey from '../../img/rightkey.png';
-import Edittodo from './Edittodo';
-import Edittravel from './Edittravel'
-import DetailTravel from './Detailtravel';
-import Rotate from '../../img/rotate.png';
-import { createAnniversary, deleteAnniversary, deleteTravelMedia, fetchAllTodos, fetchAnniversaries, fetchTravels, handleCreateTravelMedia, handleUpdateTravelMedia, updateAnniversary, uploadTravelMedia } from '../../api2';
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import Addtodo from "./Addtodo";
+import Addtravel from "./Addtravel";
+import { IconEdit, IconClose } from "../../Icons";
+import DetailTodo from "./Detailtodo";
+import leftThought from "../../img/leftThought.png";
+import Plus from "../../img/add.png";
+import LeftKey from "../../img/leftkey.png";
+import RightKey from "../../img/rightkey.png";
+import Edittodo from "./Edittodo";
+import Edittravel from "./Edittravel";
+import DetailTravel from "./Detailtravel";
+import Rotate from "../../img/rotate.png";
+import {
+  createAnniversary,
+  deleteAnniversary,
+  deleteTravelMedia,
+  fetchAllTodos,
+  fetchAnniversaries,
+  fetchTravels,
+  handleCreateTravelMedia,
+  handleUpdateTravelMedia,
+  updateAnniversary,
+  uploadTravelMedia,
+} from "../../api2";
 
 const Wrapper = styled.div`
   font-family: sans-serif;
@@ -26,12 +37,12 @@ const Main = styled.main`
   padding: 20px;
   gap: 20px;
 
-  filter: ${({ $blur }) => ($blur ? 'blur(3px)' : 'none')};
-  pointer-events: ${({ $blur }) => ($blur ? 'none' : 'auto')};
+  filter: ${({ $blur }) => ($blur ? "blur(3px)" : "none")};
+  pointer-events: ${({ $blur }) => ($blur ? "none" : "auto")};
 `;
 
 const LeftPanel = styled.div`
-  max-height: 610px; 
+  max-height: 610px;
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -54,11 +65,11 @@ const CalendarHeader = styled.h3`
   gap: 6px;
   cursor: pointer;
   font-size: 22px;
-  transform: scale(0.9);
+  /* transform: scale(0.9); */
   transition: 0.2s ease;
 
   &:hover {
-    transform: scale(1.0);
+    transform: scale(1);
   }
 `;
 
@@ -89,7 +100,7 @@ const YearArrow = styled.img`
 `;
 
 const YearButton = styled.button`
-  background-color: ${({ $active }) => ($active ? '#ffe4e6' : '#fff')};
+  background-color: ${({ $active }) => ($active ? "#ffe4e6" : "#fff")};
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 6px 12px;
@@ -114,9 +125,9 @@ const MonthGrid = styled.div`
 `;
 
 const MonthBox = styled.div`
-  justify-content: center;       
+  justify-content: center;
   align-items: center;
-  display: flex;  
+  display: flex;
   padding: 10px 0;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -157,7 +168,7 @@ const StyledTable = styled.table`
 const StyledTh = styled.th`
   border: 0.5px solid #6b5c5c;
   padding: 8px;
-  background-color: #fff0f2;
+  background-color: white; /*#fff0f2*/
   color: #333;
   text-align: center;
 `;
@@ -168,7 +179,7 @@ const StyledTd = styled.td`
   height: 100px;
   vertical-align: top;
   text-align: center;
-  background-color: ${({ $isToday }) => ($isToday ? '#ffe4e6' : '#fff')};
+  background-color: ${({ $isToday }) => ($isToday ? "#ffe4e6" : "#fff")};
 `;
 
 const DayCell = styled.div`
@@ -178,17 +189,17 @@ const DayCell = styled.div`
 `;
 
 const EventBox = styled.div`
-  background-color: ${({ color }) => color || '#ffc0cb'};
+  background-color: ${({ color }) => color || "#ffc0cb"};
   padding: 4px 6px;
   margin: 0 auto;
   border-radius: 2px;
   font-size: 0.7rem;
   line-height: 0.8;
-  
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  
+
   div {
     ${({ $isHovered }) =>
       $isHovered &&
@@ -235,10 +246,11 @@ const BottomArea = styled.div`
 `;
 
 const SectionH3 = styled.h3`
-  cursor: ${({ activeSection }) => (activeSection != 'anniversary'||'travel' ? 'default' : 'pointer')};
+  cursor: ${({ activeSection }) =>
+    activeSection != "anniversary" || "travel" ? "default" : "pointer"};
   text-align: center;
   font-weight: bold;
-  font-size: 1.0rem;
+  font-size: 1rem;
   margin-bottom: 10px;
   user-select: none;
   transition: 0.2s;
@@ -262,7 +274,7 @@ const EditButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0; 
+  font-size: 0;
   cursor: pointer;
 
   svg {
@@ -276,7 +288,7 @@ const EditButton = styled.button`
 `;
 
 const IconButton = styled(EditButton)`
-  left : -2px;
+  left: -2px;
 `;
 
 const AddButton = styled.button`
@@ -329,7 +341,7 @@ const ViewAllButton = styled.button`
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &:hover {
     background-color: #c41c1c;
@@ -380,11 +392,8 @@ function Todo({ originalMeetingDate }) {
   const [originDate, setOriginDate] = useState("");
   const originDateRef = useRef(null); // 최초 null, 내부에서 직접 할당
 
-  
-
   useEffect(() => {
     if (!events || events.length === 0) {
-      
       const fetchFallbackEvents = async () => {
         try {
           const annivs = await fetchAnniversaries();
@@ -402,8 +411,6 @@ function Todo({ originalMeetingDate }) {
     }
   }, []);
 
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -414,7 +421,7 @@ function Todo({ originalMeetingDate }) {
         console.error("❌ 이벤트 새로 불러오기 실패", err);
       }
     };
-  
+
     fetchData();
   }, [originalMeetingDate]);
 
@@ -425,12 +432,28 @@ function Todo({ originalMeetingDate }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const [editingTodoEvent, setEditingTodoEvent] = useState(null);
   const [editingTravelEvent, setEditingTravelEvent] = useState(null);
-  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({ title: '', start_date: '', end_date: '', color: '#ffc0cb', type:'ANNIVERSARY', editable:true });
-  const [newTravelEvent, setNewTravelEvent] = useState({ title: '', start_date: '', end_date: '', color: '#87cefa', type:'TRAVEL', images: [], editable:true });
+  const [newAnniversaryEvent, setNewAnniversaryEvent] = useState({
+    title: "",
+    start_date: "",
+    end_date: "",
+    color: "#ffc0cb",
+    type: "ANNIVERSARY",
+    editable: true,
+  });
+  const [newTravelEvent, setNewTravelEvent] = useState({
+    title: "",
+    start_date: "",
+    end_date: "",
+    color: "#87cefa",
+    type: "TRAVEL",
+    images: [],
+    editable: true,
+  });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
   const [viewTravelEvent, setViewTravelEvent] = useState(null);
   const [anniversaryPaletteOpen, setAnniversaryPaletteOpen] = useState(false);
-  const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [travelPaletteOpen, setTravelPaletteOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTravelModalOpen, setIsTravelModalOpen] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -449,7 +472,7 @@ function Todo({ originalMeetingDate }) {
         }
       }
     };
-  
+
     loadAllEvents();
   }, [showAllEvents]);
 
@@ -461,35 +484,49 @@ function Todo({ originalMeetingDate }) {
       } else {
         updated = await handleUpdateTravelMedia(updatedEvent.id, updatedEvent);
       }
-      setEvents(events.map(event => event.id === updated.id ? updated : event));
+      setEvents(
+        events.map((event) => (event.id === updated.id ? updated : event))
+      );
       setEditingTodoEvent(null);
       setEditingTravelEvent(null);
     } catch (e) {
-      console.error('수정 실패:', e);
+      console.error("수정 실패:", e);
     }
   };
 
   const handleDelete = async (eventToDelete) => {
-    console.log("삭제할 이벤트", eventToDelete)
+    console.log("삭제할 이벤트", eventToDelete);
     console.log("삭제할 이벤트의 id 값" + eventToDelete.id);
-    const confirmDelete = window.confirm(`${eventToDelete.title} ${eventToDelete.type.toUpperCase() === 'ANNIVERSARY' ? '기념일' : '여행'} 일정을 정말 삭제하시겠어요?`);
+    const confirmDelete = window.confirm(
+      `${eventToDelete.title} ${
+        eventToDelete.type.toUpperCase() === "ANNIVERSARY" ? "기념일" : "여행"
+      } 일정을 정말 삭제하시겠어요?`
+    );
     if (!confirmDelete) return;
     console.log("삭제할 ID 타입:", typeof eventToDelete.id, eventToDelete.id);
 
     try {
-      if (eventToDelete.type.toUpperCase() === 'ANNIVERSARY') {
-        
+      if (eventToDelete.type.toUpperCase() === "ANNIVERSARY") {
         await deleteAnniversary(eventToDelete.id);
       } else {
         await deleteTravelMedia(eventToDelete.id);
       }
-      setEvents(prev => prev.filter(ev => ev.id !== eventToDelete.id));
+      setEvents((prev) => prev.filter((ev) => ev.id !== eventToDelete.id));
     } catch (e) {
-      console.error('삭제 실패:', e);
+      console.error("삭제 실패:", e);
     }
   };
 
-  const colorSamples = ['#ffc0cb', '#ffb6c1', '#ffd700', '#90ee90', '#87cefa', '#dda0dd', '#ff7f50', '#b0c4de'];
+  const colorSamples = [
+    "#ffc0cb",
+    "#ffb6c1",
+    "#ffd700",
+    "#90ee90",
+    "#87cefa",
+    "#dda0dd",
+    "#ff7f50",
+    "#b0c4de",
+  ];
 
   const generateCalendar = () => {
     const firstDay = new Date(currentYear, currentMonth, 1);
@@ -498,14 +535,17 @@ function Todo({ originalMeetingDate }) {
     const startDay = firstDay.getDay();
 
     const calendarCells = [
-      ...Array.from({ length: startDay }), 
-      ...Array.from({ length: daysInMonth }, (_, i) => new Date(currentYear, currentMonth, i + 1)),
+      ...Array.from({ length: startDay }),
+      ...Array.from(
+        { length: daysInMonth },
+        (_, i) => new Date(currentYear, currentMonth, i + 1)
+      ),
     ];
-  
+
     while (calendarCells.length % 7 !== 0) {
       calendarCells.push(null);
     }
-  
+
     return calendarCells.reduce((weeks, day, i) => {
       if (i % 7 === 0) weeks.push([]);
       weeks[weeks.length - 1].push(day);
@@ -517,26 +557,24 @@ function Todo({ originalMeetingDate }) {
 
   const formatDate = (date) => {
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
     return `${yyyy}-${mm}-${dd}`;
   };
 
   const getEventsForDay = (date) => {
-      if (!date) return [];
+    if (!date) return [];
 
     const cellDateStr = formatDate(date); // 🧠 요거!
 
     const matching = events.filter((localEvent) => {
-      if (!showAllEvents && localEvent.type.toUpperCase() !== activeSection) return false;
+      if (!showAllEvents && localEvent.type.toUpperCase() !== activeSection)
+        return false;
 
       const eventStart = localEvent.start_date;
       const eventEnd = localEvent.end_date;
 
-      const isMatch = (
-        eventStart <= cellDateStr &&
-        cellDateStr <= eventEnd
-      );
+      const isMatch = eventStart <= cellDateStr && cellDateStr <= eventEnd;
 
       return isMatch;
     });
@@ -550,24 +588,58 @@ function Todo({ originalMeetingDate }) {
     return Math.floor((event_date - today) / (1000 * 60 * 60 * 24));
   };
 
-  const [activeSection, setActiveSection] = useState('ANNIVERSARY');
+  const [activeSection, setActiveSection] = useState("ANNIVERSARY");
 
   return (
     <>
-      <Wrapper onClick={() => {
-          if (isModalOpen) {setIsModalOpen(false);} if (isTravelModalOpen) {setIsTravelModalOpen(false);} if (viewTravelEvent) {setViewTravelEvent(false);}
-          if (editingTodoEvent) {setEditingTodoEvent(false);} if (viewTodoEvent) {setViewTodoEvent(false);} if (editingTravelEvent) {setEditingTravelEvent(false);}}}>
-        <Main $blur={ isModalOpen || isTravelModalOpen || editingTodoEvent || editingTravelEvent || viewTodoEvent || viewTravelEvent } >
+      <Wrapper
+        onClick={() => {
+          if (isModalOpen) {
+            setIsModalOpen(false);
+          }
+          if (isTravelModalOpen) {
+            setIsTravelModalOpen(false);
+          }
+          if (viewTravelEvent) {
+            setViewTravelEvent(false);
+          }
+          if (editingTodoEvent) {
+            setEditingTodoEvent(false);
+          }
+          if (viewTodoEvent) {
+            setViewTodoEvent(false);
+          }
+          if (editingTravelEvent) {
+            setEditingTravelEvent(false);
+          }
+        }}
+      >
+        <Main
+          $blur={
+            isModalOpen ||
+            isTravelModalOpen ||
+            editingTodoEvent ||
+            editingTravelEvent ||
+            viewTodoEvent ||
+            viewTravelEvent
+          }
+        >
           <LeftPanel>
             <CalendarSection>
               <CalendarHeader onClick={() => setIsPickerOpen(!isPickerOpen)}>
-                {currentYear}년 {currentMonth + 1}월 {isPickerOpen? '▲' : '▼'}
+                {currentYear}년 {currentMonth + 1}월 {isPickerOpen ? "▲" : "▼"}
               </CalendarHeader>
               {isPickerOpen && (
                 <YearPickerWrap>
                   <YearButtons>
-                    <YearArrow src={LeftKey} onClick={() => setYearRangeStart(yearRangeStart - 5)}/>
-                    {Array.from({ length: 5 }, (_, i) => yearRangeStart + i).map(year => (
+                    <YearArrow
+                      src={LeftKey}
+                      onClick={() => setYearRangeStart(yearRangeStart - 5)}
+                    />
+                    {Array.from(
+                      { length: 5 },
+                      (_, i) => yearRangeStart + i
+                    ).map((year) => (
                       <YearButton
                         key={year}
                         $active={year === selectedYear}
@@ -576,7 +648,10 @@ function Todo({ originalMeetingDate }) {
                         {year}
                       </YearButton>
                     ))}
-                    <YearArrow src={RightKey} onClick={() => setYearRangeStart(yearRangeStart + 5)}/>
+                    <YearArrow
+                      src={RightKey}
+                      onClick={() => setYearRangeStart(yearRangeStart + 5)}
+                    />
                   </YearButtons>
                   <MonthGrid>
                     {Array.from({ length: 12 }, (_, i) => (
@@ -597,7 +672,7 @@ function Todo({ originalMeetingDate }) {
               <StyledTable>
                 <thead>
                   <tr>
-                    {['일', '월', '화', '수', '목', '금', '토'].map(day => (
+                    {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
                       <StyledTh key={day}>{day}</StyledTh>
                     ))}
                   </tr>
@@ -606,9 +681,12 @@ function Todo({ originalMeetingDate }) {
                   {generateCalendar().map((week, wIdx) => (
                     <tr key={wIdx}>
                       {week.map((date, dIdx) => {
-                        if (!date) {return <StyledTd key={dIdx} />};
-                        const dateStr = date.toISOString().split('T')[0];
-                        const isToday = dateStr === today.toISOString().split('T')[0];
+                        if (!date) {
+                          return <StyledTd key={dIdx} />;
+                        }
+                        const dateStr = date.toISOString().split("T")[0];
+                        const isToday =
+                          dateStr === today.toISOString().split("T")[0];
                         return (
                           <StyledTd key={dIdx} $isToday={isToday}>
                             <DayCell>{date.getDate()}</DayCell>
@@ -616,13 +694,34 @@ function Todo({ originalMeetingDate }) {
                               <EventBox
                                 key={i}
                                 color={localEvent.color}
-                                className={`${localEvent.type.toUpperCase()}${localEvent.id}`}
-                                onMouseEnter={() => setHoveringEventId(localEvent.id)}
+                                className={`${localEvent.type.toUpperCase()}${
+                                  localEvent.id
+                                }`}
+                                onMouseEnter={() =>
+                                  setHoveringEventId(localEvent.id)
+                                }
                                 onMouseLeave={() => setHoveringEventId(null)}
                                 $isHovered={hoveringEventId === localEvent.id}
-                                onClick={() => localEvent.type.toUpperCase() === 'ANNIVERSARY' ? (localEvent.editable ? setViewTodoEvent(localEvent) : null) : setViewTravelEvent(localEvent) }
+                                onClick={() =>
+                                  localEvent.type.toUpperCase() ===
+                                  "ANNIVERSARY"
+                                    ? localEvent.editable
+                                      ? setViewTodoEvent(localEvent)
+                                      : null
+                                    : setViewTravelEvent(localEvent)
+                                }
                               >
-                                <div title={localEvent.type.toUpperCase() === 'TRAVEL' ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}` : (!localEvent.editable?`첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`:`${localEvent.title} ${localEvent.start_date}`)}>{localEvent.title}</div>
+                                <div
+                                  title={
+                                    localEvent.type.toUpperCase() === "TRAVEL"
+                                      ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}`
+                                      : !localEvent.editable
+                                      ? `첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`
+                                      : `${localEvent.title} ${localEvent.start_date}`
+                                  }
+                                >
+                                  {localEvent.title}
+                                </div>
                               </EventBox>
                             ))}
                           </StyledTd>
@@ -636,46 +735,77 @@ function Todo({ originalMeetingDate }) {
           </LeftPanel>
 
           <AnniversarySection>
-            
-
             <SectionH3>
-              {showAllEvents ? '전체 일정' : (activeSection === 'ANNIVERSARY' ? '기념일' : '데이트')} {showAllEvents? <></> :<img src={Rotate} 
-                onClick={() => {
-                  if (!showAllEvents) {
-                    setActiveSection(activeSection === 'ANNIVERSARY' ? 'TRAVEL' : 'ANNIVERSARY');
-                  }
-                }}/>}
+              {showAllEvents
+                ? "전체 일정"
+                : activeSection === "ANNIVERSARY"
+                ? "기념일"
+                : "데이트"}{" "}
+              {showAllEvents ? (
+                <></>
+              ) : (
+                <img
+                  src={Rotate}
+                  onClick={() => {
+                    if (!showAllEvents) {
+                      setActiveSection(
+                        activeSection === "ANNIVERSARY"
+                          ? "TRAVEL"
+                          : "ANNIVERSARY"
+                      );
+                    }
+                  }}
+                />
+              )}
             </SectionH3>
 
             <List>
-              {(showAllEvents ? events : events.filter(e => e.type.toUpperCase() === activeSection)).map((localEvent, idx) => {
-
+              {(showAllEvents
+                ? events
+                : events.filter((e) => e.type.toUpperCase() === activeSection)
+              ).map((localEvent, idx) => {
                 const diffDays = getDiffInDays(
-                  localEvent.type.toUpperCase() === 'ANNIVERSARY' ? localEvent.start_date : localEvent.start_date
+                  localEvent.type.toUpperCase() === "ANNIVERSARY"
+                    ? localEvent.start_date
+                    : localEvent.start_date
                 );
 
                 return (
                   <ListItem
-                    title={`${ localEvent.type.toUpperCase() === 'ANNIVERSARY'?
-                    (!localEvent.editable ? '첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.' : localEvent.title + ' ' + localEvent.start_date) 
-                    : localEvent.title + ' ' + localEvent.start_date+' ~ '+localEvent.end_date }`}
+                    title={`${
+                      localEvent.type.toUpperCase() === "ANNIVERSARY"
+                        ? !localEvent.editable
+                          ? "첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다."
+                          : localEvent.title + " " + localEvent.start_date
+                        : localEvent.title +
+                          " " +
+                          localEvent.start_date +
+                          " ~ " +
+                          localEvent.end_date
+                    }`}
                     key={idx}
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    <div className='eventTitle'>{localEvent.title}</div>
-                    <div className='day'>
-                      <div className='diff'>
+                    <div className="eventTitle">{localEvent.title}</div>
+                    <div className="day">
+                      <div className="diff">
                         {diffDays >= 0
                           ? diffDays === 0
-                            ? 'Today'
+                            ? "Today"
                             : `D -${diffDays}`
                           : `D +${Math.abs(diffDays)}`}
                       </div>
                       <ListDate>
-                        {localEvent.type.toUpperCase() === 'ANNIVERSARY'
-                          ? localEvent.start_date
-                          : <> {localEvent.start_date} <br />~ {localEvent.end_date} </> }
+                        {localEvent.type.toUpperCase() === "ANNIVERSARY" ? (
+                          localEvent.start_date
+                        ) : (
+                          <>
+                            {" "}
+                            {localEvent.start_date} <br />~{" "}
+                            {localEvent.end_date}{" "}
+                          </>
+                        )}
                       </ListDate>
                     </div>
 
@@ -686,7 +816,7 @@ function Todo({ originalMeetingDate }) {
                         </IconButton>
                         <EditButton
                           onClick={() =>
-                            localEvent.type.toUpperCase() === 'ANNIVERSARY'
+                            localEvent.type.toUpperCase() === "ANNIVERSARY"
                               ? setEditingTodoEvent({ ...localEvent })
                               : setEditingTravelEvent({ ...localEvent })
                           }
@@ -698,21 +828,24 @@ function Todo({ originalMeetingDate }) {
                   </ListItem>
                 );
               })}
-                
             </List>
             {!showAllEvents && (
-              <AddButton onClick={() => {
-                activeSection === 'ANNIVERSARY'
-                  ? setIsModalOpen(true)
-                  : setIsTravelModalOpen(true)
-              }}>
+              <AddButton
+                onClick={() => {
+                  activeSection === "ANNIVERSARY"
+                    ? setIsModalOpen(true)
+                    : setIsTravelModalOpen(true);
+                }}
+              >
                 <AddButtonImage src={Plus} />
               </AddButton>
             )}
-            <ViewAllButton onClick={() => setShowAllEvents(prev => !prev)}>
+            <ViewAllButton onClick={() => setShowAllEvents((prev) => !prev)}>
               {showAllEvents
-                ? `${activeSection === 'ANNIVERSARY' ? '기념일' : '데이트'} 보기`
-                : '전체보기'}
+                ? `${
+                    activeSection === "ANNIVERSARY" ? "기념일" : "데이트"
+                  } 보기`
+                : "전체보기"}
             </ViewAllButton>
           </AnniversarySection>
         </Main>
@@ -746,15 +879,21 @@ function Todo({ originalMeetingDate }) {
               const eventToAdd = {
                 title: newAnniversaryEvent.title,
                 startDate: newAnniversaryEvent.start_date,
-                endDate:newAnniversaryEvent.end_date,
+                endDate: newAnniversaryEvent.end_date,
                 color: newAnniversaryEvent.color,
                 type: newAnniversaryEvent.type,
               };
-            
+
               try {
                 const created = await createAnniversary(eventToAdd);
-                setEvents(prev=>[...prev, created]);
-                setNewAnniversaryEvent({ title: '', start_date: '', end_date:'', color: '#ffc0cb', type: 'ANNIVERSARY' });
+                setEvents((prev) => [...prev, created]);
+                setNewAnniversaryEvent({
+                  title: "",
+                  start_date: "",
+                  end_date: "",
+                  color: "#ffc0cb",
+                  type: "ANNIVERSARY",
+                });
                 setIsModalOpen(false);
                 setAnniversaryPaletteOpen(false);
               } catch (err) {
@@ -772,12 +911,12 @@ function Todo({ originalMeetingDate }) {
             onClose={() => setEditingTodoEvent(null)}
             onSubmit={(e) => {
               e.preventDefault();
-        
+
               const updatedEvent = {
                 ...editingTodoEvent,
-                type: editingTodoEvent.type.toUpperCase() || 'ANNIVERSARY',
+                type: editingTodoEvent.type.toUpperCase() || "ANNIVERSARY",
               };
-        
+
               handleUpdate(updatedEvent);
             }}
             paletteOpen={anniversaryPaletteOpen}
@@ -802,72 +941,81 @@ function Todo({ originalMeetingDate }) {
             localEvent={editingTravelEvent}
             setEvent={setEditingTravelEvent}
             onClose={() => setEditingTravelEvent(null)}
-            onSubmit={
-              async (e) => {
-                e.preventDefault();
-              
-                const start = new Date(editingTravelEvent.start_date);
-                const end = new Date(editingTravelEvent.end_date);
-              
-                if (start > end) {
-                  alert('종료일은 시작일보다 빠를 수 없습니다!');
-                  return;
+            onSubmit={async (e) => {
+              e.preventDefault();
+
+              const start = new Date(editingTravelEvent.start_date);
+              const end = new Date(editingTravelEvent.end_date);
+
+              if (start > end) {
+                alert("종료일은 시작일보다 빠를 수 없습니다!");
+                return;
+              }
+
+              try {
+                const existingMedia = (
+                  editingTravelEvent.mediaUrl || []
+                ).filter((item) => !(item instanceof File));
+                const newFiles = (editingTravelEvent.mediaUrl || []).filter(
+                  (item) => item instanceof File
+                );
+
+                let uploadedMedia = [];
+                if (newFiles.length > 0) {
+                  uploadedMedia = await uploadTravelMedia(
+                    editingTravelEvent.title,
+                    newFiles
+                  );
                 }
-              
-                try {
-                  const existingMedia = (editingTravelEvent.mediaUrl || []).filter(
-                    (item) => !(item instanceof File)
-                  );
-                  const newFiles = (editingTravelEvent.mediaUrl || []).filter(
-                    (item) => item instanceof File
-                  );
-            
-                  let uploadedMedia = [];
-                  if (newFiles.length > 0) {
-                    uploadedMedia = await uploadTravelMedia(editingTravelEvent.title, newFiles);
-                  }
-            
-                  const payloadToUpdate = {
-                    ...editingTravelEvent,
-                    mediaUrl: [...existingMedia, ...uploadedMedia],
-                  };
-            
-                  const updated = await handleUpdateTravelMedia(editingTravelEvent.id, payloadToUpdate);
-            
-                  setEvents((prev) =>
-                    prev.map((event) => (event.id === updated.id ? updated : event))
-                  );
-            
-                  setEditingTravelEvent(null);
-                } catch (err) {
-                  console.error('🚨 여행 일정 수정 실패:', err);
-                  alert('수정 중 오류 발생!');
-                }
-              }}
-              paletteOpen={travelPaletteOpen}
-              setPaletteOpen={setTravelPaletteOpen}
-              colorSamples={colorSamples}
-            />
-        )}  
+
+                const payloadToUpdate = {
+                  ...editingTravelEvent,
+                  mediaUrl: [...existingMedia, ...uploadedMedia],
+                };
+
+                const updated = await handleUpdateTravelMedia(
+                  editingTravelEvent.id,
+                  payloadToUpdate
+                );
+
+                setEvents((prev) =>
+                  prev.map((event) =>
+                    event.id === updated.id ? updated : event
+                  )
+                );
+
+                setEditingTravelEvent(null);
+              } catch (err) {
+                console.error("🚨 여행 일정 수정 실패:", err);
+                alert("수정 중 오류 발생!");
+              }
+            }}
+            paletteOpen={travelPaletteOpen}
+            setPaletteOpen={setTravelPaletteOpen}
+            colorSamples={colorSamples}
+          />
+        )}
 
         {isTravelModalOpen && (
           <Addtravel
             name="여행 일정 추가"
-            onClose={() => { setIsTravelModalOpen(false); setTravelPaletteOpen(false); }}
+            onClose={() => {
+              setIsTravelModalOpen(false);
+              setTravelPaletteOpen(false);
+            }}
             newEvent={newTravelEvent}
             setNewEvent={setNewTravelEvent}
             paletteOpen={travelPaletteOpen}
             setPaletteOpen={setTravelPaletteOpen}
             colorSamples={colorSamples}
-            
             onSubmit={async (e) => {
               e.preventDefault();
-            
+
               const start = new Date(newTravelEvent.start_date);
               const end = new Date(newTravelEvent.end_date);
 
               if (start > end) {
-                alert('종료일은 시작일보다 빠를 수 없습니다!');
+                alert("종료일은 시작일보다 빠를 수 없습니다!");
                 return;
               }
 
@@ -876,20 +1024,20 @@ function Todo({ originalMeetingDate }) {
                 setEvents([...events, created]);
 
                 setNewTravelEvent({
-                  title: '',
-                  start_date: '',
-                  end_date: '',
-                  color: '#ffc0cb',
+                  title: "",
+                  start_date: "",
+                  end_date: "",
+                  color: "#ffc0cb",
                   images: [],
                   editable: true,
-                  type: 'TRAVEL',
+                  type: "TRAVEL",
                 });
 
                 setIsTravelModalOpen(false);
                 setTravelPaletteOpen(false);
               } catch (err) {
-                console.error('🚨 여행 일정 추가 실패:', err);
-                alert('서버 오류로 여행 일정을 등록하지 못했습니다.');
+                console.error("🚨 여행 일정 추가 실패:", err);
+                alert("서버 오류로 여행 일정을 등록하지 못했습니다.");
               }
             }}
           />
