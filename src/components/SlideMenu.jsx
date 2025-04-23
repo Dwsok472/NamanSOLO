@@ -62,7 +62,7 @@ function SlideMenu() {
       <MenuContainer $isOpen={isOpen}>
         <MenuList>
           <MenuItem>
-            <Link to="/story/all">전체 스토리</Link>
+            <Link to="/album/all">전체 앨범</Link>
           </MenuItem>
           <MenuItem>
             <Link to="/map">맵</Link>

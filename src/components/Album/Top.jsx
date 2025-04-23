@@ -15,7 +15,7 @@ function Top({ filter, onFilterChange }) {
   const [isFocused, setIsFocused] = useState(false);
   const currentUser = useUserStore((state) => state.user?.username);
   const location = useLocation(); // 현재 경로 가져오기
-  const isUserStoryPage = location.pathname.startsWith('/user/story/');
+  const isUserStoryPage = location.pathname.startsWith('/user/album/');
   const { username } = useParams();
 
   async function handleSearch() {
@@ -220,7 +220,7 @@ function Top({ filter, onFilterChange }) {
                           <div
                             className="username"
                             onClick={() =>
-                              navigate(`/user/story/${user.username}`)
+                              navigate(`/user/album/${user.username}`)
                             }
                           >
                             {user.username}

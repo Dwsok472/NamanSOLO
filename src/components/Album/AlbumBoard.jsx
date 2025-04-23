@@ -39,7 +39,7 @@ const AlbumBoard = () => {
   const { username } = useParams();
   const location = useLocation();
   const itemsRef = useRef([]);
-  const isUserStoryPage = location.pathname.startsWith('/user/story/');
+  const isUserStoryPage = location.pathname.startsWith('/user/album/');
   const isLoggedIn = useUserStore((state) => state?.isLoggedIn);
 
   async function GetAllAlbum() {

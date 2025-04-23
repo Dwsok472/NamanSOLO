@@ -58,7 +58,7 @@ function Header({
         setSubOpen(false);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSubOpen]);
@@ -159,7 +159,8 @@ function Header({
                   {label}
                 </Link>
               </li>
-          )})}
+            )
+          })}
           {user?.authority === "ROLE_ADMIN" ? (
             <li>
               <Link to="/admin/users" onClick={closeSidebar}>
@@ -168,13 +169,13 @@ function Header({
             </li>
           ) : (
             <>
-              <li onClick={()=>{if (!isLoggedIn) {return navigate("/login")} return setSidebarSubOpen(!isSidebarSubOpen);}}>
+              <li onClick={() => { if (!isLoggedIn) { return navigate("/login") } return setSidebarSubOpen(!isSidebarSubOpen); }}>
                 <span>마이페이지 {isSidebarSubOpen ? "▲" : "▼"}</span>
               </li>
               {isSidebarSubOpen &&
                 subMenuItems.map(({ to, label }) => (
                   <li key={to}>
-                    <Link to={to} onClick={()=>{setSidebarSubOpen(false); closeSidebar();}}>
+                    <Link to={to} onClick={() => { setSidebarSubOpen(false); closeSidebar(); }}>
                       {label}
                     </Link>
                   </li>

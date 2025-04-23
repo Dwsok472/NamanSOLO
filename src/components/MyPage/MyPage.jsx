@@ -258,9 +258,9 @@ export default function MyPage() {
     "/mypage/todo": "캘린더",
     "/mypage/other": "즐겨찾기",
     "/mypage/comment": "나의 댓글",
-    "/mypage/story": "My Story",
+    "/mypage/album": "My Album",
   };
-  
+
   const [activeTab, setActiveTab] = useState(() => pathToTab[location.pathname] || "캘린더");
   const [showCoupleProfile, setShowCoupleProfile] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -357,111 +357,111 @@ export default function MyPage() {
     "캘린더": "/mypage/todo",
     "즐겨찾기": "/mypage/other",
     "나의 댓글": "/mypage/comment",
-    "My Story": "/mypage/story",
+    "My Album": "/mypage/album",
   };
 
   return (
     <Container>
       <ProfileCard>
-  {loading ? (
-    <LoadingText>불러오는 중...</LoadingText>
-  ) : (
-    <>
-      <MySetting onClick={() => setShowCoupleProfile(true)} />
-
-      <ProfileImageWrapper onClick={() => {
-        if (isEditMode) imgRef.current.click();
-      }}>
-        <ProfileImage src={tempImage || image} alt="profile" $editable={isEditMode} />
-        {isEditMode && (
-          <EditOverlay>
-            <IconEdit />
-          </EditOverlay>
-        )}
-      </ProfileImageWrapper>
-
-      <input
-        type="file"
-        accept="image/*"
-        ref={imgRef}
-        hidden
-        onChange={handleImageChange}
-      />
-
-      <Name>
-        <Username>{boyname}</Username>
-        <HeartIcon src={heart} alt="heart" />
-        <Username>{girlname}</Username>
-      </Name>
-
-      <Emotion>
-        {isEditMode ? (
-          <DateInputWrapper>
-            <DateInput
-              type="date"
-              value={meetingDate}
-              onChange={(e) => setMeetingDate(e.target.value)}
-              max={new Date().toISOString().split("T")[0]}
-            />
-            <CancelButton
-              onClick={() => {
-                setMeetingDate(originalMeetingDate);
-                setIsEditMode(false);
-                setTempImage(null);
-                setSelectedFile(null);
-              }}
-            >
-              취소
-            </CancelButton>
-          </DateInputWrapper>
+        {loading ? (
+          <LoadingText>불러오는 중...</LoadingText>
         ) : (
           <>
-            <DdayText>{daysSince}일</DdayText>
-            <DateText>{new Date(meetingDate).toLocaleDateString("ko-KR")}</DateText>
-          </>
-        )}
-      </Emotion>
+            <MySetting onClick={() => setShowCoupleProfile(true)} />
 
-      <EditButton
-        onClick={() => {
-          if (isEditMode) {
-            handleCompleteEdit();
-          }
-          setIsEditMode((prev) => !prev);
-        }}
-      >
-        {isEditMode ? "완료" : <IconEdit />}
-      </EditButton>
-    </>
-  )}
-</ProfileCard>
-      <TabsContainer>
-      <Tabs>
-        <TabGroup>
-          {["캘린더", "즐겨찾기", "나의 댓글"].map((tab) => (
-            <TabButton
-              key={tab}
-              active={activeTab === tab}
+            <ProfileImageWrapper onClick={() => {
+              if (isEditMode) imgRef.current.click();
+            }}>
+              <ProfileImage src={tempImage || image} alt="profile" $editable={isEditMode} />
+              {isEditMode && (
+                <EditOverlay>
+                  <IconEdit />
+                </EditOverlay>
+              )}
+            </ProfileImageWrapper>
+
+            <input
+              type="file"
+              accept="image/*"
+              ref={imgRef}
+              hidden
+              onChange={handleImageChange}
+            />
+
+            <Name>
+              <Username>{boyname}</Username>
+              <HeartIcon src={heart} alt="heart" />
+              <Username>{girlname}</Username>
+            </Name>
+
+            <Emotion>
+              {isEditMode ? (
+                <DateInputWrapper>
+                  <DateInput
+                    type="date"
+                    value={meetingDate}
+                    onChange={(e) => setMeetingDate(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                  />
+                  <CancelButton
+                    onClick={() => {
+                      setMeetingDate(originalMeetingDate);
+                      setIsEditMode(false);
+                      setTempImage(null);
+                      setSelectedFile(null);
+                    }}
+                  >
+                    취소
+                  </CancelButton>
+                </DateInputWrapper>
+              ) : (
+                <>
+                  <DdayText>{daysSince}일</DdayText>
+                  <DateText>{new Date(meetingDate).toLocaleDateString("ko-KR")}</DateText>
+                </>
+              )}
+            </Emotion>
+
+            <EditButton
               onClick={() => {
-                setActiveTab(tab);
-                navigate(routeMap[tab]);
+                if (isEditMode) {
+                  handleCompleteEdit();
+                }
+                setIsEditMode((prev) => !prev);
               }}
             >
-              {tab}
-            </TabButton>
-          ))}
-        </TabGroup>
+              {isEditMode ? "완료" : <IconEdit />}
+            </EditButton>
+          </>
+        )}
+      </ProfileCard>
+      <TabsContainer>
+        <Tabs>
+          <TabGroup>
+            {["캘린더", "즐겨찾기", "나의 댓글"].map((tab) => (
+              <TabButton
+                key={tab}
+                active={activeTab === tab}
+                onClick={() => {
+                  setActiveTab(tab);
+                  navigate(routeMap[tab]);
+                }}
+              >
+                {tab}
+              </TabButton>
+            ))}
+          </TabGroup>
 
-        <MyStoryButton
-          active={activeTab === "My Story"}
-          onClick={() => {
-            setActiveTab("My Story");
-            navigate(routeMap["My Story"]);
-          }}
-        >
-          My Album
-        </MyStoryButton>
-      </Tabs>
+          <MyStoryButton
+            active={activeTab === "My Album"}
+            onClick={() => {
+              setActiveTab("My Album");
+              navigate(routeMap["My Album"]);
+            }}
+          >
+            My Album
+          </MyStoryButton>
+        </Tabs>
 
         <ContentArea>
           <Routes>
@@ -471,7 +471,7 @@ export default function MyPage() {
             />
             <Route path="/other" element={<Other />} />
             <Route path="/comment" element={<CommentPage />} />
-            <Route path="/myalbum" element={<MyAlbum />} />
+            <Route path="/album" element={<MyAlbum />} />
           </Routes>
         </ContentArea>
       </TabsContainer>

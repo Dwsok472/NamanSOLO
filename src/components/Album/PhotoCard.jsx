@@ -178,9 +178,3 @@ margin-top: 10px;
   color: #555;
 `;
 
-const StarButtonWrapper = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 10;
-`;

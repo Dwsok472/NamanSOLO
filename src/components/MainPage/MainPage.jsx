@@ -135,7 +135,7 @@ function MainPage() {
         logoText="WeARE"
         onSubMenuToggle={(v) => setBlurred(v)}
         menuItems={[
-          { to: "/story/all", label: "전체 스토리" },
+          { to: "/album/all", label: "전체 앨범" },
           { to: "/map", label: "맵" },
           { to: "/events", label: "이벤트" },
         ]}
@@ -143,14 +143,14 @@ function MainPage() {
           { to: "/mypage/other", label: "즐겨찾기" },
           { to: "/mypage/comment", label: "나의 댓글" },
           { to: "/mypage/todo", label: "캘린더" },
-          { to: "/mypage/story", label: "스토리" },
+          { to: "/mypage/album", label: "앨범" },
         ]}
         loginText="로그인"
         signupText="회원가입"
       />
 
       <PageContainer>
-      {showIntro && (
+        {showIntro && (
           <Intro
             showIntro={showIntro}
             animateToLogo={animateToLogo}
@@ -159,7 +159,7 @@ function MainPage() {
             slideOut={slideOut}
           />
         )}
-    {showMain && <MainPopup />}
+        {showMain && <MainPopup />}
 
         <MainContent
           id="main-content"

@@ -121,7 +121,7 @@ const BookSection = ({ flipped, togglePage, bookRef }) => {
             기록해보세요.
           </p>
           <div className="cta-link" onClick={() => navigate('/story/all')}>
-            전체 스토리 둘러보기 →
+            전체 앨범 둘러보기 →
           </div>
         </BookIntroBox>
 

@@ -24,7 +24,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const currentUser = useUserStore((state) => state.user?.username);
   const location = useLocation();
   console.log(albumData);
-  const isMyPage = location.pathname.startsWith('/mypage/story');
+  const isMyPage = location.pathname.startsWith('/mypage/album');
   useEffect(() => {
     // 댓글 개수 업데이트
     const fetchCommentCount = albumData.comments.length; // albumData에 댓글 수가 들어있다고 가정

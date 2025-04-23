@@ -76,7 +76,7 @@ function AppRoutes() {
       <Header
         logoText="WeARE"
         menuItems={[
-          { to: "/story/all", label: "전체 스토리" },
+          { to: "/album/all", label: "전체 앨범" },
           { to: "/map", label: "맵" },
           { to: "/events", label: "이벤트" },
         ]}
@@ -84,7 +84,7 @@ function AppRoutes() {
           { to: "/mypage/other", label: "즐겨찾기" },
           { to: "/mypage/comment", label: "나의 댓글" },
           { to: "/mypage/todo", label: "캘린더" },
-          { to: "/mypage/story", label: "My Story" },
+          { to: "/mypage/story", label: "전체 앨범" },
         ]}
         loginText="로그인"
         signupText="회원가입"
@@ -95,13 +95,13 @@ function AppRoutes() {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterMain />} />
-          <Route path="/story/all" element={<AlbumBoard key="all" />} />
-          <Route path="/user/story/:username" element={<AlbumBoardWithKey />} />
+          <Route path="/album/all" element={<AlbumBoard key="all" />} />
+          <Route path="/user/album/:username" element={<AlbumBoardWithKey />} />
           <Route path="/map" element={<MainMap />} />
           <Route path="/events" element={<Event />} />
           <Route path="/admin/users" element={<AdminUserPage />} />
           <Route path="/admin/feeds" element={<AdminFeedPage />} />
-          <Route path="/mypage/story" element={<MyAlbum />} />
+          <Route path="/mypage/album" element={<MyAlbum />} />
           <Route path="/mypage/*" element={<MyPage />} />
           <Route path="/find-id" element={<FindIdOrPwd isFindId={true} />} />
           <Route path="/find-pwd" element={<FindIdOrPwd isFindId={false} />} />
