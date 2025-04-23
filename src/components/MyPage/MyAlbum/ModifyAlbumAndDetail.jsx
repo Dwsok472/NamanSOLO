@@ -45,26 +45,43 @@ function ModifyAlbumAndDetail({
       alert('제목은 필수 등록사항입니다.');
       return;
     }
-    const formData = new FormData();
-    formData.append("title", title);
-    images.forEach((img) => formData.append("files", img.file)); // 파일들 업로드
-
     try {
-      // ✅ 1. 이미지 먼저 업로드
-      const uploadRes = await axios.post("/api/album/upload/multiple", formData, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const formData = new FormData();
+      const newFiles = images.filter((img) => img.file); // 새로 추가된 이미지만
 
-      const uploadedMedia = uploadRes.data; // MediaDTO 배열
+      newFiles.forEach((img) => formData.append("files", img.file));
 
-      //앨범 추가
-      const newAlbum = {
+      let uploadedMedia = [];
+      if (newFiles.length > 0) {
+        const uploadRes = await axios.post("/api/album/upload/multiple", formData, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        uploadedMedia = uploadRes.data.map((media) => ({
+          id: media.id,
+          mediaUrl: media.mediaUrl,
+          mediaType: media.mediaType,
+        }));
+      }
+      // 기존 이미지 + 새 업로드 이미지 병합
+      const finalMediaList = [
+        ...images.filter((img) => !img.file).map((img) => ({
+          id: img.id,
+          mediaUrl: img.mediaUrl,
+          mediaType: img.mediaType,
+        })),
+        ...uploadedMedia,
+      ];
+
+
+      // 공통 앨범 데이터
+      const albumData = {
         title,
         visibility: isPublic ? "PUBLIC" : "PRIVATE",
-        mediaUrl: uploadedMedia, // 여기에 서버로부터 받은 mediaUrl/mediaType을 그대로 사용
+        mediaUrl: finalMediaList,
         latitude: selectedPlace?.lat || 0,
         longitude: selectedPlace?.lng || 0,
         location: selectedPlace?.address || "",
@@ -73,24 +90,15 @@ function ModifyAlbumAndDetail({
           name: tag.text,
         })),
       };
-      let updateAlbum = null;
-      if (editMode && editData) {
-        updateAlbum = {
-          id: editData.id,
-          title,
-          visibility: isPublic ? "PUBLIC" : "PRIVATE",
-          mediaUrl: uploadedMedia,
-          latitude: selectedPlace?.lat || 0,
-          longitude: selectedPlace?.lng || 0,
-          location: selectedPlace?.address || "",
-          tagList: tags.map((tag, index) => ({
-            id: index,
-            name: tag.text,
-          })),
-        };
-      }
+
+      let res;
 
       if (editMode && onEditAlbum && editData) {
+        const updateAlbum = {
+          ...albumData,
+          id: editData.id,
+        };
+
         const res = await axios.put(`/api/album/update`, updateAlbum, {
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -106,7 +114,7 @@ function ModifyAlbumAndDetail({
           alert("앨범 수정 실패");
         }
       } else {
-        const albumRes = await axios.post("/api/album/save", newAlbum, {
+        const albumRes = await axios.post("/api/album/save", albumData, {
           headers: {
             Authorization: `Bearer ${jwt}`,
             "Content-Type": "application/json",
@@ -115,7 +123,7 @@ function ModifyAlbumAndDetail({
 
         if (albumRes.status === 200 || albumRes.status === 201) {
           alert("앨범이 등록되었습니다.");
-          onAddAlbum(newAlbum);
+          onAddAlbum(albumData);
           window.location.reload();
           onClose();
         } else {
@@ -140,7 +148,6 @@ function ModifyAlbumAndDetail({
           mediaUrl: img.mediaUrl, // 이미지 URL
           mediaType: img.mediaType, // 이미지 타입 (필요한 경우)
         })),
-        console.log(images)
       );
       setSelectedPlace({ address: editData.location });
       setIsPublic(editData.isPublic);
@@ -154,6 +161,7 @@ function ModifyAlbumAndDetail({
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files).map((file) => ({
       file,
+      mediaType: file.type.startsWith('image/') ? 'PICTURE' : 'VIDEO', // 미디어 타입 구분
       id: Date.now() + Math.random(), // 고유한 ID 추가
     }));
     setImages((prevImages) => [...prevImages, ...files]);
@@ -232,15 +240,27 @@ function ModifyAlbumAndDetail({
                   >
                     <IconClose />
                   </div>
-                  <img
-                    src={
+
+                  {images[imageIndex].mediaType === "PICTURE" ? (
+                    <img src={
                       images[imageIndex].file
                         ? URL.createObjectURL(images[imageIndex].file)
                         : images[imageIndex].mediaUrl
                     }                  // 서버에서 불러온 이미지}
-                    alt={`image-${imageIndex}`}
-                    className="current-image"
-                  />
+                      alt={`image-${imageIndex}`}
+                      className="current-image"
+                    />
+                  ) : (
+                    <video
+                      muted
+                      autoPlay
+                      controls
+                      loop
+                      className="current-image"
+                      src={images[imageIndex].file ? URL.createObjectURL(images[imageIndex].file)
+                        : images[imageIndex].mediaUrl}
+                    />
+                  )}
                 </>
               )}
               <img

@@ -197,6 +197,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
                       muted
                       autoPlay
                       controls
+                      loop
                       className="current-image"
                       src={URL.createObjectURL(images[imageIndex].file)}
                     />

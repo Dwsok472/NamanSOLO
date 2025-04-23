@@ -15,7 +15,8 @@ const PhotoCard = ({
   onClick,
   draggable,
   onDragStart,
-  columns,
+  $columns,
+  username
 }) => {
   const [imageIndex, setImageIndex] = useState(0);
   console.log(src);
@@ -54,8 +55,9 @@ const PhotoCard = ({
         e.stopPropagation(); // 드래그 시 클릭 이벤트 방지
         if (onDragStart) onDragStart(e);
       }}
-      columns={columns}
+      columns={$columns}
     >
+      {username && <div className='username'>{username}</div>}
       <Pin>
         <img src={$pinColor} className="pin" />
       </Pin>
@@ -73,16 +75,17 @@ const PhotoCard = ({
           muted
           autoPlay
           controls
+          loop
           className="current-video"
           src={currentImg?.url}
-          columns={columns}
+          columns={$columns}
           key={imageIndex}
         />
       ) : (
         <Image
           src={currentImg?.url}
           alt="album"
-          columns={columns}
+          columns={$columns}
           key={imageIndex}
         />
       )}
@@ -95,8 +98,8 @@ const PhotoCard = ({
           onClick={nextImage}
         />
       )}
-
       {title && <Caption>{title}</Caption>}
+
     </CardWrapper>
   );
 };
@@ -105,7 +108,7 @@ export default PhotoCard;
 
 const CardWrapper = styled.div`
   width: ${({ columns }) => (columns === 3 ? '500px' : '300px')};
-  height: ${({ columns }) => (columns === 3 ? '500px' : '350px')};
+  height: ${({ columns }) => (columns === 3 ? '500px' : '360px')};
   padding: 10px;
   background: white;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
@@ -140,7 +143,12 @@ const CardWrapper = styled.div`
     height: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
     object-fit: cover;
     pointer-events: none;
-  }
+  }   
+   .username{
+      font-size :0.7rem;
+      color: #555;
+      text-align:start;
+    }
 `;
 
 const Pin = styled.div`
@@ -164,7 +172,7 @@ const Image = styled.img`
 `;
 
 const Caption = styled.div`
-  margin-top: 12px;
+margin-top: 10px;
   font-size: 20px;
   font-weight: bold;
   color: #555;

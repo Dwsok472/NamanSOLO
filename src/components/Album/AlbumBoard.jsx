@@ -180,9 +180,10 @@ const AlbumBoard = () => {
               $offsetY={offsetY} // 수직 오프셋
               title={album.title} // 제목
               onClick={() => handleSelectedAlbum(album)} // 앨범 클릭 시 이벤트
+              username={album.username}
             />
           );
-          console.log(album.url); // 배열인가요?
+          console.log(album); // 배열인가요?
           console.log(album.url.map((media) => media.mediaUrl)); // 여기 값이 정상?
         });
       }

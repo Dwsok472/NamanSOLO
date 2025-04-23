@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import img1 from '../img/1.jpg';
-import img2 from '../img/2.png';
+import img2 from '../img/2.jpg';
 import img3 from '../img/3.jpg';
 
 const PopupWrapper = styled.div`
   position: fixed;
   bottom: 300px;
-  left: 90%;
+  left: 85%;
   transform: translateX(-50%);
   z-index: 9999;
 `;

@@ -148,6 +148,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
                   muted
                   autoPlay
                   controls
+                  loop
                   className="video"
                   src={currentMedia.mediaUrl}
                 />
