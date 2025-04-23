@@ -5,7 +5,7 @@ import followImg from '../img/2.png';
 import storyImg from '../img/3.jpg';
 
 const Section = styled.section`
-  background: #fff9f9;
+  background: linear-gradient(to bottom, #f2ebdc, #fff9f9, #f2ebdc);
   padding: 120px 20px;
 `;
 
@@ -17,7 +17,6 @@ const Container = styled.div`
   padding: 0 80px;
   flex-wrap: wrap;
 `;
-
 
 const Title = styled.h2`
   text-align: center;
@@ -38,9 +37,9 @@ const Right = styled.div`
   flex: 1;
   min-width: 700px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
-
 
 const LoopWrapper = styled.div`
   position: relative;
@@ -49,7 +48,6 @@ const LoopWrapper = styled.div`
   margin: 0 auto;
   border-radius: 50%;
   border: 2px dashed #d81b60;
-
   transition: transform 0.9s ease;
 
   &:hover {
@@ -97,6 +95,7 @@ const Slider = styled.div`
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  position: relative;
 
   img {
     width: 100%;
@@ -107,16 +106,57 @@ const Slider = styled.div`
   }
 `;
 
-function SearchFeatureSection() {
-    const images = [searchImg, followImg, storyImg];
-    const [currentImage, setCurrentImage] = useState(0);
+const TextOverlay = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 
-    useEffect(() => {
+  h3 {
+    font-size: 1.3rem;
+    color: #8c0d17;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
+`;
+
+function SearchFeatureSection() {
+  const slides = [
+    {
+      img: searchImg,
+      title: '유저 검색',
+      desc: '처음 너를 찾아본 순간, 무심한 듯 설렘이 왔지.'
+    },
+    {
+      img: followImg,
+      title: '팔로우',
+      desc: '서로를 구독하며 기억을 공유하게 되었어.'
+    },
+    {
+      img: storyImg,
+      title: '스토리 보기',
+      desc: '너의 이야기를 들여다보며 내 마음도 기록했지.'
+    }
+  ];
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
     const interval = setInterval(() => {
-        setCurrentImage((prev) => (prev + 1) % images.length);
+      setCurrentImage((prev) => (prev + 1) % slides.length);
     }, 3000);
     return () => clearInterval(interval);
-    }, []);
+  }, [slides.length]);
 
   return (
     <Section>
@@ -142,9 +182,13 @@ function SearchFeatureSection() {
           </LoopWrapper>
         </Left>
         <Right>
-        <Slider>
-            <img src={images[currentImage]} alt={`slide-${currentImage}`} />
-        </Slider>
+          <Slider>
+            <img src={slides[currentImage].img} alt={`slide-${currentImage}`} />
+            <TextOverlay>
+              <h3>{slides[currentImage].title}</h3>
+              <p>{slides[currentImage].desc}</p>
+            </TextOverlay>
+          </Slider>
         </Right>
       </Container>
     </Section>
