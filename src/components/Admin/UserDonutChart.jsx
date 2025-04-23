@@ -91,7 +91,7 @@ const UserDonutChart = () => {
   return (
     <ChartContainer>
       <ChartTitle>총 목표 가입자 수</ChartTitle>
-      <GoalLabel> 현재재 목표: {goal.toLocaleString()}명</GoalLabel>
+      <GoalLabel> 현재 목표: {goal.toLocaleString()}명</GoalLabel>
       <ResponsiveContainer width="100%" height="65%">
         <PieChart>
           <Pie
