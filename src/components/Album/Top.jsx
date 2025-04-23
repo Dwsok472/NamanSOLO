@@ -388,14 +388,14 @@ const NameBox = styled.div`
     width: 100%;
    display: flex;
    justify-content: center;
-   align-items: center;
+   align-items: end;
    font-weight: 700;
   h1{
-    color: white;
+    color: #000000;
   }
   span{   
-      color: black;
-      font-size: 2.5rem;
+    color: #000000;
+      font-size: 2rem;
   }
 `
 const MiddleBox = styled.div`

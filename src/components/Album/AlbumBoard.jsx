@@ -31,7 +31,7 @@ const AlbumBoard = () => {
   const [data, setData] = useState([]); // 데이터 저장용
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
-  const itemsPerPage = 8; // 한 페이지에 표시할 아이템 수
+  const itemsPerPage = 10; // 한 페이지에 표시할 아이템 수
   const [selectedAlbum, setSelectedAlbum] = useState(null); //선택된 앨범 저장소!
   const [showDetail, setShowDetail] = useState(false); // 모달 창 열림/닫힘 상태
   const [filter, setFilter] = useState('최신순'); // 필터용

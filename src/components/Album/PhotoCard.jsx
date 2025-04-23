@@ -111,7 +111,7 @@ const CardWrapper = styled.div`
   height: ${({ columns }) => (columns === 3 ? '500px' : '360px')};
   padding: 10px;
   background: white;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.5);
   transform: ${({ rotate, $offsetY }) =>
     `rotate(${rotate}deg) translateY(${$offsetY}px)`}; /* rotate와 translateY 적용 */
   transition: transform 0.3s;
