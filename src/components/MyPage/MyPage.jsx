@@ -106,6 +106,12 @@ const DateText = styled.div`
   margin-top: 5px;
 `;
 
+const DdayText = styled.div`
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #9f142e;
+`;
+
 const EditButton = styled.button`
   position: absolute;
   top: 20px;
@@ -158,24 +164,29 @@ const TabsContainer = styled.div`
 
 const Tabs = styled.div`
   display: flex;
+  justify-content: flex-start;
   gap: 20px;
-  margin-bottom: 20px;
+  flex-wrap: wrap;
 `;
 
 const TabButton = styled.button`
   background: ${(props) => (props.active ? "#9f142e" : "#fff")};
   color: ${(props) => (props.active ? "#fff" : "#9f142e")};
   border: 2px solid #9f142e;
-  padding: 10px 20px;
+  padding: 0px 20px; 
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
+  width: 120px;
+  text-align: center;
+
   &:hover {
     background: #9f142e;
     color: #fff;
   }
 `;
+
 
 const MyStoryButton = styled(TabButton)`
   margin-left: auto;
@@ -216,6 +227,18 @@ const Backdrop = styled.div`
   height: 100vh;
   background: rgba(0, 0, 0, 0.4);
   z-index: 999;
+`;
+
+const HeartIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  margin: 0 8px;
+  vertical-align: middle;
+`;
+
+const Username = styled.span`
+  color: #222;
+  font-weight: bold;
 `;
 
 export default function MyPage() {
@@ -366,7 +389,9 @@ export default function MyPage() {
       />
 
       <Name>
-        {boyname} ❤️ {girlname}
+        <Username>{boyname}</Username>
+        <HeartIcon src={heart} alt="heart" />
+        <Username>{girlname}</Username>
       </Name>
 
       <Emotion>
@@ -391,7 +416,7 @@ export default function MyPage() {
           </DateInputWrapper>
         ) : (
           <>
-            {daysSince}일
+            <DdayText>{daysSince}일</DdayText>
             <DateText>{new Date(meetingDate).toLocaleDateString("ko-KR")}</DateText>
           </>
         )}
@@ -434,7 +459,7 @@ export default function MyPage() {
             navigate(routeMap["My Story"]);
           }}
         >
-          My Story
+          My Album
         </MyStoryButton>
       </Tabs>
 
