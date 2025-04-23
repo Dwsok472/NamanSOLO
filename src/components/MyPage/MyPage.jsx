@@ -1,264 +1,212 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { IconImage } from "../Icons";
+import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
+import { IconEdit, IconImage } from "../Icons";
 import heart from "../img/heart.png";
-import { useLocation } from "react-router-dom";
-import Todo from "./todo/Todo";
-import Other from "./Other/Other";
-import MyAlbum from "./MyAlbum/MyAlbum";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import MySetting from "./MySetting";
 import CoupleProfile from "./CoupleProfile";
 import CommentPage from "./Comment/CommentPage";
-import MySetting from "./MySetting";
-import Edit from "../img/edit.png";
+import MyAlbum from "./MyAlbum/MyAlbum";
+import Todo from "./todo/Todo";
+import Other from "./Other/Other";
 import {
-  fetchAnniversaries,
-  fetchTravels,
   getCurrentUser,
   updateUserData,
   uploadProfileImage,
+  fetchAnniversaries,
+  fetchTravels,
 } from "../api2";
-import { IconEdit } from "../Icons";
+
+// ===== 스타일 컴포넌트 - 시작 =====
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 90vh;
-  padding: 20px;
-  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
-  /* background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff); */
-  /* background: linear-gradient(to bottom, #ffb3ae, #ffe2e2, #f2ebdc); */
-  /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
-  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
-  background: linear-gradient(45deg, #ffe3e3, #fff, #ffe3e3);
-  /* background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff); */
+  align-items: flex-start;
+  padding: 40px;
+  min-height: 100vh;
+  max-width: 1800px;   // 너가 원하는 폭까지만 제한
+  margin: 0 auto;      // 중앙 정렬
+  width: 100%;         // 부모 기준 꽉 채우되 max-width 넘지 않게
 `;
+
 
 const ProfileCard = styled.div`
-  width: 100%;
-  max-width: 380px;
-  padding: 20px;
-  border-right: 1px solid #e2e2e2;
-  /* border-radius: 10px; */
+  max-width: 480px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 40px 30px;
+  margin-right: 40px;
   text-align: center;
-  background-color: ${({ bgColor }) => bgColor || "white"};
-  box-shadow: -5px 8px 8px -4px rgba(0, 0, 0, 0.08);
-  min-height: 600px;
+  position: relative;
+`;
+const LoadingText = styled.div`
+  margin-top: 200px;
+  font-size: 1.5rem;
+`;
+
+const ProfileImage = styled.img`
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ddd;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+`;
+
+const Name = styled.h2`
+  font-size: 2.2rem;
+  margin: 20px 0 10px;
+  font-weight: 700;
+  color: #9f142e;
+`;
+
+const Emotion = styled.div`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 10px;
+`;
+
+const DateInputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  position: relative;
-  /* margin-right: 30px; */
-  padding-bottom: 50px;
-  height: 750px;
-  &:first-child {
-    border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
-  }
-`;
-
-const PhotoSection = styled.div`
-  /* padding-top: 8%; */
-  margin-bottom: 8%;
-  position: relative;
-  display: flex;
-  justify-content: center;
-`;
-
-const Img = styled.img`
-  width: 280px;
-  height: 280px;
-  border-radius: 50%;
-  object-fit: contain;
-  border: 1px solid #3333;
   align-items: center;
-  background-color: white;
+  gap: 12px;
+  margin-top: 12px;
 `;
-const ImgInput = styled.input`
-  display: none;
+
+const DateInput = styled.input`
+  font-size: 1rem;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 `;
-const FileButton = styled.button`
+
+const CancelButton = styled.button`
+  background: #999;
+  color: white;
+  font-weight: 600;
   border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.9rem;
   cursor: pointer;
-  background-color: transparent;
-  position: absolute;
-  bottom: 0px;
-  right: 30px;
-  &:focus {
-    outline: none;
-  }
-`;
-
-const DateInfo = styled.div`
-  margin-top: 5%;
-  /* border-top: 1px solid ${({ borderColor }) =>
-    borderColor || "#7c7c7ca8"}; */
-  padding-top: 3%;
-  padding-bottom: 3%;
-`;
-
-const DaysSince = styled.div`
-  font-size: 4.5rem;
-  color: ${({ color }) => color || "#bf1f3c"};
-  font-weight: 700;
-  margin: 0 auto;
-`;
-
-const MeetingDate = styled.div`
-  font-size: 1.2rem;
-  color: ${({ color }) => color || "#1f1f1f"};
-  button {
-  }
-`;
-const EditIcon = styled.img`
-  align-items: center;
-  width: 1rem;
-  height: 1rem;
-  margin-left: 6px;
-  cursor: pointer;
-  transition: transform 0.2s;
+  transition: background 0.2s;
 
   &:hover {
-    transform: scale(1.2);
+    background: #666;
   }
 `;
 
-const NameHeartSection = styled.div`
-  display: flex;
-  padding-bottom: 3%;
-  justify-content: center;
-  align-items: center;
-  padding-top: 1%;
-  margin-top: 50px;
-  margin-bottom: 5px;
-  position: relative;
-  .heart {
-    display: block;
-    width: 70px;
-    height: 70px;
-  }
-  .girl {
-    font-size: 1.8rem;
-    font-weight: 700;
-    position: absolute;
-    left: 0;
-    margin-left: 40px;
-  }
-  .boy {
-    font-size: 1.8rem;
-    font-weight: 700;
-    position: absolute;
-    right: 0;
-    margin-right: 30px;
-  }
-`;
-
-const RightProfileCard = styled.div`
-  width: 100%;
-  overflow-y: auto;
-  max-width: 1100px;
-  padding: 20px;
-  background-color: ${({ bgColor }) => bgColor || "#fff"};
-  box-shadow: 5px 8px 8px -4px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  position: relative;
-  height: 750px;
-  &::-webkit-scrollbar {
-    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #727272; /* 핸들의 색상 */
-    border-radius: 10px;
-  }
-  &:last-child {
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-left: none; /* 겹치는 border 제거 */
-  }
-`;
-const TopSection = styled.div`
-  display: flex;
-  /* border-bottom: 1px solid ${({ borderColor }) =>
-    borderColor || "#ababa8"}; */
-  top: 0;
-  /* background-color: ${({ bgColor }) => bgColor || "#fff"}; */
-`;
-const Left = styled.div`
-  display: flex;
-  width: 100%;
+const DateText = styled.div`
+  font-size: 1rem;
+  color: #444;
+  margin-top: 5px;
 `;
 
 const EditButton = styled.button`
   position: absolute;
-  top: 25px;
-  right: 18px;
-  padding: 5px 12px;
-  font-weight: 700;
-  border-radius: 6px;
-  background-color: transparent;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  &:hover {
-    background-color: #f2f2f2;
-  }
   svg {
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
   }
-`;
-const ModalWrapper = styled.div`
-  border-radius: 3px;
-  max-height: 90vh;
-  overflow-y: auto;
-  
-`;
-
-const Button = styled.button`
-  margin-left: ${({ $isStory }) => ($isStory ? "auto" : "0")};
-  color: ${({ $isStory }) => ($isStory ? "#9f142e" : "#000")};
-  background-color: ${({ $isStory }) => ($isStory ? "#ffffff" : "transparent")};
-  background-color: transparent;
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  /* border: 1px solid ${({ borderColor }) => borderColor || "#fefdf1"}; */
-  /* border-radius: 20px; */
-  width: 145px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
   &:hover {
-    color: ${({ $isStory }) => ($isStory ? "#ffffff" : "#9f142e")};
-    background-color: ${({ $isStory }) => ($isStory ? "#9f142e" : "#ffffff")};
-    border: 1px solid ${({ $isStory }) => ($isStory ? "#9f142e" : "#3333")};
-  }
-  &:focus {
-    outline: none;
-  }
-  &.selected {
-    background-color: #9f142e;
-    color: #ffffff;
+    transform: scale(1.1);
   }
 `;
 
-const BottomSection = styled.div`
-  width: 100%;
-  /* overflow: scroll;
-  overflow-x: hidden; */
-  .heartRate {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-  }
-  &::-webkit-scrollbar {
-    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #727272; /* 핸들의 색상 */
-    border-radius: 10px;
+const ProfileImageWrapper = styled.div`
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 20px;
+  cursor: pointer;
+`;
+
+const EditOverlay = styled.div`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    color: #9f142e;
   }
 `;
+
+const TabsContainer = styled.div`
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+`;
+
+const Tabs = styled.div`
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+`;
+
+const TabButton = styled.button`
+  background: ${(props) => (props.active ? "#9f142e" : "#fff")};
+  color: ${(props) => (props.active ? "#fff" : "#9f142e")};
+  border: 2px solid #9f142e;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:hover {
+    background: #9f142e;
+    color: #fff;
+  }
+`;
+
+const MyStoryButton = styled(TabButton)`
+  margin-left: auto;
+`;
+
+const TabGroup = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+
+const ContentArea = styled.div`
+  min-height: 300px;
+  padding: 20px;
+  background: #fafafa;
+  box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+`;
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+`;
+
 
 const Backdrop = styled.div`
   position: fixed;
@@ -270,129 +218,60 @@ const Backdrop = styled.div`
   z-index: 999;
 `;
 
-const DateInputRow = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 12px;
-
-  input {
-    text-align: center;
-    font-size: 1rem;
-    width: 140px;
-  }
-
-  button {
-    position: absolute;
-    bottom: 487.8px;
-    right: 80px;
-    width: 55px;
-    height: 36px;
-    max-height: 36px;
-    padding: 5px 12px;
-    bottom: 488px; // 인풋보다 살짝 아래
-    right: 60px; // 우측으로 살짝
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    background-color: #000000;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    &:hover {
-      background-color: #ffe2e2;
-    }
-  }
-`;
-
-function MyPage() {
+export default function MyPage() {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [originalMeetingDate, setOriginalMeetingDate] = useState(null);
-  const pathname = location.pathname;
-  const imgRef = useRef(null);
   const [image, setImage] = useState();
+  const [tempImage, setTempImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
   const [girlname, setGirlname] = useState("");
   const [boyname, setBoyname] = useState("");
-  const [menu, setMenu] = useState("커플 정보");
-  const [selectedOption, setSelectedOption] = useState("커플 정보");
-  const navigate = useNavigate();
-  const [tempImage, setTempImage] = useState(null); // blob용
-  const [selectedFile, setSelectedFile] = useState(null); // 진짜 파일
+  const pathToTab = {
+    "/mypage/todo": "캘린더",
+    "/mypage/other": "즐겨찾기",
+    "/mypage/comment": "나의 댓글",
+    "/mypage/story": "My Story",
+  };
+  
+  const [activeTab, setActiveTab] = useState(() => pathToTab[location.pathname] || "캘린더");
   const [showCoupleProfile, setShowCoupleProfile] = useState(false);
-  const [editDateMode, setEditDateMode] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  // const [isOpen, setIsOpen] = useState(false);
+  const imgRef = useRef(null);
   const [events, setEvents] = useState([]);
 
-  const handleButtonClick = (menu) => {
-    setMenu(menu);
-    switch (menu) {
-      case "스토리":
-        setTimeout(() => {
-          navigate("/mypage/story", { replace: true });
-        }, 0);
-        break;
-      case "나의 댓글":
-        navigate("/mypage/comment");
-        break;
-      case "커플 캘린더":
-        navigate("/mypage/todo");
-        break;
-      case "그 외":
-        navigate("/mypage/other");
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleBoxClick = (option) => {
-    setSelectedOption(option);
-  };
-
   useEffect(() => {
-    const refetchAll = async () => {
-      const annivs = await fetchAnniversaries();
-      const travels = await fetchTravels();
-      setEvents([...annivs, ...travels]);
-    };
-
-    refetchAll();
-  }, [meetingDate]);
+    const matchedTab = pathToTab[location.pathname];
+    if (matchedTab && matchedTab !== activeTab) {
+      setActiveTab(matchedTab);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const data = await getCurrentUser();
-        console.log(data);
-
-        console.log("🔥 키 리스트:", Object.keys(data));
         setGirlname(data.realNameF);
         setBoyname(data.realNameM);
         setMeetingDate(data.dDay);
         setOriginalMeetingDate(data.dDay);
         const mediaUrl = [data.mediaDTO.mediaUrl];
         setImage(mediaUrl);
-
         setLoading(false);
       } catch (err) {
         console.error("유저 불러오기 실패", err);
-        return;
       }
     };
-
     fetchUser();
   }, []);
 
   useEffect(() => {
     if (meetingDate) {
-      calculateDaysSince(meetingDate, new Date()); // meetingDate가 있을 때만 계산
+      calculateDaysSince(meetingDate, new Date());
     }
   }, [meetingDate]);
 
@@ -404,24 +283,28 @@ function MyPage() {
 
     const timeDiff = date2 - date1;
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-    if (daysDiff < 1) {
-      setDaysSince("오늘");
-    }
-    setDaysSince(daysDiff);
+    setDaysSince(daysDiff < 1 ? "오늘" : daysDiff);
   };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSelectedFile(file);
+    setTempImage(URL.createObjectURL(file));
+  };
+
   const handleCompleteEdit = async () => {
     try {
       let uploadedImageUrl = null;
 
       if (selectedFile) {
-        // 업로드 -> 경로 받아오기
         uploadedImageUrl = await uploadProfileImage(selectedFile);
       }
 
       const updatedData = {
         realNameM: boyname,
         realNameF: girlname,
-        dday: meetingDate, // 없으면 null로 전달
+        dday: meetingDate,
       };
 
       if (uploadedImageUrl) {
@@ -431,13 +314,15 @@ function MyPage() {
       await updateUserData(updatedData);
 
       if (uploadedImageUrl) {
-        setImage(uploadedImageUrl); // 실제 이미지 반영
+        setImage(uploadedImageUrl);
       }
+
       const [annivs, travels] = await Promise.all([
         fetchAnniversaries(),
         fetchTravels(),
       ]);
 
+      setEvents([...annivs, ...travels]);
       setOriginalMeetingDate(meetingDate);
       setIsEditMode(false);
     } catch (err) {
@@ -445,192 +330,126 @@ function MyPage() {
     }
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      return;
-    }
-    try {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      setSelectedFile(file);
-      setTempImage(URL.createObjectURL(file)); // 로컬 미리보기용
-    } catch (e) {
-      console.error("이미지 처리 실패", e);
-    }
+  const routeMap = {
+    "캘린더": "/mypage/todo",
+    "즐겨찾기": "/mypage/other",
+    "나의 댓글": "/mypage/comment",
+    "My Story": "/mypage/story",
   };
 
   return (
     <Container>
       <ProfileCard>
-        {loading ? (
-          <div style={{ marginTop: "200px", fontSize: "1.5rem" }}>
-            불러오는 중...
-          </div>
+  {loading ? (
+    <LoadingText>불러오는 중...</LoadingText>
+  ) : (
+    <>
+      <MySetting onClick={() => setShowCoupleProfile(true)} />
+
+      <ProfileImageWrapper onClick={() => {
+        if (isEditMode) imgRef.current.click();
+      }}>
+        <ProfileImage src={tempImage || image} alt="profile" $editable={isEditMode} />
+        {isEditMode && (
+          <EditOverlay>
+            <IconEdit />
+          </EditOverlay>
+        )}
+      </ProfileImageWrapper>
+
+      <input
+        type="file"
+        accept="image/*"
+        ref={imgRef}
+        hidden
+        onChange={handleImageChange}
+      />
+
+      <Name>
+        {boyname} ❤️ {girlname}
+      </Name>
+
+      <Emotion>
+        {isEditMode ? (
+          <DateInputWrapper>
+            <DateInput
+              type="date"
+              value={meetingDate}
+              onChange={(e) => setMeetingDate(e.target.value)}
+              max={new Date().toISOString().split("T")[0]}
+            />
+            <CancelButton
+              onClick={() => {
+                setMeetingDate(originalMeetingDate);
+                setIsEditMode(false);
+                setTempImage(null);
+                setSelectedFile(null);
+              }}
+            >
+              취소
+            </CancelButton>
+          </DateInputWrapper>
         ) : (
           <>
-            <MySetting onClick={() => setShowCoupleProfile(true)} />
-            <EditButton
-              onClick={() => {
-                if (isEditMode) {
-                  handleCompleteEdit();
-                }
-                setIsEditMode((prev) => !prev);
-              }}
-            >
-              {isEditMode ? "완료" : <IconEdit />}
-            </EditButton>
-            <PhotoSection>
-              {isEditMode ? (
-                <Img
-                  src={tempImage || image}
-                  alt="profile"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    imgRef.current.click();
-                  }}
-                />
-              ) : (
-                <Img src={image} alt="profile" />
-              )}
-              {isEditMode && (
-                <FileButton
-                  onClick={() => imgRef.current && imgRef.current.click()}
-                >
-                  <IconImage />
-                </FileButton>
-              )}
-
-              <ImgInput
-                type="file"
-                id="file-upload-c"
-                accept="image/*"
-                ref={imgRef}
-                onChange={handleImageChange}
-              />
-            </PhotoSection>
-            <DateInfo>
-              {daysSince !== null && meetingDate && (
-                <DaysSince>{daysSince}일</DaysSince>
-              )}
-              {meetingDate && (
-                <MeetingDate>
-                  {isEditMode ? (
-                    <DateInputRow>
-                      <input
-                        type="date"
-                        value={meetingDate}
-                        onChange={(e) => setMeetingDate(e.target.value)}
-                        max={new Date().toISOString().split("T")[0]}
-                      />
-                      <button
-                        onClick={() => {
-                          setEditDateMode(false);
-                          setTempImage(null);
-                          setSelectedFile(null);
-                          setIsEditMode(false);
-                          setMeetingDate(originalMeetingDate);
-                        }}
-                      >
-                        취소
-                      </button>
-                    </DateInputRow>
-                  ) : (
-                    <>
-                      {new Date(meetingDate).toLocaleDateString("ko-KR")}
-                      {isEditMode && (
-                        <span
-                          style={{
-                            marginLeft: "8px",
-                            cursor: "pointer",
-                            fontSize: "16px",
-                            display: "inline-flex",
-                            alignItems: "center",
-                          }}
-                          onClick={() => setIsEditMode(true)}
-                        >
-                          <EditIcon src={Edit} alt="수정" />
-                        </span>
-                      )}
-                    </>
-                  )}
-                </MeetingDate>
-              )}
-            </DateInfo>
-
-            <NameHeartSection>
-              <div
-                className="girl"
-                onChange={(e) => setGirlname(e.target.value)}
-              >
-                {boyname || "박서진"}
-              </div>
-              <img src={heart} className="heart" />
-              <div className="boy" onChange={(e) => setBoyname(e.target.value)}>
-                {girlname || "김동인"}
-              </div>
-            </NameHeartSection>
+            {daysSince}일
+            <DateText>{new Date(meetingDate).toLocaleDateString("ko-KR")}</DateText>
           </>
         )}
-      </ProfileCard>
+      </Emotion>
 
-      <RightProfileCard>
-        <TopSection>
-          <Left>
-            <Button
+      <EditButton
+        onClick={() => {
+          if (isEditMode) {
+            handleCompleteEdit();
+          }
+          setIsEditMode((prev) => !prev);
+        }}
+      >
+        {isEditMode ? "완료" : <IconEdit />}
+      </EditButton>
+    </>
+  )}
+</ProfileCard>
+      <TabsContainer>
+      <Tabs>
+        <TabGroup>
+          {["캘린더", "즐겨찾기", "나의 댓글"].map((tab) => (
+            <TabButton
+              key={tab}
+              active={activeTab === tab}
               onClick={() => {
-                handleButtonClick("커플 캘린더");
-                handleBoxClick("커플 캘린더");
+                setActiveTab(tab);
+                navigate(routeMap[tab]);
               }}
-              className={pathname.includes("/mypage/todo") ? "selected" : ""}
             >
-              캘린더
-            </Button>
-            <Button
-              onClick={() => {
-                handleButtonClick("그 외");
-                handleBoxClick("그 외");
-              }}
-              className={pathname.includes("/mypage/other") ? "selected" : ""}
-            >
-              즐겨찾기
-            </Button>
-            <Button
-              onClick={() => {
-                handleButtonClick("나의 댓글");
-                handleBoxClick("나의 댓글");
-              }}
-              className={pathname.includes("/mypage/comment") ? "selected" : ""}
-            >
-              나의 댓글
-            </Button>
+              {tab}
+            </TabButton>
+          ))}
+        </TabGroup>
 
-            <Button
-              $isStory
-              onClick={() => {
-                handleButtonClick("스토리");
-                handleBoxClick("스토리");
-              }}
-              className={pathname.includes("/mypage/story") ? "selected" : ""}
-            >
-              My Story
-            </Button>
-          </Left>
-        </TopSection>
-        <BottomSection>
-          {" "}
+        <MyStoryButton
+          active={activeTab === "My Story"}
+          onClick={() => {
+            setActiveTab("My Story");
+            navigate(routeMap["My Story"]);
+          }}
+        >
+          My Story
+        </MyStoryButton>
+      </Tabs>
+
+        <ContentArea>
           <Routes>
-            <Route path="/myalbum" element={<MyAlbum />} />
-            <Route path="/comment" element={<CommentPage />} />
             <Route
               path="/todo"
               element={<Todo originalMeetingDate={originalMeetingDate} />}
             />
             <Route path="/other" element={<Other />} />
+            <Route path="/comment" element={<CommentPage />} />
+            <Route path="/myalbum" element={<MyAlbum />} />
           </Routes>
-        </BottomSection>
-      </RightProfileCard>
+        </ContentArea>
+      </TabsContainer>
       {showCoupleProfile && (
         <>
           <ModalWrapper>
@@ -649,4 +468,5 @@ function MyPage() {
   );
 }
 
-export default MyPage;
+
+
