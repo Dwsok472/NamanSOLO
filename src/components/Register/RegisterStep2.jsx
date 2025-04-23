@@ -129,6 +129,15 @@ function RegisterStep2({ onNext }) {
       return;
     }
 
+    if (profileF.email === profileM.email) {
+      alert("남녀의 이메일이 동일합니다. 서로 다른 이메일을 입력해주세요.");
+      return;
+    }
+    if (profileF.phone === profileM.phone) {
+      alert("남녀의 전화번호가 동일합니다. 서로 다른 전화번호를 입력해주세요.");
+      return;
+    }
+
     // 유효할 경우 저장
     setFormData({
       realNameF: profileF.name,

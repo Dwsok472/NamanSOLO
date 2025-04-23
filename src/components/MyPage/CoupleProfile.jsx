@@ -157,7 +157,33 @@ function CoupleProfile({ onClose, onUpdateNames }) {
     }
   };
 
+  const isValidProfile = (profile) => {
+    const nameValid = profile.name.trim().length > 0;
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email);
+    const phoneValid = /^\d{3}-\d{3,4}-\d{4}$/.test(profile.phone);
+    return nameValid && emailValid && phoneValid;
+  };
+
   const handleSave = async () => {
+    if (!isValidProfile(profileF)) {
+      alert("여자쪽 정보가 올바르지 않아요! 이메일/전화번호 형식도 확인해주세요.");
+      return;
+    }
+    if (!isValidProfile(profileM)) {
+      alert("남자쪽 정보가 올바르지 않아요! 이메일/전화번호 형식도 확인해주세요.");
+      return;
+    }
+  
+    if (profileF.email === profileM.email) {
+      alert("남녀의 이메일이 동일합니다. 서로 다른 이메일을 입력해주세요.");
+      return;
+    }
+  
+    if (profileF.phone === profileM.phone) {
+      alert("남녀의 전화번호가 동일합니다. 서로 다른 번호를 입력해주세요.");
+      return;
+    }
+    
     try {
       const updatedUser = {
         realNameM: profileM.name,
