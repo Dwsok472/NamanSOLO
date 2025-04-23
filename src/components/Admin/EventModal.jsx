@@ -17,18 +17,20 @@ const Overlay = styled.div`
   z-index: 9999;
 `;
 
-const Title = styled.h2`
-  text-align: center;
-  margin-bottom: 15px;
+const ModalBox = styled.div`
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 40px;
+  border-radius: 16px;
+  width: 640px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 `;
 
-const ModalBox = styled.div`
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  width: 600px;
-  max-width: 95%;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+const Title = styled.h2`
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #1d4ed8;
+  margin-bottom: 24px;
 `;
 
 const CheckboxRow = styled.div`
@@ -44,12 +46,24 @@ const CheckboxRow = styled.div`
 
 const FormInput = styled.input`
   width: 100%;
-  height: 40px;
-  padding: 6px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  margin-bottom: 15px;
+  height: 42px;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #3b82f6;
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  margin-bottom: 18px;
 `;
 
 const ContentBox = styled.div`
@@ -107,25 +121,61 @@ const Footer = styled.div`
   margin-top: 20px;
 `;
 
+const StyledButton = styled.button`
+  background-color: #1d4ed8;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #1e40af;
+  }
+`;
+
 const ListItem = styled.li`
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: ${({ selected }) => (selected ? '#e0f2fe' : '#f9fafb')};
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.04); /* 기본값 유지 */
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 12px;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  max-height: 30px;
-  background-color: ${({ selected }) => (selected ? '#eef6ff' : '#fff')};
   cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: ${({ selected }) => (selected ? '#e0f2fe' : '#f3f4f6')};
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.04); /* hover에서도 동일하게 유지 */
+  }
 `;
 
+
 const DeleteButton = styled.button`
-  border: none;
   background: transparent;
-  color: #ff4d4f;
-  font-weight: bold;
+  color: #ef4444;
+  font-weight: 700;
+  border: none;
   cursor: pointer;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  ${ListItem}:hover & {
+    opacity: 1;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
+
 
 
 function EventModal({ onClose }) {
@@ -313,24 +363,20 @@ function EventModal({ onClose }) {
             <ul>
               {paginatedEvents.map(event => (
                 <ListItem
-                  key={event.id}
-                  onClick={() => setSelectedItemId(prev => (prev === event.id ? null : event.id))}
-                  onMouseEnter={() => setHoveredId(event.id)}
-                  onMouseLeave={() => setHoveredId(null)}
-                  selected={selectedItemId === event.id}
+                key={event.id}
+                onClick={() => setSelectedItemId(prev => (prev === event.id ? null : event.id))}
+                selected={selectedItemId === event.id}
+              >
+                <span>{event.title}</span>
+                <DeleteButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(event.id);
+                  }}
                 >
-                  <span>{event.title}</span>
-                  {hoveredId === event.id && (
-                    <DeleteButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(event.id);
-                      }}
-                    >
-                      삭제
-                    </DeleteButton>
-                  )}
-                </ListItem>
+                  삭제
+                </DeleteButton>
+              </ListItem>
               ))}
             </ul>
           )}
@@ -390,7 +436,7 @@ function EventModal({ onClose }) {
 
         <Footer style={{ justifyContent: 'flex-end' }}>
           {selectedItemId && mode === '관리' && (
-            <button
+            <StyledButton
               onClick={() => {
                 const target = allEvents.find(e => e.id === selectedItemId);
                 if (!target) return;
@@ -403,40 +449,40 @@ function EventModal({ onClose }) {
               }}
             >
               수정
-            </button>
+            </StyledButton>
           )}
 
           {mode === '관리' && (
             <>
-              <button
+              <StyledButton
                 onClick={() => {
                   setMode('추가');
                   setSelectedFilter('static');
                 }}
               >
                 추가
-              </button>
-              <button onClick={onClose}>닫기</button>
+              </StyledButton>
+              <StyledButton onClick={onClose}>닫기</StyledButton>
             </>
           )}
 
           {mode === '추가' && (
             <>
-              <button onClick={handleAdd}>추가</button>
-              <button onClick={() => {
+              <StyledButton onClick={handleAdd}>추가</StyledButton>
+              <StyledButton onClick={() => {
                 setMode('관리');
                 resetForm();
-              }}>취소</button>
+              }}>취소</StyledButton>
             </>
           )}
 
           {mode === '수정' && (
             <>
-              <button onClick={handleUpdate}>수정 완료</button>
-              <button onClick={() => {
+              <StyledButton onClick={handleUpdate}>수정 완료</StyledButton>
+              <StyledButton onClick={() => {
                 setMode('관리');
                 resetForm();
-              }}>취소</button>
+              }}>취소</StyledButton>
             </>
           )}
         </Footer>
