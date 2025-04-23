@@ -91,11 +91,9 @@ const MapPicker = ({ onSelect }) => {
   const [selectedAddress, setSelectedAddress] = useState('');
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
-    script.async = true;
-    script.onload = () => initMap();
-    document.head.appendChild(script);
+    if (window.google) {
+      initMap();
+    }
   }, []);
 
   const initMap = () => {

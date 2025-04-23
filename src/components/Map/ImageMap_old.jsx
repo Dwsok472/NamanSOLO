@@ -412,14 +412,7 @@ const ImageMap = () => {
   useEffect(() => {
     if (window.google) {
       setGoogleLoaded(true);
-      return;
     }
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAko5KNj0EEUrRO8tk3_OxVpxy6vQJKmi8&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => setGoogleLoaded(true);
-    document.body.appendChild(script);
   }, []);
 
   const renderMap = (address) => {

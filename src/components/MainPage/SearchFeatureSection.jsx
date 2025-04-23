@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+import Lottie from 'lottie-react';
+
 import searchImg from '../img/1.jpg';
 import followImg from '../img/2.png';
 import storyImg from '../img/3.jpg';
+import userSearch from '../img/userSearch.json';
+import followAnimation from '../img/follow.json';
+import feed from '../img/feed.json';
 
 const Section = styled.section`
   background: linear-gradient(to bottom, #f2ebdc, #fff9f9, #f2ebdc);
@@ -11,7 +16,7 @@ const Section = styled.section`
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
   gap: 60px;
   padding: 0 80px;
@@ -24,7 +29,7 @@ const Title = styled.h2`
   color: #8c0d17;
   text-align: center;
   line-height: 1.4;
-  white-space: pre-line; 
+  white-space: pre-line;
   animation: floatIn 1.4s ease-in-out both;
   margin-bottom: 50px;
 `;
@@ -33,7 +38,6 @@ const floatIn = keyframes`
   0% { opacity: 0; transform: translateY(20px); }
   100% { opacity: 1; transform: translateY(0); }
 `;
-
 
 const Left = styled.div`
   flex: 1;
@@ -90,12 +94,6 @@ const Node = styled.div`
     font-size: 1rem;
     color: #8c0d17;
   }
-
-  p {
-    font-size: 0.9rem;
-    color: #555;
-    text-align: center;
-  }
 `;
 
 const Slider = styled.div`
@@ -106,12 +104,12 @@ const Slider = styled.div`
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   position: relative;
 
-  img {
+  img, canvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 20px;
-    transition: opacity 0.5s ease-in-out;
+    display: block;
   }
 `;
 
@@ -136,38 +134,45 @@ const TextOverlay = styled.div`
   p {
     font-size: 1rem;
     color: #555;
+    white-space: pre-line;
   }
 `;
 
-
 function SearchFeatureSection() {
+  const [currentImage, setCurrentImage] = useState(0);
   const slides = [
     {
-      img: searchImg,
+      type: 'lottie',
+      lottie: userSearch,
       title: '유저 검색',
-      desc: '연인의 아이디로 직접 검색해보세요.\n찾는 순간, 추억이 시작됩니다.'
+      desc: '처음 너를 찾아본 순간,\n무심한 듯 설렘이 왔지.'
     },
     {
-      img: followImg,
+      type: 'lottie',
+      lottie: followAnimation,
       title: '팔로우',
       desc: '서로를 팔로우하면,\n우리의 이야기가 하나로 연결돼요.'
     },
     {
-      img: storyImg,
+      type: 'lottie',
+      lottie: feed,
       title: '스토리 보기',
       desc: '팔로우한 연인의 페이지를 방문해보세요.\n사랑의 기억이 페이지마다 담겨 있어요.'
     }
   ];
+
+  const currentSlide = slides[currentImage];
   
 
-  const [currentImage, setCurrentImage] = useState(0);
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % slides.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [slides.length]);
+    if (slides[currentImage].type !== 'lottie') {
+      const interval = setInterval(() => {
+        setCurrentImage((prev) => (prev + 1) % slides.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [currentImage, slides]);
+  
 
   return (
     <Section>
@@ -177,30 +182,36 @@ function SearchFeatureSection() {
         이어졌는지, 들어볼래요?
       </Title>
 
-
       <Container>
         <Left>
           <LoopWrapper>
-            <Node style={{ top: "-50px", left: "220px" }}>
+            <Node style={{ top: '-50px', left: '220px' }}>
               <img src={searchImg} alt="검색" />
               <h3>유저 검색</h3>
-              {/* <p>처음 너를 찾아본 순간, 무심한 듯 설렘이 왔지.</p> */}
             </Node>
-            <Node style={{ top: "330px", left: "-70px" }}>
+            <Node style={{ top: '330px', left: '-70px' }}>
               <img src={followImg} alt="팔로우" />
               <h3>팔로우</h3>
-              {/* <p>서로를 구독하며 기억을 공유하게 되었어.</p> */}
             </Node>
-            <Node style={{ top: "330px", left: "500px" }}>
+            <Node style={{ top: '330px', left: '500px' }}>
               <img src={storyImg} alt="스토리" />
               <h3>스토리 보기</h3>
-              {/* <p>너의 이야기를 들여다보며 내 마음도 기록했지.</p> */}
             </Node>
           </LoopWrapper>
         </Left>
+
         <Right>
           <Slider>
-            <img src={slides[currentImage].img} alt={`slide-${currentImage}`} />
+            {currentSlide.type === 'image' ? (
+              <img src={slides[currentImage].img} alt={`slide-${currentImage}`} />
+            ) : (
+              <Lottie
+                  key={currentSlide.title}
+                  animationData={currentSlide.lottie}
+                  loop={false}
+                  onComplete={() => setCurrentImage((prev) => (prev + 1) % slides.length)}
+                />
+            )}
             <TextOverlay>
               <h3>{slides[currentImage].title}</h3>
               <p>{slides[currentImage].desc}</p>

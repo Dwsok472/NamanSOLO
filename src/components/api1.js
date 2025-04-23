@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api', // ✅ vite 프록시가 처리할 기본 경로
+  baseURL: '/api', 
   withCredentials: true,
 });
 
