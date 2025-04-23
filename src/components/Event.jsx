@@ -36,13 +36,44 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
+const SidebarButtons = styled.div`
+display: flex;
+flex-direction: row;
+width: 70%;
+justify-content: center;
+margin: 0 auto;
+gap: 2px;
+button{
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 0%;
+  border: none;
+  background-color: #ffffff;
+  color: #202020;
+  width: 100px;
+  border-radius: 15px;
+  border: 1px solid #a8a8a8;
+  margin-bottom: 5px;
+}
+.girl{
+  border: none;
+    background-color: #ff8f98;
+    color: white;
+}
+.boy{
+   background-color: #aedbff;
+    color: white;
+    border: none;
+}
+`
+
 const CategoryContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 32px;
   flex-wrap: wrap;
   overflow-y: auto;
-  height: 800px;
+  height: 770px;
   width: 70%;
   margin: 0 auto;
   &::-webkit-scrollbar {
@@ -59,22 +90,12 @@ const Category = styled.div`
   max-width: 650px;
   height: fit-content;
   padding: 28px 24px;
-  /* background-color: ${(props) =>
+  background-color: ${(props) =>
     props.$gender === 'male' ? '#c6e2ff' : '#ffcece'};
-    border-radius: 30px; */
+    border-radius: 30px;
   box-shadow: 0 3px 10px rgba(200, 200, 200, 0.15);
 `;
 
-const SubTitle = styled.h2`
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: 700;
-  color: ${(props) => (props.$gender === 'male' ? '#000000' : '#f88479')};
-  text-align: center;
-  background-color: none;
-  padding: 8px 12px;
-  border-radius: 12px;
-`;
 
 const GiftList = styled.ul`
   list-style: none;
@@ -136,32 +157,7 @@ const GiftItem = styled.li`
   }
 `;
 
-const SidebarButtons = styled.div`
-display: flex;
-flex-direction: column;
-position:fixed;
-right: 0;
-top: 20%;
-button{
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 0%;
-  border: none;
-  /* border: 1px solid #bdbdbd; */
-  background-color: #ffffff;
-  color: #202020;
-}
-.girl{
-  border: none;
-    background-color: #ff8f98;
-    color: white;
-}
-.boy{
-   background-color: #aedbff;
-    color: white;
-    border: none;
-}
-`
+
 
 const images = [gift1, gift2, gift3];
 function Event() {
@@ -220,11 +216,11 @@ function Event() {
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
       <Right>
+        <Title>선물랭킹 TOP10</Title>
         <SidebarButtons>
           <button onClick={() => setSelectedGender("female")} className={selectedGender === 'female' ? 'girl' : ''}>여자</button>
           <button onClick={() => setSelectedGender("male")} className={selectedGender === 'male' ? 'boy' : ''}>남자</button>
         </SidebarButtons>
-        <Title>선물랭킹 TOP10</Title>
         <CategoryContainer>
           <Category $gender={selectedGender === 'female' ? 'female' : 'male'}>
             <GiftList>
