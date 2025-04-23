@@ -21,7 +21,9 @@ function Header({
   const { isLoggedIn, logout, user } = useUserStore();
   const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarSubOpen, setSidebarSubOpen] = useState(false);
   const subMenuRef = useRef(null);
+  const sidebarRef = useRef(null);
   const location = useLocation();
   const isLoginPage =
     location.pathname === "/login" || location.pathname === "/register";
@@ -53,13 +55,28 @@ function Header({
         subMenuRef.current &&
         !subMenuRef.current.contains(e.target)
       ) {
-        // setSubOpen(false); // 여기서 false로 바뀌면 위 useEffect가 실행됨
+        setSubOpen(false);
       }
     };
-
+  
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSubOpen]);
+
+  useEffect(() => {
+    const handleClickOut = (e) => {
+      if (
+        isSidebarOpen &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(e.target)
+      ) {
+        setSidebarOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOut);
+    return () => document.removeEventListener("mousedown", handleClickOut);
+  }, [isSidebarOpen]);
 
   return (
     <>
@@ -131,7 +148,7 @@ function Header({
       </Container>
 
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
-      <Sidebar $open={isSidebarOpen}>
+      <Sidebar ref={sidebarRef} $open={isSidebarOpen}>
         <ul>
           {menuItems.map(({ to, label }) => {
             const isProtected = to === "/events"; // 이벤트만 로그인 필요
@@ -151,13 +168,13 @@ function Header({
             </li>
           ) : (
             <>
-              <li onClick={()=>{if (!isLoggedIn) {return navigate("/login")} return toggleSubMenu();}}>
-                <span>마이페이지 {isSubOpen ? "▲" : "▼"}</span>
+              <li onClick={()=>{if (!isLoggedIn) {return navigate("/login")} return setSidebarSubOpen(!isSidebarSubOpen);}}>
+                <span>마이페이지 {isSidebarSubOpen ? "▲" : "▼"}</span>
               </li>
-              {isSubOpen &&
+              {isSidebarSubOpen &&
                 subMenuItems.map(({ to, label }) => (
                   <li key={to}>
-                    <Link to={to} onClick={closeSidebar}>
+                    <Link to={to} onClick={()=>{setSidebarSubOpen(false); closeSidebar();}}>
                       {label}
                     </Link>
                   </li>
