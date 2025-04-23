@@ -3,7 +3,7 @@ import SockJS from "sockjs-client";
 
 // WebSocket 연결 후 알림 구독
 export function connectAlarmSocket(userId, onMessage) {
-  const socket = new SockJS("http://localhost:8082/ws"); // 백엔드 WebSocket 주소
+  const socket = new SockJS("/ws"); // 백엔드 WebSocket 주소
   const client = new Client({
     webSocketFactory: () => socket,
     reconnectDelay: 5000,

@@ -536,7 +536,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       description: place.description,
       preview:
         place.mediaUrl && place.mediaUrl.length > 0
-          ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
+          ? `${place.mediaUrl[0].mediaUrl}`
           : '',
       mediaUrl: place.mediaUrl || [],
     });
@@ -704,7 +704,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               <Thumbnail
                 src={
                   place.mediaUrl && place.mediaUrl.length > 0
-                    ? `http://localhost:8082${place.mediaUrl[0].mediaUrl}`
+                    ? `${place.mediaUrl[0].mediaUrl}`
                     : 'https://via.placeholder.com/60?text=No+Image'
                 }
                 alt={place.name}
@@ -725,7 +725,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 {place.mediaUrl && place.mediaUrl.length > 0 ? (
                   <SliderWrapper>
                     <FixedSizeImage
-                      src={`http://localhost:8082${
+                      src={`${
                         place.mediaUrl[activeImageIndex[place.id] || 0]
                           ?.mediaUrl
                       }`}

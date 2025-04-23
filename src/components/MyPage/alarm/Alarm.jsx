@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import Setting from "./Setting";
 import { useAlarmList } from "./alarmList";
 import { useUserStore } from "../../Login/Login";
+// import { fetchMyAlarms } from "../../api3";
+
 
 const Container = styled.div`
   position: absolute; /* 벨 버튼 기준으로 위치 */

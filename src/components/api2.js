@@ -4,7 +4,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 // 미디어
-const BASE_URL = 'http://localhost:8082/api';
+const BASE_URL = '/api';
 const todo_url = '/todo'
 const token = sessionStorage.getItem('jwt-token');
 

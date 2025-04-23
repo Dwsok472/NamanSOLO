@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8082/api',
+  baseURL: '/api', // ✅ vite 프록시가 처리할 기본 경로
   withCredentials: true,
 });
 
@@ -14,45 +14,23 @@ api.interceptors.request.use((config) => {
 });
 
 export const uploadRecommendPlaceImages = async (placeDTO, files) => {
-  const token = sessionStorage.getItem("jwt-token");
   const formData = new FormData();
-
   formData.append("place", new Blob([JSON.stringify(placeDTO)], { type: "application/json" }));
+  files.forEach((file) => formData.append("files", file));
 
-  files.forEach((file) => {
-    formData.append("files", file);
+  const response = await api.post("/recommend_place/upload/full", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
-
-  const response = await axios.post(
-    "http://localhost:8082/api/recommend_place/upload/full",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true,
-    }
-  );
 
   return response.data;
 };
 
 export const saveRecommendPlace = async (placeDTO) => {
-  const token = sessionStorage.getItem("jwt-token");
-
-  const res = await axios.post(
-    "http://localhost:8082/api/recommend_place/save",
-    placeDTO,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    }
-  );
-
+  const res = await api.post("/recommend_place/save", placeDTO, {
+    headers: { "Content-Type": "application/json" },
+  });
   return res.data;
 };
 
@@ -111,34 +89,15 @@ export const getUserJoinDates = async () => {
   return res.data;
 };
 
-
-
 export const registerCategoryMapping = async (placeId, categoryIds) => {
-  const token = sessionStorage.getItem("jwt-token");
-
-  const res = await axios.post(
-    "http://localhost:8082/api/categoryplace/add",
-    {
-      recommendPlaceId: placeId,
-      categoryIds,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    }
-  );
+  const res = await api.post("/categoryplace/add", {
+    recommendPlaceId: placeId,
+    categoryIds,
+  }, {
+    headers: { "Content-Type": "application/json" },
+  });
 
   return res.data;
 };
-
-// export const registerCategoryUpdate = async (placeId, categoryList) => {
-//   return await axios.post("/api/categoryplace/update", {
-//     recommendPlaceId: placeId,
-//     categoryIds: categoryList,
-//   });
-// };
 
 export default api;
