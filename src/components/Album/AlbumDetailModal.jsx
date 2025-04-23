@@ -261,12 +261,13 @@ const Box = styled.div`
   .image {
     width: 100%;
     height: 550px;
-    object-fit: cover;
+    object-fit: contain;
+    background-color: white;
   }
   .video {
     width: 100%;
     height: 550px;
-    object-fit: cover;
+    object-fit: contain;
   }
   .leftkey {
     width: 30px;
