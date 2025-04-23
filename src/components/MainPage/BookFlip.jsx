@@ -149,7 +149,11 @@ const BookFlip = () => {
           <BookPage className="left">
             {albums[0] && (
               <PhotoCard
-                src={albums[0].url.map((m) => m.mediaUrl)}
+                src={albums[0].url.map((m) =>
+                ({
+                  url: m.mediaUrl,
+                  type: m.mediaType
+                }))}
                 title={albums[0].title}
                 onClick={handleClick}
               />
@@ -158,7 +162,11 @@ const BookFlip = () => {
           <BookPage className="right">
             {albums[1] && (
               <PhotoCard
-                src={albums[1].url.map((m) => m.mediaUrl)}
+                src={albums[1].url.map((m) =>
+                ({
+                  url: m.mediaUrl,
+                  type: m.mediaType
+                }))}
                 title={albums[1].title}
                 onClick={handleClick}
               />
@@ -169,7 +177,10 @@ const BookFlip = () => {
           <BookPage className="left">
             {albums[2] && (
               <PhotoCard
-                src={albums[2].url.map((m) => m.mediaUrl)}
+                src={albums[2].url.map((m) => ({
+                  url: m.mediaUrl,
+                  type: m.mediaType
+                }))}
                 title={albums[2].title}
                 onClick={handleClick}
               />
@@ -178,7 +189,10 @@ const BookFlip = () => {
           <BookPage className="right">
             {albums[3] && (
               <PhotoCard
-                src={albums[3].url.map((m) => m.mediaUrl)}
+                src={albums[3].url.map((m) => ({
+                  url: m.mediaUrl,
+                  type: m.mediaType
+                }))}
                 title={albums[3].title}
                 onClick={handleClick}
               />
