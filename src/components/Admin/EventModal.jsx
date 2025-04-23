@@ -316,7 +316,7 @@ function EventModal({ onClose }) {
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 5;
   const pagesPerGroup = 5;
 
   const paginatedEvents = allEvents.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
