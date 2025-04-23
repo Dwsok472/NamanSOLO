@@ -468,7 +468,7 @@ function EventModal({ onClose }) {
 
           {mode === '추가' && (
             <>
-              <StyledButton onClick={handleAdd}>추가</StyledButton>
+              <StyledButton onClick={handleAdd}>추가 완료</StyledButton>
               <StyledButton onClick={() => {
                 setMode('관리');
                 resetForm();
