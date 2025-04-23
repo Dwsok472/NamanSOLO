@@ -90,8 +90,8 @@ const Category = styled.div`
   max-width: 650px;
   height: fit-content;
   padding: 28px 24px;
-  background-color: ${(props) =>
-    props.$gender === 'male' ? '#c6e2ff' : '#ffcece'};
+  /* background-color: ${(props) =>
+    props.$gender === 'male' ? '#c6e2ff' : '#ffcece'}; */
     border-radius: 30px;
   box-shadow: 0 3px 10px rgba(200, 200, 200, 0.15);
 `;
