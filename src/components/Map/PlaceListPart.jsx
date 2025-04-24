@@ -386,6 +386,22 @@ const SliderControls = styled.div`
   margin-top: 8px;
 `;
 
+const ModalCloseBtn = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10000;
+
+  &:hover {
+    color: #888;
+  }
+`;
+
+
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -835,6 +851,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 </AddressRow>
                 {showMapPicker && (
                   <ModalWrapper>
+                    <ModalCloseBtn onClick={() => setShowMapPicker(false)}>
+                      ✖
+                    </ModalCloseBtn>
                     <MapPicker
                       onSelect={({ address, lat, lng }) => {
                         setNewPlace((prev) => ({
@@ -958,6 +977,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
           {showMapPicker && (
             <ModalWrapper>
+              <ModalCloseBtn onClick={() => setShowMapPicker(false)}>
+                ✖
+              </ModalCloseBtn>
               <MapPicker
                 onSelect={({ address, lat, lng }) => {
                   setNewPlace((prev) => ({
