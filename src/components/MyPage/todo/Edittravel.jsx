@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { IconClose, IconPhoto } from '../../Icons';
 import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
-import { fetchMediaBlobUrls } from '../../api2';
 
 const CardWrap = styled.div`
   width: 400px;

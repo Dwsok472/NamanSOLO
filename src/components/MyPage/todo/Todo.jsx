@@ -303,7 +303,6 @@ const AddButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 5;
 
   &:hover {
     box-shadow: none;
@@ -553,12 +552,12 @@ function Todo({ originalMeetingDate }) {
 
     const cellDateStr = formatDate(date); // 🧠 요거!
 
-    const matching = events.filter((localEvent) => {
-      if (!showAllEvents && localEvent.type.toUpperCase() !== activeSection)
+    const matching = events.filter((event) => {
+      if (!showAllEvents && event.type.toUpperCase() !== activeSection)
         return false;
 
-      const eventStart = localEvent.start_date;
-      const eventEnd = localEvent.end_date;
+      const eventStart = event.start_date;
+      const eventEnd = event.end_date;
 
       const isMatch = eventStart <= cellDateStr && cellDateStr <= eventEnd;
 
@@ -641,36 +640,36 @@ function Todo({ originalMeetingDate }) {
                         return (
                           <StyledTd key={dIdx} $isToday={isToday} >
                             <DayCell>{date.getDate()}</DayCell>
-                            {getEventsForDay(date).map((localEvent, i) => (
+                            {getEventsForDay(date).map((event, i) => (
                               <EventBox
                                 key={i}
-                                color={localEvent.color}
-                                className={`${localEvent.type.toUpperCase()}${localEvent.id
+                                color={event.color}
+                                className={`${event.type.toUpperCase()}${event.id
                                   }`}
                                 onMouseEnter={() =>
-                                  setHoveringEventId(localEvent.id)
+                                  setHoveringEventId(event.id)
                                 }
                                 onMouseLeave={() => setHoveringEventId(null)}
-                                $isHovered={hoveringEventId === localEvent.id}
+                                $isHovered={hoveringEventId === event.id}
                                 onClick={() =>
-                                  localEvent.type.toUpperCase() ===
+                                  event.type.toUpperCase() ===
                                     "ANNIVERSARY"
-                                    ? localEvent.editable
-                                      ? setViewTodoEvent(localEvent)
+                                    ? event.editable
+                                      ? setViewTodoEvent(event)
                                       : null
-                                    : setViewTravelEvent(localEvent)
+                                    : setViewTravelEvent(event)
                                 }
                               >
                                 <div
                                   title={
-                                    localEvent.type.toUpperCase() === "TRAVEL"
-                                      ? `${localEvent.title} ${localEvent.start_date} ~ ${localEvent.end_date}`
-                                      : !localEvent.editable
+                                    event.type.toUpperCase() === "TRAVEL"
+                                      ? `${event.title} ${event.start_date} ~ ${event.end_date}`
+                                      : !event.editable
                                         ? `첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`
-                                        : `${localEvent.title} ${localEvent.start_date}`
+                                        : `${event.title} ${event.start_date}`
                                   }
                                 >
-                                  {localEvent.title}
+                                  {event.title}
                                 </div>
                               </EventBox>
                             ))}
@@ -713,30 +712,30 @@ function Todo({ originalMeetingDate }) {
               {(showAllEvents
                 ? events
                 : events.filter((e) => e.type.toUpperCase() === activeSection)
-              ).map((localEvent, idx) => {
+              ).map((event, idx) => {
                 const diffDays = getDiffInDays(
-                  localEvent.type.toUpperCase() === "ANNIVERSARY"
-                    ? localEvent.start_date
-                    : localEvent.start_date
+                  event.type.toUpperCase() === "ANNIVERSARY"
+                    ? event.start_date
+                    : event.start_date
                 );
 
                 return (
                   <ListItem
-                    title={`${localEvent.type.toUpperCase() === "ANNIVERSARY"
-                      ? !localEvent.editable
+                    title={`${event.type.toUpperCase() === "ANNIVERSARY"
+                      ? !event.editable
                         ? "첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다."
-                        : localEvent.title + " " + localEvent.start_date
-                      : localEvent.title +
+                        : event.title + " " + event.start_date
+                      : event.title +
                       " " +
-                      localEvent.start_date +
+                      event.start_date +
                       " ~ " +
-                      localEvent.end_date
+                      event.end_date
                       }`}
                     key={idx}
                     onMouseEnter={() => setHoveredItem(idx)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
-                    <div className="eventTitle">{localEvent.title}</div>
+                    <div className="eventTitle">{event.title}</div>
                     <div className="day">
                       <div className="diff">
                         {diffDays >= 0
@@ -746,28 +745,28 @@ function Todo({ originalMeetingDate }) {
                           : `D +${Math.abs(diffDays)}`}
                       </div>
                       <ListDate>
-                        {localEvent.type.toUpperCase() === "ANNIVERSARY" ? (
-                          localEvent.start_date
+                        {event.type.toUpperCase() === "ANNIVERSARY" ? (
+                          event.start_date
                         ) : (
                           <>
                             {" "}
-                            {localEvent.start_date} <br />~{" "}
-                            {localEvent.end_date}{" "}
+                            {event.start_date} <br />~{" "}
+                            {event.end_date}{" "}
                           </>
                         )}
                       </ListDate>
                     </div>
 
-                    {hoveredItem === idx && localEvent.editable && (
+                    {hoveredItem === idx && event.editable && (
                       <>
-                        <IconButton onClick={() => handleDelete(localEvent)}>
+                        <IconButton onClick={() => handleDelete(event)}>
                           <IconClose />
                         </IconButton>
                         <EditButton
                           onClick={() =>
-                            localEvent.type.toUpperCase() === "ANNIVERSARY"
-                              ? setEditingTodoEvent({ ...localEvent })
-                              : setEditingTravelEvent({ ...localEvent })
+                            event.type.toUpperCase() === "ANNIVERSARY"
+                              ? setEditingTodoEvent({ ...event })
+                              : setEditingTravelEvent({ ...event })
                           }
                         >
                           <IconEdit />
@@ -800,7 +799,7 @@ function Todo({ originalMeetingDate }) {
 
         {viewTodoEvent && (
           <DetailTodo
-            localEvent={viewTodoEvent}
+            event={viewTodoEvent}
             onClose={() => setViewTodoEvent(null)}
             onEdit={() => {
               setEditingTodoEvent(viewTodoEvent);
@@ -854,7 +853,7 @@ function Todo({ originalMeetingDate }) {
 
         {editingTodoEvent && (
           <Edittodo
-            localEvent={editingTodoEvent}
+            event={editingTodoEvent}
             setEvent={setEditingTodoEvent}
             onClose={() => setEditingTodoEvent(null)}
             onSubmit={(e) => {
@@ -886,7 +885,7 @@ function Todo({ originalMeetingDate }) {
 
         {editingTravelEvent && (
           <Edittravel
-            localEvent={editingTravelEvent}
+            event={editingTravelEvent}
             setEvent={setEditingTravelEvent}
             onClose={() => setEditingTravelEvent(null)}
             onSubmit={async (e) => {
