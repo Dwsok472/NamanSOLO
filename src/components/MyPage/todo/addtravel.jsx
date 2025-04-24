@@ -259,7 +259,7 @@ function AddTravel({
     const files = Array.from(e.target.files).filter(f => f instanceof File);
     setNewEvent({
       ...newEvent,
-      images: [...(newEvent.images || []), ...files]
+      mediaUrl: [...(newEvent.mediaUrl || []), ...files]
     });
   };
 
@@ -267,18 +267,18 @@ function AddTravel({
     const confirmDelete = window.confirm('이 이미지를 삭제할까요?');
     if (!confirmDelete) return;
 
-    const updated = [...(newEvent.images || [])];
+    const updated = [...(newEvent.mediaUrl)];
     updated.splice(currentImageIndex, 1);
-    setNewEvent({ ...newEvent, images: updated });
+    setNewEvent({ ...newEvent, mediaUrl: updated });
     setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : 0));
   };
 
   const handlePrevImage = () => {
-    setCurrentImageIndex(prev => (prev - 1 + newEvent.images.length) % newEvent.images.length);
+    setCurrentImageIndex(prev => (prev - 1 + newEvent.mediaUrl.length) % newEvent.mediaUrl.length);
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex(prev => (prev + 1) % newEvent.images.length);
+    setCurrentImageIndex(prev => (prev + 1) % newEvent.mediaUrl.length);
   };
 
   return (
@@ -291,14 +291,14 @@ function AddTravel({
         </Top>
         <Bottom>
           <ImagePreviewContainer>
-            {newEvent.images?.length > 0 ? (
+            {newEvent.mediaUrl?.length > 0 ? (
               <>
                 <PreviewImage
-                  src={URL.createObjectURL(newEvent.images[currentImageIndex])}
+                  src={URL.createObjectURL(newEvent.mediaUrl[currentImageIndex])}
                   alt="미리보기"
                   onClick={() => fileInputRef.current?.click()}
                 />
-                {newEvent.images.length > 1 && (
+                {newEvent.mediaUrl.length > 1 && (
                   <>
                     <PrevButton onClick={handlePrevImage}><img src={LeftKey} alt="이전" /></PrevButton>
                     <NextButton onClick={handleNextImage}><img src={RightKey} alt="다음" /></NextButton>
@@ -317,7 +317,7 @@ function AddTravel({
               accept="image/*"
               onChange={handleImageChange}
             />
-            {newEvent.images?.length > 0 && (
+            {newEvent.mediaUrl?.length > 0 && (
               <DeleteButton onClick={handleDeleteImage}><IconClose /></DeleteButton>
             )}
           </ImagePreviewContainer>

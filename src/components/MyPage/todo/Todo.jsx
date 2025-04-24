@@ -444,7 +444,7 @@ function Todo({ originalMeetingDate }) {
     end_date: "",
     color: "#87cefa",
     type: "TRAVEL",
-    images: [],
+    mediaUrl: [],
     editable: true,
   });
   const [viewTodoEvent, setViewTodoEvent] = useState(null);
@@ -976,7 +976,7 @@ function Todo({ originalMeetingDate }) {
                   start_date: "",
                   end_date: "",
                   color: "#ffc0cb",
-                  images: [],
+                  mediaUrl: [],
                   editable: true,
                   type: "TRAVEL",
                 });
