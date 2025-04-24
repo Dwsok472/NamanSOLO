@@ -36,6 +36,7 @@ const StyledWrapper = styled.div`
     border-radius: 10px;
   }
   .button {
+    top:-22px;
     background: none;
     border: none;
     cursor: pointer;
