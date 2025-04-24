@@ -239,7 +239,7 @@ const SubmitButton = styled.button`
 `;
 
 function Edittravel({
-  localEvent,
+  event,
   setEvent,
   paletteOpen,
   setPaletteOpen,
@@ -247,42 +247,42 @@ function Edittravel({
   onClose,
   onSubmit
 }) {
-  if (!localEvent) return null;
+  if (!event) return null;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const fileInputRef = useRef(null);
 
-  const isFileImage = (index) => index >= (localEvent.mediaUrl?.length || 0);
+  const isFileImage = (index) => index >= (event.mediaUrl?.length || 0);
 
-  const currentImage = localEvent.mediaUrl[currentIndex];
+  const currentImage = event.mediaUrl[currentIndex];
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + localEvent.mediaUrl.length) % localEvent.mediaUrl.length);
+    setCurrentIndex((prev) => (prev - 1 + event.mediaUrl.length) % event.mediaUrl.length);
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % localEvent.mediaUrl.length);
+    setCurrentIndex((prev) => (prev + 1) % event.mediaUrl.length);
   };
 
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
     const fetchImages = async () => {
-      console.log(localEvent.mediaUrl)
-      if (localEvent.mediaUrl?.length) {
-        setImageUrls(localEvent.mediaUrl.map((media) => media.mediaUrl));
+      console.log(event.mediaUrl)
+      if (event.mediaUrl?.length) {
+        setImageUrls(event.mediaUrl.map((media) => media.mediaUrl));
       }
     };
 
     fetchImages();
-  }, [localEvent.mediaUrl]);
+  }, [event.mediaUrl]);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     setEvent({
-      ...localEvent,
-      id: localEvent.id,
-      mediaUrl: [...(localEvent.mediaUrl || []), ...files]
+      ...event,
+      id: event.id,
+      mediaUrl: [...(event.mediaUrl || []), ...files]
     });
   };
 
@@ -291,14 +291,14 @@ function Edittravel({
     if (!confirmDel) return;
 
     if (isFileImage(currentIndex)) {
-      const idx = currentIndex - (localEvent.mediaUrl?.length || 0);
-      const updatedImages = [...localEvent.imageUrl];
+      const idx = currentIndex - (event.mediaUrl?.length || 0);
+      const updatedImages = [...event.imageUrl];
       updatedImages.splice(idx, 1);
-      setEvent({ ...localEvent, mediaUrl: updatedImages });
+      setEvent({ ...event, mediaUrl: updatedImages });
     } else {
-      const updatedMedia = [...localEvent.mediaUrl];
+      const updatedMedia = [...event.mediaUrl];
       updatedMedia.splice(currentIndex, 1);
-      setEvent({ ...localEvent, mediaUrl: updatedMedia });
+      setEvent({ ...event, mediaUrl: updatedMedia });
     }
 
     setCurrentIndex((prev) => Math.max(0, prev - 1));
@@ -350,39 +350,39 @@ function Edittravel({
             <Input
               type="text"
               placeholder="제목을 입력해주세요"
-              value={localEvent.title || ''}
-              onChange={(e) => setEvent({ ...localEvent, title: e.target.value })}
+              value={event.title || ''}
+              onChange={(e) => setEvent({ ...event, title: e.target.value })}
               required
             />
 
             <Row>
               <Input
                 type="date"
-                value={localEvent.start_date || ''}
-                onChange={(e) => setEvent({ ...localEvent, start_date: e.target.value })}
+                value={event.start_date || ''}
+                onChange={(e) => setEvent({ ...event, start_date: e.target.value })}
                 required
               />
               <Input
                 type="date"
-                value={localEvent.end_date || ''}
-                onChange={(e) => setEvent({ ...localEvent, end_date: e.target.value })}
+                value={event.end_date || ''}
+                onChange={(e) => setEvent({ ...event, end_date: e.target.value })}
                 required
               />
             </Row>
 
             {/* <Label>색상</Label> */}
             <ColorSection onClick={() => setPaletteOpen(prev => !prev)}>
-              <SelectedColorPreview color={localEvent.color} />
+              <SelectedColorPreview color={event.color} />
             </ColorSection>
 
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.filter((color)=>color!=localEvent.color).map(color => (
+                {colorSamples.filter((color)=>color!=event.color).map(color => (
                   <ColorDot
                     key={color}
                     color={color}
                     onClick={() => {
-                      setEvent({ ...localEvent, color });
+                      setEvent({ ...event, color });
                       setPaletteOpen(false);
                     }}
                   />

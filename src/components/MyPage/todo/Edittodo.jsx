@@ -130,7 +130,7 @@ const Button = styled.button`
 `;
 
 function Edittodo({
-  localEvent,
+  event,
   setEvent,
   paletteOpen,
   setPaletteOpen,
@@ -138,7 +138,7 @@ function Edittodo({
   onClose,
   onSubmit
 }) {
-  if (!localEvent) return null;
+  if (!event) return null;
 
   return (
     <CardWrap
@@ -153,31 +153,31 @@ function Edittodo({
             <Input
               type="text"
               placeholder="기념일 제목"
-              value={localEvent.title || ''}
-              onChange={(e) => setEvent({ ...localEvent, title: e.target.value })}
+              value={event.title || ''}
+              onChange={(e) => setEvent({ ...event, title: e.target.value })}
               required
             />
 
             <Input
               type="date"
-              value={localEvent.start_date || ''}
-              onChange={(e) => setEvent({ ...localEvent, start_date: e.target.value, end_date: e.target.value, type: "ANNIVERSARY" })}
+              value={event.start_date || ''}
+              onChange={(e) => setEvent({ ...event, start_date: e.target.value, end_date: e.target.value, type: "ANNIVERSARY" })}
               required
             />
 
 
             <ColorSection onClick={() => setPaletteOpen((prev) => !prev)}>
-              <SelectedColorPreview color={localEvent.color} />
+              <SelectedColorPreview color={event.color} />
             </ColorSection>
 
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.filter((color) => color != localEvent.color).map((color) => (
+                {colorSamples.filter((color) => color != event.color).map((color) => (
                   <ColorDot
                     key={color}
                     color={color}
                     onClick={() => {
-                      setEvent({ ...localEvent, color });
+                      setEvent({ ...event, color });
                       setPaletteOpen(false);
                     }}
                   />
