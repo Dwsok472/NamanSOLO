@@ -60,6 +60,7 @@ export const fetchTravels = async () => {
       end_date: item.endDate,
       editable: true,
       type: 'travel',
+      mediaUrl: item.mediaUrl,
       color: item.color,
     }));
   } catch (e) {
