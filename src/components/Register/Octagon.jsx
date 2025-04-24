@@ -149,6 +149,16 @@ function Octagon({
     }
   }
 
+  useEffect(() => {
+    setEmailStatus(false);
+    setEmailButtonText("중복확인");
+  }, [email]);
+  
+  useEffect(() => {
+    setPhoneStatus(false);
+    setPhoneButtonText("중복확인");
+  }, [phone]);
+
   async function handleCheckPhone() {
     try {
       const isAvaliable = await checkPhoneDuplicate(phone);
