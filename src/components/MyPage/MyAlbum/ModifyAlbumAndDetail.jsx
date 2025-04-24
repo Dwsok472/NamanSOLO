@@ -290,7 +290,7 @@ function ModifyAlbumAndDetail({
               <input
                 type="text"
                 className="tags"
-                placeholder="태그를 입력하시면 아래에 태그 목록이 반영됩니다"
+                placeholder="태그를 입력 후 SPACE 버튼을 누르면 아래에 태그 목록이 반영됩니다"
                 onKeyUp={handleTagChange}
               />
               <div className="tags-list">
