@@ -221,10 +221,13 @@ const Form = styled.div`
     display: none;
   }
   img.preview {
-    width: 100%;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain; 
+  border-radius: 8px;
+  margin-top: 10px;
+  display: block;
+}
   .imgwrap {
     width: 100%;
     position: relative;
@@ -253,20 +256,28 @@ const Form = styled.div`
     }
   }
 
-  .imgwraps {
-    width: 100%;
-    height: 350px;
-    position: relative;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    .fileinput {
-      position: absolute;
-      bottom: 2px;
-      right: 0;
-      padding-right: 5px;
-      z-index: 400;
-      cursor: pointer;
-    }
+  .imgwrap {
+  width: 100%;
+  max-height: 280px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #ccc; 
+  border-radius: 8px;
+  background-color: #f9f9f9; 
+  padding: 6px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .fileinput {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    z-index: 400;
+    cursor: pointer;
+  }
+}
+
     .fixed {
       width: 100%;
       height: 100%;
@@ -516,10 +527,10 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const handleImage = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      setImages(files); // 여러 이미지 저장
+      setImages(files); 
       setNewPlace((prev) => ({
         ...prev,
-        images: files, // 썸네일용 대표 이미지
+        images: files, 
         preview: URL.createObjectURL(files[0]),
       }));
     }
@@ -800,6 +811,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                 <CloseBtn
                   onClick={() => {
                     setEditingId(null);
+                    setShowForm(false);
                     setNewPlace({
                       name: '',
                       category: '',
@@ -960,7 +972,6 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               </CategoryCheckboxLabel>
             ))}
           </CategoryCheckboxGroup>
-
           <AddressRow>
             <input
               type="text"
@@ -974,7 +985,6 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               장소검색
             </SearchButton>
           </AddressRow>
-
           {showMapPicker && (
             <ModalWrapper>
               <ModalCloseBtn onClick={() => setShowMapPicker(false)}>
@@ -996,7 +1006,6 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
               />
             </ModalWrapper>
           )}
-
           <textarea
             placeholder="설명"
             value={newPlace.description}
