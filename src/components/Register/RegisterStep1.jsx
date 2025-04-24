@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { IconPassword, IconUser } from "../Icons";
@@ -240,6 +240,10 @@ function RegisterStep1({ onNext }) {
 
     onNext();
   };
+  
+  useEffect(()=> {
+    setButtonText("중복확인");
+  }, [username])
 
   return (
     <Container>
