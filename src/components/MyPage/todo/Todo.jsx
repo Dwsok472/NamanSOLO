@@ -93,7 +93,8 @@ const YearPickerWrap = styled.div`
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 10%;
+  top: 25%;
+  left:45%;
   padding: 20px;
   height: 270px;
 `;
@@ -991,7 +992,7 @@ function Todo({ originalMeetingDate }) {
         )}
 
         {isPickerOpen && (
-          <YearPickerWrap>
+          <YearPickerWrap onClick={(e) => e.stopPropagation()}>
             <YearButtons>
               <YearArrow
                 src={LeftKey}
