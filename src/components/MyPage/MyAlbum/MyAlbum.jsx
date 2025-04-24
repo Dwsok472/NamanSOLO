@@ -111,6 +111,9 @@ const MyAlbum = () => {
 
   //해당 ID를 가진 앨범을 삭제하기
   async function handleDeleteAlbum(id) {
+    const confirmDelete = window.confirm(`앨범을 정말 삭제하시겠어요?`
+    );
+    if (!confirmDelete) return;
     await deleteMyAlbum(id);
     setSelectedPost(null);
     setIsModalOpen(false);
