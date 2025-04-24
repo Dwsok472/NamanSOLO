@@ -281,7 +281,7 @@ function Follow({ type }) {
                   <Img src={item.profileUrl} />
                   <p
                     className="userName"
-                    onClick={() => navigate(`/user/story/${item.username}`)}
+                    onClick={() => navigate(`/user/album/${item.username}`)}
                   >
                     {item.username}
                   </p>
@@ -303,8 +303,8 @@ function Follow({ type }) {
                         ? "맞팔중"
                         : "팔로우 하기"
                       : item.mutualFollow
-                      ? "맞팔중"
-                      : "피드 구경하기"}
+                        ? "맞팔중"
+                        : "피드 구경하기"}
                   </TopButton>
                   <ButtomButton
                     onClick={() =>
