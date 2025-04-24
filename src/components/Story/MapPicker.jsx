@@ -194,14 +194,34 @@ const MapPicker = ({ onSelect }) => {
 
   useEffect(() => {
     const handleLocationMessage = (event) => {
-      console.log("메시지 받음:", event.data);
       const { latitude, longitude } = event.data;
+      if (latitude && longitude && window.google) {
+        const loc = new window.google.maps.LatLng(latitude, longitude);
+        const geocoder = new window.google.maps.Geocoder();
+  
+        geocoder.geocode({ location: loc }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const address = results[0].formatted_address;
+            placeMarker(loc, address); 
+            
+            if (onSelect) {
+              onSelect({
+                address,
+                lat: latitude,
+                lng: longitude,
+              });
+            }
+          }
+        });
+      }
     };
+  
     window.addEventListener("message", handleLocationMessage);
     return () => {
       window.removeEventListener("message", handleLocationMessage);
     };
-  }, []);
+  }, [map]);
+  
 
   return (
     <MapContainer>
