@@ -821,7 +821,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
                   <input
                     type="text"
                     placeholder="주소"
-                    value={newPlace.address}
+                    value={newPlace.address ?? ``}
                     onChange={(e) =>
                       setNewPlace({ ...newPlace, address: e.target.value })
                     }

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 
 const MapContainer = styled.div`
   padding: 20px;
@@ -8,7 +8,7 @@ const MapContainer = styled.div`
 `;
 
 const Title = styled.h3`
-color: black;
+  color: black;
   margin-bottom: 10px;
   font-size: 1.5rem;
 `;
@@ -86,9 +86,9 @@ const MapPicker = ({ onSelect }) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [predictions, setPredictions] = useState([]);
-  const [selectedAddress, setSelectedAddress] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   useEffect(() => {
     if (window.google) {
@@ -97,7 +97,7 @@ const MapPicker = ({ onSelect }) => {
   }, []);
 
   const initMap = () => {
-    const seoul = { lat: 37.5665, lng: 126.9780 };
+    const seoul = { lat: 37.5665, lng: 126.978 };
     const mapInstance = new window.google.maps.Map(mapRef.current, {
       center: seoul,
       zoom: 13,
@@ -123,7 +123,7 @@ const MapPicker = ({ onSelect }) => {
   const handleSelectPlace = (placeId, description) => {
     const geocoder = new window.google.maps.Geocoder();
     geocoder.geocode({ placeId }, (results, status) => {
-      if (status === 'OK' && results[0]) {
+      if (status === "OK" && results[0]) {
         const location = results[0].geometry.location;
         placeMarker(location, results[0].formatted_address);
         setSearchInput(description);
@@ -132,7 +132,7 @@ const MapPicker = ({ onSelect }) => {
     });
   };
 
-  const placeMarker = (location, address = '') => {
+  const placeMarker = (location, address = "") => {
     if (!map) return;
 
     if (marker) marker.setMap(null);
@@ -141,14 +141,15 @@ const MapPicker = ({ onSelect }) => {
       position: location,
       map,
       icon: {
-        url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
         scaledSize: new window.google.maps.Size(40, 40),
       },
     });
 
-    newMarker.addListener('click', () => {
+    newMarker.addListener("click", () => {
       if (address) {
         setSelectedAddress(address);
+        setSearchInput(address);
       }
     });
 
@@ -168,26 +169,39 @@ const MapPicker = ({ onSelect }) => {
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert('위치 권한을 확인해주세요!');
+      alert("위치 권한을 확인해주세요!");
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        const loc = new window.google.maps.LatLng(latitude, longitude);
+    const popup = window.open("https://192.168.0.77/location-helper.html");
 
-        const geocoder = new window.google.maps.Geocoder();
-        geocoder.geocode({ location: loc }, (results, status) => {
-          if (status === 'OK' && results[0]) {
-            const address = results[0].formatted_address;
-            placeMarker(loc, address);
-          }
-        });
-      },
-      () => alert('현재 위치를 가져올 수 없습니다.')
-    );
+    // navigator.geolocation.getCurrentPosition(
+    //   (pos) => {
+    //     const { latitude, longitude } = pos.coords;
+    //     const loc = new window.google.maps.LatLng(latitude, longitude);
+
+    //     const geocoder = new window.google.maps.Geocoder();
+    //     geocoder.geocode({ location: loc }, (results, status) => {
+    //       if (status === 'OK' && results[0]) {
+    //         const address = results[0].formatted_address;
+    //         placeMarker(loc, address);
+    //       }
+    //     });
+    //   },
+    //   () => alert('현재 위치를 가져올 수 없습니다.')
+    // );
   };
+
+  useEffect(() => {
+    const handleLocationMessage = (event) => {
+      console.log("메시지 받음:", event.data);
+      const { latitude, longitude } = event.data;
+    };
+    window.addEventListener("message", handleLocationMessage);
+    return () => {
+      window.removeEventListener("message", handleLocationMessage);
+    };
+  }, []);
 
   return (
     <MapContainer>
