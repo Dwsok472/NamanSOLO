@@ -30,6 +30,10 @@ function Top({ filter, onFilterChange }) {
     if (!jwt) {
       return;
     }
+    if (!currentUser) {
+      alert("로그인 후 이용이 가능합니다");
+      return
+    }
     try {
       const response = await axios.get(
         `/api/follow/search/all/${inputKeyword}`,
