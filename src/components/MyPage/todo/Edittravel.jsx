@@ -267,14 +267,13 @@ function Edittravel({
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
-    const fetchImages = async () => {
-      console.log(event.mediaUrl)
-      if (event.mediaUrl?.length) {
-        setImageUrls(event.mediaUrl.map((media) => media.mediaUrl));
-      }
-    };
-
-    fetchImages();
+    console.log(event.mediaUrl)
+    if (event.mediaUrl?.length) {
+      const urls = event.mediaUrl.map((media) =>
+        media instanceof File ? URL.createObjectURL(media) : media.mediaUrl
+      );
+      setImageUrls(urls);
+    }
   }, [event.mediaUrl]);
 
   const handleFileChange = (e) => {
@@ -316,11 +315,7 @@ function Edittravel({
             {imageUrls.length > 0 ? (
               <>
                 <PreviewImage
-                  src={
-                    currentImage instanceof File
-                      ? URL.createObjectURL(currentImage)
-                      : currentImage.mediaUrl
-                  }
+                  src={imageUrls[currentIndex]}
                   onClick={() => fileInputRef.current.click()}
                   alt="미리보기"
                 />
