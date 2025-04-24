@@ -190,15 +190,17 @@ const SelectedColorPreview = styled.div`
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  padding-bottom:6px;
   background-color: ${(props) => props.color || '#eee'};
   border: 2px solid #ccc;
 `;
 
 const ColorPalette = styled.div`
+  justify-content: end;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: -30px;
   flex-wrap: wrap;
   padding-bottom: 6px;
 `;
@@ -376,7 +378,7 @@ function Edittravel({
 
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.map(color => (
+                {colorSamples.filter((color)=>color!=localEvent.color).map(color => (
                   <ColorDot
                     key={color}
                     color={color}

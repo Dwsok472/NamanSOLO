@@ -85,10 +85,11 @@ const SelectedColorPreview = styled.div`
 `;
 
 const ColorPalette = styled.div`
+  justify-content: end;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: -30px;
   flex-wrap: wrap;
   padding-bottom: 6px;
 `;
@@ -171,7 +172,7 @@ function Edittodo({
 
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.map((color) => (
+                {colorSamples.filter((color) => color != localEvent.color).map((color) => (
                   <ColorDot
                     key={color}
                     color={color}

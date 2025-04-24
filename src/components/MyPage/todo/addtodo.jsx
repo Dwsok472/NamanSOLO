@@ -78,29 +78,23 @@ const ColorSection = styled.div`
   padding-bottom: 6px;
   width: fit-content;
   cursor: pointer;
-
-  &:hover {
-    transform: scale(1.1);
-  }
 `;
 
 const SelectedColorPreview = styled.div`
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  padding-bottom: 6px;
   background-color: ${(props) => props.color || '#eee'};
   border: 2px solid #ccc;
-  
-  &:hover {
-    transform: scale(1.1);
-  }
 `;
 
 const ColorPalette = styled.div`
+  justify-content: end;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
+  margin-top: -30px;
   flex-wrap: wrap;
   padding-bottom: 6px;
 `;
@@ -181,7 +175,7 @@ function Addtodo({
 
             {paletteOpen && (
               <ColorPalette>
-                {colorSamples.map((color) => (
+                {colorSamples.filter((color)=>color!=newEvent.color).map((color) => (
                   <ColorDot
                     key={color}
                     color={color}
