@@ -75,12 +75,10 @@ function WebSocketManager() {
         Authorization: `Bearer ${token}`, // JWT 인증
       },
       onConnect: () => {
-        console.log("✅ WebSocket 연결됨:", user.username);
         stompClientRef.current = client;
         client.subscribe(`/user/${user.username}/queue/private`, onNotificationReceived);
       },
       onStompError: (frame) => {
-        console.error("❌ STOMP 연결 에러:", frame.headers["message"]);
         client.deactivate();
       },
     });
@@ -89,11 +87,11 @@ function WebSocketManager() {
 
   function onNotificationReceived(notification) {
     const raw = JSON.parse(notification.body);
-    console.log("📨 수신된 알림:", raw);
+    console.log(" 수신된 알림:", raw);
 
     const addAlarm = useAlarmList.getState().addAlarm;
     const currentUser = useUserStore.getState().user?.username;
-    if (raw.recipient !== currentUser) return; // ✅ 수신 대상 기준 체크
+    if (raw.recipient !== currentUser) return; 
 
     const type = raw.type || raw.alarmType || "UNKNOWN";
 
