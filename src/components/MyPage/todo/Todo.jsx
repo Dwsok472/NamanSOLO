@@ -196,10 +196,18 @@ const StyledTd = styled.td`
 `;
 
 const DayCell = styled.div`
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;  
   font-weight: bold;
   font-size: 1.2rem;
   color: ${({ $isToday }) => ($isToday ? "#eb0202" : "black")};
+
+  img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
 `;
 
 const EventBox = styled.div`
@@ -223,12 +231,6 @@ const EventBox = styled.div`
     align-items: center;
     justify-content: center;
     gap:3px;
-    img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
     ${({ $isHovered }) =>
     $isHovered &&
     `
@@ -655,7 +657,12 @@ function Todo({ originalMeetingDate }) {
                           dateStr === today.toISOString().split("T")[0];
                         return (
                           <StyledTd key={dIdx} $isToday={isToday} >
-                            <DayCell>{date.getDate()}</DayCell>
+                            <DayCell>
+                              {getEventsForDay(date).some(ev => !ev.editable) && (
+                                <img src={firework} alt="비편집 아이콘" />
+                              )}
+                              {date.getDate()}
+                            </DayCell>
                             {getEventsForDay(date).map((event, i) => (
                               <EventBox
                                 key={i}
@@ -686,20 +693,6 @@ function Todo({ originalMeetingDate }) {
                                         : `${event.title} ${event.start_date}`
                                   }
                                 >
-                                  {!event.editable && (
-                                    <img
-                                      title={
-                                        event.type.toUpperCase() === "TRAVEL"
-                                          ? `${event.title} ${event.start_date} ~ ${event.end_date}`
-                                          : !event.editable
-                                            ? `첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`
-                                            : `${event.title} ${event.start_date}`
-                                      }
-                                      src={firework}
-                                      alt="비편집 아이콘"
-                                      style={{ width: "14px", marginLeft: "4px" }}
-                                    />
-                                  )}
                                   {event.title}
                                 </div>
                               </EventBox>
