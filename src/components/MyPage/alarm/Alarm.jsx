@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Setting from "./Setting";
 import { useAlarmList } from "./alarmList";
 import { useUserStore } from "../../Login/Login";
+import axios from "axios";
 // import { fetchMyAlarms } from "../../api3";
 
 
@@ -242,7 +243,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
       useAlarmList.getState().resetUnreadCount();
     }
   }, []);
-  
+
   useEffect(() => {
     const currentUser = useUserStore.getState().user?.username;
     if (!currentUser) return;
