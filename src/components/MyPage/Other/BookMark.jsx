@@ -57,11 +57,13 @@ function BookMark() {
       }
       setData(response.data);
       setLoading(false);
+      console.log(response.data);
     } catch (error) {
       alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
       throw error; // 에러 처리
     }
   }
+  console.log(data);
   useEffect(() => {
     GetAllBookmark();
   }, []);
@@ -109,7 +111,15 @@ function BookMark() {
                   <IconClose />
                 </DeleteButton>
                 <Left>
-                  <Img src={item.url} />
+                  {item.url.mediaType === 'PICTURE' ? (
+                    <Img src={item.url.mediaUrl} />
+                  ) : (
+                    <video src={item.url.mediaUrl}
+                      muted
+                      className="video"
+                    ></video>
+                  )}
+
                 </Left>
 
                 <BottomName>
@@ -206,6 +216,8 @@ const DeleteButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
+
+  width: 15%;
 `;
 
 const Left = styled.div`
@@ -217,6 +229,14 @@ const Left = styled.div`
     font-size: 1rem;
     font-weight: 700;
     padding-left: 10px;
+  }
+  .video{
+    border-radius: 15px;
+  object-fit: cover;
+  border: 1px solid #333;
+  align-items: center;
+  width: 100px;
+  height: 90px;
   }
 `;
 

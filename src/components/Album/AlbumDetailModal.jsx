@@ -24,26 +24,32 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const currentUser = useUserStore((state) => state.user?.username);
   const location = useLocation();
   console.log(albumData);
+  console.log(userLikes)
   const isMyPage = location.pathname.startsWith('/mypage/album');
+
+
+  // 해당 앨범에 전체 좋아요를 한 username을 가지고 오기
+  const getAllComments = async () => {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      const response = await axios.get(`/api/comment/album-id/${albumData.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      setCommentCount(response.data.length);
+    } catch (error) {
+      console.error('코멘트 개수 불러오기 실패:', error);
+    }
+  }
   useEffect(() => {
-    // 댓글 개수 업데이트
-    const fetchCommentCount = albumData.comments.length; // albumData에 댓글 수가 들어있다고 가정
-    setCommentCount(fetchCommentCount);
-  }, [albumData]);
+    getAllComments();
+  }, [albumData.id]) // albumData.id를 부를 때마다 좋아요 목록 가지고 오기
 
-  // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
-  const prevImage = () => {
-    setImageIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : albumData.url.length - 1
-    );
-  };
 
-  // 이미지 변경 함수 (오른쪽 화살표 클릭 시)
-  const nextImage = () => {
-    setImageIndex((prevIndex) =>
-      prevIndex < albumData.url.length - 1 ? prevIndex + 1 : 0
-    );
-  };
 
   // 댓글 모음 토글 함수
   const toggleCommentVisibility = (albumId) => {
@@ -60,6 +66,8 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
     setCommentCount(newCount);
   };
 
+
+  // 좋아요 토글 관리 함수
   async function toggleLike(albumId, username) {
     const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
@@ -85,10 +93,42 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
       return null;
     }
   }
+  // 해당 앨범에 전체 좋아요를 한 username을 가지고 오기
+  const getAllGreats = async () => {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      const response = await axios.get(`/api/great/albumId/${albumData.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      const usernames = response.data;//현재 앨범에 좋아요를 누른 유저네임들
+
+      const updateLikes = {};
+      usernames.forEach((username) => {
+        updateLikes[username] = true;  // [couple001] = true 로 만들기!! 
+      });
+
+      setUserLikes(updateLikes); // 전체 좋아요를 누른 username 담기
+      setLikeCount(usernames.length); // 좋아요 개수 
+    } catch (error) {
+      console.error('좋아요 목록 불러오기 실패:', error);
+    }
+  }
+
+  useEffect(() => {
+    getAllGreats();
+  }, [albumData.id]) // albumData.id를 부를 때마다 좋아요 목록 가지고 오기
+
   const handleLike = async () => {
     const result = await toggleLike(albumData.id, currentUser);
     if (!result) return;
 
+
+    // 좋아요 상태 갱신
     setUserLikes((prev) => {
       const updated = { ...prev };
       if (result.liked) {
@@ -100,14 +140,20 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
       return updated;
     });
   };
-  useEffect(() => {
-    // 초기 좋아요 상태 설정 (기존 좋아요 배열에 포함된 사용자 확인)
-    const initialLikes = albumData.greats.reduce((acc, user) => {
-      acc[user] = 1; // 좋아요를 누른 유저는 1로 설정
-      return acc;
-    }, {});
-    setUserLikes(initialLikes);
-  }, [albumData.greats]);
+
+  // 이미지 변경 함수 (왼쪽 화살표 클릭 시)
+  const prevImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : albumData.url.length - 1
+    );
+  };
+
+  // 이미지 변경 함수 (오른쪽 화살표 클릭 시)
+  const nextImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex < albumData.url.length - 1 ? prevIndex + 1 : 0
+    );
+  };
 
   const currentMedia = albumData.url?.[imageIndex];
   const multipleImages = albumData.url?.length > 1;

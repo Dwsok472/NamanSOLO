@@ -47,9 +47,10 @@ function ModifyAlbumAndDetail({
     }
     try {
       const formData = new FormData();
-      const newFiles = images.filter((img) => img.file); // 새로 추가된 이미지만
+      const newFiles = images.filter((img) => img.file);
+      // 새로 추가된 이미지만(새로 추가한 이미지는 file 객체를 포함했기 때문에 file이 있는 것만 추출), 기존 이미지는 file 객체가 없음
 
-      newFiles.forEach((img) => formData.append("files", img.file));
+      newFiles.forEach((img) => formData.append("files", img.file)); // 새로 추가된 이미지들만 upload 하기
 
       let uploadedMedia = [];
       if (newFiles.length > 0) {
@@ -72,8 +73,8 @@ function ModifyAlbumAndDetail({
           id: img.id,
           mediaUrl: img.mediaUrl,
           mediaType: img.mediaType,
-        })),
-        ...uploadedMedia,
+        })), // 여기까지가 기존 이미지
+        ...uploadedMedia, //새로 추가된 이미지
       ];
 
 

@@ -58,6 +58,8 @@ const CommentPage = () => {
             albumTitle: album?.title || "제목 없음",
             albumThumbnail:
               album?.url?.[0]?.mediaUrl || "/default-thumbnail.png",
+            albumThumbnailType:
+              album?.url?.[0]?.mediaType || "/default-thumbnail.png",
           };
         })
       );
@@ -85,6 +87,8 @@ const CommentPage = () => {
             albumTitle: album?.title || "제목 없음",
             albumThumbnail:
               album?.url?.[0]?.mediaUrl || "/default-thumbnail.png",
+            albumThumbnailType:
+              album?.url?.[0]?.mediaType || "/default-thumbnail.png",
           };
         })
       );
@@ -197,11 +201,16 @@ const CommentPage = () => {
     data.map((item) => (
       <Card key={item.id}>
         <Thumbnail onClick={() => handleSelectedAlbum(item.albumId)}>
-          <img
-            src={item.albumThumbnail}
-            alt="앨범 썸네일"
-            className="albumimg"
-          />
+          {item.albumThumbnailType === 'PICTURE' ? (
+            <img
+              src={item.albumThumbnail}
+              alt="앨범 썸네일"
+              className="albumimg"
+            />
+          ) : (
+            <video muted src={item.albumThumbnail} alt="앨범 썸네일" className="albumvideo" />
+          )}
+
         </Thumbnail>
         <Content>
           <Date>작성일자 : {item.addDate}</Date>
@@ -237,7 +246,7 @@ const CommentPage = () => {
         <CloseBtn onClick={() => handleDelete(item.id, isReply)}>
           <IconClose />
         </CloseBtn>
-      
+
       </Card>
     ));
 
@@ -267,11 +276,11 @@ const CommentPage = () => {
         <ScrollSection>{renderList(replies, true)}</ScrollSection>
       </Column>
       {showDetail && selectedAlbum && (
-  <AlbumDetailModal
-    onClose={toggleBack}
-    albumData={selectedAlbum}
-  />
-)}
+        <AlbumDetailModal
+          onClose={toggleBack}
+          albumData={selectedAlbum}
+        />
+      )}
 
     </Wrapper>
   );
@@ -336,7 +345,7 @@ const Thumbnail = styled.div`
   border-radius: 15px;
   border: 1px solid #3333;
   margin-right: 16px;
-  img {
+  img,video {
     border-radius: 15px;
     object-fit: cover;
     width: 100%;
