@@ -2,73 +2,45 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useUserStore } from "../../Login/Login";
 
-export const useAlarmList = create(
-  persist(
-    (set) => ({
-      alarmList: [],
-      unreadCount: 0,
+export const useAlarmList = create((set) => ({
+  alarmList: [],
+  unreadCount: 0,
 
-      addAlarm: (alarm) => {
-        const currentUser = useUserStore.getState().user?.username;
-          const alarmWithDefaults = {
-            ...alarm,
-            isRead: alarm.isRead ?? false,
-            recipient: currentUser, 
-          };
+  addAlarm: (alarm) => {
+    const currentUser = useUserStore.getState().user?.username;
+    if (alarm.username !== currentUser) return;
 
-        const updated = {
-          alarmList: [alarmWithDefaults, ...useAlarmList.getState().alarmList],
-          unreadCount: useAlarmList.getState().unreadCount + 1,
-        };
+    const alarmWithDefaults = {
+      ...alarm,
+      isRead: alarm.isRead ?? false,
+      recipient: currentUser,
+    };
 
-        set(updated);
+    set((state) => ({
+      alarmList: [alarmWithDefaults, ...state.alarmList],
+      unreadCount: state.unreadCount + 1,
+    }));
+  },
 
-        if (currentUser) {
-          localStorage.setItem(`alarms-${currentUser}`, JSON.stringify(updated));
-        }
-      }, // ✅ 이 콤마 추가해야 함
+  resetUnreadCount: () => set((state) => ({ ...state, unreadCount: 0 })),
 
-      resetUnreadCount: () => set((state) => ({ ...state, unreadCount: 0 })),
+  resetAlarmList: () => set({ alarmList: [], unreadCount: 0 }),
 
-      resetAlarmList: () => set({ alarmList: [], unreadCount: 0 }),
+  markAsRead: (id) =>
+    set((state) => ({
+      alarmList: state.alarmList.map((alarm) =>
+        alarm.id === id ? { ...alarm, isRead: true } : alarm
+      ),
+    })),
 
-      markAsRead: (id) =>
-        set((state) => ({
-          alarmList: state.alarmList.map((alarm) =>
-            alarm.id === id ? { ...alarm, isRead: true } : alarm
-          ),
-        })),
-
-      removeAlarm: (id) =>
-        set((state) => {
-          const currentUser = useUserStore.getState().user?.username;
-          const updatedAlarmList = state.alarmList.filter(
-            (alarm) => alarm.id !== id
-          );
-          const updatedUnread = updatedAlarmList.filter(
-            (a) => !a.isRead
-          ).length;
-
-          const updated = {
-            alarmList: updatedAlarmList,
-            unreadCount: updatedUnread,
-          };
-
-          if (currentUser) {
-            localStorage.setItem(
-              `alarms-${currentUser}`,
-              JSON.stringify(updated)
-            );
-          }
-
-          return updated;
-        }),
+  removeAlarm: (id) =>
+    set((state) => {
+      const updatedAlarmList = state.alarmList.filter((alarm) => alarm.id !== id);
+      const updatedUnread = updatedAlarmList.filter((a) => !a.isRead).length;
+      return {
+        alarmList: updatedAlarmList,
+        unreadCount: updatedUnread,
+      };
     }),
-    {
-      name: "alarm-storage",
-      getStorage: () => localStorage,
-      skipHydration: true,
-    }
-  )
-);
+}));
 

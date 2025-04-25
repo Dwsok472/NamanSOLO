@@ -77,8 +77,8 @@ function WebSocketManager() {
 
     const addAlarm = useAlarmList.getState().addAlarm;
     const currentUser = useUserStore.getState().user?.username;
-    if (raw.username !== currentUser) return; // 로그인한 사용자 알람만 처리
-
+    if (raw.recipient !== currentUser) return; // ✅ 수신 대상 기준 체크
+    
     const type = raw.type || raw.alarmType || "UNKNOWN";
 
     if (type === "WEATHER") {

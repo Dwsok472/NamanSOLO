@@ -215,7 +215,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const alarmList = useAlarmList((state) => state.alarmList);
   const currentUser = useUserStore.getState().user?.username;
   const filteredAlarms = alarmList.filter((alarm) => alarm.recipient === currentUser);
-
+  
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
   // const [alarmList, setAlarmList] = useState([]);
@@ -241,21 +241,6 @@ function Alarm({ onClose /*, isOpen*/ }) {
       });
   
       useAlarmList.getState().resetUnreadCount();
-    }
-  }, []);
-
-  useEffect(() => {
-    const currentUser = useUserStore.getState().user?.username;
-    if (!currentUser) return;
-  
-    const stored = localStorage.getItem(`alarms-${currentUser}`);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      useAlarmList.setState({
-        alarmList: parsed.alarmList,
-        unreadCount: parsed.unreadCount,
-      });
-      console.log("✅ 로컬스토리지 알람 복원됨:", parsed);
     }
   }, []);
 
