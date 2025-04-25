@@ -243,7 +243,6 @@ function Alarm({ onClose /*, isOpen*/ }) {
     }
   }, []);
   
-
   useEffect(() => {
     const currentUser = useUserStore.getState().user?.username;
     if (!currentUser) return;
@@ -507,20 +506,19 @@ function Alarm({ onClose /*, isOpen*/ }) {
               </DropdownWrapper>
             </Content>
 
-            {/* 알람 항목들 */}
             {filteredAlarms.map((alarm) => {
               const isExpanded = expandedId === alarm.id;
               const shouldShowToggle = isExpanded || overflowingItems[alarm.id];
               return (
                 <AlarmItem
                   key={alarm.id}
-                  onClick={() => handleAlarmClick(alarm)}
                   isExpanded={isExpanded}
+                  onClick={() => handleAlarmClick(alarm)}
                 >
                   <Img src={alarm.img || undefined} alt={alarm.alt || "알림"} />
                   <TextWrapper
                     isExpanded={isExpanded}
-                    ref={(el) => (textRefs.current[alarm.id] = el)} // ref 설정
+                    ref={(el) => (textRefs.current[alarm.id] = el)}
                   >
                     {alarm.text}
                   </TextWrapper>
@@ -530,7 +528,36 @@ function Alarm({ onClose /*, isOpen*/ }) {
                       {isExpanded ? "▲" : "▼"}
                     </ToggleIcon>
                   )}
+                  {isExpanded && (
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                          const token = sessionStorage.getItem("jwt-token");
+                          await axios.delete(`/api/alarm/${alarm.id}`, {
+                            headers: { Authorization: `Bearer ${token}` },
+                          });
+                          useAlarmList.getState().removeAlarm(alarm.id); // 상태에서도 삭제
+                          console.log("✅ 알람 삭제 완료:", alarm.id);
+                        } catch (err) {
+                          console.error("❌ 알람 삭제 실패:", err);
+                        }
+                      }}
+                      style={{
+                        marginLeft: "10px",
+                        fontSize: "12px",
+                        color: "#8c0d17",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      삭제
+                    </button>
+
+                  )}
                 </AlarmItem>
+
               );
             })}
           </ContainerMain>
