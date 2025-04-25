@@ -146,7 +146,7 @@ const Container = styled.div`
   width: 330px;
   margin: 0 auto;
   margin-top: 30px;
-  border-right: 1px solid black;
+  /* border-right: 1px solid black; */
 `;
 
 const ContainerMain = styled.div`

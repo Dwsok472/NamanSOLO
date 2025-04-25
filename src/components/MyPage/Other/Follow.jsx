@@ -248,7 +248,7 @@ function Follow({ type }) {
     }
   }
   return (
-    <Container>
+    <Container className={type === "follower" ? '' : 'active'}>
       <Top>
         <IconUsers />
         <h1>{type === "follower" ? "팔로워" : "팔로잉"}</h1>
@@ -331,7 +331,10 @@ const Container = styled.div`
   width: 350px;
   margin: 0 auto;
   margin-top: 30px;
-  border-right: 1px solid black;
+
+  &.active{
+    /* border-left: 1px solid black; */
+  }
 `;
 
 const ContainerMain = styled.div`
@@ -339,6 +342,7 @@ const ContainerMain = styled.div`
   border-radius: 5px;
   padding-top: 10px;
   height: 540px;
+
 `;
 
 const Top = styled.div`
