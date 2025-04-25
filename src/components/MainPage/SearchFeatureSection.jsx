@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import Lottie from 'lottie-react';
-
-import searchImg from '../img/1.jpg';
-import followImg from '../img/2.png';
-import storyImg from '../img/3.jpg';
 import userSearch from '../img/userSearch.json';
 import followAnimation from '../img/follow.json';
 import feed from '../img/feed.json';
 
 const Section = styled.section`
-  background: linear-gradient(to bottom, #f2ebdc, #fff9f9, #f2ebdc);
+  background: linear-gradient(to bottom, #f2ebdc, #fce8f0, #f2ebdc);
   padding: 120px 20px;
 `;
 
@@ -23,20 +19,30 @@ const Container = styled.div`
   flex-wrap: wrap;
 `;
 
+// 애니메이션 정의
+const floatUpDown = keyframes`
+  0% {
+    transform: translateY(-5px); /* 위로 살짝 이동 */
+  }
+  50% {
+    transform: translateY(5px); /* 아래로 살짝 이동 */
+  }
+  100% {
+    transform: translateY(-5px); /* 다시 위로 이동 */
+  }
+`;
+
 const Title = styled.h2`
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: #8c0d17;
+  color: #000000;
   text-align: center;
   line-height: 1.4;
   white-space: pre-line;
-  animation: floatIn 1.4s ease-in-out both;
+  animation:  ${floatUpDown} 2s ease-in-out infinite; 
   margin-bottom: 50px;
-`;
-
-const floatIn = keyframes`
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
+  1px 1px 0 white;
 `;
 
 const Left = styled.div`
@@ -54,19 +60,34 @@ const Right = styled.div`
   align-items: center;
 `;
 
+
 const LoopWrapper = styled.div`
   position: relative;
-  width: 600px;
-  height: 600px;
+  width: 550px;
+  height: 550px;
   margin: 0 auto;
   border-radius: 50%;
-  border: 2px dashed #d81b60;
-  transition: transform 0.9s ease;
+  border: 2px dashed #ffffff;
 
-  &:hover {
-    transform: rotate(8deg);
+  box-shadow:
+  0 0 20px rgba(192, 11, 78, 0.6),
+  inset 0 0 15px rgba(192, 11, 78, 0.3);
+
+  animation: pulseRotate 30s ease-in-out infinite; // 회전 애니메이션 적용
+  @keyframes pulseRotate {
+  0% {
+    transform: rotate(0deg) scale(1);
   }
+  50% {
+    transform: rotate(180deg) scale(1.02);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
 `;
+
+
 
 const Node = styled.div`
   position: absolute;
@@ -74,26 +95,32 @@ const Node = styled.div`
   height: 160px;
   border-radius: 50%;
   background: white;
-  border: 4px solid #d81b60;
+  border: 1.5px solid #7c2a2a;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 14px rgba(0,0,0,0.1);
   padding: 10px;
+  animation: spinNode 30s linear infinite;
+  ${props => props.className === 'active' && `
+  box-shadow: 0 0 25px 5px rgba(255, 126, 126, 0.7);
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+`}
 
-  img {
-    width: 70px;
-    height: 70px;
-    border-radius: 12px;
-    object-fit: cover;
-    margin-bottom: 8px;
-  }
+@keyframes spinNode {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); } // 반대 방향으로 살짝 회전해줌
+}
 
   h3 {
-    font-size: 1rem;
-    color: #8c0d17;
+    font-size: 1.2rem;
+    color: #000000;
+    position: absolute;
+    bottom: -30px;
   }
+
 `;
 
 const Slider = styled.div`
@@ -103,6 +130,7 @@ const Slider = styled.div`
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   position: relative;
+  background-color: #ffffff;
 
   img, canvas {
     width: 100%;
@@ -118,7 +146,7 @@ const TextOverlay = styled.div`
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.9);
   padding: 20px 30px;
   border-radius: 12px;
   text-align: center;
@@ -127,13 +155,13 @@ const TextOverlay = styled.div`
 
   h3 {
     font-size: 1.3rem;
-    color: #8c0d17;
+    color: #ffffff;
     margin-bottom: 10px;
   }
 
   p {
     font-size: 1rem;
-    color: #555;
+    color: #c9c9c9;
     white-space: pre-line;
   }
 `;
@@ -162,7 +190,7 @@ function SearchFeatureSection() {
   ];
 
   const currentSlide = slides[currentImage];
-  
+
 
   useEffect(() => {
     if (slides[currentImage].type !== 'lottie') {
@@ -172,7 +200,7 @@ function SearchFeatureSection() {
       return () => clearInterval(interval);
     }
   }, [currentImage, slides]);
-  
+
 
   return (
     <Section>
@@ -185,16 +213,16 @@ function SearchFeatureSection() {
       <Container>
         <Left>
           <LoopWrapper>
-            <Node style={{ top: '-50px', left: '220px' }}>
-              <img src={searchImg} alt="검색" />
+            <Node style={{ top: '-60px', left: '220px' }} className={currentImage === 0 ? 'active' : ''}>
+              <Lottie animationData={userSearch} style={{ width: 100, height: 100 }} />
               <h3>유저 검색</h3>
             </Node>
-            <Node style={{ top: '330px', left: '-70px' }}>
-              <img src={followImg} alt="팔로우" />
+            <Node style={{ top: '330px', left: '-30px' }} className={currentImage === 1 ? 'active' : ''}>
+              <Lottie animationData={followAnimation} style={{ width: 100, height: 100 }} />
               <h3>팔로우</h3>
             </Node>
-            <Node style={{ top: '330px', left: '500px' }}>
-              <img src={storyImg} alt="스토리" />
+            <Node style={{ top: '350px', left: '400px' }} className={currentImage === 2 ? 'active' : ''}>
+              <Lottie animationData={feed} style={{ width: 100, height: 100 }} />
               <h3>스토리 보기</h3>
             </Node>
           </LoopWrapper>
@@ -206,11 +234,11 @@ function SearchFeatureSection() {
               <img src={slides[currentImage].img} alt={`slide-${currentImage}`} />
             ) : (
               <Lottie
-                  key={currentSlide.title}
-                  animationData={currentSlide.lottie}
-                  loop={false}
-                  onComplete={() => setCurrentImage((prev) => (prev + 1) % slides.length)}
-                />
+                key={currentSlide.title}
+                animationData={currentSlide.lottie}
+                loop={false}
+                onComplete={() => setCurrentImage((prev) => (prev + 1) % slides.length)}
+              />
             )}
             <TextOverlay>
               <h3>{slides[currentImage].title}</h3>

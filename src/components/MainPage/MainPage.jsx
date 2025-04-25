@@ -49,6 +49,7 @@ const LovePhrase = styled.h2`
   animation: ${floatUpDown} 3s ease-in-out infinite;
 `;
 
+
 function MainPage() {
   const [displayText, setDisplayText] = useState("");
   const [showIntro, setShowIntro] = useState(() => {
@@ -104,6 +105,7 @@ function MainPage() {
       // 인트로 안 보여줄 거면 그냥 바로 showMain true로
       setShowMain(true);
       setShowLogo(true);
+
       return;
     }
 
