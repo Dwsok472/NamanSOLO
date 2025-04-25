@@ -507,6 +507,8 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   useEffect(() => {
     if (!selectedRegion) return;
 
+    setSelectedId(null);
+
     if (activeCategory === '전체') {
       getPlacesByRegion(selectedRegion).then((data) => {
         setFilteredPlaces(removeDuplicatesById(data));
@@ -703,6 +705,28 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
     }
   };
 
+  const smoothScrollTo = (container, targetOffset) => {
+    const start = container.scrollTop;
+    const change = targetOffset - start;
+    const duration = 500;
+    let currentTime = 0;
+  
+    const easeOut = (t) => t * (2 - t);
+  
+    const animateScroll = () => {
+      currentTime += 20;
+      const val = easeOut(currentTime / duration);
+      container.scrollTop = start + change * val;
+  
+      if (currentTime < duration) {
+        setTimeout(animateScroll, 20);
+      }
+    };
+  
+    animateScroll();
+  };
+  
+
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
 
   return (
@@ -712,12 +736,17 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       <CategoryFilterGroup>
         {['전체', ...categories].map((cat) => (
           <CategoryButton
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            $active={activeCategory === cat}
-          >
-            {cat}
-          </CategoryButton>
+          key={cat}
+          onClick={() => {
+            if (activeCategory !== cat) {
+              setActiveCategory(cat);
+              setSelectedId(null);
+            }
+          }}
+          $active={activeCategory === cat}
+        >
+          {cat}
+        </CategoryButton>
         ))}
       </CategoryFilterGroup>
 
@@ -737,10 +766,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
             
                   if (container && target) {
                     const targetOffsetTop = target.offsetTop;
-                    container.scrollTo({
-                      top: targetOffsetTop - 80, 
-                      behavior: 'smooth',
-                    });
+                    smoothScrollTo(container, targetOffsetTop - 80);
                   }
                 }, 50);
               }
