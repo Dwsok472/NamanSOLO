@@ -112,7 +112,6 @@ const AlbumBoard = () => {
     setSelectedAlbum(album);
     setShowDetail(true); // 앨범 클릭 시 모달을 엽니다.
   }
-
   const toggleBack = () => {
     setShowDetail(false); // 모달을 닫는 함수
   };

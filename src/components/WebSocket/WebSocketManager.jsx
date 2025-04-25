@@ -27,13 +27,10 @@ function WebSocketManager() {
       });
   
       const allAlarms = res.data || [];
+  
       const currentUser = useUserStore.getState().user?.username;
   
-      const alarms = allAlarms.map((a) => ({
-        ...a,
-        recipient: currentUser,
-      }));
-  
+      const alarms = allAlarms.filter((a) => a.recipient === currentUser);
       const unread = alarms.filter((a) => !a.isRead).length;
   
       useAlarmList.setState({
@@ -41,11 +38,12 @@ function WebSocketManager() {
         unreadCount: unread,
       });
   
-      console.log("✅ 본인 알림 목록 정상 로딩 완료");
+      console.log("✅ 알림 정상 로딩", alarms);
     } catch (err) {
       console.error("❌ 알림 로딩 실패:", err);
     }
   };
+  
   
   useEffect(() => {
     const token = sessionStorage.getItem("jwt-token");
@@ -92,6 +90,7 @@ function WebSocketManager() {
         alt: "WEATHER",
         link: "/weather",
         isRead: false,
+        recipient: currentUser,
       };
 
       addAlarm(weatherAlarm);
@@ -106,6 +105,7 @@ function WebSocketManager() {
         alt: "WEATHER",
         link: "/weather",
         isRead: false,
+        recipient: currentUser,
       };
 
       addAlarm(weatherAlarm);
