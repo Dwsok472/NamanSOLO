@@ -146,7 +146,11 @@ const Container = styled.div`
   width: 330px;
   margin: 0 auto;
   margin-top: 30px;
-  /* border-right: 1px solid black; */
+  border: 1px solid #8c0d17;
+  border-radius: 20px;
+  box-shadow:  0 3px 4px rgba(0, 0, 0, 0.5);
+  padding-top: 10px;
+  background-color: white;
 `;
 
 const ContainerMain = styled.div`
@@ -154,6 +158,7 @@ const ContainerMain = styled.div`
   border-radius: 5px;
   padding-top: 10px;
   height: 540px;
+
 `;
 
 const Top = styled.div`
@@ -164,6 +169,7 @@ const Top = styled.div`
   margin-bottom: 30px;
   gap: 15px;
   user-select: none;
+
   h1{
     font-size: 1.5rem;
   }

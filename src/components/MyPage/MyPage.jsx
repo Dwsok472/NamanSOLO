@@ -38,6 +38,7 @@ const ProfileCard = styled.div`
   margin-right: 20px;
   text-align: center;
   position: relative;
+  /* background-color: #8c0d17; */
 `;
 const LoadingText = styled.div`
   margin-top: 200px;
@@ -53,6 +54,7 @@ const ProfileImage = styled.img`
   object-fit: cover;
   background: #ddd;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  
 `;
 
 const Name = styled.h2`
@@ -160,6 +162,7 @@ const TabsContainer = styled.div`
   border-radius: 16px;
   padding: 30px;
   border: 1px solid #8c0d17;
+  /* background-color: #8c0d17; */
 `;
 
 const Tabs = styled.div`
@@ -216,7 +219,7 @@ const TabGroup = styled.div`
 
 const ContentArea = styled.div`
   min-height: 300px;
-  margin-top: 5px;
+  margin-top: 10px;
   padding: 20px;
   border-radius: 12px;
 `;

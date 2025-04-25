@@ -63,8 +63,8 @@ const CalendarSection = styled.section`
   border-radius: 10px;
   position: relative;
   background-color: #c01e3c; /*#fff0f2*/
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   /* animation: floatUpDown 2.5s ease-in-out infinite; */
 `;
 
@@ -244,7 +244,7 @@ const AnniversarySection = styled.section`
   min-width: 221px;
   background-color: #fff;
   border: 1px solid #8c0d17;
-  border-radius: 30px;
+  border-radius: 10px;
   padding: 20px;
   position: relative;
   overflow: auto;
@@ -683,7 +683,7 @@ function Todo({ originalMeetingDate }) {
                                     : setViewTravelEvent(event)
                                 }
                               >
-                                
+
                                 <div
                                   title={
                                     event.type.toUpperCase() === "TRAVEL"

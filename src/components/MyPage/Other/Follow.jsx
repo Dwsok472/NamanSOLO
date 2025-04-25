@@ -331,10 +331,11 @@ const Container = styled.div`
   width: 350px;
   margin: 0 auto;
   margin-top: 30px;
-
-  &.active{
-    /* border-left: 1px solid black; */
-  }
+  border: 1px solid #8c0d17;
+  border-radius: 20px;
+  box-shadow:  0 3px 4px rgba(0, 0, 0, 0.5);
+  padding-top: 10px;
+  background-color: white;
 `;
 
 const ContainerMain = styled.div`
