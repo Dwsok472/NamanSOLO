@@ -331,14 +331,13 @@ const Container = styled.div`
   width: 350px;
   margin: 0 auto;
   margin-top: 30px;
+  border-right: 1px solid black;
 `;
 
 const ContainerMain = styled.div`
   width: 100%;
   border-radius: 5px;
   padding-top: 10px;
-  background-color: #f2f2f2;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.05);
   height: 540px;
 `;
 
@@ -350,11 +349,14 @@ const Top = styled.div`
   margin-bottom: 30px;
   gap: 15px;
   user-select: none;
+  h1{
+    font-size: 1.5rem;
+  }
 `;
 const SearchBox = styled.div`
   width: 90%;
   height: 50px;
-  border: 1px solid #ffffff33;
+  border: 1px solid #cecece;
   border-radius: 30px;
   display: flex;
   align-items: center;
@@ -477,89 +479,3 @@ const ButtomButton = styled.button`
     border: none;
   }
 `;
-
-// useEffect(() => {
-//   if (urlKeyword) {
-//     if (type === 'follower') {
-//       searchFollower(urlKeyword); // 팔로워 검색
-//     } else if (type === 'following') {
-//       searchFollowing(urlKeyword); // 팔로윙 검색
-//     }
-//   } else {
-//     setData(null);
-//     setLoading(true);
-//   }
-// }, [urlKeyword, type]);
-
-// useEffect(() => {
-//   if (type === 'follower') {
-//     getFollower(); // 팔로워 목록 조회
-//   } else if (type === 'following') {
-//     getFollowing(); // 팔로윙 목록 조회
-//   }
-// }, [type]);
-
-// // 팔로워 목록을 가져오는 함수
-// async function getFollower() {
-//   try {
-//     let response = await getAllFollower();
-//     if (!response || response.length === 0) {
-//       console.log('데이터를 가져오지 못했습니다.');
-//       return;
-//     }
-//     console.log(response);
-//     setData(response);
-//     setLoading(false);
-//   } catch (error) {
-//     console.log(error);
-//     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-//   }
-// }
-// // 팔로잉 목록을 가져오는 함수
-// async function getFollowing() {
-//   try {
-//     let response = await getAllFollowing();
-//     if (!response || response.length === 0) {
-//       console.log('데이터를 가져오지 못했습니다.');
-//       return;
-//     }
-//     console.log(response);
-//     setData(response);
-//     setLoading(false);
-//   } catch (error) {
-//     console.log(error);
-//     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-//   }
-// }
-// // 특정 username으로 팔로윙 검색
-// async function searchFollowing(username) {
-//   try {
-//     let response = await getFollowingByUsername(username);
-//     if (!response || response.length === 0) {
-//       console.log('데이터를 가져오지 못했습니다.');
-//       return;
-//     }
-//     console.log(response);
-//     setData(response); // 검색된 팔로워 데이터 설정
-//     setLoading(false);
-//   } catch (error) {
-//     console.log(error);
-//     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-//   }
-// }
-// // 특정 username으로 팔로워 검색
-// async function searchFollower(username) {
-//   try {
-//     let response = await getFollowerByUsername(username);
-//     if (!response || response.length === 0) {
-//       console.log('데이터를 가져오지 못했습니다.');
-//       return;
-//     }
-//     console.log(response);
-//     setData(response); // 검색된 팔로워 데이터 설정
-//     setLoading(false);
-//   } catch (error) {
-//     console.log(error);
-//     alert('네트워크 오류로 정상적인 동작이 안되고 있습니다');
-//   }
-// }

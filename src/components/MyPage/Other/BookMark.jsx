@@ -146,15 +146,13 @@ const Container = styled.div`
   width: 330px;
   margin: 0 auto;
   margin-top: 30px;
+  border-right: 1px solid black;
 `;
 
 const ContainerMain = styled.div`
   width: 100%;
   border-radius: 5px;
   padding-top: 10px;
-  background-color: #f2f2f2;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.05);
-  /* background: linear-gradient(to bottom, #f8e7e7, #fee2e0, #f8e7e7); */
   height: 540px;
 `;
 
@@ -166,11 +164,14 @@ const Top = styled.div`
   margin-bottom: 30px;
   gap: 15px;
   user-select: none;
+  h1{
+    font-size: 1.5rem;
+  }
 `;
 
 const Image = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   user-select: none;
 `;
 

@@ -24,20 +24,18 @@ const Container = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 40px;
-  min-height: 100vh;
-  max-width: 1800px;   // 너가 원하는 폭까지만 제한
-  margin: 0 auto;      // 중앙 정렬
-  width: 100%;         // 부모 기준 꽉 채우되 max-width 넘지 않게
-`;
+  margin: 0 auto;  
+  width: 80%;
 
+`;
 
 const ProfileCard = styled.div`
   max-width: 480px;
   background: white;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #8c0d17;
   padding: 40px 30px;
-  margin-right: 40px;
+  margin-right: 20px;
   text-align: center;
   position: relative;
 `;
@@ -51,6 +49,7 @@ const ProfileImage = styled.img`
   height: 200px;
   margin: 0 auto 20px;
   border-radius: 50%;
+  border: 1px solid #000;
   object-fit: cover;
   background: #ddd;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
@@ -60,7 +59,7 @@ const Name = styled.h2`
   font-size: 2.2rem;
   margin: 20px 0 10px;
   font-weight: 700;
-  color: #9f142e;
+  color: #ac001f;
 `;
 
 const Emotion = styled.div`
@@ -85,7 +84,7 @@ const DateInput = styled.input`
 `;
 
 const CancelButton = styled.button`
-  background: #999;
+  background: #8c0d17;
   color: white;
   font-weight: 600;
   border: none;
@@ -96,7 +95,7 @@ const CancelButton = styled.button`
   transition: background 0.2s;
 
   &:hover {
-    background: #666;
+    background: #ac0412;
   }
 `;
 
@@ -109,7 +108,7 @@ const DateText = styled.div`
 const DdayText = styled.div`
   font-size: 2.2rem;
   font-weight: bold;
-  color: #9f142e;
+  color: #d80028;
 `;
 
 const EditButton = styled.button`
@@ -122,6 +121,7 @@ const EditButton = styled.button`
   svg {
     width: 20px;
     height: 20px;
+    fill: #8c0d17;
   }
   &:hover {
     transform: scale(1.1);
@@ -150,7 +150,7 @@ const EditOverlay = styled.div`
   svg {
     width: 18px;
     height: 18px;
-    color: #9f142e;
+    color: #8c0d17;
   }
 `;
 
@@ -158,27 +158,29 @@ const TabsContainer = styled.div`
   flex: 1;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   padding: 30px;
+  border: 1px solid #8c0d17;
 `;
 
 const Tabs = styled.div`
   display: flex;
   justify-content: flex-start;
-  gap: 20px;
+  gap: 10px;
   flex-wrap: wrap;
 `;
 
 const TabButton = styled.button`
   background: ${(props) => (props.active ? "#9f142e" : "#fff")};
   color: ${(props) => (props.active ? "#fff" : "#9f142e")};
-  border: 2px solid #9f142e;
+  /* border: 1px solid #9f142e; */
   padding: 0px 20px; 
-  border-radius: 8px;
+  border-radius: 40px;
+  font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
-  width: 120px;
+  width: 100px;
+  height: 30px;
   text-align: center;
 
   &:hover {
@@ -188,21 +190,34 @@ const TabButton = styled.button`
 `;
 
 
-const MyStoryButton = styled(TabButton)`
+const MyStoryButton = styled.button`
   margin-left: auto;
+  background: ${(props) => (props.active ? "#9f142e" : "#fff")};
+  color: ${(props) => (props.active ? "#fff" : "#9f142e")};
+  padding: 0px 20px; 
+  border-radius: 40px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 130px;
+  height: 30px;
+  text-align: center;
+  &:hover {
+    background: #9f142e;
+    color: #fff;
+  }
 `;
 
 const TabGroup = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 10px;
 `;
-
 
 const ContentArea = styled.div`
   min-height: 300px;
+  margin-top: 5px;
   padding: 20px;
-  background: #fafafa;
-  box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
 `;
 
@@ -214,7 +229,6 @@ const ModalWrapper = styled.div`
   background-color: white;
   padding: 40px 30px;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 `;
 
@@ -459,7 +473,7 @@ export default function MyPage() {
               navigate(routeMap["My Album"]);
             }}
           >
-            My Album
+            MY ALBUM
           </MyStoryButton>
         </Tabs>
 

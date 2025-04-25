@@ -258,10 +258,6 @@ const BoardWrapper = styled.div`
   gap: 10px;
   align-items: center;
   height: auto;
-  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
-  /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
-  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
-  background: linear-gradient(to bottom, #ffe3e3, #fff, #ffe3e3);
 `;
 
 const BoardFrame = styled.div`
