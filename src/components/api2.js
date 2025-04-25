@@ -209,7 +209,11 @@ export const updateTravel = async (id, travelData) => {
       start_date: res.data.startDate,
       end_date: res.data.endDate,
       editable: true,
-      type: res.data.type
+      type: res.data.type,
+      mediaUrl: (res.data.mediaUrl || []).map(media => ({
+        ...media,
+        mediaType: media.mediaType || (media.mediaUrl.endsWith('.mp4') ? 'VIDEO' : 'PICTURE')
+      }))
     };
   } catch (e) {
     handleError('updateTravel', e);
@@ -220,8 +224,8 @@ export const handleUpdateTravelMedia = async (id, travelData) => {
   try {
     let mediaList = travelData.mediaUrl || [];
 
-    if (travelData.images && travelData.images.length > 0) {
-      const uploadedMedia = await uploadTravelMedia(travelData.title, travelData.images);
+    if (travelData.mediaList && travelData.mediaList.length > 0) {
+      const uploadedMedia = await uploadTravelMedia(travelData.title, travelData.mediaList);
       uploadedMedia.forEach(media => {
         if (!media.mediaType) {
           media.mediaType = "PICTURE";

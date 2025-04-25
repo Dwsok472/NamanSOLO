@@ -263,43 +263,33 @@ function Edittravel({
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % event.mediaUrl.length);
   };
-
+  
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
-    console.log(event.mediaUrl)
     if (event.mediaUrl?.length) {
       const urls = event.mediaUrl.map((media) =>
         media instanceof File ? URL.createObjectURL(media) : media.mediaUrl
       );
       setImageUrls(urls);
+    } else {
+      setImageUrls([]);
     }
   }, [event.mediaUrl]);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    setEvent({
-      ...event,
-      id: event.id,
-      mediaUrl: [...(event.mediaUrl || []), ...files]
-    });
+    setEvent((prev) => ({
+      ...prev,
+      mediaUrl: [...(prev.mediaUrl || []), ...files]
+    }));
   };
 
   const handleDelete = () => {
-    const confirmDel = window.confirm('이 이미지를 삭제할까요?');
-    if (!confirmDel) return;
-
-    if (isFileImage(currentIndex)) {
-      const idx = currentIndex - (event.mediaUrl?.length || 0);
-      const updatedImages = [...event.imageUrl];
-      updatedImages.splice(idx, 1);
-      setEvent({ ...event, mediaUrl: updatedImages });
-    } else {
-      const updatedMedia = [...event.mediaUrl];
-      updatedMedia.splice(currentIndex, 1);
-      setEvent({ ...event, mediaUrl: updatedMedia });
-    }
-
+    if (!window.confirm('이 이미지를 삭제할까요?')) return;
+    const updated = [...event.mediaUrl];
+    updated.splice(currentIndex, 1);
+    setEvent({ ...event, mediaUrl: updated });
     setCurrentIndex((prev) => Math.max(0, prev - 1));
   };
 
