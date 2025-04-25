@@ -59,7 +59,7 @@ const LeftPanel = styled.div`
 const CalendarSection = styled.section`
   flex: 2 1 100%;
   background-color: #fff;
-  max-height: 650px;
+  max-height: 620px;
   border-radius: 10px;
   position: relative;
   background-color: #c01e3c; /*#fff0f2*/
@@ -167,6 +167,7 @@ const MonthBox = styled.div`
 
 const StyledTable = styled.table`
   width: 100%;
+  height: 570px;
   table-layout: fixed;
   border-collapse: collapse;
   border-spacing: 0;
@@ -245,7 +246,7 @@ const AnniversarySection = styled.section`
   padding: 20px;
   position: relative;
   overflow: auto;
-  max-height: 610px;
+  max-height: 620px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 
   img {
