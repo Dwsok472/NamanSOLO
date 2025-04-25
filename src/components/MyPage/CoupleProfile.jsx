@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { IconClose } from "../Icons";
-import { getCurrentUser, updateUserData } from "../api2";
+import { checkEmailDuplicate, checkPhoneDuplicate, getCurrentUser, updateUserData } from "../api2";
 import CityDropdown from "../Register/DropdownButton";
 
 const ModalWrapper = styled.div`
@@ -71,6 +71,19 @@ const ProfileBox = styled.div`
       margin-bottom: 5px;
     }
 
+    button {
+      margin-top: -30px;
+      margin-bottom: 5px;
+      align-self: flex-end;
+      font-size: 0.75rem;
+      padding: 5px 10px;
+      border-radius: 4px;
+      background-color: #8c0d17;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
     input {
       padding: 8px;
       border: 1px solid #ccc;
@@ -124,6 +137,18 @@ function CoupleProfile({ onClose, onUpdateNames }) {
     phone: "",
   });
 
+  const [emailCheckF, setEmailCheckF] = useState(false);
+  const [emailCheckTextF, setEmailCheckTextF] = useState("중복확인");
+
+  const [phoneCheckF, setPhoneCheckF] = useState(false);
+  const [phoneCheckTextF, setPhoneCheckTextF] = useState("중복확인");
+
+  const [emailCheckM, setEmailCheckM] = useState(false);
+  const [emailCheckTextM, setEmailCheckTextM] = useState("중복확인");
+
+  const [phoneCheckM, setPhoneCheckM] = useState(false);
+  const [phoneCheckTextM, setPhoneCheckTextM] = useState("중복확인");
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -148,6 +173,80 @@ function CoupleProfile({ onClose, onUpdateNames }) {
     };
     fetchUser();
   }, []);
+
+  const handleCheckEmailF = async () => {
+    const data = await getCurrentUser();
+    if (profileF.email === data.emailF) {
+      setEmailCheckF(true);
+      setEmailCheckTextF("사용가능");
+      return;
+    }
+
+    const isAvailable = await checkEmailDuplicate(profileF.email);
+    setEmailCheckF(isAvailable);
+    setEmailCheckTextF(isAvailable ? "사용가능" : "중복됨");
+  };
+
+  const handleCheckEmailM = async () => {
+    const data = await getCurrentUser();
+    if (profileM.email === data.emailM) {
+      setEmailCheckM(true);
+      setEmailCheckTextM("사용가능");
+      return;
+    }
+
+    const isAvailable = await checkEmailDuplicate(profileM.email);
+    setEmailCheckM(isAvailable);
+    setEmailCheckTextM(isAvailable ? "사용가능" : "중복됨");
+  };
+
+  const handleCheckPhoneF = async () => {
+    const data = await getCurrentUser();
+    if (profileF.phone === data.phoneNumberF) {
+      setPhoneCheckF(true);
+      setPhoneCheckTextF("사용가능");
+      return;
+    }
+
+    const isAvailable = await checkPhoneDuplicate(profileF.phone);
+    setPhoneCheckF(isAvailable);
+    setPhoneCheckTextF(isAvailable ? "사용가능" : "중복됨");
+  };
+
+  const handleCheckPhoneM = async () => {
+    const data = await getCurrentUser();
+    if (profileM.phone === data.phoneNumberM) {
+      setPhoneCheckM(true);
+      setPhoneCheckTextM("사용가능");
+      return;
+    }
+
+    const isAvailable = await checkPhoneDuplicate(profileM.phone);
+    setPhoneCheckM(isAvailable);
+    setPhoneCheckTextM(isAvailable ? "사용가능" : "중복됨");
+  };
+
+  useEffect(() => {
+    setEmailCheckM(false);
+    setEmailCheckTextM("중복확인");
+  }, [profileM.email]);
+
+
+  useEffect(() => {
+    setPhoneCheckM(false);
+    setPhoneCheckTextM("중복확인");
+  }, [profileM.phone]);
+
+  useEffect(() => {
+    setEmailCheckF(false);
+    setEmailCheckTextF("중복확인");
+  }, [profileF.email]);
+
+
+  useEffect(() => {
+    setPhoneCheckF(false);
+    setPhoneCheckTextF("중복확인");
+  }, [profileF.phone]);
 
   const handleChange = (type, field, value) => {
     if (type === "M") {
@@ -190,8 +289,8 @@ function CoupleProfile({ onClose, onUpdateNames }) {
         realNameF: profileF.name,
         emailM: profileM.email,
         emailF: profileF.email,
-        phoneNumberM: profileM.phoneNumberM,
-        phoneNumberF: profileF.phoneNumberF,
+        phoneNumberM: profileM.phone,
+        phoneNumberF: profileF.phone,
         city: city,
       };
 
@@ -223,11 +322,19 @@ function CoupleProfile({ onClose, onUpdateNames }) {
               <div className="input-field" key={key}>
                 <label>{key}</label>
                 {isEditable && key !== "birthday" ? (
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => handleChange("M", key, e.target.value)}
-                  />
+                  <>
+                    {key === "email" && (
+                      <button onClick={handleCheckEmailM}>{emailCheckTextM}</button>
+                    )}
+                    {key === "phone" && (
+                      <button onClick={handleCheckPhoneM}>{phoneCheckTextM}</button>
+                    )}
+                    <input
+                      type="text"
+                      value={value}
+                      onChange={(e) => handleChange("M", key, e.target.value)}
+                    />
+                  </>
                 ) : (
                   <span>{value}</span>
                 )}
@@ -244,12 +351,21 @@ function CoupleProfile({ onClose, onUpdateNames }) {
               <div className="input-field" key={key}>
                 <label>{key}</label>
                 {isEditable && key !== "birthday" ? (
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => handleChange("F", key, e.target.value)}
-                  />
-                ) : (
+                  <>
+                    {key === "email" && (
+                      <button onClick={handleCheckEmailF}>{emailCheckTextF}</button>
+                    )}
+                    {key === "phone" && (
+                      <button onClick={handleCheckPhoneF}>{phoneCheckTextF}</button>
+                    )}
+                    <input
+                      type="text"
+                      value={value}
+                      onChange={(e) => handleChange("F", key, e.target.value)}
+                    />
+                  </>
+                )
+                 : (
                   <span>{value}</span>
                 )}
               </div>
