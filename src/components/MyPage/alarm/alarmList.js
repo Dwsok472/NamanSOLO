@@ -74,3 +74,27 @@ export const useAlarmList = create(
     }
   )
 );
+
+const fetchUserAlarms = async () => {
+  try {
+    const token = sessionStorage.getItem("jwt-token");
+    const res = await axios.get("/api/alarm/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const allAlarms = res.data || [];
+    const currentUser = useUserStore.getState().user?.username;
+    
+    // ✨ 여기서 필터링
+    const alarms = allAlarms.filter((a) => a.username === currentUser);
+    const unread = alarms.filter((a) => !a.isRead).length;
+
+    useAlarmList.setState({
+      alarmList: alarms,
+      unreadCount: unread,
+    });
+
+    console.log("✅ 본인 알림 목록 정상 로딩 완료");
+  } catch (err) {
+    console.error("❌ 알림 로딩 실패:", err);
+  }
+};

@@ -284,7 +284,7 @@ const Form = styled.div`
       object-fit: cover;
       border: none;
     }
-  }
+
   .addbtn {
     position: absolute;
     bottom: 5px;
@@ -295,12 +295,12 @@ const Form = styled.div`
     color: white;
     font-size: 0.8rem;
     height: 30px;
+
     &:hover {
       color: #ddd;
     }
   }
 `;
-
 const AddressRow = styled.div`
   display: flex;
   gap: 8px;
