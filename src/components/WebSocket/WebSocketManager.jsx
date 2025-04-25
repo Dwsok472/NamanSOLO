@@ -28,7 +28,6 @@ function WebSocketManager() {
       const allAlarms = res.data || [];
       const currentUser = useUserStore.getState().user?.username;
       
-      // ✨ 여기서 필터링
       const alarms = allAlarms.filter((a) => a.username === currentUser);
       const unread = alarms.filter((a) => !a.isRead).length;
   
@@ -116,6 +115,7 @@ function WebSocketManager() {
       link: resolveLink(type),
       isRead: false,
       username: raw.username,
+      recipient: currentUser,
     };
     addAlarm(generalAlarm);
   }
