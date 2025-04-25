@@ -212,37 +212,16 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const textRefs = useRef({});
   const [isOpen, setIsOpen] = useState(false);
   // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
-  const alarmList = useAlarmList((state) => state.alarmList);
-  const currentUser = useUserStore.getState().user?.username;
-  const filteredAlarms = alarmList.filter((alarm) => alarm.recipient === currentUser);
+  const currentUser = useUserStore((state) => state.user?.username);
+  const { alarmList } = useAlarmList();
+  const filteredAlarms = alarmList.filter(
+      (alarm) => alarm.recipient === currentUser
+  );
   
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
   // const [alarmList, setAlarmList] = useState([]);
   // const userId = 1; // 실제 로그인 유저 ID 넣기
-
-  useEffect(() => {
-    const currentUser = useUserStore.getState().user?.username;
-    if (!currentUser) return;
-  
-    const stored = localStorage.getItem(`alarms-${currentUser}`);
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      useAlarmList.setState({
-        alarmList: parsed.alarmList,
-        unreadCount: parsed.unreadCount,
-      });
-      console.log(" 로컬스토리지 알람 복원됨:", parsed);
-  
-      // 복원 성공 후 → 이때 초기화
-      const unread = parsed.alarmList.filter((alarm) => !alarm.isRead);
-      unread.forEach((alarm) => {
-        useAlarmList.getState().markAsRead(alarm.id);
-      });
-  
-      useAlarmList.getState().resetUnreadCount();
-    }
-  }, []);
 
   // 날씨 정보를 가져오는 함수
   const fetchWeather = async (cityName) => {

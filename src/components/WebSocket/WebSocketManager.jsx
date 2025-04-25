@@ -78,7 +78,7 @@ function WebSocketManager() {
     const addAlarm = useAlarmList.getState().addAlarm;
     const currentUser = useUserStore.getState().user?.username;
     if (raw.recipient !== currentUser) return; // ✅ 수신 대상 기준 체크
-    
+
     const type = raw.type || raw.alarmType || "UNKNOWN";
 
     if (type === "WEATHER") {
@@ -114,9 +114,9 @@ function WebSocketManager() {
 
     const generalAlarm = {
       id: Date.now(),
-      text: raw.message,
+      text: raw.message || "내용 없음",
       img: resolveImage(type),
-      alt: type,
+      alt: type || "알림",
       link: resolveLink(type),
       isRead: false,
       username: raw.username,

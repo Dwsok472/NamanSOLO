@@ -8,14 +8,14 @@ export const useAlarmList = create((set) => ({
 
   addAlarm: (alarm) => {
     const currentUser = useUserStore.getState().user?.username;
-    if (alarm.username !== currentUser) return;
-
+    if (alarm.recipient !== currentUser) return; 
+  
     const alarmWithDefaults = {
       ...alarm,
       isRead: alarm.isRead ?? false,
       recipient: currentUser,
     };
-
+  
     set((state) => ({
       alarmList: [alarmWithDefaults, ...state.alarmList],
       unreadCount: state.unreadCount + 1,
