@@ -28,7 +28,6 @@ function WebSocketManager() {
   
       const allAlarms = res.data || [];
   
-      // 🔥 이제 백엔드에서 recipient가 넘어오므로 가공 없이 그대로 써도 됨
       const currentUser = useUserStore.getState().user?.username;
   
       const alarms = allAlarms.filter((a) => a.recipient === currentUser);
@@ -106,6 +105,7 @@ function WebSocketManager() {
         alt: "WEATHER",
         link: "/weather",
         isRead: false,
+        recipient: currentUser,
       };
 
       addAlarm(weatherAlarm);
