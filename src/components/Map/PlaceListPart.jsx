@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import MapPicker from '../Story/MapPicker';
 import {
@@ -87,6 +87,10 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  max-height: calc(97px * 5);
+  overflow-y: auto;
+  padding-right: 6px;
+
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -96,6 +100,7 @@ const ListContainer = styled.div`
     border-radius: 10px;
   }
 `;
+
 
 const Card = styled.div`
   background: #ffffff;
@@ -431,6 +436,9 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const isAdmin = user?.authority === 'ROLE_ADMIN';
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [activeImageIndex, setActiveImageIndex] = useState({});
+  const cardRefs = useRef({});
+  const listContainerRef = useRef(null);
+
 
   const showPrevImage = (placeId, total) => {
     const currentIndex = activeImageIndex[placeId] || 0;
@@ -713,28 +721,45 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         ))}
       </CategoryFilterGroup>
 
-      <ListContainer>
-        {filteredPlaces?.map((place) => (
-          <React.Fragment key={`place-${place.id}`}>
-            <Card
-              onClick={() =>
-                setSelectedId(selectedId === place.id ? null : place.id)
+      <ListContainer ref={listContainerRef}>
+      {filteredPlaces?.map((place) => (
+        <React.Fragment key={`place-${place.id}`}>
+          <Card
+            ref={(el) => (cardRefs.current[place.id] = el)}
+            onClick={() => {
+              const alreadySelected = selectedId === place.id;
+              setSelectedId(alreadySelected ? null : place.id);
+            
+              if (!alreadySelected) {
+                setTimeout(() => {
+                  const container = listContainerRef.current;
+                  const target = cardRefs.current[place.id];
+            
+                  if (container && target) {
+                    const targetOffsetTop = target.offsetTop;
+                    container.scrollTo({
+                      top: targetOffsetTop - 80, 
+                      behavior: 'smooth',
+                    });
+                  }
+                }, 50);
               }
-            >
-              <Thumbnail
-                src={
-                  place.mediaUrl && place.mediaUrl.length > 0
-                    ? `${place.mediaUrl[0].mediaUrl}`
-                    : 'https://via.placeholder.com/60?text=No+Image'
-                }
-                alt={place.name}
-              />
-              <Info>
-                <div className="category">{place.category}</div>
-                <div className="title">{place.name}</div>
-                <div className="address">{place.address}</div>
-              </Info>
-            </Card>
+            }}
+          >
+      <Thumbnail
+        src={
+          place.mediaUrl && place.mediaUrl.length > 0
+            ? `${place.mediaUrl[0].mediaUrl}`
+            : 'https://via.placeholder.com/60?text=No+Image'
+        }
+        alt={place.name}
+      />
+      <Info>
+        <div className="category">{place.category}</div>
+        <div className="title">{place.name}</div>
+        <div className="address">{place.address}</div>
+      </Info>
+    </Card>
 
             {selectedId === place.id && (
               <Detail>
