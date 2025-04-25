@@ -120,7 +120,7 @@ const BookSection = ({ flipped, togglePage, bookRef }) => {
             <span className="highlight">함께 공감하는 공간</span>에
             기록해보세요.
           </p>
-          <div className="cta-link" onClick={() => navigate('/story/all')}>
+          <div className="cta-link" onClick={() => navigate('/album/all')}>
             전체 앨범 둘러보기 →
           </div>
         </BookIntroBox>
