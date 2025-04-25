@@ -265,11 +265,21 @@ function CoupleProfile({ onClose, onUpdateNames }) {
 
   const handleSave = async () => {
     if (!isValidProfile(profileF)) {
-      alert("여자쪽 정보가 올바르지 않아요! 이메일/전화번호 형식도 확인해주세요.");
+      alert("여성의 정보가 올바르지 않아요! 이메일/전화번호 형식도 확인해주세요.");
       return;
     }
     if (!isValidProfile(profileM)) {
-      alert("남자쪽 정보가 올바르지 않아요! 이메일/전화번호 형식도 확인해주세요.");
+      alert("남성의 정보가 올바르지 않아요! 이메일/전화번호 형식도 확인해주세요.");
+      return;
+    }
+
+    if (!emailCheckF || !phoneCheckF) {
+      alert("여자의 이메일 또는 전화번호가 중복확인되지 않았습니다.");
+      return;
+    }
+  
+    if (!emailCheckM || !phoneCheckM) {
+      alert("남자의 이메일 또는 전화번호가 중복확인되지 않았습니다.");
       return;
     }
   
