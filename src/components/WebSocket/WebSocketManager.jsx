@@ -99,7 +99,7 @@ function WebSocketManager() {
 
     if (type === "WEATHER") {
       const weatherAlarm = {
-        id: Date.now(),
+        id: raw.id || Date.now(),
         username: raw.username || user?.username,
         text: raw.message || "예정된 날씨 알림이 도착했습니다!",
         img: raw.icon ? `http://openweathermap.org/img/w/${raw.icon}.png` : null,
