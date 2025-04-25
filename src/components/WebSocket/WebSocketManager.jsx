@@ -27,10 +27,26 @@ function WebSocketManager() {
       });
   
       const allAlarms = res.data || [];
-  
       const currentUser = useUserStore.getState().user?.username;
   
-      const alarms = allAlarms.filter((a) => a.recipient === currentUser);
+      const alarms = allAlarms
+        .filter((a) => a.recipient === currentUser)
+        .map((a) => {
+          const type = a.type || a.alarmType || "UNKNOWN";
+          return {
+            id: a.id,
+            text: a.message || "내용 없음",
+            img: a.icon
+              ? `http://openweathermap.org/img/w/${a.icon}.png`
+              : resolveImage(type),
+            alt: type,
+            link: resolveLink(type),
+            isRead: a.isRead ?? a.read ?? false,
+            username: a.username,
+            recipient: a.recipient,
+          };
+        });
+  
       const unread = alarms.filter((a) => !a.isRead).length;
   
       useAlarmList.setState({
@@ -38,11 +54,11 @@ function WebSocketManager() {
         unreadCount: unread,
       });
   
-      console.log("✅ 알림 정상 로딩", alarms);
+      console.log(" 알림 정상 로딩", alarms);
     } catch (err) {
-      console.error("❌ 알림 로딩 실패:", err);
+      console.error("알림 로딩 실패:", err);
     }
-  };
+  };  
   
   
   useEffect(() => {
@@ -115,6 +131,7 @@ function WebSocketManager() {
     const generalAlarm = {
       id: Date.now(),
       text: raw.message || "내용 없음",
+      message: raw.message || "내용 없음",
       img: resolveImage(type),
       alt: type || "알림",
       link: resolveLink(type),
