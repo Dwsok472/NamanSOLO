@@ -121,6 +121,11 @@ function RegisterStep3({ onNext }) {
       return;
     }
 
+    if (!city) {
+      alert("도시를 선택해주세요.");
+      return;
+    }
+
     try {
       await submitRegistration({ dDay, city });
       deleteForm();
