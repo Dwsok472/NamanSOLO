@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import PhotoCard from '../../Album/PhotoCard';
 import AlbumDetailModal from '../../Album/AlbumDetailModal';
@@ -27,7 +27,6 @@ const MyAlbum = () => {
   const [$columns, setColumns] = useState(5); // 기본값: 5개 보기
   const [isTrashDragOver, setIsTrashDragOver] = useState(false);
   const [myPosts, setMyPosts] = useState([]); // 나의 포스트들~~
-
   // 내 앨범 가지고 오기!!!!!
   async function GetMyAlbum() {
     const jwt = sessionStorage.getItem('jwt-token');

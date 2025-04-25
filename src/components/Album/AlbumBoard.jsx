@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PhotoCard from './PhotoCard';
-import couple1 from '../img/couple1.png';
-import couple2 from '../img/couple2.png';
-import couple3 from '../img/couple3.png';
-import couple4 from '../img/couple4.jpg';
 import tape1 from '../img/tape1.png';
 import tape2 from '../img/tape2.png';
 import tape3 from '../img/tape3.png';
@@ -14,7 +10,6 @@ import tape6 from '../img/tape6.png';
 import tape7 from '../img/tape7.png';
 
 import AlbumDetailModal from './AlbumDetailModal';
-import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import axios from 'axios';
 
