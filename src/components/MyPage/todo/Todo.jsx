@@ -4,7 +4,7 @@ import Addtodo from "./Addtodo";
 import Addtravel from "./Addtravel";
 import { IconEdit, IconClose } from "../../Icons";
 import DetailTodo from "./Detailtodo";
-import leftThought from "../../img/leftThought.png";
+import firework from "../../img/firework.png";
 import Plus from "../../img/add.png";
 import LeftKey from "../../img/top11.png";
 import RightKey from "../../img/down11.png";
@@ -206,13 +206,28 @@ const EventBox = styled.div`
   padding: 4px 6px;
   margin: 0 auto;
   border-radius: 2px;
+  max-height: 17px;
   font-size: 0.7rem;
   line-height: 0.8;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:3px;
+    img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
     ${({ $isHovered }) =>
     $isHovered &&
     `
@@ -660,6 +675,7 @@ function Todo({ originalMeetingDate }) {
                                     : setViewTravelEvent(event)
                                 }
                               >
+                                
                                 <div
                                   title={
                                     event.type.toUpperCase() === "TRAVEL"
@@ -669,6 +685,20 @@ function Todo({ originalMeetingDate }) {
                                         : `${event.title} ${event.start_date}`
                                   }
                                 >
+                                  {!event.editable && (
+                                    <img
+                                      title={
+                                        event.type.toUpperCase() === "TRAVEL"
+                                          ? `${event.title} ${event.start_date} ~ ${event.end_date}`
+                                          : !event.editable
+                                            ? `첫 만남일을 기준으로 계산된 날짜는 변경할 수 없습니다.`
+                                            : `${event.title} ${event.start_date}`
+                                      }
+                                      src={firework}
+                                      alt="비편집 아이콘"
+                                      style={{ width: "14px", marginLeft: "4px" }}
+                                    />
+                                  )}
                                   {event.title}
                                 </div>
                               </EventBox>
