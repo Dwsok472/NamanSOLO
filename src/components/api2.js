@@ -41,7 +41,7 @@ export const fetchAnniversaries = async () => {
       start_date: item.startDate,
       end_date: item.endDate,
       editable: item.editable,
-      type: 'anniversary',
+      type: 'ANNIVERSARY',
       color: item.color,
     }));
   } catch (e) {
@@ -59,7 +59,7 @@ export const fetchTravels = async () => {
       start_date: item.startDate,
       end_date: item.endDate,
       editable: true,
-      type: 'travel',
+      type: 'TRAVEL',
       mediaUrl: item.mediaUrl,
       color: item.color,
     }));
@@ -114,7 +114,11 @@ export const createTravel = async (travelEvent) => {
       start_date: res.data.startDate,
       end_date: res.data.endDate,
       editable: true,
-      type: 'travel',
+      type: 'TRAVEL',
+      mediaUrl: res.data.mediaUrl.map((media) => ({
+        ...media,
+        mediaType: media.mediaType || (media.mediaUrl.endsWith('.mp4') ? 'VIDEO' : 'PICTURE')
+      })),
     };
   } catch (e) {
     handleError('createTravel', e);
@@ -145,8 +149,9 @@ export const uploadTravelMedia = async (title, files) => {
 export const handleCreateTravelMedia = async (travelEvent) => {
   try {
     let mediaList = [];
-    if (travelEvent.images && travelEvent.images.length > 0) {
-      mediaList = await uploadTravelMedia(travelEvent.title, travelEvent.images);
+    if (travelEvent.mediaUrl && travelEvent.mediaUrl.length > 0) {
+      const newFiles = travelEvent.mediaUrl.filter(file => file instanceof File);
+      mediaList = await uploadTravelMedia(travelEvent.title, newFiles);
     }
 
     const dto = { ...travelEvent, mediaUrl: mediaList };
