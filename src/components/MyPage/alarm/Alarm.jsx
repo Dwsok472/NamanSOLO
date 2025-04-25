@@ -214,7 +214,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
   // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
   const alarmList = useAlarmList((state) => state.alarmList);
   const currentUser = useUserStore.getState().user?.username;
-  const filteredAlarms = alarmList.filter((alarm) => alarm.username === currentUser);
+  const filteredAlarms = alarmList.filter((alarm) => alarm.recipient === currentUser);
 
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
