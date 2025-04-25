@@ -152,7 +152,7 @@ const ContainerMain = styled.div`
   width: 100%;
   border-radius: 5px;
   padding-top: 10px;
-  background-color: #f9f5f6;
+  background-color: #f2f2f2;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.05);
   /* background: linear-gradient(to bottom, #f8e7e7, #fee2e0, #f8e7e7); */
   height: 540px;
