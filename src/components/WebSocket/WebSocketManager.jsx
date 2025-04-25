@@ -25,10 +25,15 @@ function WebSocketManager() {
       const res = await axios.get("/api/alarm/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
+  
       const allAlarms = res.data || [];
       const currentUser = useUserStore.getState().user?.username;
-      
-      const alarms = allAlarms.filter((a) => a.username === currentUser);
+  
+      const alarms = allAlarms.map((a) => ({
+        ...a,
+        recipient: currentUser,
+      }));
+  
       const unread = alarms.filter((a) => !a.isRead).length;
   
       useAlarmList.setState({
@@ -41,7 +46,7 @@ function WebSocketManager() {
       console.error("❌ 알림 로딩 실패:", err);
     }
   };
-
+  
   useEffect(() => {
     const token = sessionStorage.getItem("jwt-token");
     if (token && isLoggedIn) {
