@@ -7,7 +7,7 @@ const IntroWrapper = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: #8c0d17;
+  background: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,7 +21,7 @@ const IntroText = styled.div`
   z-index: 10001;
   font-weight: bold;
   font-family: 'inherit';
-  color: white;
+  color: #8c0d17;
   font-size: ${({ $animateToLogo }) => ($animateToLogo ? '2.5rem' : '10rem')};
   top: ${({ $top }) => ($top !== undefined ? `${$top}px` : '50%')};
   left: ${({ $left }) => ($left !== undefined ? `${$left}px` : '50%')};
