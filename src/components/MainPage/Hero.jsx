@@ -162,7 +162,7 @@ function Hero({ scrollToStory }) {
 
   const handleSaveClick = () => {
     if (isLoggedIn) {
-      navigate("/mypage/story");
+      navigate("/mypage/album");
     } else {
       navigate("/login");
     }

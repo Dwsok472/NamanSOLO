@@ -66,7 +66,7 @@ const StoryMenuBubbles = () => {
       </TextGroup>
 
       <CardGrid>
-        <Link to="/story/all">
+        <Link to="/album/all">
           <BubbleCard
             icon={storyall}
             title="다른 연인들의<br />이야기가 궁금하다면?"
@@ -75,7 +75,7 @@ const StoryMenuBubbles = () => {
             $backColor="#fd7240"
           />
         </Link>
-        <div onClick={() => handleClick("/mypage/story")}>
+        <div onClick={() => handleClick("/mypage/album")}>
           <BubbleCard
             icon={mystory}
             title="우리의 추억,<br />하나 하나 놓치지 마세요!"
