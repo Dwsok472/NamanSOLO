@@ -10,7 +10,7 @@ import { useUserStore } from "./Login/Login";
 function Header({
   logoText = "WeARE",
   menuItems = [],
-  subMenuItems = [],
+  // subMenuItems = [],
   loginText = "로그인",
   signupText = "회원가입",
   logoRef,
@@ -136,8 +136,8 @@ function Header({
                 </button>
               ) : (
                 <>
-                  <LoginButton type="navigate" />
-                  <RegisterButton />
+                  {/* <LoginButton type="navigate" /> */}
+                  {/* <RegisterButton /> */}
                 </>
               )}
             </>
@@ -226,7 +226,7 @@ const ToggleArrow = styled.span`
 const Container = styled.header`
   width: 100%;
   height: 78px;
-  background-color: #8c0d17;
+  /* background-color: #8c0d17; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -239,7 +239,7 @@ const Container = styled.header`
 
 const Logo = styled.h1`
   font-size: 2.5rem;
-  color: white;
+  color: #8c0d17;
   margin: 0;
   opacity: ${({ $visible }) => ($visible === false ? 0 : 1)};
   transition: opacity 0.8s ease-in-out;
@@ -345,10 +345,11 @@ const ButtonGroup = styled.div`
   }
 `;
 
-const Hamburger = styled.button`
-  display: none;
+const Hamburger = styled.div`
+   background-color: none;
+  /* display: none; */
 
-  @media (max-width: 768px) {
+  /* @media (max-width: 768px) {
     display: block;
     background: none;
     border: 2px solid white;
@@ -358,7 +359,7 @@ const Hamburger = styled.button`
     color: white;
     cursor: pointer;
     z-index: 1001;
-  }
+  } */
 `;
 
 const Sidebar = styled.div`

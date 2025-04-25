@@ -28,7 +28,7 @@ const Wrapper = styled.div`
   position: relative;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
-  }
+  },
   &::-webkit-scrollbar-thumb {
     background-color: #727272; /* 핸들의 색상 */
     border-radius: 10px;

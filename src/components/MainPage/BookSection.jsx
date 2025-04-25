@@ -61,9 +61,9 @@ const BookIntroBox = styled.div`
     /* background: linear-gradient(to right, #a10000, #2c2c2c, #bf1f3c);
     -webkit-background-clip: text;
     color: transparent; */
-    color: white;
-    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
-    1px 1px 0 black;
+    color: #bf1f3c;
+    /* text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+    1px 1px 0 black; */
   }
   p {
     margin-bottom: 2rem;
