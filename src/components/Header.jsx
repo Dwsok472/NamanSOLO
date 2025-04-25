@@ -1,212 +1,105 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import LoginButton from "./Button/LoginButton";
-import RegisterButton from "./Button/RegisterButton";
-import { useNavigate } from "react-router-dom";
-import logo2 from "./img/logo2.png";
 import { useUserStore } from "./Login/Login";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 function Header({
   logoText = "WeARE",
-  menuItems = [],
-  // subMenuItems = [],
   loginText = "로그인",
   signupText = "회원가입",
   logoRef,
   showLogo,
-  onSubMenuToggle,
+  subMenuItems = [],
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoggedIn, logout, user } = useUserStore();
-  const [isSubOpen, setSubOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isSidebarSubOpen, setSidebarSubOpen] = useState(false);
-  const subMenuRef = useRef(null);
   const sidebarRef = useRef(null);
-  const location = useLocation();
-  const isLoginPage =
-    location.pathname === "/login" || location.pathname === "/register";
+  const isLoginPage = location.pathname === "/login" || location.pathname === "/register";
 
-  useEffect(() => {
-    if (onSubMenuToggle) {
-      onSubMenuToggle(isSubOpen);
-    }
-  }, [isSubOpen]);
-
-  const toggleSubMenu = () => setSubOpen(!isSubOpen);
   const closeSidebar = () => {
     setSidebarOpen(false);
-    setSubOpen(false);
+    setSidebarSubOpen(false);
+  };
+  const [showHeader, setShowHeader] = useState(true);
+  const lastScrollY = useRef(0);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY.current) {
+      setShowHeader(false); // 아래로 스크롤하면 숨김
+    } else {
+      setShowHeader(true); // 위로 스크롤하면 보이기
+    }
+
+    lastScrollY.current = currentScrollY;
   };
 
-  useEffect(() => {
-    if (isSubOpen) {
-      document.body.classList.add("blur");
-    } else {
-      document.body.classList.remove("blur");
-    }
-  }, [isSubOpen]);
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        isSubOpen &&
-        subMenuRef.current &&
-        !subMenuRef.current.contains(e.target)
-      ) {
-        setSubOpen(false);
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+        closeSidebar();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isSubOpen]);
-
-  useEffect(() => {
-    const handleClickOut = (e) => {
-      if (
-        isSidebarOpen &&
-        sidebarRef.current &&
-        !sidebarRef.current.contains(e.target)
-      ) {
-        setSidebarOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOut);
-    return () => document.removeEventListener("mousedown", handleClickOut);
-  }, [isSidebarOpen]);
+  }, []);
 
   return (
     <>
-      <Container>
+      <Container $show={showHeader}>
         <Link to="/">
-          <Logo ref={logoRef} $visible={showLogo !== false}>
-            {logoText}
-          </Logo>
+          <Logo ref={logoRef} $visible={showLogo !== false}>{logoText}</Logo>
         </Link>
-
-        <Nav>
-          {menuItems.map(({ to, label }) => {
-            const isProtected = to === "/events"; // 이벤트만 로그인 필요
-
-            return (
-              <Link key={to} to={isLoggedIn || !isProtected ? to : "/login"}>
-                {label}
-              </Link>
-            );
-          })}
-          {user?.authority === "ROLE_ADMIN" ? (
-            <Link to="/admin/users">관리자 페이지</Link>
-          ) : (
-            <MenuWrapper ref={subMenuRef}>
-              <div
-                onClick={() =>
-                  isLoggedIn ? toggleSubMenu() : navigate("/login")
-                }
-              >
-                마이페이지 <ToggleArrow $open={isSubOpen}>▼</ToggleArrow>
-              </div>
-              {isSubOpen && isLoggedIn && (
-                <SubMenu>
-                  {subMenuItems.map(({ to, label }) => (
-                    <li key={to} onClick={toggleSubMenu}>
-                      <Link to={to}>{label}</Link>
-                    </li>
-                  ))}
-                </SubMenu>
-              )}
-            </MenuWrapper>
-          )}
-        </Nav>
-
-        <ButtonGroup>
-          {!isLoginPage && (
-            <>
-              {isLoggedIn ? (
-                <button
-                  onClick={() => {
-                    navigate("/");
-                    logout();
-                  }}
-                  className="logout"
-                >
-                  로그아웃
-                </button>
-              ) : (
-                <>
-                  {/* <LoginButton type="navigate" /> */}
-                  {/* <RegisterButton /> */}
-                </>
-              )}
-            </>
-          )}
-        </ButtonGroup>
-
-        <Hamburger onClick={() => setSidebarOpen(true)}>☰</Hamburger>
+        <Hamburger onClick={() => setSidebarOpen(true)}>
+          <FontAwesomeIcon icon={faBars} />
+        </Hamburger>
       </Container>
 
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
       <Sidebar ref={sidebarRef} $open={isSidebarOpen}>
         <ul>
-          {menuItems.map(({ to, label }) => {
-            const isProtected = to === "/events"; // 이벤트만 로그인 필요
+          <li><Link to="/" onClick={closeSidebar}>홈</Link></li>
+          <li><Link to="/album/all" onClick={closeSidebar}>전체 앨범</Link></li>
+          <li><Link to="/map" onClick={closeSidebar}>맵</Link></li>
+          <li><Link to="/events" onClick={closeSidebar}>이벤트</Link></li>
 
-            return (
-              <li key={to}>
-                <Link to={isLoggedIn || !isProtected ? to : "login"} onClick={closeSidebar}>
-                  {label}
-                </Link>
-              </li>
-            )
-          })}
-          {user?.authority === "ROLE_ADMIN" ? (
-            <li>
-              <Link to="/admin/users" onClick={closeSidebar}>
-                관리자 페이지
-              </Link>
-            </li>
-          ) : (
+          {user?.authority === "ROLE_ADMIN" && (
+            <li><Link to="/admin/users" onClick={closeSidebar}>관리자 페이지</Link></li>
+          )}
+
+          {isLoggedIn && (
             <>
-              <li onClick={() => { if (!isLoggedIn) { return navigate("/login") } return setSidebarSubOpen(!isSidebarSubOpen); }}>
+              <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
                 <span>마이페이지 {isSidebarSubOpen ? "▲" : "▼"}</span>
               </li>
               {isSidebarSubOpen &&
                 subMenuItems.map(({ to, label }) => (
                   <li key={to}>
-                    <Link to={to} onClick={() => { setSidebarSubOpen(false); closeSidebar(); }}>
-                      {label}
-                    </Link>
+                    <Link to={to} onClick={closeSidebar}>{label}</Link>
                   </li>
                 ))}
+              <li onClick={() => { logout(); closeSidebar(); }}>
+                <span>로그아웃</span>
+              </li>
             </>
           )}
-          {!isLoginPage && (
+
+          {!isLoggedIn && !isLoginPage && (
             <>
-              {isLoggedIn ? (
-                <li
-                  onClick={() => {
-                    logout();
-                    closeSidebar();
-                  }}
-                >
-                  <span>로그아웃</span>
-                </li>
-              ) : (
-                <>
-                  <li>
-                    <Link to="/login" onClick={closeSidebar}>
-                      {loginText}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/login?view=register" onClick={closeSidebar}>
-                      {signupText}
-                    </Link>
-                  </li>
-                </>
-              )}
+              <li><Link to="/login" onClick={closeSidebar}>{loginText}</Link></li>
+              <li><Link to="/register" onClick={closeSidebar}>{signupText}</Link></li>
             </>
           )}
         </ul>
@@ -215,18 +108,9 @@ function Header({
   );
 }
 
-export default Header;
-
-const ToggleArrow = styled.span`
-  display: inline-block;
-  transition: 0.2s;
-  transform: ${({ $open }) => ($open ? "rotate(180deg)" : "none")};
-`;
-
 const Container = styled.header`
   width: 100%;
   height: 78px;
-  /* background-color: #8c0d17; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -235,7 +119,11 @@ const Container = styled.header`
   top: 0;
   left: 0;
   z-index: 1001;
+  background-color: white;
+  transition: transform 0.3s ease-in-out;
+  transform: ${({ $show }) => ($show ? "translateY(0)" : "translateY(-100%)")};
 `;
+
 
 const Logo = styled.h1`
   font-size: 2.5rem;
@@ -247,120 +135,16 @@ const Logo = styled.h1`
   position: relative;
 `;
 
-const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  margin-left: 3rem;
-  a,
-  div {
-    font-size: 1.3rem;
-    color: white;
-    font-weight: 700;
-    text-decoration: none;
-    padding: 0.4rem 0.6rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.25s ease-in-out;
-    transform-origin: center;
-    display: inline-block;
-    &:hover {
-      color: #dcbdb8;
-      /* transform: scale(1.05); */
-    }
-  }
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const MenuWrapper = styled.div`
-  position: relative;
-`;
-
-const SubMenu = styled.ul`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 0.5rem;
-  background-color: #8c0d17;
-  padding: 1rem 1.5rem;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  z-index: 9999;
-  width: 100%;
-
-  li a {
-    color: white;
-    text-decoration: none;
-    padding: 0.4rem 0.6rem;
-    border-radius: 8px;
-    white-space: nowrap;
-    transition: all 0.25s ease-in-out;
-    transform-origin: center;
-    display: inline-block;
-  }
-`;
-
-const ButtonGroup = styled.div`
-  margin-left: auto;
-  display: flex;
-  gap: 1.5rem;
-
-  a {
-    font-size: 1.05rem;
-    color: white;
-    font-weight: 500;
-    text-decoration: none;
-    padding: 0.3rem 0.5rem;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      color: #ffe9e5;
-      transform: scale(1.05);
-    }
-  }
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-  .logout {
-    /* width: 100px; */
-    border-radius: 10px;
-    background-color: #ffffff;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #8c0d17;
-    cursor: pointer;
-    &:hover {
-      color: #000000;
-      border: 1px solid #3333;
-    }
-    &:focus {
-      outline: none;
-    }
-  }
-`;
-
 const Hamburger = styled.div`
-   background-color: none;
-  /* display: none; */
+  cursor: pointer;
+  z-index: 1001;
 
-  /* @media (max-width: 768px) {
-    display: block;
-    background: none;
-    border: 2px solid white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 10px;
-    font-size: 1.6rem;
-    color: white;
-    cursor: pointer;
-    z-index: 1001;
-  } */
+  svg {
+    font-size: 2rem;
+    color: #8c0d17;
+  }
 `;
+
 
 const Sidebar = styled.div`
   position: fixed;
@@ -369,18 +153,16 @@ const Sidebar = styled.div`
   width: 280px;
   height: 100%;
   background-color: #bf1f3c;
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
   transition: left 0.3s ease;
   z-index: 1000;
+  padding: 100px 20px 0;
 
   ul {
     list-style: none;
-    padding: 100px 20px 0;
-    margin: 0;
+    padding: 0;
     li {
       padding: 12px 0;
-      a,
-      span {
+      a, span {
         color: #fff;
         text-decoration: none;
         font-size: 1.5rem;
@@ -401,3 +183,7 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 `;
+
+
+
+export default Header;
