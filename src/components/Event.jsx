@@ -8,7 +8,7 @@ import gift3 from './img/gift3.jpg';
 const Container = styled.div`
   padding: 40px 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.5fr 2.5fr 2.5fr 0.5fr;
   margin: 0;
   padding: 0;
   position: relative;
@@ -28,12 +28,13 @@ const ImgWrap = styled.div`
 const Right = styled.div`
   width: 100%;
 `;
+
 const Title = styled.h1`
   text-align: center;
   font-size: 3.5rem;
   color: #1f0606;
   margin-top: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 `;
 
 const SidebarButtons = styled.div`
@@ -70,7 +71,7 @@ button{
 const CategoryContainer = styled.div`
   display: flex;
   justify-content: center;
-  gap: 32px;
+  gap: 0px;
   flex-wrap: wrap;
   overflow-y: auto;
   height: 770px;
@@ -105,11 +106,10 @@ const GiftList = styled.ul`
   justify-content: center;
   padding: 0;
   margin: 0;
-  
 `;
 
 const GiftItem = styled.li`
-  width: 45%;
+  width: 47.5%;
   border: 1px solid #e3e3e3;
   border-radius: 12px;
   margin-bottom: 18px;
@@ -131,7 +131,7 @@ const GiftItem = styled.li`
   }
   img {
     width: 100%;
-    height: 50%;
+    height: 200px;
     object-fit: cover;
     border-radius: 12px;
   }
@@ -166,7 +166,6 @@ function Event() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
-  const [selectedGender, setSelectedGender] = useState("female");
 
   const stripHTML = (html) => {
     const div = document.createElement('div');
@@ -205,26 +204,28 @@ function Event() {
     return () => clearInterval(interval);
   }, []);
 
-  const giftsToDisplay = selectedGender === "male" ? maleGifts : femaleGifts;
+  // const giftsToDisplay = selectedGender === "male" ? maleGifts : femaleGifts;
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
   return (
+    <>
+    <Title>선물랭킹 TOP10</Title>
     <Container>
-      <ImgWrap>
+      {/* <ImgWrap>
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
-      </ImgWrap>
-      <Right>
-        <Title>선물랭킹 TOP10</Title>
-        <SidebarButtons>
+      </ImgWrap> */}
+      {/* <Right> */}
+        {/* <SidebarButtons>
           <button onClick={() => setSelectedGender("female")} className={selectedGender === 'female' ? 'girl' : ''}>여자</button>
           <button onClick={() => setSelectedGender("male")} className={selectedGender === 'male' ? 'boy' : ''}>남자</button>
-        </SidebarButtons>
+        </SidebarButtons> */}
+        <div></div>
         <CategoryContainer>
-          <Category $gender={selectedGender === 'female' ? 'female' : 'male'}>
+          <Category $gender={'male'}>
             <GiftList>
-              {giftsToDisplay.map((gift, index) => (
+              {maleGifts.map((gift, index) => (
                 <GiftItem key={index} title={stripHTML(gift.title)}>
                   <a href={gift.shoppingUrl} target="_blank" rel="noopener noreferrer">
                     <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
@@ -236,8 +237,25 @@ function Event() {
             </GiftList>
           </Category>
         </CategoryContainer>
-      </Right>
+        <CategoryContainer>
+          <Category $gender={'female'}>
+            <GiftList>
+              {femaleGifts.map((gift, index) => (
+                <GiftItem key={index} title={stripHTML(gift.title)}>
+                  <a href={gift.shoppingUrl} target="_blank" rel="noopener noreferrer">
+                    <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
+                    <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
+                    <p>가격: {Number(gift.price).toLocaleString()}원</p>
+                  </a>
+                </GiftItem>
+              ))}
+            </GiftList>
+          </Category>
+        </CategoryContainer>
+        <div></div>
+      {/* </Right> */}
     </Container>
+    </>
   );
 }
 
