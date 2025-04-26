@@ -61,14 +61,14 @@ const RegionLabel = styled.div`
 `;
 
 const regions = [
-  { name: '인천,서울,경기', top: 15, left: 38 },
+  { name: '인천,서울,경기', top: 20, left: 28 },
   { name: '강원도', top: 15, left: 55 },
-  { name: '충청남도', top: 40, left: 35 },
+  { name: '충청남도', top: 40, left: 28 },
   { name: '충청북도', top: 34, left: 45 },
-  { name: '전라북도', top: 50, left: 38 },
-  { name: '전라남도', top: 63, left: 38 },
-  { name: '경상북도', top: 45, left: 58 },
-  { name: '경상남도', top: 58, left: 51 },
+  { name: '전라북도', top: 55, left: 38 },
+  { name: '전라남도', top: 63, left: 27 },
+  { name: '경상북도', top: 45, left: 68 },
+  { name: '경상남도', top: 58, left: 57 },
   { name: '제주도', top: 91, left: 30 },
 ];
 

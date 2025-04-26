@@ -5,14 +5,26 @@ import { useUserStore } from './Login/Login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
-function Header({
-  logoText = 'WeARE',
-  loginText = '로그인',
-  signupText = '회원가입',
-  logoRef,
-  showLogo,
-  subMenuItems = [],
-}) {
+
+function Header(props) {
+  const {
+    logoText = "WeARE",
+    loginText = "로그인",
+    signupText = "회원가입",
+    logoRef,
+    showLogo,
+    subMenuItems
+  } = props;
+
+  const effectiveSubMenuItems =
+    subMenuItems && subMenuItems.length > 0
+      ? subMenuItems
+      : [
+          { to: "/mypage/favorites", label: "즐겨찾기" },
+          { to: "/mypage/calendar", label: "캘린더" },
+          { to: "/mypage/comments", label: "내 댓글" }
+        ];
+ 
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, logout, user } = useUserStore();

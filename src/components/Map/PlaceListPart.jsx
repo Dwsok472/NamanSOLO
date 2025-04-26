@@ -16,24 +16,26 @@ import { registerCategoryMapping } from '../api1';
 import { IconClose, IconImage } from '../Icons';
 
 const Wrapper = styled.div`
+  flex: 1;
   width: 100%;
-  max-width: 600px;
-  height: 85vh;
+  height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 12px;
   border-radius: 10px;
-
   position: relative;
+  padding: 20px; 
+
   &::-webkit-scrollbar {
-    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
-  },
+    width: 7px;
+  }
   &::-webkit-scrollbar-thumb {
-    background-color: #727272; /* 핸들의 색상 */
+    background-color: #727272;
     border-radius: 10px;
   }
 `;
+
 
 const RegionTitle = styled.h3`
   font-size: 3rem;
@@ -84,11 +86,12 @@ const CloseBtn = styled.button`
 `;
 
 const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-height: calc(97px * 5);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px; 
   overflow-y: auto;
+  width: 100%;
+  max-height: 70vh;
   padding-right: 6px;
 
   &::-webkit-scrollbar {
@@ -102,20 +105,25 @@ const ListContainer = styled.div`
 `;
 
 
+
 const Card = styled.div`
   background: #ffffff;
-  padding: 12px;
+  padding: 25px;
   display: flex;
-  gap: 10px;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   border-radius: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   cursor: pointer;
+  width: 100%;
+  height: 300px;
+  text-align: center;
 `;
 
 const Thumbnail = styled.img`
-  width: 60px;
-  height: 60px;
+  width: 100%;
+  height: 180px;
   object-fit: cover;
   border-radius: 8px;
 
@@ -148,14 +156,18 @@ const Info = styled.div`
 
 const Detail = styled.div`
   background: #ffffff;
-  padding: 12px 16px;
-  position: relative;
-  .close {
-    position: absolute;
-    top: 0;
-    bottom: -100px;
-  }
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  grid-column: span 1;
+  box-sizing: border-box;
 `;
+
 
 const DetailText = styled.p`
   font-size: 0.85rem;
@@ -417,6 +429,56 @@ const ModalCloseBtn = styled.button`
   }
 `;
 
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80%;
+  overflow-y: auto;
+  position: relative;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+
+  label {
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+  }
+
+  input, textarea {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+`;
+
+
 
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedId, setSelectedId] = useState(null);
@@ -438,8 +500,12 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [activeImageIndex, setActiveImageIndex] = useState({});
   const cardRefs = useRef({});
   const listContainerRef = useRef(null);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [showMapInModal, setShowMapInModal] = useState(false);
+  const [isEditingInModal, setIsEditingInModal] = useState(false);
+  const [showFormInModal, setShowFormInModal] = useState(false);
 
-
+  
   const showPrevImage = (placeId, total) => {
     const currentIndex = activeImageIndex[placeId] || 0;
     setActiveImageIndex((prev) => ({
@@ -591,7 +657,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         if (newPlace.image) {
           await uploadRecommendPlaceImages(updatedDTO, [newPlace.image]);
         } else {
-          await updateRecommendPlace(updatedDTO); // 이미지 변경 없을 때
+          await updateRecommendPlace(updatedDTO);
         }
         alert('수정 성공');
       } else {
@@ -663,48 +729,61 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         alert('이미지를 업로드해주세요.');
         return;
       }
-
+  
       const placeDTO = {
         name: newPlace.name,
         address: newPlace.address,
         description: newPlace.description,
-        category: selectedCategories[0] || '', // 대표 카테고리 하나만 백업용
+        category: selectedCategories[0] || '',
         city: selectedRegion,
         latitude: 0,
         longitude: 0,
       };
-
+  
       const savedPlace = await uploadRecommendPlaceImages(
         placeDTO,
         newPlace.images
       );
-
+  
       if (savedPlace?.id && selectedCategories.length > 0) {
         await registerCategoryMapping(savedPlace.id, selectedCategories);
-
+  
         const updatedPlaces = await getPlacesByRegion(selectedRegion);
+  
         setRegionPlaces((prev) => ({
           ...prev,
           [selectedRegion]: updatedPlaces,
         }));
-
-        alert(' 등록 성공!');
-
-        setNewPlace({
-          name: '',
-          category: '',
-          address: '',
-          description: '',
-          image: null,
-          preview: '',
-        });
-        setShowForm(false);
+  
+        setFilteredPlaces(updatedPlaces);
       }
+  
+      alert(' 등록 성공!');
+  
+      setNewPlace({
+        name: '',
+        category: '',
+        address: '',
+        description: '',
+        images: [],
+        preview: '',
+      });
+      setShowFormInModal(false); 
+  
     } catch (err) {
       console.error('등록 실패:', err);
     }
-  };
 
+    const updatedPlaces = await getPlacesByRegion(selectedRegion);
+
+setRegionPlaces((prev) => ({
+  ...prev,
+  [selectedRegion]: updatedPlaces,
+}));
+
+setFilteredPlaces(updatedPlaces)
+  };
+  
   const smoothScrollTo = (container, targetOffset) => {
     const start = container.scrollTop;
     const change = targetOffset - start;
@@ -755,22 +834,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         <React.Fragment key={`place-${place.id}`}>
           <Card
             ref={(el) => (cardRefs.current[place.id] = el)}
-            onClick={() => {
-              const alreadySelected = selectedId === place.id;
-              setSelectedId(alreadySelected ? null : place.id);
-            
-              if (!alreadySelected) {
-                setTimeout(() => {
-                  const container = listContainerRef.current;
-                  const target = cardRefs.current[place.id];
-            
-                  if (container && target) {
-                    const targetOffsetTop = target.offsetTop;
-                    smoothScrollTo(container, targetOffsetTop - 80);
-                  }
-                }, 50);
-              }
-            }}
+            onClick={() => setSelectedPlace(place)}
           >
       <Thumbnail
         src={
@@ -975,14 +1039,185 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           </React.Fragment>
         ))}
       </ListContainer>
+
+      {showFormInModal && (
+  <ModalBackground onClick={() => setShowFormInModal(false)}>
+    <ModalContent onClick={(e) => e.stopPropagation()}>
+      <ModalCloseBtn onClick={() => setShowFormInModal(false)}>
+        ✖
+      </ModalCloseBtn>
+
+      <h2>장소 등록</h2>
+
+      <FormGroup>
+        <label>이름</label>
+        <input
+          type="text"
+          value={newPlace.name}
+          onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
+          placeholder="장소 이름"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <label>주소</label>
+        <input
+          type="text"
+          value={newPlace.address}
+          onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })}
+          placeholder="장소 주소"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <label>설명</label>
+        <textarea
+          value={newPlace.description}
+          onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })}
+          placeholder="장소 설명"
+        />
+      </FormGroup>
+
+      <FormGroup>
+        <label>이미지</label>
+        <input type="file" multiple onChange={handleImage} />
+        {newPlace.preview && (
+          <img
+            src={newPlace.preview}
+            alt="미리보기"
+            style={{ width: '100%', marginTop: '10px', borderRadius: '8px' }}
+          />
+        )}
+      </FormGroup>
+
+      <ButtonGroup>
+        <SmallBtn onClick={handleRegister}>등록</SmallBtn>
+        <SmallBtn onClick={() => setShowFormInModal(false)}>취소</SmallBtn>
+      </ButtonGroup>
+    </ModalContent>
+  </ModalBackground>
+)}
+
+
+      {selectedPlace && (
+  <ModalBackground onClick={() => {
+    setSelectedPlace(null);
+    setShowMapInModal(false);
+    setIsEditingInModal(false);
+  }}>
+    <ModalContent onClick={(e) => e.stopPropagation()}>
+      <ModalCloseBtn onClick={() => {
+        setSelectedPlace(null);
+        setShowMapInModal(false);
+        setIsEditingInModal(false);
+      }}>
+        ✖
+      </ModalCloseBtn>
+
+      {/* 수정 모드 */}
+      {isEditingInModal ? (
+        <div>
+        <h2>수정하기</h2>
+      
+        <FormGroup>
+          <label>이름</label>
+          <input
+            type="text"
+            value={newPlace.name}
+            placeholder="장소 이름"
+            onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
+          />
+        </FormGroup>
+      
+        <FormGroup>
+          <label>주소</label>
+          <input
+            type="text"
+            value={newPlace.address}
+            placeholder="장소 주소"
+            onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })}
+          />
+        </FormGroup>
+      
+        <FormGroup>
+          <label>설명</label>
+          <textarea
+            value={newPlace.description}
+            placeholder="장소 설명"
+            onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })}
+          />
+        </FormGroup>
+      
+        <ButtonGroup>
+          <SmallBtn onClick={handleSavePlace}>저장</SmallBtn>
+          <SmallBtn onClick={() => setIsEditingInModal(false)}>취소</SmallBtn>
+        </ButtonGroup>
+      </div>
+      
+      ) : (
+        <div>
+          <h2>{selectedPlace.name}</h2>
+
+          <FixedSizeImage
+            src={selectedPlace.mediaUrl?.[0]?.mediaUrl || 'https://via.placeholder.com/300x200'}
+            alt={selectedPlace.name}
+          />
+
+          <p>{selectedPlace.address}</p>
+          <p>{selectedPlace.description}</p>
+
+          {/* 지도 보기 */}
+          {showMapInModal && (
+            <MapWrapper id="map-in-modal" />
+          )}
+
+          <ButtonGroup>
+            <SmallBtn onClick={() => setShowMapInModal(!showMapInModal)}>
+              {showMapInModal ? "지도 닫기" : "지도 보기"}
+            </SmallBtn>
+
+            {isAdmin && (
+              <>
+                <SmallBtn onClick={() => {
+                  setIsEditingInModal(true);
+                  setNewPlace({
+                    name: selectedPlace.name,
+                    address: selectedPlace.address,
+                    description: selectedPlace.description,
+                    mediaUrl: selectedPlace.mediaUrl || [],
+                  });
+                }}>
+                  ✏ 수정
+                </SmallBtn>
+
+                <SmallBtn onClick={() => handleDelete(selectedPlace.id)}>
+                  🗑 삭제
+                </SmallBtn>
+              </>
+            )}
+          </ButtonGroup>
+        </div>
+      )}
+    </ModalContent>
+  </ModalBackground>
+)}
+
       {isAdmin && !showForm && (
         <AddButton
-          onClick={() => {
-            setShowForm(true);
-            setSelectedId(null);
-            setEditingId(null);
-          }}
-        >
+        onClick={() => {
+          setShowFormInModal(true);
+          setSelectedId(null);
+          setEditingId(null);
+          setNewPlace({
+            name: '',
+            category: '',
+            address: '',
+            description: '',
+            images: [],
+            preview: '',
+          });
+        }}
+      >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
               d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
