@@ -200,7 +200,7 @@ const DayCell = styled.div`
   font-weight: 700;
   font-size: 0.8rem;
   color: black;
-  background-color: ${({ $isToday }) => ($isToday ? '#eb0202' : '')};
+  background-color: ${({ $isToday }) => ($isToday ? '#F5E050' : '')};
   img {
     width: 20px;
     height: 20px;
@@ -660,8 +660,8 @@ function Todo({ originalMeetingDate }) {
                         const isToday =
                           dateStr === today.toISOString().split('T')[0];
                         return (
-                          <StyledTd key={dIdx} $isToday={isToday}>
-                            <DayCell>
+                          <StyledTd key={dIdx}>
+                            <DayCell $isToday={isToday}>
                               {getEventsForDay(date).some(
                                 (ev) => !ev.editable
                               ) && <img src={firework} alt="비편집 아이콘" />}
