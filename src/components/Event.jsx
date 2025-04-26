@@ -8,7 +8,7 @@ import gift3 from './img/gift3.jpg';
 const Container = styled.div`
   padding: 40px 20px;
   display: grid;
-  grid-template-columns: 0.5fr 2.5fr 2.5fr 0.5fr;
+  grid-template-columns: 1fr 1fr;
   margin: 0;
   padding: 0;
   position: relative;
@@ -221,7 +221,6 @@ function Event() {
           <button onClick={() => setSelectedGender("female")} className={selectedGender === 'female' ? 'girl' : ''}>여자</button>
           <button onClick={() => setSelectedGender("male")} className={selectedGender === 'male' ? 'boy' : ''}>남자</button>
         </SidebarButtons> */}
-        <div></div>
         <CategoryContainer>
           <Category $gender={'male'}>
             <GiftList>
@@ -252,7 +251,6 @@ function Event() {
             </GiftList>
           </Category>
         </CategoryContainer>
-        <div></div>
       {/* </Right> */}
     </Container>
     </>
