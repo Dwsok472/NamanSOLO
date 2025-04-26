@@ -9,8 +9,8 @@ const BookSectionWrapper = styled.section`
   align-items: flex-start;
   padding: 100px 60px;
   /* background: linear-gradient(to bottom, #ececec, #f5e4c3); */
-  /* background: linear-gradient(to bottom, #bb1616, #dd7676, #f6f2ea); */
-  background-color: #dd7676;
+  background: linear-gradient(to bottom, #eb9898, #dd7676, #f6f2ea);
+  /* background-color: #dd7676; */
   border-radius: 0;
   width: 100%;
   height: 1000px;

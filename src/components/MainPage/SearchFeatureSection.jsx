@@ -6,7 +6,7 @@ import followAnimation from '../img/follow.json';
 import feed from '../img/feed.json';
 
 const Section = styled.section`
-  background: linear-gradient(to bottom, #f2ebdc, #fce8f0, #f2ebdc);
+  background: linear-gradient(to bottom, #f6f2ea, #fce8f0, #f2ebdc);
   padding: 120px 20px;
 `;
 

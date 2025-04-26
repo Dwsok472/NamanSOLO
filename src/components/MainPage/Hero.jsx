@@ -16,8 +16,8 @@ const float = keyframes`
 `;
 
 const HeroWrapper = styled.section`
-  /* background: linear-gradient(to bottom, #f6f2ea, #bb1616); */
-  background-color: #f6f2ea;
+  background: linear-gradient(to bottom, #f6f2ea, #eb9898);
+  /* background-color: #f6f2ea; */
   min-height: 92vh;
   display: flex;
   flex-direction: column;
