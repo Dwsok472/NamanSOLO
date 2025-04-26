@@ -31,8 +31,8 @@ function Top({ filter, onFilterChange }) {
       return;
     }
     if (!currentUser) {
-      alert("로그인 후 이용이 가능합니다");
-      return
+      alert('로그인 후 이용이 가능합니다');
+      return;
     }
     try {
       const response = await axios.get(
@@ -89,11 +89,11 @@ function Top({ filter, onFilterChange }) {
           prevResults.map((user) =>
             user.username === targetUsername
               ? {
-                ...user, //기존 유저 객체를 그대로 복사
-                // 관계만 변경해주기
-                relation:
-                  user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
-              }
+                  ...user, //기존 유저 객체를 그대로 복사
+                  // 관계만 변경해주기
+                  relation:
+                    user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
+                }
               : user
           )
         );
@@ -143,7 +143,9 @@ function Top({ filter, onFilterChange }) {
           최신순
         </button>
         <button
-          className={`${selected === '좋아요순' ? 'selected' : ''} ${filter === '좋아요순' ? 'active' : ''}`}
+          className={`${selected === '좋아요순' ? 'selected' : ''} ${
+            filter === '좋아요순' ? 'active' : ''
+          }`}
           id="like"
           onClick={() => {
             onFilterChange('좋아요순');
@@ -153,7 +155,9 @@ function Top({ filter, onFilterChange }) {
           좋아요순
         </button>
         <button
-          className={`${selected === '댓글순' ? 'selected' : ''} ${filter === '댓글순'}`}
+          className={`${selected === '댓글순' ? 'selected' : ''} ${
+            filter === '댓글순'
+          }`}
           id="comment"
           onClick={() => {
             onFilterChange('댓글순');
@@ -166,7 +170,8 @@ function Top({ filter, onFilterChange }) {
       {isUserStoryPage && (
         <>
           <NameBox>
-            <h1>{username}</h1><span>의 앨범</span>
+            <h1>{username}</h1>
+            <span>의 앨범</span>
           </NameBox>
           <div></div>
         </>
@@ -230,14 +235,15 @@ function Top({ filter, onFilterChange }) {
                             {user.username}
                           </div>
                           <button
-                            className={`follow ${user.relation === 'FRIEND'
-                              ? 'friend'
-                              : user.relation === 'FOLLOWING'
+                            className={`follow ${
+                              user.relation === 'FRIEND'
+                                ? 'friend'
+                                : user.relation === 'FOLLOWING'
                                 ? 'following'
                                 : user.relation === 'FOLLOWER'
-                                  ? 'follower'
-                                  : 'none'
-                              }`}
+                                ? 'follower'
+                                : 'none'
+                            }`}
                             onClick={() => {
                               if (
                                 user.relation === 'FOLLOWER' ||
@@ -370,13 +376,13 @@ const TopBox = styled.div`
     font-size: 0.8rem; /* 더 큰 글씨 */
     background-color: #ffffff;
     color: #2b2b2b;
-    border-radius: 20px;
+    border-radius: 50px;
     width: 90px; /* 조금 더 넓게 */
     margin: 5px;
     transition: all 0.2s;
     cursor: pointer;
     white-space: nowrap; /* 글자 줄바꿈 방지 */
-
+    border: 0.5px solid #888888;
     &:hover {
       background-color: #8c0d17;
       color: white;
@@ -386,22 +392,23 @@ const TopBox = styled.div`
   .selected {
     background-color: #8c0d17;
     color: white;
+    border: none;
   }
 `;
 const NameBox = styled.div`
-    width: 100%;
-   display: flex;
-   justify-content: center;
-   align-items: end;
-   font-weight: 700;
-  h1{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  font-weight: 700;
+  h1 {
     color: #000000;
   }
-  span{   
+  span {
     color: #000000;
-      font-size: 2rem;
+    font-size: 2rem;
   }
-`
+`;
 const MiddleBox = styled.div`
   width: 100%;
   height: auto;

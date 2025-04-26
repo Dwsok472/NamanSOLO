@@ -16,7 +16,7 @@ const PhotoCard = ({
   draggable,
   onDragStart,
   $columns,
-  username
+  username,
 }) => {
   const [imageIndex, setImageIndex] = useState(0);
   console.log(src);
@@ -57,7 +57,7 @@ const PhotoCard = ({
       }}
       columns={$columns}
     >
-      {username && <div className='username'>{username}</div>}
+      {username && <div className="username">{username}</div>}
       <Pin>
         <img src={$pinColor} className="pin" />
       </Pin>
@@ -99,7 +99,6 @@ const PhotoCard = ({
         />
       )}
       {title && <Caption>{title}</Caption>}
-
     </CardWrapper>
   );
 };
@@ -107,8 +106,8 @@ const PhotoCard = ({
 export default PhotoCard;
 
 const CardWrapper = styled.div`
-  width: ${({ columns }) => (columns === 3 ? '500px' : '300px')};
-  height: ${({ columns }) => (columns === 3 ? '500px' : '360px')};
+  width: ${({ columns }) => (columns === 3 ? '500px' : '250px')};
+  height: ${({ columns }) => (columns === 3 ? '500px' : '300px')};
   padding: 10px;
   background: white;
   box-shadow: 0 4px 7px rgba(0, 0, 0, 0.5);
@@ -139,16 +138,16 @@ const CardWrapper = styled.div`
     opacity: 0.3;
   }
   .current-video {
-    width: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
-    height: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
+    width: ${({ columns }) => (columns === 3 ? '430px' : '230px')};
+    height: ${({ columns }) => (columns === 3 ? '430px' : '200px')};
     object-fit: cover;
     pointer-events: none;
-  }   
-   .username{
-      font-size :0.7rem;
-      color: #555;
-      text-align:start;
-    }
+  }
+  .username {
+    font-size: 0.7rem;
+    color: #555;
+    text-align: start;
+  }
 `;
 
 const Pin = styled.div`
@@ -165,16 +164,15 @@ const Pin = styled.div`
 `;
 
 const Image = styled.img`
-  width: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
-  height: ${({ columns }) => (columns === 3 ? '430px' : '280px')};
+  width: ${({ columns }) => (columns === 3 ? '430px' : '230px')};
+  height: ${({ columns }) => (columns === 3 ? '430px' : '200px')};
   object-fit: cover;
   pointer-events: none;
 `;
 
 const Caption = styled.div`
-margin-top: 10px;
-  font-size: 20px;
+  margin-top: 10px;
+  font-size: 1rem;
   font-weight: bold;
   color: #555;
 `;
-

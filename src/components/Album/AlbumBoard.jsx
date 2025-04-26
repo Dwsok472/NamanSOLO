@@ -251,13 +251,14 @@ export default AlbumBoard;
 
 const BoardWrapper = styled.div`
   padding-top: 10px;
-  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  height: auto;
+  height: 850px;
+  margin: 0 auto;
+  width: 80%;
 `;
 
 const BoardFrame = styled.div`
@@ -275,7 +276,7 @@ const PhotoArea = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 24px; /* 아이템 간 간격 */
+  gap: 50px; /* 아이템 간 간격 */
   width: 70%;
   height: 750px;
   justify-content: center;
@@ -313,7 +314,7 @@ const AddButton = styled.button`
   }
 
   &:hover svg {
-    stroke: white;
+    stroke: #000000;
     transform: rotate(90deg);
   }
 `;
@@ -322,12 +323,12 @@ const MarkerWrapper = styled.div`
   cursor: pointer;
   position: absolute;
   top: 2%;
-  left: -260px;
+  left: -380px;
 `;
 
 const EraserWrapper = styled.div`
   cursor: pointer;
   position: absolute;
   top: 2%;
-  right: -245px;
+  right: -380px;
 `;

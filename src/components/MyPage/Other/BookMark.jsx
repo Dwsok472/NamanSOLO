@@ -230,7 +230,7 @@ const Left = styled.div`
 const Img = styled.img`
   border-radius: 15px;
   object-fit: cover;
-  border: 1px solid #333;
+  border: 1px solid #a7a7a7;
   align-items: center;
   width: 250px;
   height: 230px;
