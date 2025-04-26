@@ -20,11 +20,11 @@ const BookWrapper = styled.div`
   height: 520px;
   perspective: 1500px;
   margin: 0 auto;
-  margin-right: 50px;
+  margin-right: 180px;
 `;
 
 const FlipCard = styled.div`
-  width: 100%;
+  width: 750px;
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
@@ -84,15 +84,16 @@ const NavButton = styled.button`
   ${({ $left }) => ($left ? 'left: -48px;' : 'right: -48px;')}
   width: 42px;
   height: 42px;
-  background: white;
+  background: #dd7676;
   border-radius: 50%;
   border: none;
   display: flex;
   justify-content: center;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  opacity: 0.5;
+  /* box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); */
   transition: all 0.25s ease-in-out;
   &:hover {
-    background: #dddddd;
+    background: #dd7676;
     color: white;
   }
   &:active {
@@ -110,22 +111,25 @@ const BookFlip = () => {
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
-        const jwt = sessionStorage.getItem("jwt-token");
+        const jwt = sessionStorage.getItem('jwt-token');
         const headers = jwt ? { Authorization: `Bearer ${jwt}` } : {};
 
-        const url = isLoggedIn && username
-          ? `/api/album/username/${username}`
-          : `/api/album/all`;
+        const url =
+          isLoggedIn && username
+            ? `/api/album/username/${username}`
+            : `/api/album/all`;
 
         const res = await axios.get(url, { headers });
         if (res && res.data) {
           const sorted = isLoggedIn
             ? res.data.slice(0, 4)
-            : res.data.sort((a, b) => b.greats.length - a.greats.length).slice(0, 4);
+            : res.data
+                .sort((a, b) => b.greats.length - a.greats.length)
+                .slice(0, 4);
           setAlbums(sorted);
         }
       } catch (err) {
-        console.error("앨범 불러오기 실패", err);
+        console.error('앨범 불러오기 실패', err);
       }
     };
 
@@ -136,9 +140,9 @@ const BookFlip = () => {
 
   const handleClick = () => {
     if (isLoggedIn) {
-      navigate("/mypage/album");
+      navigate('/mypage/album');
     } else {
-      navigate("/story/all");
+      navigate('/story/all');
     }
   };
 
@@ -149,10 +153,9 @@ const BookFlip = () => {
           <BookPage className="left">
             {albums[0] && (
               <PhotoCard
-                src={albums[0].url.map((m) =>
-                ({
+                src={albums[0].url.map((m) => ({
                   url: m.mediaUrl,
-                  type: m.mediaType
+                  type: m.mediaType,
                 }))}
                 title={albums[0].title}
                 onClick={handleClick}
@@ -162,10 +165,9 @@ const BookFlip = () => {
           <BookPage className="right">
             {albums[1] && (
               <PhotoCard
-                src={albums[1].url.map((m) =>
-                ({
+                src={albums[1].url.map((m) => ({
                   url: m.mediaUrl,
-                  type: m.mediaType
+                  type: m.mediaType,
                 }))}
                 title={albums[1].title}
                 onClick={handleClick}
@@ -179,7 +181,7 @@ const BookFlip = () => {
               <PhotoCard
                 src={albums[2].url.map((m) => ({
                   url: m.mediaUrl,
-                  type: m.mediaType
+                  type: m.mediaType,
                 }))}
                 title={albums[2].title}
                 onClick={handleClick}
@@ -191,7 +193,7 @@ const BookFlip = () => {
               <PhotoCard
                 src={albums[3].url.map((m) => ({
                   url: m.mediaUrl,
-                  type: m.mediaType
+                  type: m.mediaType,
                 }))}
                 title={albums[3].title}
                 onClick={handleClick}

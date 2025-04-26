@@ -296,8 +296,9 @@ const Column = styled.div`
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  height: 630px;
+  height: 565px;
   border: 1px solid #8c0d17;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
 `;
 
 const TopFixed = styled.div`

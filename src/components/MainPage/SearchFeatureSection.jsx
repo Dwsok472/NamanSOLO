@@ -39,10 +39,10 @@ const Title = styled.h2`
   text-align: center;
   line-height: 1.4;
   white-space: pre-line;
-  animation:  ${floatUpDown} 2s ease-in-out infinite; 
+  animation: ${floatUpDown} 2s ease-in-out infinite;
   margin-bottom: 50px;
   text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
-  1px 1px 0 white;
+    1px 1px 0 white;
 `;
 
 const Left = styled.div`
@@ -60,7 +60,6 @@ const Right = styled.div`
   align-items: center;
 `;
 
-
 const LoopWrapper = styled.div`
   position: relative;
   width: 550px;
@@ -69,25 +68,22 @@ const LoopWrapper = styled.div`
   border-radius: 50%;
   border: 2px dashed #ffffff;
 
-  box-shadow:
-  0 0 20px rgba(192, 11, 78, 0.6),
-  inset 0 0 15px rgba(192, 11, 78, 0.3);
+  box-shadow: 0 0 20px rgba(192, 11, 78, 0.6),
+    inset 0 0 15px rgba(192, 11, 78, 0.3);
 
   animation: pulseRotate 30s ease-in-out infinite; // 회전 애니메이션 적용
   @keyframes pulseRotate {
-  0% {
-    transform: rotate(0deg) scale(1);
+    0% {
+      transform: rotate(0deg) scale(1);
+    }
+    50% {
+      transform: rotate(180deg) scale(1.02);
+    }
+    100% {
+      transform: rotate(360deg) scale(1);
+    }
   }
-  50% {
-    transform: rotate(180deg) scale(1.02);
-  }
-  100% {
-    transform: rotate(360deg) scale(1);
-  }
-}
 `;
-
-
 
 const Node = styled.div`
   position: absolute;
@@ -100,19 +96,25 @@ const Node = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
   padding: 10px;
   animation: spinNode 30s linear infinite;
-  ${props => props.className === 'active' && `
+  ${(props) =>
+    props.className === 'active' &&
+    `
   box-shadow: 0 0 25px 5px rgba(255, 126, 126, 0.7);
   transform: scale(1.05);
   transition: all 0.3s ease;
 `}
 
-@keyframes spinNode {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); } // 반대 방향으로 살짝 회전해줌
-}
+  @keyframes spinNode {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    } // 반대 방향으로 살짝 회전해줌
+  }
 
   h3 {
     font-size: 1.2rem;
@@ -120,7 +122,6 @@ const Node = styled.div`
     position: absolute;
     bottom: -30px;
   }
-
 `;
 
 const Slider = styled.div`
@@ -132,7 +133,8 @@ const Slider = styled.div`
   position: relative;
   background-color: #ffffff;
 
-  img, canvas {
+  img,
+  canvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -151,7 +153,7 @@ const TextOverlay = styled.div`
   border-radius: 12px;
   text-align: center;
   width: 80%;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 
   h3 {
     font-size: 1.3rem;
@@ -173,24 +175,23 @@ function SearchFeatureSection() {
       type: 'lottie',
       lottie: userSearch,
       title: '유저 검색',
-      desc: '처음 너를 찾아본 순간,\n무심한 듯 설렘이 왔지.'
+      desc: '처음 너를 찾아본 순간,\n무심한 듯 설렘이 왔지.',
     },
     {
       type: 'lottie',
       lottie: followAnimation,
       title: '팔로우',
-      desc: '서로를 팔로우하면,\n우리의 이야기가 하나로 연결돼요.'
+      desc: '서로를 팔로우하면,\n우리의 이야기가 하나로 연결돼요.',
     },
     {
       type: 'lottie',
       lottie: feed,
       title: '스토리 보기',
-      desc: '팔로우한 연인의 페이지를 방문해보세요.\n사랑의 기억이 페이지마다 담겨 있어요.'
-    }
+      desc: '팔로우한 연인의 페이지를 방문해보세요.\n사랑의 기억이 페이지마다 담겨 있어요.',
+    },
   ];
 
   const currentSlide = slides[currentImage];
-
 
   useEffect(() => {
     if (slides[currentImage].type !== 'lottie') {
@@ -201,28 +202,44 @@ function SearchFeatureSection() {
     }
   }, [currentImage, slides]);
 
-
   return (
     <Section>
       <Title>
-        두 사람의 순간들이
-        어떻게 하나의 이야기로{'\n'}
+        두 사람의 순간들이 어떻게 하나의 이야기로{'\n'}
         이어졌는지, 들어볼래요?
       </Title>
 
       <Container>
         <Left>
           <LoopWrapper>
-            <Node style={{ top: '-60px', left: '220px' }} className={currentImage === 0 ? 'active' : ''}>
-              <Lottie animationData={userSearch} style={{ width: 100, height: 100 }} />
+            <Node
+              style={{ top: '-60px', left: '220px' }}
+              className={currentImage === 0 ? 'active' : ''}
+            >
+              <Lottie
+                animationData={userSearch}
+                style={{ width: 100, height: 100 }}
+              />
               <h3>유저 검색</h3>
             </Node>
-            <Node style={{ top: '330px', left: '-30px' }} className={currentImage === 1 ? 'active' : ''}>
-              <Lottie animationData={followAnimation} style={{ width: 100, height: 100 }} />
+            <Node
+              style={{ top: '330px', left: '-30px' }}
+              className={currentImage === 1 ? 'active' : ''}
+            >
+              <Lottie
+                animationData={followAnimation}
+                style={{ width: 100, height: 100 }}
+              />
               <h3>팔로우</h3>
             </Node>
-            <Node style={{ top: '350px', left: '400px' }} className={currentImage === 2 ? 'active' : ''}>
-              <Lottie animationData={feed} style={{ width: 100, height: 100 }} />
+            <Node
+              style={{ top: '350px', left: '400px' }}
+              className={currentImage === 2 ? 'active' : ''}
+            >
+              <Lottie
+                animationData={feed}
+                style={{ width: 100, height: 100 }}
+              />
               <h3>스토리 보기</h3>
             </Node>
           </LoopWrapper>
@@ -231,13 +248,18 @@ function SearchFeatureSection() {
         <Right>
           <Slider>
             {currentSlide.type === 'image' ? (
-              <img src={slides[currentImage].img} alt={`slide-${currentImage}`} />
+              <img
+                src={slides[currentImage].img}
+                alt={`slide-${currentImage}`}
+              />
             ) : (
               <Lottie
                 key={currentSlide.title}
                 animationData={currentSlide.lottie}
                 loop={false}
-                onComplete={() => setCurrentImage((prev) => (prev + 1) % slides.length)}
+                onComplete={() =>
+                  setCurrentImage((prev) => (prev + 1) % slides.length)
+                }
               />
             )}
             <TextOverlay>

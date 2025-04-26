@@ -24,32 +24,31 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const currentUser = useUserStore((state) => state.user?.username);
   const location = useLocation();
   console.log(albumData);
-  console.log(userLikes)
+  console.log(userLikes);
   const isMyPage = location.pathname.startsWith('/mypage/album');
-
 
   // 해당 앨범에 전체 좋아요를 한 username을 가지고 오기
   const getAllComments = async () => {
     const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
-      const response = await axios.get(`/api/comment/album-id/${albumData.id}`,
+      const response = await axios.get(
+        `/api/comment/album-id/${albumData.id}`,
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
             'Content-Type': 'application/json',
           },
-        });
+        }
+      );
       setCommentCount(response.data.length);
     } catch (error) {
       console.error('코멘트 개수 불러오기 실패:', error);
     }
-  }
+  };
   useEffect(() => {
     getAllComments();
-  }, [albumData.id]) // albumData.id를 부를 때마다 좋아요 목록 가지고 오기
-
-
+  }, [albumData.id]); // albumData.id를 부를 때마다 좋아요 목록 가지고 오기
 
   // 댓글 모음 토글 함수
   const toggleCommentVisibility = (albumId) => {
@@ -65,7 +64,6 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
     console.log('실시간 댓글 수:', commentCount);
     setCommentCount(newCount);
   };
-
 
   // 좋아요 토글 관리 함수
   async function toggleLike(albumId, username) {
@@ -98,35 +96,33 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
     const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
-      const response = await axios.get(`/api/great/albumId/${albumData.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-            'Content-Type': 'application/json',
-          },
-        });
-      const usernames = response.data;//현재 앨범에 좋아요를 누른 유저네임들
+      const response = await axios.get(`/api/great/albumId/${albumData.id}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      const usernames = response.data; //현재 앨범에 좋아요를 누른 유저네임들
 
       const updateLikes = {};
       usernames.forEach((username) => {
-        updateLikes[username] = true;  // [couple001] = true 로 만들기!! 
+        updateLikes[username] = true; // [couple001] = true 로 만들기!!
       });
 
       setUserLikes(updateLikes); // 전체 좋아요를 누른 username 담기
-      setLikeCount(usernames.length); // 좋아요 개수 
+      setLikeCount(usernames.length); // 좋아요 개수
     } catch (error) {
       console.error('좋아요 목록 불러오기 실패:', error);
     }
-  }
+  };
 
   useEffect(() => {
     getAllGreats();
-  }, [albumData.id]) // albumData.id를 부를 때마다 좋아요 목록 가지고 오기
+  }, [albumData.id]); // albumData.id를 부를 때마다 좋아요 목록 가지고 오기
 
   const handleLike = async () => {
     const result = await toggleLike(albumData.id, currentUser);
     if (!result) return;
-
 
     // 좋아요 상태 갱신
     setUserLikes((prev) => {
@@ -262,10 +258,7 @@ export default AlbumDetailModal;
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
-  /* display: flex; */
-  /* justify-content: center; */
   margin-top: 30px;
-  /* align-items: center; */
   position: absolute;
   height: 100%;
 `;
@@ -280,7 +273,7 @@ const Backdrop = styled.div`
 `;
 
 const BottomBox = styled.div`
-  width: ${(props) => (props.$isCommentVisible ? '70%' : '35%')};
+  width: ${(props) => (props.$isCommentVisible ? '60%' : '30%')};
   border-radius: 16px;
   transition: margin-top 0.3s ease-out;
   background-color: #000000;
@@ -290,7 +283,7 @@ const BottomBox = styled.div`
   display: flex;
   position: fixed;
   top: 150px;
-  left: 280px;
+  left: 320px;
 `;
 const CommentBox = styled.div`
   width: 100%;

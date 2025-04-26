@@ -9,12 +9,12 @@ const BookSectionWrapper = styled.section`
   align-items: flex-start;
   padding: 100px 60px;
   /* background: linear-gradient(to bottom, #ececec, #f5e4c3); */
-  background: linear-gradient(to bottom, #fff, #ffe2e2, #f2ebdc);
+  /* background: linear-gradient(to bottom, #bb1616, #dd7676, #f6f2ea); */
+  background-color: #dd7676;
   border-radius: 0;
   width: 100%;
-  height: 900px;
+  height: 1000px;
   min-height: 640px;
-  gap: 60px;
   flex-wrap: wrap;
   position: relative;
 
@@ -30,10 +30,9 @@ const BookSectionWrapper = styled.section`
 const BookSectionContent = styled.div`
   display: flex;
   justify-content: center;
-  align-items: stretch;
-  flex-wrap: nowrap;
-  width: 100%;
 
+  width: 100%;
+  margin-top: 100px;
   @media (max-width: 1024px) {
     flex-wrap: wrap;
     justify-content: center;
@@ -47,23 +46,17 @@ const BookIntroBox = styled.div`
   line-height: 2;
   color: #1d1d1d;
   text-align: left;
-  margin-left: 50px;
+  margin-left: 180px;
   h3 {
     font-size: 3.5rem;
     font-weight: 700;
-    color: #0f0f0f;
+    color: #ffffff;
     margin-bottom: 1.5rem;
   }
   .other {
-    color: #bf1f3c;
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 700;
-    /* background: linear-gradient(to right, #a10000, #2c2c2c, #bf1f3c);
-    -webkit-background-clip: text;
-    color: transparent; */
-    color: #bf1f3c;
-    /* text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
-    1px 1px 0 black; */
+    color: #ffffff;
   }
   p {
     margin-bottom: 2rem;
@@ -74,7 +67,7 @@ const BookIntroBox = styled.div`
     display: inline-block;
     font-weight: 600;
     color: #ffffff;
-    background: #ffbebe;
+    background: #bb1616;
     padding: 3px 8px;
     border-radius: 10px;
     margin: 0 2px;

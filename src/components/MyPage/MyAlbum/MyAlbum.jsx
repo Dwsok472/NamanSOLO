@@ -110,8 +110,7 @@ const MyAlbum = () => {
 
   //해당 ID를 가진 앨범을 삭제하기
   async function handleDeleteAlbum(id) {
-    const confirmDelete = window.confirm(`앨범을 정말 삭제하시겠어요?`
-    );
+    const confirmDelete = window.confirm(`앨범을 정말 삭제하시겠어요?`);
     if (!confirmDelete) return;
     await deleteMyAlbum(id);
     setSelectedPost(null);
@@ -228,8 +227,6 @@ const MyAlbum = () => {
 export default MyAlbum;
 
 const AlbumWrapper = styled.div`
-  background: linear-gradient(to bottom, #ffe3e3, #fff, #ffe3e3);
-  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
   min-height: 100vh;
   display: flex;
   justify-content: center; // 수평 가운데 정렬

@@ -1,12 +1,12 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import Header from "../Header";
-import Intro from "./Intro";
-import BookSection from "./BookSection";
-import Hero from "./Hero";
-import StoryMenuBubbles from "./StoryMenuBubbles";
-import MainPopup from "./MainPopup";
-import SearchFeatureSection from "./SearchFeatureSection";
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import Header from '../Header';
+import Intro from './Intro';
+import BookSection from './BookSection';
+import Hero from './Hero';
+import StoryMenuBubbles from './StoryMenuBubbles';
+import MainPopup from './MainPopup';
+import SearchFeatureSection from './SearchFeatureSection';
 
 const PageContainer = styled.div`
   position: relative;
@@ -14,13 +14,13 @@ const PageContainer = styled.div`
 `;
 
 const MainContent = styled.div`
-  filter: ${({ $blur }) => ($blur ? "blur(4px)" : "none")};
+  filter: ${({ $blur }) => ($blur ? 'blur(4px)' : 'none')};
   transition: filter 0.3s ease;
-  pointer-events: ${({ $blur }) => ($blur ? "none" : "auto")};
-  user-select: ${({ $blur }) => ($blur ? "none" : "auto")};
+  pointer-events: ${({ $blur }) => ($blur ? 'none' : 'auto')};
+  user-select: ${({ $blur }) => ($blur ? 'none' : 'auto')};
 
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transform: ${({ $show }) => ($show ? "translateY(0)" : "translateY(20px)")};
+  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
   transition: all 0.8s ease-in-out;
 `;
 
@@ -42,25 +42,24 @@ const floatUpDown = keyframes`
 
 const LovePhrase = styled.h2`
   font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-family: "Caveat", cursive;
+  font-family: 'Caveat', cursive;
   font-weight: 800;
   color: #000;
   letter-spacing: 4px;
   animation: ${floatUpDown} 3s ease-in-out infinite;
 `;
 
-
 function MainPage() {
-  const [displayText, setDisplayText] = useState("");
+  const [displayText, setDisplayText] = useState('');
   const [showIntro, setShowIntro] = useState(() => {
-    const played = sessionStorage.getItem("introPlayed");
+    const played = sessionStorage.getItem('introPlayed');
     return !played; // 아직 본 적 없다면 보여주기
   });
   const [animateToLogo, setAnimateToLogo] = useState(false);
   const [showMain, setShowMain] = useState(false);
   const [slideOut, setSlideOut] = useState(false);
   const [flipped, setFlipped] = useState(false);
-  const fullTextRef = useRef("WeARE");
+  const fullTextRef = useRef('WeARE');
   const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState(null);
   const [showLogo, setShowLogo] = useState(false);
@@ -77,7 +76,7 @@ function MainPage() {
       } else {
         clearInterval(interval);
         setTimeout(() => {
-          setDisplayText("");
+          setDisplayText('');
         }, 3000);
       }
     }, 100);
@@ -114,8 +113,8 @@ function MainPage() {
     const t3 = setTimeout(() => setSlideOut(true), 3600);
     const t4 = setTimeout(() => {
       setShowMain(true);
-      sessionStorage.setItem("introPlayed", "true");
-      document.body.classList.remove("blur");
+      sessionStorage.setItem('introPlayed', 'true');
+      document.body.classList.remove('blur');
       window.scrollTo({ top: 0 });
     }, 4400);
 
@@ -137,20 +136,19 @@ function MainPage() {
         logoText="WeARE"
         onSubMenuToggle={(v) => setBlurred(v)}
         menuItems={[
-          { to: "/album/all", label: "전체 앨범" },
-          { to: "/map", label: "맵" },
-          { to: "/events", label: "이벤트" },
+          { to: '/album/all', label: '전체 앨범' },
+          { to: '/map', label: '맵' },
+          { to: '/events', label: '이벤트' },
         ]}
         subMenuItems={[
-          { to: "/mypage/other", label: "즐겨찾기" },
-          { to: "/mypage/comment", label: "나의 댓글" },
-          { to: "/mypage/todo", label: "캘린더" },
-          { to: "/mypage/album", label: "앨범" },
+          { to: '/mypage/other', label: '즐겨찾기' },
+          { to: '/mypage/comment', label: '나의 댓글' },
+          { to: '/mypage/todo', label: '캘린더' },
+          { to: '/mypage/album', label: '앨범' },
         ]}
         loginText="로그인"
         signupText="회원가입"
       />
-
       <PageContainer>
         {showIntro && (
           <Intro

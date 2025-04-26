@@ -382,15 +382,15 @@ const TopBox = styled.div`
     transition: all 0.2s;
     cursor: pointer;
     white-space: nowrap; /* 글자 줄바꿈 방지 */
-    border: 0.5px solid #888888;
+    /* border: 0.5px solid #888888; */
     &:hover {
-      background-color: #8c0d17;
+      background-color: #bb1616;
       color: white;
     }
   }
 
   .selected {
-    background-color: #8c0d17;
+    background-color: #bb1616;
     color: white;
     border: none;
   }

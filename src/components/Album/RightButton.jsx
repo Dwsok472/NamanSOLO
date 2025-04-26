@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 export const Button = ({ onClick }) => {
   return (
@@ -38,20 +38,20 @@ const RightWrapper = styled.div`
 
   .button:before,
   .button:after {
-    content: "";
+    content: '';
     position: absolute;
     border-radius: 50%;
     inset: 7px;
   }
 
   .button:before {
-    border: 4px solid #8c0d17;
+    border: 4px solid #bb1616;
     transition: opacity 0.4s cubic-bezier(0.77, 0, 0.175, 1) 80ms,
       transform 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) 80ms;
   }
 
   .button:after {
-    border: 4px solid #96daf0;
+    border: 4px solid #8c0d17;
     transform: scale(1.3);
     transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
       transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);

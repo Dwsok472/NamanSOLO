@@ -27,13 +27,14 @@ const Container = styled.div`
   padding: 40px;
   margin: 0 auto;
   width: 80%;
+  /* background-color: #f6f2ea; */
 `;
 
 const ProfileCard = styled.div`
   max-width: 480px;
   background: white;
   border-radius: 16px;
-  border: 1px solid #8c0d17;
+  border: 1px solid #bb1616;
   padding: 40px 30px;
   margin-right: 20px;
   text-align: center;
@@ -85,7 +86,7 @@ const DateInput = styled.input`
 `;
 
 const CancelButton = styled.button`
-  background: #8c0d17;
+  background: #bb1616;
   color: white;
   font-weight: 600;
   border: none;
@@ -96,7 +97,7 @@ const CancelButton = styled.button`
   transition: background 0.2s;
 
   &:hover {
-    background: #ac0412;
+    background: #bb1616;
   }
 `;
 
@@ -122,7 +123,7 @@ const EditButton = styled.button`
   svg {
     width: 20px;
     height: 20px;
-    fill: #8c0d17;
+    fill: #bb1616;
   }
   &:hover {
     transform: scale(1.1);
@@ -151,7 +152,7 @@ const EditOverlay = styled.div`
   svg {
     width: 18px;
     height: 18px;
-    color: #8c0d17;
+    color: #bb1616;
   }
 `;
 
@@ -160,8 +161,9 @@ const TabsContainer = styled.div`
   background: #fff;
   border-radius: 16px;
   padding: 30px;
-  border: 1px solid #8c0d17;
-  /* background-color: #8c0d17; */
+  border: 1px solid #bb1616;
+  height: 750px;
+  /* background-color: #f6f2ea; */
 `;
 
 const Tabs = styled.div`

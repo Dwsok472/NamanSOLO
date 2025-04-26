@@ -43,7 +43,6 @@ function Comment({ albumData, onCommentAdd }) {
   const newComment = {
     content: value,
     albumId: albumData.id,
-
   };
 
   const AddComment = async () => {
@@ -63,7 +62,7 @@ function Comment({ albumData, onCommentAdd }) {
 
       if (response.status === 200 || response.status === 201) {
         const savedComment = response.data;
-        console.log(savedComment)
+        console.log(savedComment);
         const updatedComments = [...data, savedComment];
         setData(updatedComments);
         setValue('');
@@ -172,7 +171,7 @@ const Box = styled.div`
     display: flex;
   }
   .show-more {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     background-color: black;
     border-radius: 5px;
     color: white;

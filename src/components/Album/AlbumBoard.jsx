@@ -8,6 +8,7 @@ import tape4 from '../img/tape4.png';
 import tape5 from '../img/tape5.png';
 import tape6 from '../img/tape6.png';
 import tape7 from '../img/tape7.png';
+import zzzz from '../img/zzzz.png';
 
 import AlbumDetailModal from './AlbumDetailModal';
 import { useRef } from 'react';
@@ -207,7 +208,6 @@ const AlbumBoard = () => {
         <MarkerWrapper>
           <LeftButton onClick={handlePrevPage} />
         </MarkerWrapper>
-
         <BoardInner>
           <PhotoArea>
             {loading ? <p>LOADING...</p> : generateItems()}{' '}
@@ -221,7 +221,7 @@ const AlbumBoard = () => {
         {!isUserStoryPage && isLoggedIn && (
           <>
             <AddButton onClick={handleOpenAddAlbum} title="Add New">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <svg xmlns="50px" viewBox="0 0 24 24">
                 <path
                   d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
                   strokeWidth="1.5"
@@ -258,7 +258,7 @@ const BoardWrapper = styled.div`
   align-items: center;
   height: 850px;
   margin: 0 auto;
-  width: 80%;
+  /* width: 80%; */
 `;
 
 const BoardFrame = styled.div`
@@ -323,12 +323,12 @@ const MarkerWrapper = styled.div`
   cursor: pointer;
   position: absolute;
   top: 2%;
-  left: -380px;
+  left: -250px;
 `;
 
 const EraserWrapper = styled.div`
   cursor: pointer;
   position: absolute;
   top: 2%;
-  right: -380px;
+  right: -250px;
 `;

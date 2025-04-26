@@ -6,7 +6,7 @@ import couple4 from '../img/22222.png';
 import couple5 from '../img/33333.png';
 import star from '../img/star.png';
 import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import BookSection from './BookSection';
 import { useUserStore } from '../Login/Login';
 
@@ -16,9 +16,8 @@ const float = keyframes`
 `;
 
 const HeroWrapper = styled.section`
-  background: linear-gradient(to bottom, #940e19, #ffe3e3, #fff);
-  /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
-  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
+  /* background: linear-gradient(to bottom, #f6f2ea, #bb1616); */
+  background-color: #f6f2ea;
   min-height: 92vh;
   display: flex;
   flex-direction: column;
@@ -35,7 +34,7 @@ const HeroText = styled.h1`
   font-weight: 800;
   /* margin-bottom: 24px; */
   margin-top: 30px;
-  color: #ffffff;
+  color: #bb1616;
 
   span {
     display: block;
@@ -162,15 +161,15 @@ function Hero({ scrollToStory }) {
 
   const handleSaveClick = () => {
     if (isLoggedIn) {
-      navigate("/mypage/album");
+      navigate('/mypage/album');
     } else {
-      navigate("/login");
+      navigate('/login');
     }
   };
-  
+
   return (
     <HeroWrapper>
-      <FloatingTopLeft src={couple3} alt="커플풍선" />
+      {/* <FloatingTopLeft src={couple3} alt="커플풍선" /> */}
       <Star src={star} alt="star" $top="30%" $left="80%" />
       <Star src={star} alt="star" $top="70%" $left="20%" />
       <Star src={star} alt="star" $top="85%" $left="75%" />
@@ -186,15 +185,13 @@ function Hero({ scrollToStory }) {
         <br />
         <strong>WeARE가 함께할게요.</strong>
       </HeroDesc>
-      <CTAButton onClick={handleSaveClick}>
-      지금 바로 담아두기
-    </CTAButton>
+      <CTAButton onClick={handleSaveClick}>지금 바로 담아두기</CTAButton>
 
-      <VisualRow>
+      {/* <VisualRow>
         <FloatImage src={couple2} alt="커플 이미지 1" className="couple2" />
         <FloatImage src={couple4} alt="커플 이미지 2" className="couple3" />
         <FloatImage src={couple5} alt="커플 이미지 3" className="couple4" />
-      </VisualRow>
+      </VisualRow> */}
     </HeroWrapper>
   );
 }

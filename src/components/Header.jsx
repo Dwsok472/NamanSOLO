@@ -156,14 +156,14 @@ const Container = styled.header`
   top: 0;
   left: 0;
   z-index: 1001;
-  background-color: white;
+  /* background-color: white; */
   transition: transform 0.3s ease-in-out;
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(-100%)')};
 `;
 
 const Logo = styled.h1`
   font-size: 2.7rem;
-  color: #8c0d17;
+  color: #bb1616;
   margin: 0;
   opacity: ${({ $visible }) => ($visible === false ? 0 : 1)};
   transition: opacity 0.8s ease-in-out;
@@ -177,7 +177,7 @@ const Hamburger = styled.div`
 
   svg {
     font-size: 2rem;
-    color: #8c0d17;
+    color: #bb1616;
   }
 `;
 

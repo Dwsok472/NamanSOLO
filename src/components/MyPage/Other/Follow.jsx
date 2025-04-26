@@ -331,7 +331,7 @@ const Container = styled.div`
   width: 400px;
   margin: 0 auto;
   margin-top: 30px;
-  border: 1px solid #8c0d17;
+  border: 1px solid #bb1616;
   border-radius: 20px;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
   padding-top: 20px;
@@ -385,7 +385,7 @@ const Input = styled.input`
   padding-left: 10px;
   margin-right: 5px;
   &::placeholder {
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 700;
   }
 `;
@@ -407,7 +407,7 @@ const ContentBox = styled.div`
 const SmallBox = styled.div`
   border: 1px solid #3333;
   width: 100%;
-  height: 100px;
+  height: 80px;
   margin: 0 auto;
   border-radius: 10px;
   display: flex;
@@ -431,8 +431,8 @@ const Img = styled.img`
   object-fit: contain;
   border: 1px solid #3333;
   align-items: center;
-  width: 40%;
-  height: 70%;
+  width: 50px;
+  height: 50px;
 `;
 const Right = styled.div`
   width: 43%;

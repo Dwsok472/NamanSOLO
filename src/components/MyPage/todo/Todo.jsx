@@ -62,7 +62,7 @@ const CalendarSection = styled.section`
   max-height: 620px;
   border-radius: 10px;
   position: relative;
-  background-color: #c01e3c; /*#fff0f2*/
+  background-color: #c80a0a; /*#fff0f2*/
   border: none;
 `;
 
@@ -200,7 +200,8 @@ const DayCell = styled.div`
   font-weight: 700;
   font-size: 0.8rem;
   color: black;
-  background-color: ${({ $isToday }) => ($isToday ? '#F5E050' : '')};
+  background-color: ${({ $isToday }) => ($isToday ? '#dd7676' : '')};
+  color: ${({ $isToday }) => ($isToday ? '#fff' : '')};
   img {
     width: 20px;
     height: 20px;

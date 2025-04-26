@@ -1,26 +1,26 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 const ChatBotButton = ({ onClick }) => {
   return (
     <StyledWrapper onClick={onClick}>
       <button className="button">
         <p className="button__text">
-          <span style={{ "--index": 0 }}>C</span>
-          <span style={{ "--index": 1 }}>H</span>
-          <span style={{ "--index": 2 }}>A</span>
-          <span style={{ "--index": 3 }}>T</span>
-          <span style={{ "--index": 4 }}>B</span>
-          <span style={{ "--index": 5 }}>O</span>
-          <span style={{ "--index": 6 }}>T</span>
-          <span style={{ "--index": 7 }}> </span>
-          <span style={{ "--index": 8 }}>C</span>
-          <span style={{ "--index": 9 }}>H</span>
-          <span style={{ "--index": 10 }}>A</span>
-          <span style={{ "--index": 11 }}>T</span>
-          <span style={{ "--index": 12 }}>B</span>
-          <span style={{ "--index": 13 }}>O</span>
-          <span style={{ "--index": 14 }}>T</span>
+          <span style={{ '--index': 0 }}>C</span>
+          <span style={{ '--index': 1 }}>H</span>
+          <span style={{ '--index': 2 }}>A</span>
+          <span style={{ '--index': 3 }}>T</span>
+          <span style={{ '--index': 4 }}>B</span>
+          <span style={{ '--index': 5 }}>O</span>
+          <span style={{ '--index': 6 }}>T</span>
+          <span style={{ '--index': 7 }}> </span>
+          <span style={{ '--index': 8 }}>C</span>
+          <span style={{ '--index': 9 }}>H</span>
+          <span style={{ '--index': 10 }}>A</span>
+          <span style={{ '--index': 11 }}>T</span>
+          <span style={{ '--index': 12 }}>B</span>
+          <span style={{ '--index': 13 }}>O</span>
+          <span style={{ '--index': 14 }}>T</span>
         </p>
         <div className="button__circle">
           <svg
@@ -57,7 +57,7 @@ const StyledWrapper = styled.div`
   .button {
     cursor: pointer;
     border: none;
-    background: #1e2a38;
+    background: #dd7676;
     color: #fff;
     width: 50px;
     height: 50px;
@@ -87,8 +87,8 @@ const StyledWrapper = styled.div`
     width: 40px;
     height: 40px;
     overflow: hidden;
-    background: #212121;
-    color: white;
+    background: #c80a0a;
+    color: #f6f2ea;
     border-radius: 50%;
     display: flex;
     align-items: center;

@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
 export const Button = ({ onClick }) => {
   return (
@@ -38,7 +38,7 @@ const LeftWrapper = styled.div`
 
   .button:before,
   .button:after {
-    content: "";
+    content: '';
     position: absolute;
     border-radius: 50%;
     inset: 7px;
@@ -51,7 +51,7 @@ const LeftWrapper = styled.div`
   }
 
   .button:after {
-    border: 4px solid #96daf0;
+    border: 4px solid #dd7676;
     transform: scale(1.3);
     transition: opacity 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
       transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
