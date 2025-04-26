@@ -131,7 +131,7 @@ const GiftItem = styled.li`
   }
   img {
     width: 100%;
-    height: 200px;
+    height: 240px;
     object-fit: cover;
     border-radius: 12px;
   }
