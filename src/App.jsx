@@ -1,25 +1,25 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import styled, { createGlobalStyle } from "styled-components";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Login from "./components/Login/Login";
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import styled, { createGlobalStyle } from 'styled-components';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Login from './components/Login/Login';
 // import Find from "./components/FindIdAndPwd/Find";
-import Event from "./components/Event";
-import RegisterMain from "./components/Register/RegisterMain";
-import AllStories from "./components/Story/AllStories";
-import MainPage from "./components/MainPage/MainPage";
-import MyPage from "./components/MyPage/MyPage";
-import MyAlbum from "./components/MyPage/MyAlbum/MyAlbum";
-import MainMap from "./components/Map/MainMap";
-import AlbumBoard from "./components/Album/AlbumBoard";
-import AdminFeedPage from "./components/Admin/AdminFeedPage";
-import AdminUserPage from "./components/Admin/AdminUserPage";
-import ChatBotButton from "./components/ChatBot/ChatBotButton";
-import ScrollToTop from "./components/MainPage/ScrollToTop";
-import UserAlbum from "./components/UserAlbumDummy";
-import AlbumBoardWithKey from "./components/Album/AlbumBoardWIthKey";
-import WebSocketManager from "./components/WebSocket/WebSocketManager";
-import FindIdOrPwd from "./components/FindIdAndPwd/FindIdOrPwd";
+import Event from './components/Event';
+import RegisterMain from './components/Register/RegisterMain';
+import AllStories from './components/Story/AllStories';
+import MainPage from './components/MainPage/MainPage';
+import MyPage from './components/MyPage/MyPage';
+import MyAlbum from './components/MyPage/MyAlbum/MyAlbum';
+import MainMap from './components/Map/MainMap';
+import AlbumBoard from './components/Album/AlbumBoard';
+import AdminFeedPage from './components/Admin/AdminFeedPage';
+import AdminUserPage from './components/Admin/AdminUserPage';
+import ChatBotButton from './components/ChatBot/ChatBotButton';
+import ScrollToTop from './components/MainPage/ScrollToTop';
+import UserAlbum from './components/UserAlbumDummy';
+import AlbumBoardWithKey from './components/Album/AlbumBoardWIthKey';
+import WebSocketManager from './components/WebSocket/WebSocketManager';
+import FindIdOrPwd from './components/FindIdAndPwd/FindIdOrPwd';
 
 const AppWrapper = styled.div`
   width: 100vw;
@@ -67,7 +67,7 @@ const GlobalStyle = createGlobalStyle`
 
 function AppRoutes() {
   const location = useLocation();
-  const isMainPage = location.pathname === "/";
+  const isMainPage = location.pathname === '/';
 
   return (
     <AppWrapper>
@@ -76,15 +76,16 @@ function AppRoutes() {
       <Header
         logoText="WeARE"
         menuItems={[
-          { to: "/album/all", label: "전체 앨범" },
-          { to: "/map", label: "맵" },
-          { to: "/events", label: "이벤트" },
+          { to: '/album/all', label: '전체 앨범' },
+          { to: '/map', label: '맵' },
+          { to: '/events', label: '이벤트' },
         ]}
         subMenuItems={[
-          { to: "/mypage/other", label: "즐겨찾기" },
-          { to: "/mypage/comment", label: "나의 댓글" },
-          { to: "/mypage/todo", label: "캘린더" },
-          { to: "/mypage/album", label: "앨범" },
+          { to: '/mypage/todo', label: '캘린더' },
+          { to: '/mypage/follow', label: '팔로우' },
+          { to: '/mypage/comment', label: '나의 댓글' },
+          { to: '/mypage/bookmark', label: '즐겨찾기' },
+          { to: '/mypage/album', label: 'MY ALBUM' },
         ]}
         loginText="로그인"
         signupText="회원가입"

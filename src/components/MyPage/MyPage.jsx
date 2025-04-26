@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
-import { useLocation, useNavigate, Routes, Route } from "react-router-dom";
-import { IconEdit, IconImage } from "../Icons";
-import heart from "../img/heart.png";
-import MySetting from "./MySetting";
-import CoupleProfile from "./CoupleProfile";
-import CommentPage from "./Comment/CommentPage";
-import MyAlbum from "./MyAlbum/MyAlbum";
-import Todo from "./todo/Todo";
-import Other from "./Other/Other";
+import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
+import { useLocation, useNavigate, Routes, Route } from 'react-router-dom';
+import { IconEdit, IconImage } from '../Icons';
+import heart from '../img/heart.png';
+import MySetting from './MySetting';
+import CoupleProfile from './CoupleProfile';
+import CommentPage from './Comment/CommentPage';
+import MyAlbum from './MyAlbum/MyAlbum';
+import Todo from './todo/Todo';
+import BookMark from './Other/BookMark';
+import Other from './Other/Other';
 import {
   getCurrentUser,
   updateUserData,
   uploadProfileImage,
   fetchAnniversaries,
   fetchTravels,
-} from "../api2";
+} from '../api2';
 
 // ===== 스타일 컴포넌트 - 시작 =====
 
@@ -24,9 +25,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding: 40px;
-  margin: 0 auto;  
+  margin: 0 auto;
   width: 80%;
-
 `;
 
 const ProfileCard = styled.div`
@@ -54,7 +54,6 @@ const ProfileImage = styled.img`
   object-fit: cover;
   background: #ddd;
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-  
 `;
 
 const Name = styled.h2`
@@ -173,10 +172,10 @@ const Tabs = styled.div`
 `;
 
 const TabButton = styled.button`
-  background: ${(props) => (props.active ? "#9f142e" : "#fff")};
-  color: ${(props) => (props.active ? "#fff" : "#9f142e")};
+  background: ${(props) => (props.active ? '#9f142e' : '#fff')};
+  color: ${(props) => (props.active ? '#fff' : '#9f142e')};
   /* border: 1px solid #9f142e; */
-  padding: 0px 20px; 
+  padding: 0px 20px;
   border-radius: 40px;
   font-size: 0.8rem;
   font-weight: 700;
@@ -192,12 +191,11 @@ const TabButton = styled.button`
   }
 `;
 
-
 const MyStoryButton = styled.button`
   margin-left: auto;
-  background: ${(props) => (props.active ? "#9f142e" : "#fff")};
-  color: ${(props) => (props.active ? "#fff" : "#9f142e")};
-  padding: 0px 20px; 
+  background: ${(props) => (props.active ? '#9f142e' : '#fff')};
+  color: ${(props) => (props.active ? '#fff' : '#9f142e')};
+  padding: 0px 20px;
   border-radius: 40px;
   font-size: 1rem;
   font-weight: 700;
@@ -235,7 +233,6 @@ const ModalWrapper = styled.div`
   z-index: 1000;
 `;
 
-
 const Backdrop = styled.div`
   position: fixed;
   top: 0;
@@ -269,16 +266,19 @@ export default function MyPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [daysSince, setDaysSince] = useState(null);
   const [meetingDate, setMeetingDate] = useState(null);
-  const [girlname, setGirlname] = useState("");
-  const [boyname, setBoyname] = useState("");
+  const [girlname, setGirlname] = useState('');
+  const [boyname, setBoyname] = useState('');
   const pathToTab = {
-    "/mypage/todo": "캘린더",
-    "/mypage/other": "즐겨찾기",
-    "/mypage/comment": "나의 댓글",
-    "/mypage/album": "My Album",
+    '/mypage/todo': '캘린더',
+    '/mypage/bookmark': '즐겨찾기',
+    '/mypage/comment': '나의 댓글',
+    '/mypage/album': 'My Album',
+    '/mypage/follow': '팔로우',
   };
 
-  const [activeTab, setActiveTab] = useState(() => pathToTab[location.pathname] || "캘린더");
+  const [activeTab, setActiveTab] = useState(
+    () => pathToTab[location.pathname] || '캘린더'
+  );
   const [showCoupleProfile, setShowCoupleProfile] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const imgRef = useRef(null);
@@ -303,7 +303,7 @@ export default function MyPage() {
         setImage(mediaUrl);
         setLoading(false);
       } catch (err) {
-        console.error("유저 불러오기 실패", err);
+        console.error('유저 불러오기 실패', err);
       }
     };
     fetchUser();
@@ -323,7 +323,7 @@ export default function MyPage() {
 
     const timeDiff = date2 - date1;
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-    setDaysSince(daysDiff < 1 ? "오늘" : daysDiff);
+    setDaysSince(daysDiff < 1 ? '오늘' : daysDiff);
   };
 
   const handleImageChange = async (e) => {
@@ -366,15 +366,16 @@ export default function MyPage() {
       setOriginalMeetingDate(meetingDate);
       setIsEditMode(false);
     } catch (err) {
-      console.error("수정 실패", err);
+      console.error('수정 실패', err);
     }
   };
 
   const routeMap = {
-    "캘린더": "/mypage/todo",
-    "즐겨찾기": "/mypage/other",
-    "나의 댓글": "/mypage/comment",
-    "My Album": "/mypage/album",
+    캘린더: '/mypage/todo',
+    즐겨찾기: '/mypage/bookmark',
+    '나의 댓글': '/mypage/comment',
+    'My Album': '/mypage/album',
+    팔로우: '/mypage/follow',
   };
 
   return (
@@ -386,10 +387,16 @@ export default function MyPage() {
           <>
             <MySetting onClick={() => setShowCoupleProfile(true)} />
 
-            <ProfileImageWrapper onClick={() => {
-              if (isEditMode) imgRef.current.click();
-            }}>
-              <ProfileImage src={tempImage || image} alt="profile" $editable={isEditMode} />
+            <ProfileImageWrapper
+              onClick={() => {
+                if (isEditMode) imgRef.current.click();
+              }}
+            >
+              <ProfileImage
+                src={tempImage || image}
+                alt="profile"
+                $editable={isEditMode}
+              />
               {isEditMode && (
                 <EditOverlay>
                   <IconEdit />
@@ -418,7 +425,7 @@ export default function MyPage() {
                     type="date"
                     value={meetingDate}
                     onChange={(e) => setMeetingDate(e.target.value)}
-                    max={new Date().toISOString().split("T")[0]}
+                    max={new Date().toISOString().split('T')[0]}
                   />
                   <CancelButton
                     onClick={() => {
@@ -434,7 +441,9 @@ export default function MyPage() {
               ) : (
                 <>
                   <DdayText>{daysSince}일</DdayText>
-                  <DateText>{new Date(meetingDate).toLocaleDateString("ko-KR")}</DateText>
+                  <DateText>
+                    {new Date(meetingDate).toLocaleDateString('ko-KR')}
+                  </DateText>
                 </>
               )}
             </Emotion>
@@ -447,7 +456,7 @@ export default function MyPage() {
                 setIsEditMode((prev) => !prev);
               }}
             >
-              {isEditMode ? "완료" : <IconEdit />}
+              {isEditMode ? '완료' : <IconEdit />}
             </EditButton>
           </>
         )}
@@ -455,7 +464,7 @@ export default function MyPage() {
       <TabsContainer>
         <Tabs>
           <TabGroup>
-            {["캘린더", "즐겨찾기", "나의 댓글"].map((tab) => (
+            {['캘린더', '팔로우', '나의 댓글', '즐겨찾기'].map((tab) => (
               <TabButton
                 key={tab}
                 active={activeTab === tab}
@@ -470,10 +479,10 @@ export default function MyPage() {
           </TabGroup>
 
           <MyStoryButton
-            active={activeTab === "My Album"}
+            active={activeTab === 'My Album'}
             onClick={() => {
-              setActiveTab("My Album");
-              navigate(routeMap["My Album"]);
+              setActiveTab('My Album');
+              navigate(routeMap['My Album']);
             }}
           >
             MY ALBUM
@@ -486,9 +495,10 @@ export default function MyPage() {
               path="/todo"
               element={<Todo originalMeetingDate={originalMeetingDate} />}
             />
-            <Route path="/other" element={<Other />} />
+            <Route path="/bookmark" element={<BookMark />} />
             <Route path="/comment" element={<CommentPage />} />
             <Route path="/album" element={<MyAlbum />} />
+            <Route path="/follow" element={<Other />} />
           </Routes>
         </ContentArea>
       </TabsContainer>
@@ -509,6 +519,3 @@ export default function MyPage() {
     </Container>
   );
 }
-
-
-

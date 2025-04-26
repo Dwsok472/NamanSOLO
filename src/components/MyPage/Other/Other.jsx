@@ -12,7 +12,6 @@ const Container = styled.div`
 function Other() {
   return (
     <Container>
-      <BookMark />
       <Follow type="follower" />
       <Follow type="following" />
     </Container>

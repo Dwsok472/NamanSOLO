@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import styled from "styled-components";
-import star from "../../img/star.png";
-import { IconClose } from "../../Icons";
-import { useUserStore } from "../../Login/Login";
-import axios from "axios";
-import qs from "qs";
-import AlbumDetailModal from "../../Album/AlbumDetailModal";
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
+import star from '../../img/star.png';
+import { IconClose } from '../../Icons';
+import { useUserStore } from '../../Login/Login';
+import axios from 'axios';
+import qs from 'qs';
+import AlbumDetailModal from '../../Album/AlbumDetailModal';
 
 function BookMark() {
   const currentUser = useUserStore((state) => state.user?.username);
@@ -14,7 +14,7 @@ function BookMark() {
   const [loading, setLoading] = useState(true);
   const [showDetail, setShowDetail] = useState(false);
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
-  const urlKeyword = new URLSearchParams(location.search).get("userName");
+  const urlKeyword = new URLSearchParams(location.search).get('userName');
   const [selectedAlbum, setSelectedAlbum] = useState(null);
 
   const handleDelete = (id) => {
@@ -30,7 +30,7 @@ function BookMark() {
   };
 
   async function GetAllBookmark() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
       return;
     }
@@ -39,27 +39,27 @@ function BookMark() {
     console.log(stored);
     try {
       // 서버로 중복 확인 요청
-      const response = await axios.get("/api/album/ids", {
+      const response = await axios.get('/api/album/ids', {
         params: {
           id: parsed,
         },
         paramsSerializer: {
           serialize: (params) =>
-            qs.stringify(params, { arrayFormat: "repeat" }), // 핵심
+            qs.stringify(params, { arrayFormat: 'repeat' }), // 핵심
         },
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response || response.length === 0) {
-        console.log("즐겨찾기 데이터를 가져오지 못했습니다.");
+        console.log('즐겨찾기 데이터를 가져오지 못했습니다.');
         return;
       }
       setData(response.data);
       setLoading(false);
       console.log(response.data);
     } catch (error) {
-      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
@@ -75,26 +75,26 @@ function BookMark() {
       console.log(response.data);
       console.log(response.data.greats.length);
       if (!response || response.length === 0) {
-        console.log("앨범 데이터를 가져오지 못했습니다.");
+        console.log('앨범 데이터를 가져오지 못했습니다.');
         return;
       }
       setSelectedAlbum(response.data);
       console.log(selectedAlbum);
     } catch (error) {
-      console.error("앨범 정보 불러오기 실패:", error);
+      console.error('앨범 정보 불러오기 실패:', error);
     }
   };
   useEffect(() => {
     if (selectedAlbum) {
-      console.log("selectedAlbum:", selectedAlbum);
+      console.log('selectedAlbum:', selectedAlbum);
     }
   }, [selectedAlbum]);
   return (
     <Container>
-      <Top>
+      {/* <Top>
         <Image src={star} />
         <h1>즐겨찾기</h1>
-      </Top>
+      </Top> */}
       <ContainerMain>
         <ContentBox>
           {loading ? (
@@ -114,12 +114,12 @@ function BookMark() {
                   {item.url.mediaType === 'PICTURE' ? (
                     <Img src={item.url.mediaUrl} />
                   ) : (
-                    <video src={item.url.mediaUrl}
+                    <video
+                      src={item.url.mediaUrl}
                       muted
                       className="video"
                     ></video>
                   )}
-
                 </Left>
 
                 <BottomName>
@@ -143,12 +143,11 @@ function BookMark() {
 export default BookMark;
 
 const Container = styled.div`
-  width: 330px;
+  width: 100%;
   margin: 0 auto;
-  margin-top: 30px;
-  border: 1px solid #8c0d17;
+  /* border: 1px solid #8c0d17; */
   border-radius: 20px;
-  box-shadow:  0 3px 4px rgba(0, 0, 0, 0.5);
+  /* box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5); */
   padding-top: 10px;
   background-color: white;
 `;
@@ -158,27 +157,6 @@ const ContainerMain = styled.div`
   border-radius: 5px;
   padding-top: 10px;
   height: 540px;
-
-`;
-
-const Top = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  margin-bottom: 30px;
-  gap: 15px;
-  user-select: none;
-
-  h1{
-    font-size: 1.5rem;
-  }
-`;
-
-const Image = styled.img`
-  width: 30px;
-  height: 30px;
-  user-select: none;
 `;
 
 const ContentBox = styled.div`
@@ -190,7 +168,9 @@ const ContentBox = styled.div`
   overflow-x: hidden;
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
   }
@@ -201,8 +181,8 @@ const ContentBox = styled.div`
 `;
 const SmallBox = styled.div`
   border: 1px solid #3333;
-  width: 45%;
-  height: 140px;
+  width: 100%;
+  height: 300px;
   margin: 0 auto;
   border-radius: 10px;
   display: flex;
@@ -237,13 +217,13 @@ const Left = styled.div`
     font-weight: 700;
     padding-left: 10px;
   }
-  .video{
+  .video {
     border-radius: 15px;
-  object-fit: cover;
-  border: 1px solid #333;
-  align-items: center;
-  width: 100px;
-  height: 90px;
+    object-fit: cover;
+    border: 1px solid #333;
+    align-items: center;
+    width: 250px;
+    height: 230px;
   }
 `;
 
@@ -252,8 +232,8 @@ const Img = styled.img`
   object-fit: cover;
   border: 1px solid #333;
   align-items: center;
-  width: 100px;
-  height: 90px;
+  width: 250px;
+  height: 230px;
 `;
 
 const BottomName = styled.div`

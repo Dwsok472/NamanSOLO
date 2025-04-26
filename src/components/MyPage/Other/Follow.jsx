@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { IconFollowing, IconSearch, IconUsers } from "../../Icons";
-import styled from "styled-components";
-import { useUserStore } from "../../Login/Login";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { IconFollowing, IconSearch, IconUsers } from '../../Icons';
+import styled from 'styled-components';
+import { useUserStore } from '../../Login/Login';
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
 function Follow({ type }) {
-  const [inputKeyword, setInputKeyword] = useState("");
+  const [inputKeyword, setInputKeyword] = useState('');
   const [follower, setFollower] = useState([]);
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,54 +16,54 @@ function Follow({ type }) {
   const { username } = useParams();
   const navigate = useNavigate();
   const location = useLocation(); // url로부터 정보를 얻기위한 함수
-  const urlKeyword = new URLSearchParams(location.search).get("username");
+  const urlKeyword = new URLSearchParams(location.search).get('username');
   const currentUser = useUserStore((state) => state.user?.username);
 
   const data = useMemo(() => {
-    return type === "follower" ? follower : following;
+    return type === 'follower' ? follower : following;
   }, [type, follower, following]);
 
   async function GetAllFollower() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
       return;
     }
     try {
-      const response = await axios.get("/api/follow/all/followers", {
+      const response = await axios.get('/api/follow/all/followers', {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response || response.length === 0) {
-        console.log("팔로워 데이터를 가져오지 못했습니다.");
+        console.log('팔로워 데이터를 가져오지 못했습니다.');
         return;
       }
       setFollower(response.data);
       setLoading(false);
     } catch (error) {
-      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
   async function GetAllFollowings() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
       return;
     }
     try {
-      const response = await axios.get("/api/follow/all/followings", {
+      const response = await axios.get('/api/follow/all/followings', {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response || response.length === 0) {
-        console.log("팔로잉 데이터를 가져오지 못했습니다.");
+        console.log('팔로잉 데이터를 가져오지 못했습니다.');
         return;
       }
       setFollowing(response.data);
       setLoading(false);
     } catch (error) {
-      alert("정보를 불러오는 과장에서 에러가 발생하였습니다! ");
+      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
@@ -74,7 +74,7 @@ function Follow({ type }) {
 
   //검색
   async function SearchUserFollower() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
 
     try {
@@ -91,7 +91,7 @@ function Follow({ type }) {
     }
   }
   async function SearchUserFollowing() {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
       const response = await axios.get(`/api/follow/search/user-following`, {
@@ -111,28 +111,28 @@ function Follow({ type }) {
     try {
       await SearchUserFollower();
     } catch (error) {
-      alert("로그인 실패! 다시 시도해주세요.");
+      alert('로그인 실패! 다시 시도해주세요.');
     }
   }
   async function handleFollowingSearch() {
     try {
       await SearchUserFollowing();
     } catch (error) {
-      alert("로그인 실패! 다시 시도해주세요.");
+      alert('로그인 실패! 다시 시도해주세요.');
     }
   }
 
   useEffect(() => {
-    if (!inputKeyword || inputKeyword.trim() === "") {
+    if (!inputKeyword || inputKeyword.trim() === '') {
       // 검색어가 비워지면 전체 데이터를 다시 불러옴
-      if (type === "follower") {
+      if (type === 'follower') {
         GetAllFollower();
       } else {
         GetAllFollowings();
       }
       return;
     }
-    if (type === "follower") {
+    if (type === 'follower') {
       handleFollowerSearch();
     } else {
       handleFollowingSearch();
@@ -140,7 +140,7 @@ function Follow({ type }) {
   }, [inputKeyword, type]);
 
   async function deleteFollower(username) {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
       await axios.delete(`/api/follow/delete/follower/${username}`, {
@@ -160,16 +160,16 @@ function Follow({ type }) {
   }
   async function handledeleteFollower(username) {
     try {
-      const isConfirmed = confirm("해당 유저를 삭제 처리하도록 할까요 ?");
+      const isConfirmed = confirm('해당 유저를 삭제 처리하도록 할까요 ?');
       if (isConfirmed) {
         await deleteFollower(username);
       }
     } catch (error) {
-      alert("삭제에 실패하였습니다");
+      alert('삭제에 실패하였습니다');
     }
   }
   async function deleteFollowing(username) {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
     try {
       await axios.delete(`/api/follow/delete/following/${username}`, {
@@ -191,20 +191,20 @@ function Follow({ type }) {
   async function handledeleteFollowing(username) {
     try {
       const isConfirmed = confirm(
-        "해당 유저를 팔로우 취소 처리하도록 할까요 ?"
+        '해당 유저를 팔로우 취소 처리하도록 할까요 ?'
       );
       if (isConfirmed) {
         await deleteFollowing(username);
       }
     } catch (error) {
-      alert("삭제에 실패하였습니다");
+      alert('삭제에 실패하였습니다');
     }
   }
 
   async function addFollow(targetUsername) {
-    const jwt = sessionStorage.getItem("jwt-token");
+    const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) {
-      alert("로그인이 필요합니다.");
+      alert('로그인이 필요합니다.');
       return;
     }
     const newFollow = {
@@ -213,12 +213,12 @@ function Follow({ type }) {
     };
     try {
       const response = await axios.post(
-        "/api/follow/new/following",
+        '/api/follow/new/following',
         newFollow,
         {
           headers: {
             Authorization: `Bearer ${jwt}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -231,27 +231,27 @@ function Follow({ type }) {
             ...prev,
             {
               username: targetUsername,
-              profileUrl: "", // 서버에서 받아온 경우 사용
+              profileUrl: '', // 서버에서 받아온 경우 사용
             },
           ];
         });
 
-        alert("팔로우 성공!");
+        alert('팔로우 성공!');
         window.location.reload();
       } else {
-        console.error("등록 실패", response);
-        alert("팔로잉 등록에 실패하였습니다.");
+        console.error('등록 실패', response);
+        alert('팔로잉 등록에 실패하였습니다.');
       }
     } catch (error) {
-      console.error("에러 발생", error);
-      alert("서버와 통신 중 오류가 발생했습니다.");
+      console.error('에러 발생', error);
+      alert('서버와 통신 중 오류가 발생했습니다.');
     }
   }
   return (
-    <Container className={type === "follower" ? '' : 'active'}>
+    <Container className={type === 'follower' ? '' : 'active'}>
       <Top>
         <IconUsers />
-        <h1>{type === "follower" ? "팔로워" : "팔로잉"}</h1>
+        <h1>{type === 'follower' ? '팔로워' : '팔로잉'}</h1>
       </Top>
       <ContainerMain>
         <SearchBox>
@@ -266,7 +266,7 @@ function Follow({ type }) {
               onClick={() => {
                 inputKeyword
                   ? navigate(`/search?username=${inputKeyword}`)
-                  : alert("검색어를 입력해주세요");
+                  : alert('검색어를 입력해주세요');
               }}
             />
           </InputBox>
@@ -288,32 +288,32 @@ function Follow({ type }) {
                 </Left>
                 <Right>
                   <TopButton
-                    className={item.mutualFollow ? "mutual" : "none"}
+                    className={item.mutualFollow ? 'mutual' : 'none'}
                     onClick={async () => {
-                      if (type === "follower" && !item.mutualFollow) {
+                      if (type === 'follower' && !item.mutualFollow) {
                         await addFollow(item.username); // 팔로우 요청
                       }
-                      if (type === "following" && !item.mutualFollow) {
+                      if (type === 'following' && !item.mutualFollow) {
                         navigate(`/user/story/${item.username}`); // 피드 구경
                       }
                     }}
                   >
-                    {type === "follower"
+                    {type === 'follower'
                       ? item.mutualFollow
-                        ? "맞팔중"
-                        : "팔로우 하기"
+                        ? '맞팔중'
+                        : '팔로우 하기'
                       : item.mutualFollow
-                        ? "맞팔중"
-                        : "피드 구경하기"}
+                      ? '맞팔중'
+                      : '피드 구경하기'}
                   </TopButton>
                   <ButtomButton
                     onClick={() =>
-                      type === "follower"
+                      type === 'follower'
                         ? handledeleteFollower(item.username)
                         : handledeleteFollowing(item.username)
                     }
                   >
-                    {type === "follower" ? "팔로우 해제" : "팔로우 취소"}
+                    {type === 'follower' ? '팔로우 해제' : '팔로우 취소'}
                   </ButtomButton>
                 </Right>
               </SmallBox>
@@ -328,22 +328,22 @@ function Follow({ type }) {
 export default Follow;
 
 const Container = styled.div`
-  width: 350px;
+  width: 400px;
   margin: 0 auto;
   margin-top: 30px;
   border: 1px solid #8c0d17;
   border-radius: 20px;
-  box-shadow:  0 3px 4px rgba(0, 0, 0, 0.5);
-  padding-top: 10px;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.5);
+  padding-top: 20px;
   background-color: white;
+  margin-left: 80px;
 `;
 
 const ContainerMain = styled.div`
   width: 100%;
   border-radius: 5px;
   padding-top: 10px;
-  height: 540px;
-
+  height: 500px;
 `;
 
 const Top = styled.div`
@@ -354,15 +354,15 @@ const Top = styled.div`
   margin-bottom: 30px;
   gap: 15px;
   user-select: none;
-  h1{
+  h1 {
     font-size: 1.5rem;
   }
 `;
 const SearchBox = styled.div`
-  width: 90%;
+  width: 85%;
   height: 50px;
   border: 1px solid #cecece;
-  border-radius: 30px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   margin: 0 auto;
@@ -390,7 +390,7 @@ const Input = styled.input`
   }
 `;
 const ContentBox = styled.div`
-  width: 94%;
+  width: 85%;
   height: 85%;
   margin: 0 auto;
   margin-top: 10px;
@@ -406,7 +406,7 @@ const ContentBox = styled.div`
 `;
 const SmallBox = styled.div`
   border: 1px solid #3333;
-  width: 90%;
+  width: 100%;
   height: 100px;
   margin: 0 auto;
   border-radius: 10px;
