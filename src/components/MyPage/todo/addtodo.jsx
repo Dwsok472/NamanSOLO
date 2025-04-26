@@ -14,7 +14,7 @@ const CardWrap = styled.div`
 const Card = styled.div`
   background-color: white;
   border-radius: 15px;
-  border: 1px solid #94949433;
+  border: 1px solid #8c0d17;
   display: flex;
   flex-direction: column;
   height: 280px;
@@ -43,6 +43,7 @@ const TopX = styled.div`
   top: 0px;
   right: 10px;
   cursor: pointer;
+  filter: brightness(0) invert(1);
 `;
 
 const Bottom = styled.div`

@@ -5,7 +5,7 @@ import LeftKey from '../../img/leftkey.png';
 import RightKey from '../../img/rightkey.png';
 
 const CardWrap = styled.div`
-    width: 400px;
+  width: 400px;
   position: absolute;
   top: 53%;
   left: 50%;
@@ -16,7 +16,7 @@ const CardWrap = styled.div`
 const Card = styled.div`
   background-color: white;
   border-radius: 15px;
-  border: 1px solid #94949433;
+  border: 1px solid #8c0d17;
   display: flex;
   flex-direction: column;
   height: 500px;
@@ -113,6 +113,7 @@ const TopX = styled.div`
   top: 0px;
   right: 10px;
   cursor: pointer;
+  filter: brightness(0) invert(1);
 `;
 
 const Bottom = styled.div`

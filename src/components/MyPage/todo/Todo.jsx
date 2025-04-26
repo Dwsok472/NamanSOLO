@@ -36,6 +36,7 @@ const Main = styled.main`
   padding: 20px;
   gap: 20px;
   filter: ${({ $blur }) => ($blur ? "blur(3px)" : "none")};
+  transition: 1s ease;
   pointer-events: ${({ $blur }) => ($blur ? "none" : "auto")};
 `;
 
