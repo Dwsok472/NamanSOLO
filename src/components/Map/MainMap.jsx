@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 // import background from "../img/back2.jpg";
-import place from "../img/place.png";
-import question from "../img/question.png";
-import heart from "../img/heart.png";
-import course1 from "../img/banner1.jpg";
-import course2 from "../img/banner2.jpg";
-import course3 from "../img/banner3.jpg";
-import leftkey from "../img/leftkey.png";
-import rightkey from "../img/rightkey.png";
+import place from '../img/place.png';
+import question from '../img/question.png';
+import heart from '../img/heart.png';
+import course1 from '../img/banner1.jpg';
+import course2 from '../img/banner2.jpg';
+import course3 from '../img/banner3.jpg';
+import leftkey from '../img/leftkey.png';
+import rightkey from '../img/rightkey.png';
 
-import ImageMapMapPart from "./ImageMapMapPart";
-import PlaceListPart from "./PlaceListPart";
+import ImageMapMapPart from './ImageMapMapPart';
+import PlaceListPart from './PlaceListPart';
 
 const Container = styled.div`
   width: 100%;
@@ -118,7 +118,7 @@ const LeftBox = styled.div`
   justify-content: center;
   align-items: center;
   border-right: 2px dashed #ffa8a8;
-  pointer-events: all; 
+  pointer-events: all;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -127,7 +127,6 @@ const LeftBox = styled.div`
     border-bottom: 2px dashed #ffa8a8;
   }
 `;
-
 
 const RightBox = styled.div`
   flex: 1;
@@ -147,7 +146,6 @@ const RightBox = styled.div`
     border-top: 2px dashed #75c7c3;
   }
 `;
-
 
 const InnerBox = styled.div`
   width: 100%;
@@ -237,7 +235,7 @@ const ScrollWrapper = styled.div`
 function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
-  const categories = ["전체", "맛집", "카페", "호텔", "관광지", "포토존"];
+  const categories = ['전체', '맛집', '카페', '호텔', '관광지', '포토존'];
   const [regionPlaces, setRegionPlaces] = useState({});
   const [categoryPlaces, setCategoryPlaces] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -271,13 +269,13 @@ function MainMap() {
   // });
 
   const slides = [
-    { label: "데이트 코스 1", image: course1 },
-    { label: "데이트 코스 2", image: course2 },
-    { label: "데이트 코스 3", image: course3 },
+    { label: '데이트 코스 1', image: course1 },
+    { label: '데이트 코스 2', image: course2 },
+    { label: '데이트 코스 3', image: course3 },
   ];
 
   const scrollToContent = () => {
-    const element = document.getElementById("contentBox");
+    const element = document.getElementById('contentBox');
     if (element) {
       const elementPosition = element.offsetTop;
       const offsetPosition = elementPosition - 78;
@@ -319,7 +317,7 @@ function MainMap() {
     <Container>
       {/* <BackgroundImage src={background} alt="background" /> */}
 
-      <BannerBox>
+      {/* <BannerBox>
         <SlideImage>
           <Focus onClick={scrollToContent}>보러가기▶</Focus>
           <NavButton
@@ -344,11 +342,11 @@ function MainMap() {
             <img src={rightkey} alt="next" />
           </NavButton>
         </SlideImage>
-      </BannerBox>
+      </BannerBox> */}
 
       <ContentBox id="contentBox">
         <LeftBox>
-        <InnerBox $full>
+          <InnerBox $full>
             {!selectedRegion ? (
               <>
                 <Wrap>

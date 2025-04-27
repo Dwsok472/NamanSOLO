@@ -356,11 +356,5 @@ const Container = styled.div`
   padding: 0;
   overflow: hidden;
   position: relative;
-
-  /* padding: 0 400px; 전체 컨테이너에 좌우 간격을 추가 (옵션) */
-  /* background-image: radial-gradient(circle, #ffffff, #f2ebdc); */
-  /* background: linear-gradient(to bottom, #940e19, #ffe3e3); */
-  /* background: linear-gradient(to bottom, #7b1e3c, #ffe3e3); */
-  /* background: linear-gradient(to bottom, #b85c79, #fdecec); */
-  /* background: linear-gradient(to right, #7b1e3c, #ffb3b3, #ffe3e3); */
+  background-color: white;
 `;

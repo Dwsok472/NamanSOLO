@@ -5,26 +5,25 @@ import { useUserStore } from './Login/Login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
-
 function Header(props) {
   const {
-    logoText = "WeARE",
-    loginText = "로그인",
-    signupText = "회원가입",
+    logoText = 'WeARE',
+    loginText = '로그인',
+    signupText = '회원가입',
     logoRef,
     showLogo,
-    subMenuItems
+    subMenuItems,
   } = props;
 
   const effectiveSubMenuItems =
     subMenuItems && subMenuItems.length > 0
       ? subMenuItems
       : [
-          { to: "/mypage/favorites", label: "즐겨찾기" },
-          { to: "/mypage/calendar", label: "캘린더" },
-          { to: "/mypage/comments", label: "내 댓글" }
+          { to: '/mypage/favorites', label: '즐겨찾기' },
+          { to: '/mypage/calendar', label: '캘린더' },
+          { to: '/mypage/comments', label: '내 댓글' },
         ];
- 
+
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, logout, user } = useUserStore();
@@ -209,6 +208,7 @@ const Sidebar = styled.div`
     padding: 0;
     li {
       padding: 12px 0;
+
       a,
       span {
         color: #fff;
