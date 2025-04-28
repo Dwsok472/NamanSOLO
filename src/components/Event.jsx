@@ -1,32 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { fetchFemalePresents, fetchMalePresents } from './api2';
-import gift1 from './img/gift1.jpg';
-import gift2 from './img/gift2.jpg';
-import gift3 from './img/gift3.jpg';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { fetchFemalePresents, fetchMalePresents } from "./api2";
+import gift1 from "./img/gift1.jpg";
+import gift2 from "./img/gift2.jpg";
+import gift3 from "./img/gift3.jpg";
 
 const Container = styled.div`
   padding: 40px 20px;
-  display: grid;
-  grid-template-columns: 3fr 10fr 10fr 3fr;
-  margin: 0;
-  padding: 0;
-  position: relative;
-`;
-
-const ImgWrap = styled.div`
   display: flex;
-  cursor: pointer;
-  width: 100%;
-  img {
-    object-fit: cover;
-    width: 100%;
-    height: 100vh;
-    object-fit: contain;
-  }
-`;
-const Right = styled.div`
-  width: 100%;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Title = styled.h1`
@@ -34,142 +17,100 @@ const Title = styled.h1`
   font-size: 3.5rem;
   color: #1f0606;
   margin-top: 40px;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 `;
 
-const SidebarButtons = styled.div`
-display: flex;
-flex-direction: row;
-width: 70%;
-justify-content: center;
-margin: 0 auto;
-gap: 2px;
-button{
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 0%;
-  border: none;
-  background-color: #ffffff;
-  color: #202020;
-  width: 100px;
-  border-radius: 15px;
-  border: 1px solid #a8a8a8;
-  margin-bottom: 5px;
-}
-.girl{
-  border: none;
-    background-color: #ff8f98;
-    color: white;
-}
-.boy{
-   background-color: #aedbff;
-    color: white;
-    border: none;
-}
-`
+const Subtitle = styled.h3`
+  text-align: center;
+  font-size: 1.5rem;
+  color: #5f5b5b;
+  margin-bottom: 30px;
+`;
 
 const CategoryContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 0px;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  height: 770px;
   width: 90%;
-  margin: 0 auto;
-  &::-webkit-scrollbar {
-    width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #727272; /* 핸들의 색상 */
-    border-radius: 10px;
-  }
+  margin: 0 auto 70px;
 `;
 
-const Category = styled.div`
-  width: 100%;
-  max-width: 650px;
-  height: fit-content;
-  padding: 28px 24px;
-  /* background-color: ${(props) =>
-    props.$gender === 'male' ? '#c6e2ff' : '#ffcece'}; */
-    border-radius: 30px;
-`;
-
-
-const GiftList = styled.ul`
-  list-style: none;
+const GiftList = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
+  flex-direction: column;
+  gap: 40px;
 `;
 
-const GiftItem = styled.li`
-  width: 47.5%;
+const GiftRow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 100px; /* 남자 그룹과 여자 그룹 사이 */
+`;
+
+const GiftGroup = styled.div`
+  display: flex;
+  gap: 20px; /* 그룹 내 아이템 간격 */
+`;
+
+const GiftItem = styled.div`
+  width: 300px;
   border: 1px solid #e3e3e3;
   border-radius: 12px;
-  margin-bottom: 18px;
   padding: 12px;
-  text-align: center;
   background: #ffffffee;
-  box-shadow: 0 2px 6px rgba(200, 200, 200, 0.1);
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(100, 100, 00, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex-direction: column;
+
   &:hover {
-    text-decoration: underline;
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
+
   a {
     display: flex;
     flex-direction: column;
-    &:hover {
-      font-weight: 700;
-    }
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
   }
+
   img {
     width: 100%;
-    height: 240px;
+    height: 300px;
     object-fit: cover;
     border-radius: 12px;
   }
+
   h3 {
-    height: 70px;
-    font-size: 0.8rem;
-    color: #333;
-    text-align: center;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    font-size: 1rem;
+    margin: 10px 0 5px;
+    height: 50px;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   p {
-    font-size: 0.7rem;
-    margin-top: auto;
+    font-size: 0.8rem;
     color: #666;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+`;
 
-
-const images = [gift1, gift2, gift3];
 function Event() {
   const [maleGifts, setMaleGifts] = useState([]);
   const [femaleGifts, setFemaleGifts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentImage, setCurrentImage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const stripHTML = (html) => {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
     div.innerHTML = html;
-    return div.textContent || div.innerText || '';
+    return div.textContent || div.innerText || "";
   };
 
   useEffect(() => {
@@ -179,15 +120,11 @@ function Event() {
           fetchMalePresents(),
           fetchFemalePresents(),
         ]);
-
-        console.log('👩 여자 선물:', femaleData);
-        console.log('👨 남자 선물:', maleData);
-
         setFemaleGifts(femaleData);
         setMaleGifts(maleData);
         setLoading(false);
       } catch (err) {
-        setError('선물 데이터를 불러오는 데 문제가 발생했습니다.');
+        setError("선물 데이터를 불러오는 데 문제가 발생했습니다.");
         setLoading(false);
       }
     };
@@ -195,65 +132,103 @@ function Event() {
     fetchGifts();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // const giftsToDisplay = selectedGender === "male" ? maleGifts : femaleGifts;
-
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
+  // 남자/여자 각각 2개씩 끊어서 줄 만들기
+  const rows = [];
+  const maxLength = Math.max(maleGifts.length, femaleGifts.length);
+  for (let i = 0; i < maxLength; i += 2) {
+    const maleRow = maleGifts.slice(i, i + 2);
+    const femaleRow = femaleGifts.slice(i, i + 2);
+    rows.push({ maleRow, femaleRow });
+  }
+
+  // 한 페이지에 2줄씩 (8개)
+  const rowsPerPage = 2;
+  const pageStart = currentPage * rowsPerPage;
+  const pageRows = rows.slice(pageStart, pageStart + rowsPerPage);
+
+  const handlePrev = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  const handleNext = () => {
+    const maxPages = Math.ceil(rows.length / rowsPerPage);
+    if (currentPage + 1 < maxPages) {
+      setCurrentPage(currentPage + 1);
+      window.scrollTo(0, 0);
+    }
+  };
+
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 0,
+  //     behavior: "smooth",
+  //   });
+  // }, [currentPage]);
+
   return (
     <>
-    <Title>선물랭킹 TOP10</Title>
-    <Container>
-      <div></div>
-      {/* <ImgWrap>
-        <img src={images[currentImage]} alt={`slide-${currentImage}`} />
-      </ImgWrap> */}
-      {/* <Right> */}
-        {/* <SidebarButtons>
-          <button onClick={() => setSelectedGender("female")} className={selectedGender === 'female' ? 'girl' : ''}>여자</button>
-          <button onClick={() => setSelectedGender("male")} className={selectedGender === 'male' ? 'boy' : ''}>남자</button>
-        </SidebarButtons> */}
+      <Title>선물랭킹 TOP10</Title>
+      <Subtitle>지금 가장 인기 있는 선물을 만나보세요</Subtitle>
+
+      <Container>
         <CategoryContainer>
-          <Category $gender={'male'}>
-            <GiftList>
-              {maleGifts.map((gift, index) => (
-                <GiftItem key={index} title={stripHTML(gift.title)}>
-                  <a href={gift.shoppingUrl} target="_blank" rel="noopener noreferrer">
-                    <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
-                    <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
-                    <p>가격: {Number(gift.price).toLocaleString()}원</p>
-                  </a>
-                </GiftItem>
-              ))}
-            </GiftList>
-          </Category>
+          <GiftList>
+            {pageRows.map((row, rowIndex) => (
+              <GiftRow key={rowIndex}>
+                <GiftGroup>
+                  {row.maleRow.map((gift, index) => (
+                    <GiftItem key={`male-${rowIndex}-${index}`}>
+                      <a
+                        href={gift.shoppingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
+                        <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
+                        <p>가격: {Number(gift.price).toLocaleString()}원</p>
+                      </a>
+                    </GiftItem>
+                  ))}
+                </GiftGroup>
+
+                <GiftGroup>
+                  {row.femaleRow.map((gift, index) => (
+                    <GiftItem key={`female-${rowIndex}-${index}`}>
+                      <a
+                        href={gift.shoppingUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
+                        <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
+                        <p>가격: {Number(gift.price).toLocaleString()}원</p>
+                      </a>
+                    </GiftItem>
+                  ))}
+                </GiftGroup>
+              </GiftRow>
+            ))}
+          </GiftList>
+
+          <ButtonWrapper>
+            <button onClick={handlePrev} disabled={currentPage === 0}>
+              ◀ 이전
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={(currentPage + 1) * rowsPerPage >= rows.length}
+            >
+              다음 ▶
+            </button>
+          </ButtonWrapper>
         </CategoryContainer>
-        <CategoryContainer>
-          <Category $gender={'female'}>
-            <GiftList>
-              {femaleGifts.map((gift, index) => (
-                <GiftItem key={index} title={stripHTML(gift.title)}>
-                  <a href={gift.shoppingUrl} target="_blank" rel="noopener noreferrer">
-                    <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
-                    <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
-                    <p>가격: {Number(gift.price).toLocaleString()}원</p>
-                  </a>
-                </GiftItem>
-              ))}
-            </GiftList>
-          </Category>
-          <div></div>
-        </CategoryContainer>
-      {/* </Right> */}
-    </Container>
+      </Container>
     </>
   );
 }
