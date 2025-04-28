@@ -145,7 +145,7 @@ function Event() {
   }
 
   // 한 페이지에 2줄씩 (8개)
-  const rowsPerPage = 2;
+  const rowsPerPage = 1;
   const pageStart = currentPage * rowsPerPage;
   const pageRows = rows.slice(pageStart, pageStart + rowsPerPage);
 
