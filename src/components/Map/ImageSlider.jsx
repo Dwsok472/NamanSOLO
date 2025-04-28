@@ -1,40 +1,44 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-const SliderWrapper = styled.div`
-  position: relative;
+const OuterWrapper = styled.div`
   width: 100%;
-  max-width: 500px;
+  max-width: 700px; 
   margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const NavButton = styled.button`
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  padding: 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 10%;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #9c9b9b;
+  }
+`;
+
+const ImageContainer = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
 `;
 
 const Image = styled.img`
   width: 100%;
+  max-width: 500px;
   height: 300px;
   object-fit: cover;
   border-radius: 10px;
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 10px;
-`;
-
-const NavButton = styled.button`
-  background: #0c0c0c;
-  color: #ffffff;
-  border: none;
-  padding: 6px 10px;
-  font-size: 0.8rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-
-  &:hover {
-    background: #333;
-  }
 `;
 
 function ImageSlider({ images }) {
@@ -51,16 +55,15 @@ function ImageSlider({ images }) {
   if (!images || images.length === 0) return null;
 
   return (
-    <SliderWrapper>
-      <Image src={images[currentIndex]} alt={`이미지 ${currentIndex + 1}`} />
+    <OuterWrapper>
+      {images.length > 1 && <NavButton onClick={showPrev}>이전</NavButton>}
+      
+      <ImageContainer>
+        <Image src={images[currentIndex]} alt={`이미지 ${currentIndex + 1}`} />
+      </ImageContainer>
 
-      {images.length > 1 && (
-        <ButtonGroup>
-          <NavButton onClick={showPrev}>← 이전</NavButton>
-          <NavButton onClick={showNext}>다음 →</NavButton>
-        </ButtonGroup>
-      )}
-    </SliderWrapper>
+      {images.length > 1 && <NavButton onClick={showNext}>다음</NavButton>}
+    </OuterWrapper>
   );
 }
 
