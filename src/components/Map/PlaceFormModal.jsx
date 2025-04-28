@@ -42,7 +42,7 @@ const CloseButton = styled.button`
   }
 `;
 
-function PlaceFormModal({ editingPlace, selectedRegion, onClose, refreshPlaces, setRegionPlaces, setFilteredPlaces }) {
+function PlaceFormModal({ editingPlace, selectedRegion, onClose, refreshPlaces, setRegionPlaces, setFilteredPlaces, setActiveCategory }) {
   return (
     <ModalBackground onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -54,6 +54,7 @@ function PlaceFormModal({ editingPlace, selectedRegion, onClose, refreshPlaces, 
           refreshPlaces={refreshPlaces}
           setRegionPlaces={setRegionPlaces}
           setFilteredPlaces={setFilteredPlaces}
+          setActiveCategory={setActiveCategory}
         />
       </ModalContent>
     </ModalBackground>

@@ -180,14 +180,20 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   };
 
   const refreshPlaces = async () => {
-    if (selectedRegion) {
-      const updatedPlaces = await getPlacesByRegion(selectedRegion);
-      setRegionPlaces((prev) => ({
-        ...prev,
-        [selectedRegion]: updatedPlaces,
-      }));
-      setFilteredPlaces(updatedPlaces);
+    if (!selectedRegion) return;
+  
+    let updatedPlaces = [];
+    if (activeCategory === '전체') {
+      updatedPlaces = await getPlacesByRegion(selectedRegion);
+    } else {
+      updatedPlaces = await getPlacesByRegionAndCategory(selectedRegion, activeCategory);
     }
+  
+    setRegionPlaces((prev) => ({
+      ...prev,
+      [selectedRegion]: updatedPlaces,
+    }));
+    setFilteredPlaces(removeDuplicatesById(updatedPlaces)); 
   };
   
   
@@ -272,6 +278,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           refreshPlaces={() => setActiveCategory('전체')}
           setRegionPlaces={setRegionPlaces}
           setFilteredPlaces={setFilteredPlaces}
+          setActiveCategory={setActiveCategory}
         />
       )}
     </Wrapper>

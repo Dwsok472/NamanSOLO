@@ -85,7 +85,7 @@ const MapModalContent = styled.div`
 `;
 
 
-function PlaceForm({ editingPlace, selectedRegion, onClose, refreshPlaces, setRegionPlaces, setFilteredPlaces }) {
+function PlaceForm({ editingPlace, selectedRegion, onClose, refreshPlaces, setRegionPlaces, setFilteredPlaces,setActiveCategory }) {
   const [name, setName] = useState(editingPlace?.name || '');
   const [address, setAddress] = useState(editingPlace?.address || '');
   const [description, setDescription] = useState(editingPlace?.description || '');
@@ -110,6 +110,9 @@ function PlaceForm({ editingPlace, selectedRegion, onClose, refreshPlaces, setRe
         city: selectedRegion,
         latitude: 0,
         longitude: 0,
+        mediaUrl: images.length > 0 
+          ? [] 
+          : (editingPlace?.mediaUrl || []),
       };
   
       let savedPlace = null;
@@ -120,13 +123,21 @@ function PlaceForm({ editingPlace, selectedRegion, onClose, refreshPlaces, setRe
         } else {
           await updateRecommendPlace(placeDTO);
         }
-        
-        // ⭐ 카테고리 업데이트 추가
+  
         if (categories.length > 0) {
           await updateCategoryMapping(editingPlace.id, categories);
         }
   
         await refreshPlaces();
+        setActiveCategory('전체');
+  
+        const updatedPlaces = await getPlacesByRegion(selectedRegion); // 🔥 지역 데이터 새로 가져오기
+        setRegionPlaces((prev) => ({
+          ...prev,
+          [selectedRegion]: updatedPlaces,
+        }));
+        setFilteredPlaces(updatedPlaces);
+  
         alert('수정 성공!');
         onClose();
       } else {
@@ -139,18 +150,10 @@ function PlaceForm({ editingPlace, selectedRegion, onClose, refreshPlaces, setRe
         if (savedPlace?.id && categories.length > 0) {
           await registerCategoryMapping(savedPlace.id, categories);
         }
+  
         alert('등록 성공!');
       }
   
-      const updatedPlaces = await getPlacesByRegion(selectedRegion);
-      setRegionPlaces((prev) => ({
-        ...prev,
-        [selectedRegion]: updatedPlaces,
-      }));
-      setFilteredPlaces(updatedPlaces);
-  
-      refreshPlaces(); // (필요시)
-      onClose(); // 모달 닫기
     } catch (error) {
       console.error('저장 실패:', error);
       alert('저장 중 오류 발생!');
