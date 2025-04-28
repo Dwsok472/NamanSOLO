@@ -142,7 +142,7 @@ function Header(props) {
                 closeSidebar();
               }}
             >
-              (<span>로그아웃</span>)
+              <span>로그아웃</span>
             </li> : <></>}
           </>
 
