@@ -15,15 +15,6 @@ function Header(props) {
     subMenuItems,
   } = props;
 
-  const effectiveSubMenuItems =
-    subMenuItems && subMenuItems.length > 0
-      ? subMenuItems
-      : [
-          { to: '/mypage/favorites', label: '즐겨찾기' },
-          { to: '/mypage/calendar', label: '캘린더' },
-          { to: '/mypage/comments', label: '내 댓글' },
-        ];
-
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoggedIn, logout, user } = useUserStore();
@@ -39,6 +30,7 @@ function Header(props) {
   };
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,9 +91,18 @@ function Header(props) {
             </Link>
           </li>
           <li>
-            <Link to="/events" onClick={closeSidebar}>
+            <li onClick={() => {
+              closeSidebar();
+              if (!isLoggedIn) {
+                alert("로그인 후 이용이 가능합니다");
+                navigate('/login');
+              }
+              else {
+                navigate('/events');
+              }
+            }} className='other'>
               선물 랭킹
-            </Link>
+            </li>
           </li>
 
           {user?.authority === 'ROLE_ADMIN' && (
@@ -112,29 +113,38 @@ function Header(props) {
             </li>
           )}
 
-          {isLoggedIn && (
-            <>
-              <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
-                <span>마이페이지 {isSidebarSubOpen ? '▲' : '▼'}</span>
-              </li>
-              {isSidebarSubOpen &&
-                subMenuItems.map(({ to, label }) => (
-                  <li key={to}>
-                    <Link to={to} onClick={closeSidebar}>
-                      {label}
-                    </Link>
+
+          <>
+            <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
+              <span>마이페이지 {isSidebarSubOpen ? '▲' : '▼'}</span>
+            </li>
+            {isSidebarSubOpen &&
+              subMenuItems.map(({ to, label }) => (
+                <li key={to}>
+                  <li to={to} onClick={() => {
+                    closeSidebar();
+                    if (!isLoggedIn) {
+                      alert("로그인 후 이용이 가능합니다");
+                      navigate('/login');
+                    }
+                    else {
+                      navigate(to);
+                    }
+                  }} className='others'>
+                    {label}
                   </li>
-                ))}
-              <li
-                onClick={() => {
-                  logout();
-                  closeSidebar();
-                }}
-              >
-                <span>로그아웃</span>
-              </li>
-            </>
-          )}
+                </li>
+              ))}
+            <li
+              onClick={() => {
+                logout();
+                closeSidebar();
+              }}
+            >
+              {isLoggedIn ? (<span>로그아웃</span>) : ''}
+            </li>
+          </>
+
 
           {!isLoggedIn && !isLoginPage && (
             <>
@@ -173,7 +183,7 @@ const Container = styled.header`
 `;
 
 const Logo = styled.h1`
-  font-size: 2.7rem;
+  font-size: 2.5rem;
   color: #bb1616;
   margin: 0;
   opacity: ${({ $visible }) => ($visible === false ? 0 : 1)};
@@ -217,6 +227,20 @@ const Sidebar = styled.div`
         font-weight: 700;
         cursor: pointer;
       }
+      .other{
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .others{
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
     }
   }
 `;
@@ -229,7 +253,7 @@ const Overlay = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index:999;
 `;
 
 export default Header;
