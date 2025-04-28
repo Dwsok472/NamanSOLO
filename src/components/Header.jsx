@@ -114,13 +114,13 @@ function Header(props) {
             </li>
           )}
 
-
-          <>
-            <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
-              <span>마이페이지 {isSidebarSubOpen ? '▲' : '▼'}</span>
-            </li>
-            {isSidebarSubOpen &&
-              subMenuItems.map(({ to, label }) => (
+        {user?.authority != 'ROLE_ADMIN' && (
+            <>
+              <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
+                <span>마이페이지 {isSidebarSubOpen ? '▲' : '▼'}</span>
+              </li>
+              {isSidebarSubOpen &&
+                subMenuItems.map(({ to, label }) => (
                 <li key={to} className='sub'>
                   <li to={to} onClick={() => {
                     closeSidebar();
@@ -135,7 +135,10 @@ function Header(props) {
                     {label}
                   </li>
                 </li>
-              ))}
+              ))}          
+            </>
+          )}
+
             {isLoggedIn ? <li
               onClick={() => {
                 navigate("/");
@@ -145,7 +148,6 @@ function Header(props) {
             >
               <span>로그아웃</span>
             </li> : <></>}
-          </>
 
 
           {!isLoggedIn && !isLoginPage && (
