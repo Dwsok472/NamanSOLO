@@ -72,7 +72,7 @@ const FixedBtn = styled.button`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 9999;
+  z-index:100;
   border: none;
   background: none;
   cursor: pointer;
@@ -279,9 +279,8 @@ const Footer = () => {
               <IconBell />
               <Badge $visible={unreadCount > 0}>{unreadCount}</Badge>
             </button>
-            {showAlarm && <Alarm onClose={toggleAlarm} />}
           </BellWrapper>
-
+          {showAlarm && <Alarm onClose={toggleAlarm} />}
           <FixedChat>
             <ChatBotButton onClick={handleChat} />
           </FixedChat>
