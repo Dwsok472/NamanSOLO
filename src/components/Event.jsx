@@ -8,7 +8,7 @@ import gift3 from './img/gift3.jpg';
 const Container = styled.div`
   padding: 40px 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 10fr 10fr 3fr;
   margin: 0;
   padding: 0;
   position: relative;
@@ -75,7 +75,7 @@ const CategoryContainer = styled.div`
   flex-wrap: wrap;
   overflow-y: auto;
   height: 770px;
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
@@ -94,7 +94,6 @@ const Category = styled.div`
   /* background-color: ${(props) =>
     props.$gender === 'male' ? '#c6e2ff' : '#ffcece'}; */
     border-radius: 30px;
-  box-shadow: 0 3px 10px rgba(200, 200, 200, 0.15);
 `;
 
 
@@ -213,6 +212,7 @@ function Event() {
     <>
     <Title>선물랭킹 TOP10</Title>
     <Container>
+      <div></div>
       {/* <ImgWrap>
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap> */}
@@ -250,6 +250,7 @@ function Event() {
               ))}
             </GiftList>
           </Category>
+          <div></div>
         </CategoryContainer>
       {/* </Right> */}
     </Container>
