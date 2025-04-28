@@ -106,15 +106,13 @@ function Header(props) {
             </span>
           </li>
 
-          {user?.authority === 'ROLE_ADMIN' && (
+          {user?.authority === 'ROLE_ADMIN' ? (
             <li>
               <Link to="/admin/users" onClick={closeSidebar}>
                 관리자 페이지
               </Link>
             </li>
-          )}
-
-        {user?.authority != 'ROLE_ADMIN' && (
+          ) : (
             <>
               <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
                 <span>마이페이지 {isSidebarSubOpen ? '▲' : '▼'}</span>
