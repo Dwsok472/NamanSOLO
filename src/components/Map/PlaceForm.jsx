@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { saveRecommendPlace, updateRecommendPlace, uploadRecommendPlaceImages, registerCategoryMapping, getPlacesByRegion } from '../api1';
 import MapPicker from '../MapPicker/MapPicker';
+import { updateCategoryMapping } from '../api1';
 
 const FormWrapper = styled.div`
   background: #ffffff;
@@ -119,7 +120,15 @@ function PlaceForm({ editingPlace, selectedRegion, onClose, refreshPlaces, setRe
         } else {
           await updateRecommendPlace(placeDTO);
         }
+        
+        // ⭐ 카테고리 업데이트 추가
+        if (categories.length > 0) {
+          await updateCategoryMapping(editingPlace.id, categories);
+        }
+  
+        await refreshPlaces();
         alert('수정 성공!');
+        onClose();
       } else {
         if (images.length > 0) {
           savedPlace = await uploadRecommendPlaceImages(placeDTO, images);

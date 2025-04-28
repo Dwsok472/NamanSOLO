@@ -178,6 +178,18 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       }
     }
   };
+
+  const refreshPlaces = async () => {
+    if (selectedRegion) {
+      const updatedPlaces = await getPlacesByRegion(selectedRegion);
+      setRegionPlaces((prev) => ({
+        ...prev,
+        [selectedRegion]: updatedPlaces,
+      }));
+      setFilteredPlaces(updatedPlaces);
+    }
+  };
+  
   
 
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
@@ -244,6 +256,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           }}
           onDelete={() => handleDeletePlace(selectedPlace.id)}
           isAdmin={isAdmin}
+          refreshPlaces={refreshPlaces}
         />
       )}
 

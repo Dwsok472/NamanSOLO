@@ -100,4 +100,15 @@ export const registerCategoryMapping = async (placeId, categoryIds) => {
   return res.data;
 };
 
+export const updateCategoryMapping = async (placeId, categoryIds) => {
+  const res = await api.post("/categoryplace/update", {
+    recommendPlaceId: placeId,
+    categoryIds,
+  }, {
+    headers: { "Content-Type": "application/json" },
+  });
+
+  return res.data;
+};
+
 export default api;

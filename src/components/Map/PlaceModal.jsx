@@ -43,7 +43,7 @@ const CloseButton = styled.button`
   }
 `;
 
-function PlaceModal({ place, onClose, onEdit, onDelete, isAdmin }) {
+function PlaceModal({ place, onClose, onEdit, onDelete, isAdmin, refreshPlaces  }) {
   return (
     <ModalBackground onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -53,6 +53,7 @@ function PlaceModal({ place, onClose, onEdit, onDelete, isAdmin }) {
           onEdit={onEdit}
           onDelete={onDelete}
           isAdmin={isAdmin}
+          refreshPlaces={refreshPlaces}
         />
       </ModalContent>
     </ModalBackground>
