@@ -136,14 +136,14 @@ function Header(props) {
                   </li>
                 </li>
               ))}
-            <li
+            {isLoggedIn ? <li
               onClick={() => {
                 logout();
                 closeSidebar();
               }}
             >
-              {isLoggedIn ? (<span>로그아웃</span>) : ''}
-            </li>
+              (<span>로그아웃</span>)
+            </li> : ''}
           </>
 
 
@@ -155,7 +155,7 @@ function Header(props) {
                 </Link>
               </li>
               <li>
-                <Link to="/register" onClick={closeSidebar}>
+                <Link to="/login?view=register" onClick={closeSidebar}>
                   {signupText}
                 </Link>
               </li>
