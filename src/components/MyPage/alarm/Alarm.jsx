@@ -220,7 +220,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
       (alarm) => alarm.recipient === currentUser
     );
     setFilteredAlarms(filter);
-  }, [alarmList])
+  }, [alarmList, currentUser])
 
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
@@ -406,6 +406,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
             </Content>
 
             {filteredAlarms.map((alarm) => {
+              console.log("Alarm ID:", alarm.id);
               const isExpanded = expandedId === alarm.id;
               const shouldShowToggle = isExpanded || overflowingItems[alarm.id];
               return (

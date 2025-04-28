@@ -127,6 +127,7 @@ function WebSocketManager() {
     }
 
     const generalAlarm = {
+      id: raw.id || Date.now(),
       text: raw.message || "내용 없음",
       message: raw.message || "내용 없음",
       img: resolveImage(type),
