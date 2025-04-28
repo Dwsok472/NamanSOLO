@@ -208,16 +208,20 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const [position, setPosition] = useState({ x: 0, y: 0 }); // 모달의 위치
   const [showSetting, setShowSetting] = useState(false); // 설정 모달 상태 추가
   const [clickTimeout, setClickTimeout] = useState(null);
+  const [filteredAlarms, setFilteredAlarms] = useState([]);
   const [overflowingItems, setOverflowingItems] = useState({});
   const textRefs = useRef({});
   const [isOpen, setIsOpen] = useState(false);
   // 알림 리스트 (이 부분은 컴포넌트 안에 위치)
   const currentUser = useUserStore((state) => state.user?.username);
   const { alarmList } = useAlarmList();
-  const filteredAlarms = alarmList.filter(
+  useEffect(() => {
+    const filter = alarmList.filter(
       (alarm) => alarm.recipient === currentUser
-  );
-  
+    );
+    setFilteredAlarms(filter);
+  }, [alarmList])
+
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
   // const [alarmList, setAlarmList] = useState([]);
@@ -274,7 +278,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
     setIsDraggingAlarm(false);
   };
 
-  // useEffect 안에서 이벤트 리스너
+  // useEffect 안에서 이벤트 리스너 추가하여 모달을 드래그하기
   useEffect(() => {
     const modal = document.querySelector(".alarm-modal-container");
     if (modal) {
@@ -296,77 +300,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
     setShowSetting((prev) => !prev);
   };
 
-  // 일정 기반 알림 가져오기
-  // useEffect(() => {
-  //   if (!isOpen) return;
-
-  //   const load = async () => {
-  //     try {
-  //   const calendar = await fetchUserEvents(userId);
-  //   const calendarAlarms = getUpcomingAlarms(calendar);
-
-  //   const todayEvents = await fetchTodayEvents(userId);
-  //   const eventAlarms = getTodayEventAlarms(todayEvents);
-
-  //   const placeItems = await fetchRecommendedPlaces(userId);
-  //   const placeAlarms = getPlaceRecommendAlarms(placeItems);
-
-  //   const likeAlarms = await fetchLikeAlarms(userId);
-
-  //   const followAlarms = await fetchFollowAlarms(userId);
-
-  //   const weatherAlarms = await fetchWeatherAlarm(userId);
-
-  //   const commentAlarms = await fetchCommentAlarms(userId);
-
-  //   const replyAlarms = await fetchReplyAlarms(userId);
-
-  //   setAlarmList([
-  //     ...calendarAlarms,
-  //     ...eventAlarms,
-  //     ...placeAlarms,
-  //     ...likeAlarms,
-  //     ...followAlarms,
-  //     ...weatherAlarms,
-  //     ...commentAlarms,
-  //     ...replyAlarms
-  //   ]);
-  // } catch (err) {
-  //       console.error("알림 로딩 실패:", err);
-  //     }
-  //   };
-
-  //   load();
-
-  //   const interval = setInterval(load, 1000 * 60 * 60 * 24);
-  //   return () => clearInterval(interval);
-  // }, [isOpen, userId]);
-
-  // WebSocket 실시간 알림 받기
-  // useEffect(() => {
-  //   const client = connectAlarmSocket(userId, (alarm) => {
-  //     setAlarmList((prev) => [alarm, ...prev]);
-  //   });
-
-  //   return () => client.deactivate(); // 언마운트 시 연결 해제
-  // }, [userId]);
-
-  // 며칠 지난 알림 자동 제거
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     const now = new Date();
-  //     setAlarmList((prev) =>
-  //       prev.filter((alarm) => {
-  //         const created = new Date(alarm.createdAt);
-  //         const diff = (now - created) / (1000 * 60 * 60 * 24);
-  //         return diff <= 10; // 3일 이하만 유지
-  //       })
-  //     );
-  //   }, 1000 * 60 * 60); // 매시간마다 체크
-
-  //   return () => clearInterval(interval); // 언마운트 시 정리
-  // }, []);
-
+  //알림 텍스트의 오버플로우(넘침) 여부를 체크
   useEffect(() => {
     const checkOverflow = () => {
       const updated = {};
@@ -387,7 +321,7 @@ function Alarm({ onClose /*, isOpen*/ }) {
     return () => clearTimeout(timer);
   }, [expandedId, alarmList]);
 
-  // 클릭 핸들러 (이것도 컴포넌트 안에)
+  // 알람 클릭 핸들러 (이것도 컴포넌트 안에)
   const handleAlarmClick = (alarm) => {
     // 기존 타이머가 있으면 → 더블클릭
     if (clickTimeout) {
