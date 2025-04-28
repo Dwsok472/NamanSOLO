@@ -30,6 +30,7 @@ function ChatBot({ onClose }) {
     const jwt = sessionStorage.getItem('jwt-token');
     if (!jwt) return;
 
+    console.log("추천 횟수:", recommendationCount); // 이 부분 추가
     try {
       const res = await fetch(
         `/api/hugging/recommend?username=${username}&count=${recommendationCount}`,
@@ -74,6 +75,7 @@ function ChatBot({ onClose }) {
     setShowOptions(false);
 
     if (optionText === '네') {
+
       fetchRecommendation();
     } else {
       setMessages((prev) => [
@@ -119,63 +121,6 @@ function ChatBot({ onClose }) {
 }
 
 export default ChatBot;
-//  // 첫 번째 질문에 대한 응답
-//  if (botMessageIndex === 2 && optionText === "네") {
-//   setTimeout(() => {
-//     setMessages((prev) => [...prev, { type: "bot", text: botMessages[2] }]);
-//   }, 1000);
-
-//   setTimeout(() => {
-//     setMessages((prev) => [...prev, { type: "bot", text: botMessages[3] }]);
-//   }, 3000);
-
-//   setTimeout(() => {
-//     setMessages((prev) => [...prev, { type: "bot", text: botMessages[4] }]);
-//     setBotMessageIndex(5); // 추가 추천 분기 시작
-//     setShowOptions(true);
-//   }, 5000);
-// }
-
-// // 첫 번째 질문: 아니요
-// else if (botMessageIndex === 2 && optionText === "아니요") {
-//   setTimeout(() => {
-//     setMessages((prev) => [
-//       ...prev,
-//       { type: "bot", text: "알겠습니다. 다음에 도와드릴게요!" },
-//       { type: "bot", text: botMessages[7] },
-//     ]);
-//     setBotMessageIndex(8);
-//   }, 1000);
-// }
-
-// // 추가 추천: 네
-// else if (botMessageIndex === 5 && optionText === "네") {
-//   setTimeout(() => {
-//     setMessages((prev) => [...prev, { type: "bot", text: botMessages[5] }]);
-//   }, 1000);
-
-//   setTimeout(() => {
-//     setMessages((prev) => [...prev, { type: "bot", text: botMessages[6] }]);
-//   }, 3000);
-
-//   setTimeout(() => {
-//     setMessages((prev) => [...prev, { type: "bot", text: botMessages[7] }]);
-//     setBotMessageIndex(8);
-//   }, 5000);
-// }
-
-// // 추가 추천: 아니요
-// else if (botMessageIndex === 5 && optionText === "아니요") {
-//   setTimeout(() => {
-//     setMessages((prev) => [
-//       ...prev,
-//       { type: "bot", text: "알겠습니다. 다음에 도와드릴게요!" },
-//       { type: "bot", text: botMessages[7] },
-//     ]);
-//     setBotMessageIndex(8);
-//   }, 1000);
-// }
-// };
 
 const BackDrop = styled.div`
   position: fixed;
