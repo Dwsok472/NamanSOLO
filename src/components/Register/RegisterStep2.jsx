@@ -26,7 +26,7 @@ const GenderWrapper = styled.div`
   padding: 10px 0;
   margin: 0 10px; */
   width: fit-content;
-  height: 650px;
+  height: 600px;
 `;
 
 const GenderLabel = styled.div`
@@ -41,11 +41,12 @@ const GenderImage = styled.img`
   width: 150px; // 원하는 사이즈로
   height: auto;
   object-fit: cover;
-
   user-select: none;
 `;
 
 const H1 = styled.h1`
+  margin-top: 100px;
+  margin-bottom: 30px;
   font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
@@ -84,8 +85,14 @@ const Icon = styled.div`
 `;
 
 function RegisterStep2({ onNext }) {
-  const [validFStatus, setValidFStatus] = useState({ emailStatus: false, phoneStatus: false });
-  const [validMStatus, setValidMStatus] = useState({ emailStatus: false, phoneStatus: false });
+  const [validFStatus, setValidFStatus] = useState({
+    emailStatus: false,
+    phoneStatus: false,
+  });
+  const [validMStatus, setValidMStatus] = useState({
+    emailStatus: false,
+    phoneStatus: false,
+  });
   const { formData, setFormData } = useRegisterStore();
   const [profileF, setProfileF] = useState({
     name: "",
@@ -105,7 +112,16 @@ function RegisterStep2({ onNext }) {
     const birthdayValid = profile.birthday !== "";
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(profile.email);
     const phoneValid = /^\d{3}-\d{3,4}-\d{4}$/.test(profile.phone);
-    console.log("유효성 체크 - name:", nameValid, "birthday:", birthdayValid, "email:", emailValid, "phone:", phoneValid);
+    console.log(
+      "유효성 체크 - name:",
+      nameValid,
+      "birthday:",
+      birthdayValid,
+      "email:",
+      emailValid,
+      "phone:",
+      phoneValid
+    );
 
     return nameValid && birthdayValid && emailValid && phoneValid;
   };
@@ -179,7 +195,7 @@ function RegisterStep2({ onNext }) {
             onStatusChange={(status) => setValidFStatus(status)}
           />
         </GenderWrapper>
-        <img src={rate} className="heartRate" />
+        {/* <img src={rate} className="heartRate" /> */}
         <GenderWrapper $gender="male">
           <GenderLabel>MALE</GenderLabel>
           <GenderImage src={male} />

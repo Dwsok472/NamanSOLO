@@ -11,7 +11,7 @@ const DropdownButton = styled.button`
   font-size: 1rem;
   border-radius: 6px;
   border: 1px solid #ccc;
-  background-color: white;
+  background-color: #f6f2ea;
   cursor: pointer;
 `;
 
@@ -20,7 +20,7 @@ const DropdownList = styled.ul`
   bottom: 100%;
   left: 0;
   width: 120%;
-  background-color: white;
+  background-color: #f6f2ea;
   border: 1px solid #ccc;
   border-radius: 6px;
   margin-bottom: 5px;

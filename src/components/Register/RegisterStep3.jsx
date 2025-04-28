@@ -8,14 +8,12 @@ import CityDropdown from "./DropdownButton";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 90vh;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  height: 100vh;
 
   .heartswithrate {
     display: block;
     margin: 0 auto;
-    width: 500px;
+    width: 400px;
   }
 
   .dday {
@@ -39,6 +37,8 @@ const Container = styled.div`
 `;
 
 const H1 = styled.h1`
+  padding-top: 80px;
+  padding-bottom: 30px;
   font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
@@ -55,6 +55,7 @@ const Input = styled.input`
   margin-bottom: 30px;
   font-size: 35px;
   font-weight: 700;
+  background-color: #f6f2ea;
   cursor: pointer;
 
   &::-webkit-calendar-picker-indicator {
@@ -82,7 +83,8 @@ const CityWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
+  /* margin-top: 60px; */
+  /* margin-bottom: 30px; */
 `;
 
 const Label = styled.label`
@@ -142,14 +144,18 @@ function RegisterStep3({ onNext }) {
     <Container>
       <H1>회원가입</H1>
       <CityWrapper>
-        <Label>도시를 선택해주세요. 사용자맞춤 날씨 정보 제공 기반이 됩니다.</Label>
+        <Label>
+          도시를 선택해주세요. 사용자맞춤 날씨 정보 제공 기반이 됩니다.
+        </Label>
         <CityDropdown onSelect={handleCitySelect} />
       </CityWrapper>
+
       <img
         src={heartswithrate}
         className="heartswithrate"
         alt="하트와 레이트"
       />
+
       <h1 className="dday">
         {daysDiff !== null
           ? `D-${daysDiff === 0 ? "DAY" : daysDiff}`

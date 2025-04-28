@@ -10,10 +10,7 @@ import { IconBehind } from "../Icons";
 const Container = styled.div`
   margin: 0 auto;
   width: 100%;
-  height: 95vh;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  height: 95vh;
+  height: 100vh;
   position: relative;
   .heartswithrate {
     display: block;
@@ -22,6 +19,8 @@ const Container = styled.div`
   }
 `;
 const H1 = styled.h1`
+  padding-top: 80px;
+  padding-bottom: 30px;
   font-size: 3.5rem;
   font-weight: 700;
   text-align: center;
@@ -33,18 +32,18 @@ const Box = styled.div`
   height: 15%;
   .cloudleft {
     position: absolute;
-    left: 50px;
-    top: 50px;
+    left: 270px;
+    top: 150px;
   }
   .cloudright {
     position: absolute;
-    right: 60px;
-    top: 150px;
+    right: 270px;
+    top: 250px;
   }
   .textleft {
     position: absolute;
-    left: 220px;
-    top: 200px;
+    left: 450px;
+    top: 300px;
     z-index: 5;
     font-size: 2rem;
     font-weight: 700;
@@ -52,8 +51,8 @@ const Box = styled.div`
   }
   .textright {
     position: absolute;
-    right: 210px;
-    top: 300px;
+    right: 420px;
+    top: 400px;
     z-index: 5;
     font-size: 2rem;
     font-weight: 700;
@@ -64,7 +63,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 25px; /* 버튼 위치를 아래로 살짝 내릴 수 있음 */
+  margin-top: 320px; /* 버튼 위치를 아래로 살짝 내릴 수 있음 */
 `;
 
 const Button = styled.button`
@@ -99,7 +98,7 @@ function RegisterStep4() {
   return (
     <Container>
       <H1>회원가입</H1>
-      <img src={heartswithrate} className="heartswithrate" />
+      {/* <img src={heartswithrate} className="heartswithrate" /> */}
       <Box>
         <img src={leftcloud} className="cloudleft" />
         <div className="textleft">
