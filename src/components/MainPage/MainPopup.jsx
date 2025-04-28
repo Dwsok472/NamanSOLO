@@ -10,7 +10,7 @@ const PopupWrapper = styled.div`
   bottom: 300px;
   left: 85%;
   transform: translateX(-50%);
-  z-index: 9999;
+  z-index: 998;
 `;
 
 const PopupContainer = styled.div`
