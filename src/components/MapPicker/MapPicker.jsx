@@ -82,7 +82,7 @@ const AddressText = styled.p`
   font-weight: 500;
 `;
 
-const MapPicker = ({ onSelect }) => {
+function MapPicker({ onSelect, onClose, initialAddress = "", initialLat = 37.5665, initialLng = 126.978 }) {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
@@ -97,13 +97,25 @@ const MapPicker = ({ onSelect }) => {
   }, []);
 
   const initMap = () => {
-    const seoul = { lat: 37.5665, lng: 126.978 };
+    const center = { lat: initialLat, lng: initialLng };
     const mapInstance = new window.google.maps.Map(mapRef.current, {
-      center: seoul,
+      center: center,
       zoom: 13,
     });
     setMap(mapInstance);
+  
+    const location = new window.google.maps.LatLng(initialLat, initialLng);
+    const newMarker = new window.google.maps.Marker({
+      position: location,
+      map: mapInstance,
+      icon: {
+        url: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+        scaledSize: new window.google.maps.Size(40, 40),
+      },
+    });
+    setMarker(newMarker);
   };
+  
 
   const handleSearchInput = async (e) => {
     const input = e.target.value;
