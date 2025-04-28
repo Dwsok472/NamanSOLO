@@ -75,7 +75,7 @@ const CategoryContainer = styled.div`
   flex-wrap: wrap;
   overflow-y: auto;
   height: 770px;
-  width: 100%;
+  width: 90%;
   margin: 0 auto;
   &::-webkit-scrollbar {
     width: 7px; /* 세로 스크롤바의 너비를 8px로 설정 */
