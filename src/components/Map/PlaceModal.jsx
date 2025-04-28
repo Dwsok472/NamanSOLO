@@ -43,17 +43,16 @@ const CloseButton = styled.button`
   }
 `;
 
-function PlaceModal({ place, onClose, onEdit, onDelete }) {  // ✅ onDelete 추가 받기
+function PlaceModal({ place, onClose, onEdit, onDelete, isAdmin }) {
   return (
     <ModalBackground onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>✖</CloseButton>
         <PlaceDetail
           place={place}
-          onShowMap={() => window.open(`https://map.kakao.com/?q=${encodeURIComponent(place.address)}`, '_blank')}
           onEdit={onEdit}
           onDelete={onDelete}
-          isAdmin={true}
+          isAdmin={isAdmin}
         />
       </ModalContent>
     </ModalBackground>

@@ -86,12 +86,20 @@ function PlaceDetail({ place, onEdit, onDelete, isAdmin }) {
     try {
       const { lat, lng } = await geocodeByAddress(place.address);
       setMapCoords({ lat, lng });
-      setShowMap((prev) => !prev); 
+      setShowMap((prev) => !prev);
+  
+      setTimeout(() => {
+        const mapWrapper = document.getElementById('map-wrapper');
+        if (mapWrapper) {
+          mapWrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300); 
     } catch (error) {
       console.error('주소 변환 실패:', error);
       alert('주소를 찾을 수 없습니다.');
     }
   };
+  
 
   return (
     <DetailWrapper>
@@ -125,7 +133,7 @@ function PlaceDetail({ place, onEdit, onDelete, isAdmin }) {
       </ButtonGroup>
 
       {showMap && mapCoords && (
-        <MapWrapper>
+        <MapWrapper id="map-wrapper">
           <MapPicker
             initialAddress={place.address}
             initialLat={mapCoords.lat}

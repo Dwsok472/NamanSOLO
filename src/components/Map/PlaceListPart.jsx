@@ -27,7 +27,7 @@ const RegionTitle = styled.h3`
   text-align: center;
   font-weight: 700;
   margin-bottom: 15px;
-  margin-top: 15px;
+  margin-top: 30px;
   color: white;
   text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
 `;
@@ -85,9 +85,12 @@ const AddButton = styled.button`
 const PaginationWrapper = styled.div`
   display: flex;
   justify-content: center;
-  /* margin-top: 20px; */
-  gap: 8px;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 12px;
+  padding: 10px 0;
 `;
+
 
 const PageButton = styled.button`
   background: white;
@@ -240,6 +243,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
             setSelectedPlace(null);
           }}
           onDelete={() => handleDeletePlace(selectedPlace.id)}
+          isAdmin={isAdmin}
         />
       )}
 
