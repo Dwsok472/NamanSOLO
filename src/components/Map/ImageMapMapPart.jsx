@@ -13,16 +13,18 @@ const MapWrapper = styled.div`
 `;
 
 const MapImage = styled.img`
-  width: 750px;
+  width: 100%;
+  max-width: 500px; // 크기 제한 추가
   height: auto;
   object-fit: contain;
-  margin-left: -7.1%;
+  margin: 0;
 `;
+
 
 const RegionLabel = styled.div`
   position: absolute;
   transform: translate(-50%, -50%);
-  z-index: 3;
+  z-index: 5;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -41,7 +43,7 @@ const RegionLabel = styled.div`
   }
   .tooltip {
     position: absolute;
-    bottom: 100%; /* picker 위에 */
+    bottom: 100%;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(77, 77, 77, 0.9);
@@ -61,15 +63,15 @@ const RegionLabel = styled.div`
 `;
 
 const regions = [
-  { name: '인천,서울,경기', top: 20, left: 28 },
+  { name: '인천,서울,경기', top: 20, left: 38 },
   { name: '강원도', top: 15, left: 55 },
-  { name: '충청남도', top: 40, left: 28 },
-  { name: '충청북도', top: 34, left: 45 },
-  { name: '전라북도', top: 55, left: 38 },
-  { name: '전라남도', top: 63, left: 27 },
+  { name: '충청남도', top: 40, left: 38 },
+  { name: '충청북도', top: 34, left: 52 },
+  { name: '전라북도', top: 52, left: 43 },
+  { name: '전라남도', top: 63, left: 37 },
   { name: '경상북도', top: 45, left: 68 },
-  { name: '경상남도', top: 58, left: 57 },
-  { name: '제주도', top: 91, left: 15 },
+  { name: '경상남도', top: 58, left: 62 },
+  { name: '제주도', top: 91, left: 30 },
 ];
 
 function ImageMapMapPart({ onRegionClick }) {

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import Lottie from 'lottie-react';
+import mapjson from '../img/map.json';
 
 // import background from "../img/back2.jpg";
 import place from '../img/place.png';
@@ -21,86 +23,10 @@ const Container = styled.div`
   align-items: center;
 `;
 
-// const BackgroundImage = styled.img`
-//   width: 100%;
-//   position: absolute;
-//   top: 150px;
-//   left: 0;
-//   z-index: -1;
-//   opacity: 0.3;
-// `;
-
-const BannerBox = styled.div`
-  width: 100vw;
-  position: relative;
-  top: 0;
-  z-index: 1;
-`;
-
-const SlideImage = styled.div`
-  position: relative;
-  width: 100%;
-  background-color: #ffffff;
-
-  .image {
-    width: 100%;
-    height: 350px;
-    object-fit: cover;
-    opacity: 0.8;
-    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-  }
-`;
-
-const Focus = styled.button`
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  font-size: 1rem;
-  font-weight: 700;
-  color: white;
-  background-color: #ff9996;
-  border-radius: 30px;
-  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
-  &:focus {
-    outline: none;
-  }
-  &:hover {
-    background-color: white;
-    border: 1px solid #ff9996;
-    color: #141414;
-  }
-`;
-
-const NavButton = styled.button`
-  position: absolute;
-  bottom: 16px;
-  border: none;
-  font-size: 1.2rem;
-  padding: 8px 12px;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 2;
-  ${({ $left }) => $left && `left: 16px;`}
-  ${({ $right }) => $right && `right: 16px;`}
-  background: transparent;
-
-  img {
-    object-fit: cover;
-    width: 20px;
-    height: 20px;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
 const ContentBox = styled.div`
   display: flex;
   width: 100%;
-  height: calc(100vh - 60px); /* 뷰포트 기준 높이 설정 */
+  height: calc(100vh - 60px);
   flex-direction: row;
 
   @media (max-width: 768px) {
@@ -117,35 +43,37 @@ const LeftBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 2px dashed #ffa8a8;
+  /* border-right: 2px dashed #ffa8a8; */
   pointer-events: all;
 
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
     border-right: none;
-    border-bottom: 2px dashed #ffa8a8;
+    /* border-bottom: 2px dashed #ffa8a8; */
   }
 `;
 
 const RightBox = styled.div`
-  flex: 1;
+  flex: 1.5;
   width: 50%;
   height: 100%;
-  background-color: #75c7c3;
+  background-color: #f6f2ea;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-left: 2px dashed #75c7c3;
+  /* border-left: 2px dashed #75c7c3; */
   pointer-events: none;
+  margin-top: 30px;
 
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
     border-left: none;
-    border-top: 2px dashed #75c7c3;
+    /* border-top: 2px dashed #75c7c3; */
   }
 `;
+
 
 const InnerBox = styled.div`
   width: 100%;
@@ -158,72 +86,6 @@ const InnerBox = styled.div`
   }
 `;
 
-const Wrap = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 10px;
-  margin-left: 130px;
-  display: flex;
-  flex-direction: column;
-
-  h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    /* text-align: start; */
-  }
-
-  .hash {
-    font-weight: 700;
-    padding: 8px;
-    text-decoration: underline;
-    text-decoration-color: #ffa8a8;
-    text-decoration-thickness: 2px;
-    /* text-align: start; */
-  }
-
-  .highlight {
-    color: #ff1778;
-    text-decoration: none;
-  }
-`;
-
-const HashWrap = styled.div`
-  display: flex;
-  gap: 12px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-  justify-content: start;
-`;
-
-const BoxWrap = styled.div`
-  padding: 10px;
-  align-items: center;
-  margin-top: 160px;
-  margin-left: 110px;
-`;
-
-const Box = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  margin-bottom: 20px;
-
-  .place,
-  .question,
-  .heart {
-    object-fit: cover;
-    width: 50px;
-    height: 50px;
-  }
-`;
-
-const Text = styled.div`
-  font-size: 1.1rem;
-  font-weight: 700;
-  padding-left: 10px;
-`;
-
 const ScrollWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -231,6 +93,125 @@ const ScrollWrapper = styled.div`
   justify-content: center;
   height: 100%;
 `;
+
+const CardWrapper = styled.div`
+  width: 1000px;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  position: relative;
+  margin-left: 120px;
+  display: flex;
+  flex-direction: column;
+`;
+
+
+const AnimationArea = styled.div`
+  width: 100%;
+  height: 650px;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const LottieWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TextOverlay = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  h3 {
+    font-size: 1.5rem;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #c9c9c9;
+    white-space: pre-line;
+  }
+`;
+
+const StyledLottie = styled(Lottie)`
+  width: 100%;
+  height: 100%;
+`;
+
+const MapCardWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MapAnimationArea = styled.div`
+  width: 100%;
+  height: 650px;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const LabelGuide = styled.div`
+  margin-top: 20px;
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 14px;
+
+  img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+    color: #444;
+  }
+`;
+
+const GuideText = styled.p`
+  font-size: 16px; /* 글자 좀 키우고 */
+  color: #ff9900; /* 주황색 계열 강조 */
+  font-weight: bold; /* 굵게 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* 살짝 그림자 효과 */
+  margin: 0;
+`;
+
 
 function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -349,33 +330,22 @@ function MainMap() {
           <InnerBox $full>
             {!selectedRegion ? (
               <>
-                <Wrap>
-                  <h1>
-                    <span className="highlight">가장 행복한 하루</span>를 <br />
-                    보낼 오늘
-                  </h1>
+               <CardWrapper>
+               <AnimationArea>
+                <LottieWrapper>
+                  <StyledLottie
+                    animationData={mapjson}
+                    loop
+                    speed={0.5}
+                  />
+                </LottieWrapper>
+              </AnimationArea>
+                <TextOverlay>
+                  <h3>마음이 가는 지역을 클릭해보세요</h3>
+                  <p>두분의 특별한 하루가 시작됩니다.</p>
+                </TextOverlay>
+              </CardWrapper>
 
-                  <HashWrap>
-                    <span className="hash">#데이트</span>
-                    <span className="hash">#이색체험</span>
-                    <span className="hash">#핫플</span>
-                    <span className="hash">#힐링</span>
-                  </HashWrap>
-                </Wrap>
-                <BoxWrap>
-                  <Box>
-                    <img src={place} className="place" alt="place" />
-                    <Text>데이트할 장소에 대한 추천이 필요하시나요 ?</Text>
-                  </Box>
-                  <Box>
-                    <img src={question} className="question" alt="question" />
-                    <Text>데이트할 장소가 마땅치 않나요?</Text>
-                  </Box>
-                  <Box>
-                    <img src={heart} className="heart" alt="heart" />
-                    <Text>연인과의 추억을 쌓으세요</Text>
-                  </Box>
-                </BoxWrap>
               </>
             ) : (
               <ScrollWrapper key={selectedRegion || 'default'}>
@@ -391,10 +361,23 @@ function MainMap() {
         </LeftBox>
 
         <RightBox>
-          <InnerBox>
-            <ImageMapMapPart onRegionClick={setSelectedRegion} />
+          <InnerBox $full>
+            <MapCardWrapper>
+              <MapAnimationArea>
+                <LottieWrapper style={{ pointerEvents: 'none' }}>
+                  <ImageMapMapPart onRegionClick={setSelectedRegion} />
+                </LottieWrapper>
+              </MapAnimationArea>
+            </MapCardWrapper>
+
+            <LabelGuide>
+              <img src={place} alt="place" />
+              <GuideText>아이콘을 클릭하여 추천장소를 확인해보세요.</GuideText>
+            </LabelGuide>
           </InnerBox>
         </RightBox>
+
+
       </ContentBox>
     </Container>
   );
