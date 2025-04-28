@@ -83,7 +83,7 @@ const HeroText = styled.h1`
   font-size: 5rem;
   font-weight: 700;
   margin-top: 30px;
-  color: #dd7676;
+  color: #fdfdfd;
 
   span {
     display: block;
@@ -225,26 +225,26 @@ function Hero({ scrollToStory }) {
       <Star src={star} alt="star" $top="15%" $left="35%" />
       <Star src={star} alt="star" $top="35%" $left="5%" />
       <Star src={star} alt="star" $top="50%" $left="50%" />
-      <div className='a1'></div>
-      <div className='a2'></div>
-      <Wrap>
-        <div className='box'>
-          <div className='box1'>
-            <span>We ARE</span>
-          </div>
+      {/* <div className='a1'></div>
+      <div className='a2'></div> */}
+      {/* <Wrap> */}
+      {/* <div className='box'>
+        <div className='box1'>
+          <span>We ARE</span>
         </div>
-        <HeroText>
-          연인과 함께하는 오늘을,
-          <span>잘 담아두고 있나요?</span>
-        </HeroText>
-        <HeroDesc>
-          잊지못할 그날을 기억하고 기념해요,
-          <br />
-          <strong>WeARE가 함께할게요.</strong>
-        </HeroDesc>
-        <CTAButton onClick={handleSaveClick}>지금 바로 담아두기</CTAButton>
+      </div> */}
+      <HeroText>
+        연인과 함께하는 오늘을,
+        <span>잘 담아두고 있나요?</span>
+      </HeroText>
+      <HeroDesc>
+        잊지못할 그날을 기억하고 기념해요,
+        <br />
+        <strong>WeARE가 함께할게요.</strong>
+      </HeroDesc>
+      <CTAButton onClick={handleSaveClick}>지금 바로 담아두기</CTAButton>
 
-      </Wrap>
+      {/* </Wrap> */}
       {/* <VisualRow>
         <FloatImage src={couple2} alt="커플 이미지 1" className="couple2" />
         <FloatImage src={couple4} alt="커플 이미지 2" className="couple3" />
