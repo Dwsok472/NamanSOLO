@@ -92,7 +92,7 @@ function Header(props) {
             </Link>
           </li>
           <li>
-            <li onClick={() => {
+            <span onClick={() => {
               closeSidebar();
               if (!isLoggedIn) {
                 alert("로그인 후 이용이 가능합니다");
@@ -103,7 +103,7 @@ function Header(props) {
               }
             }} className='other'>
               선물 랭킹
-            </li>
+            </span>
           </li>
 
           {user?.authority === 'ROLE_ADMIN' && (
@@ -138,11 +138,12 @@ function Header(props) {
               ))}
             {isLoggedIn ? <li
               onClick={() => {
+                navigate("/");
                 logout();
                 closeSidebar();
               }}
             >
-              (<span>로그아웃</span>)
+              <span>로그아웃</span>
             </li> : <></>}
           </>
 
