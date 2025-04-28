@@ -12,6 +12,9 @@ const Card = styled.div`
   position: relative;
   overflow: hidden;
 
+  animation: float ${({ $duration }) => $duration || 3}s ease-in-out infinite;
+  animation-delay: ${({ $delay }) => $delay || 0}s;
+
   &:hover {
     transform: scale(1.1);
   }
@@ -24,6 +27,17 @@ const Card = styled.div`
   &:hover .back {
     opacity: 1;
     transform: translateY(0);
+  }
+  @keyframes float {
+    0% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-10px) scale(1);
+    }
+    100% {
+      transform: translateY(0) scale(1);
+    }
   }
 `;
 
@@ -84,9 +98,9 @@ const Back = styled.div`
   padding: 20px;
 `;
 
-const BubbleCard = ({ icon, title, meta, $bgColor, $backColor }) => {
+const BubbleCard = ({ icon, title, meta, $bgColor, $backColor, $delay, $duration }) => {
   return (
-    <Card>
+    <Card $delay={$delay} $duration={$duration}>
       <Front className="front" $bgColor={$bgColor}>
         <CardTitle dangerouslySetInnerHTML={{ __html: title }} />
         <CardImage src={icon} alt="icon" />

@@ -5,7 +5,7 @@ import location from '../../img/location.png';
 import leftkey from '../../img/leftkey.png';
 import rightkey from '../../img/rightkey.png';
 import Modal from '../../Album/Modal';
-import MapPicker from '../../Story/MapPicker';
+import MapPicker from '../../MapPicker/MapPicker';
 import { IconClose, IconClose1, IconImage } from '../../Icons';
 import axios from 'axios';
 

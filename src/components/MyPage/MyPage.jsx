@@ -27,7 +27,7 @@ const Container = styled.div`
   padding: 40px;
   margin: 0 auto;
   width: 80%;
-  /* background-color: #f6f2ea; */
+  padding-top: 100px;
 `;
 
 const ProfileCard = styled.div`

@@ -62,14 +62,15 @@ function Header(props) {
   return (
     <>
       <Container $show={showHeader}>
+        <Hamburger onClick={() => setSidebarOpen(true)}>
+          <FontAwesomeIcon icon={faBars} />
+        </Hamburger>
         <Link to="/">
           <Logo ref={logoRef} $visible={showLogo !== false}>
             {logoText}
           </Logo>
         </Link>
-        <Hamburger onClick={() => setSidebarOpen(true)}>
-          <FontAwesomeIcon icon={faBars} />
-        </Hamburger>
+
       </Container>
 
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
@@ -120,7 +121,7 @@ function Header(props) {
             </li>
             {isSidebarSubOpen &&
               subMenuItems.map(({ to, label }) => (
-                <li key={to}>
+                <li key={to} className='sub'>
                   <li to={to} onClick={() => {
                     closeSidebar();
                     if (!isLoggedIn) {
@@ -170,7 +171,7 @@ const Container = styled.header`
   width: 100%;
   height: 78px;
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   align-items: center;
   padding: 0 2rem;
   position: fixed;
@@ -197,8 +198,9 @@ const Hamburger = styled.div`
   z-index: 1001;
 
   svg {
-    font-size: 2rem;
-    color: #bb1616;
+    font-size: 2.5rem;
+    color: #dd7676;
+
   }
 `;
 
@@ -206,12 +208,13 @@ const Sidebar = styled.div`
   position: fixed;
   top: 0;
   left: ${({ $open }) => ($open ? '0' : '-300px')};
-  width: 200px;
+  width: 250px;
   height: 100%;
   background-color: #8c0d17;
   transition: left 0.3s ease;
   z-index: 1000;
   padding: 100px 20px 0;
+  padding-left: 33px;
 
   ul {
     list-style: none;
@@ -238,9 +241,12 @@ const Sidebar = styled.div`
         color: #fff;
         text-decoration: none;
         font-size: 1rem;
-        font-weight: 700;
+        font-weight: 500;
         cursor: pointer;
       }
+    }
+    .sub{
+      padding: 1px;
     }
   }
 `;

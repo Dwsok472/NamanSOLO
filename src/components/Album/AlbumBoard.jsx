@@ -250,13 +250,13 @@ const AlbumBoard = () => {
 export default AlbumBoard;
 
 const BoardWrapper = styled.div`
-  padding-top: 10px;
+  padding-top: 100px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  height: 850px;
+  height: 920px;
   margin: 0 auto;
   /* width: 80%; */
 `;
