@@ -36,7 +36,7 @@ const ContentBox = styled.div`
 `;
 
 const LeftBox = styled.div`
-  flex: 3;
+  flex: 2.5;
   width: 50%;
   height: 100%;
   overflow: hidden;

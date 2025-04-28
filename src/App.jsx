@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -65,8 +66,17 @@ const GlobalStyle = createGlobalStyle`
 function AppRoutes() {
   const location = useLocation();
   const isMainPage = location.pathname === '/';
+  const [showLogo, setShowLogo] = useState(false);
 
   const hide = location.pathname.startsWith('/login');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLogo(true);  
+    }, 4000);
+
+    return () => clearTimeout(timer); 
+  }, []); 
 
   return (
     <AppWrapper>
@@ -75,6 +85,7 @@ function AppRoutes() {
       {!hide && (
         <Header
           logoText="WeARE"
+          showLogo={showLogo}
           menuItems={[
             { to: '/album/all', label: '전체 앨범' },
             { to: '/map', label: '맵' },
