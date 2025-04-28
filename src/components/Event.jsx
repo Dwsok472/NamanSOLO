@@ -18,6 +18,7 @@ const Title = styled.h1`
   color: #1f0606;
   margin-top: 100px;
   margin-bottom: 20px;
+  user-select: none;
 `;
 
 const Subtitle = styled.h3`
@@ -30,6 +31,25 @@ const Subtitle = styled.h3`
 const CategoryContainer = styled.div`
   width: 90%;
   margin: 0 auto 70px;
+`;
+
+const GroupTitle = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  user-select: none;
+`;
+
+const TopLabel = styled.div`
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #777;
+  text-align: center;
+  letter-spacing: 1px;
+  opacity: 0.8;
 `;
 
 const GiftList = styled.div`
@@ -164,13 +184,6 @@ function Event() {
     }
   };
 
-  // useEffect(() => {
-  //   window.scrollTo({
-  //     top: 0,
-  //     behavior: "smooth",
-  //   });
-  // }, [currentPage]);
-
   return (
     <>
       <Title>선물랭킹 TOP10</Title>
@@ -178,6 +191,11 @@ function Event() {
 
       <Container>
         <CategoryContainer>
+          <GroupTitle>
+            <TopLabel>MAN</TopLabel>
+            <TopLabel>WOMAN</TopLabel>
+          </GroupTitle>
+
           <GiftList>
             {pageRows.map((row, rowIndex) => (
               <GiftRow key={rowIndex}>
