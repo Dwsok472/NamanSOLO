@@ -33,25 +33,6 @@ const CategoryContainer = styled.div`
   margin: 0 auto 70px;
 `;
 
-const GroupTitle = styled.div`
-  width: 80%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 5px;
-  user-select: none;
-`;
-
-const TopLabel = styled.div`
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #777;
-  text-align: center;
-  letter-spacing: 1px;
-  opacity: 0.8;
-`;
-
 const GiftList = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,22 +43,22 @@ const GiftRow = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 100px; /* 남자 그룹과 여자 그룹 사이 */
+  gap: 100px;
 `;
 
 const GiftGroup = styled.div`
   display: flex;
-  gap: 20px; /* 그룹 내 아이템 간격 */
+  gap: 20px;
 `;
 
 const GiftItem = styled.div`
-  width: 300px;
+  width: 330px;
   border: 1px solid #e3e3e3;
   border-radius: 12px;
   padding: 12px;
   background: #ffffffee;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(100, 100, 00, 0.1);
+  box-shadow: 0 2px 6px rgba(100, 100, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
@@ -120,12 +101,40 @@ const ButtonWrapper = styled.div`
   margin-top: 30px;
 `;
 
+const Button = styled.div`
+  width: 82%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: left;
+  gap: 20px;
+  align-items: center;
+`;
+
+const TabButton = styled.button`
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: ${(props) => (props.active ? "700" : "600")};
+  color: ${(props) => (props.active ? "#f6f2ea" : "#8c0d17")};
+  background-color: ${(props) => (props.active ? "#8c0d17" : "#f6f2ea")};
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #8c0d17;
+    color: #f6f2ea;
+  }
+`;
+
 function Event() {
   const [maleGifts, setMaleGifts] = useState([]);
   const [femaleGifts, setFemaleGifts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const [activeTab, setActiveTab] = useState("woman");
 
   const stripHTML = (html) => {
     const div = document.createElement("div");
@@ -158,13 +167,12 @@ function Event() {
   // 남자/여자 각각 2개씩 끊어서 줄 만들기
   const rows = [];
   const maxLength = Math.max(maleGifts.length, femaleGifts.length);
-  for (let i = 0; i < maxLength; i += 2) {
-    const maleRow = maleGifts.slice(i, i + 2);
-    const femaleRow = femaleGifts.slice(i, i + 2);
+  for (let i = 0; i < maxLength; i += 4) {
+    const maleRow = maleGifts.slice(i, i + 4);
+    const femaleRow = femaleGifts.slice(i, i + 4);
     rows.push({ maleRow, femaleRow });
   }
 
-  // 한 페이지에 2줄씩 (8개)
   const rowsPerPage = 1;
   const pageStart = currentPage * rowsPerPage;
   const pageRows = rows.slice(pageStart, pageStart + rowsPerPage);
@@ -191,45 +199,75 @@ function Event() {
 
       <Container>
         <CategoryContainer>
-          <GroupTitle>
-            <TopLabel>MAN</TopLabel>
-            <TopLabel>WOMAN</TopLabel>
-          </GroupTitle>
+          <Button>
+            <TabButton
+              onClick={() => {
+                setActiveTab("woman");
+                setCurrentPage(0); // 탭 변경 시 페이지를 0으로 초기화
+              }}
+              active={activeTab === "woman"}
+            >
+              여성을 위한 추천 선물
+            </TabButton>
+            <TabButton
+              onClick={() => {
+                setActiveTab("man");
+                setCurrentPage(0); // 탭 변경 시 페이지를 0으로 초기화
+              }}
+              active={activeTab === "man"}
+            >
+              남성을 위한 추천 선물
+            </TabButton>
+          </Button>
 
           <GiftList>
             {pageRows.map((row, rowIndex) => (
               <GiftRow key={rowIndex}>
-                <GiftGroup>
-                  {row.maleRow.map((gift, index) => (
-                    <GiftItem key={`male-${rowIndex}-${index}`}>
-                      <a
-                        href={gift.shoppingUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
-                        <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
-                        <p>가격: {Number(gift.price).toLocaleString()}원</p>
-                      </a>
-                    </GiftItem>
-                  ))}
-                </GiftGroup>
+                {activeTab === "man" && (
+                  <GiftGroup>
+                    {row.maleRow.map((gift, index) => (
+                      <GiftItem key={`male-${rowIndex}-${index}`}>
+                        <a
+                          href={gift.shoppingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={gift.imageUrl}
+                            alt={stripHTML(gift.title)}
+                          />
+                          <h3
+                            dangerouslySetInnerHTML={{ __html: gift.title }}
+                          />
+                          <p>가격: {Number(gift.price).toLocaleString()}원</p>
+                        </a>
+                      </GiftItem>
+                    ))}
+                  </GiftGroup>
+                )}
 
-                <GiftGroup>
-                  {row.femaleRow.map((gift, index) => (
-                    <GiftItem key={`female-${rowIndex}-${index}`}>
-                      <a
-                        href={gift.shoppingUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img src={gift.imageUrl} alt={stripHTML(gift.title)} />
-                        <h3 dangerouslySetInnerHTML={{ __html: gift.title }} />
-                        <p>가격: {Number(gift.price).toLocaleString()}원</p>
-                      </a>
-                    </GiftItem>
-                  ))}
-                </GiftGroup>
+                {activeTab === "woman" && (
+                  <GiftGroup>
+                    {row.femaleRow.map((gift, index) => (
+                      <GiftItem key={`female-${rowIndex}-${index}`}>
+                        <a
+                          href={gift.shoppingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={gift.imageUrl}
+                            alt={stripHTML(gift.title)}
+                          />
+                          <h3
+                            dangerouslySetInnerHTML={{ __html: gift.title }}
+                          />
+                          <p>가격: {Number(gift.price).toLocaleString()}원</p>
+                        </a>
+                      </GiftItem>
+                    ))}
+                  </GiftGroup>
+                )}
               </GiftRow>
             ))}
           </GiftList>
