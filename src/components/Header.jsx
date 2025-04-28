@@ -138,6 +138,7 @@ function Header(props) {
               ))}
             {isLoggedIn ? <li
               onClick={() => {
+                navigate("/");
                 logout();
                 closeSidebar();
               }}
