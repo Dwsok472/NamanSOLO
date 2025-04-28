@@ -8,6 +8,7 @@ import feed from '../img/feed.json';
 const Section = styled.section`
   background: linear-gradient(to bottom, #f6f2ea, #fce8f0, #f2ebdc);
   padding: 120px 20px;
+  height: 100vh;
 `;
 
 const Container = styled.div`
@@ -91,7 +92,7 @@ const Node = styled.div`
   height: 160px;
   border-radius: 50%;
   background: white;
-  border: 1.5px solid #7c2a2a;
+  border: 1.5px solid #bb1616;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -204,10 +205,10 @@ function SearchFeatureSection() {
 
   return (
     <Section>
-      <Title>
+      {/* <Title>
         두 사람의 순간들이 어떻게 하나의 이야기로{'\n'}
         이어졌는지, 들어볼래요?
-      </Title>
+      </Title> */}
 
       <Container>
         <Left>

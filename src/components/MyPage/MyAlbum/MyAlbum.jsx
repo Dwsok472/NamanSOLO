@@ -232,6 +232,7 @@ const AlbumWrapper = styled.div`
   justify-content: center; // 수평 가운데 정렬
   align-items: flex-start; // 위에서부터 정렬
   padding: 60px 20px 100px;
+  padding-top: 100px;
 `;
 const AlbumInner = styled.div`
   width: 100%;

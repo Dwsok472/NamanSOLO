@@ -16,9 +16,9 @@ const float = keyframes`
 `;
 
 const HeroWrapper = styled.section`
-  background: linear-gradient(to bottom, #f6f2ea, #eb9898);
+  background: linear-gradient(to bottom, #f6f2ea, #dd7676, #f6f2ea );
   /* background-color: #f6f2ea; */
-  min-height: 92vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,14 +27,63 @@ const HeroWrapper = styled.section`
   position: relative;
   padding: 60px 20px;
   overflow: hidden;
+  .a1{
+    position: absolute;
+    min-height: 600px;
+    width: 900px;
+    background-color: #f6f2ea;
+    top: 22.4%;
+    right: 25.8%;
+    z-index: 2;
+    border: 1px solid #afafaf;
+  }
+.a2{
+    position: absolute;
+    min-height: 600px;
+    width: 900px;
+    background-color: #f6f2ea;
+    border: 1px solid #afafaf;
+    top: 21%;
+    right: 24.9%;
+    z-index: 1;
+  }
 `;
 
+const Wrap = styled.div`
+margin-top: 100px;
+  background-color: #ffffff;
+  height: 600px;
+  width: 900px;
+  position: relative;
+  z-index: 1000000;
+  border: 1px solid #afafaf;
+.box{
+width: 100%;
+height: 150px;
+background-color: #f6f2ea;
+position: relative;
+.box1{
+  width: 100%;
+position: absolute;
+top: 0;
+height: 30px;
+border-bottom: 1px solid #b6b6b6;
+z-index: 10;
+text-align: start;
+span{
+  padding-left: 10px;
+  color: #bb6f6f;
+  font-weight: 500;
+}
+}
+  }
+
+`
 const HeroText = styled.h1`
-  font-size: 4.5rem;
-  font-weight: 800;
-  /* margin-bottom: 24px; */
+  font-size: 5rem;
+  font-weight: 700;
   margin-top: 30px;
-  color: #bb1616;
+  color: #dd7676;
 
   span {
     display: block;
@@ -176,17 +225,26 @@ function Hero({ scrollToStory }) {
       <Star src={star} alt="star" $top="15%" $left="35%" />
       <Star src={star} alt="star" $top="35%" $left="5%" />
       <Star src={star} alt="star" $top="50%" $left="50%" />
-      <HeroText>
-        연인과 함께하는 오늘을,
-        <span>잘 담아두고 있나요?</span>
-      </HeroText>
-      <HeroDesc>
-        잊지못할 그날을 기억하고 기념해요,
-        <br />
-        <strong>WeARE가 함께할게요.</strong>
-      </HeroDesc>
-      <CTAButton onClick={handleSaveClick}>지금 바로 담아두기</CTAButton>
+      <div className='a1'></div>
+      <div className='a2'></div>
+      <Wrap>
+        <div className='box'>
+          <div className='box1'>
+            <span>We ARE</span>
+          </div>
+        </div>
+        <HeroText>
+          연인과 함께하는 오늘을,
+          <span>잘 담아두고 있나요?</span>
+        </HeroText>
+        <HeroDesc>
+          잊지못할 그날을 기억하고 기념해요,
+          <br />
+          <strong>WeARE가 함께할게요.</strong>
+        </HeroDesc>
+        <CTAButton onClick={handleSaveClick}>지금 바로 담아두기</CTAButton>
 
+      </Wrap>
       {/* <VisualRow>
         <FloatImage src={couple2} alt="커플 이미지 1" className="couple2" />
         <FloatImage src={couple4} alt="커플 이미지 2" className="couple3" />

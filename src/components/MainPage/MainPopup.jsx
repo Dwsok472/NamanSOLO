@@ -7,14 +7,14 @@ import img3 from '../img/3.jpg';
 
 const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 300px;
+  bottom: 350px;
   left: 85%;
   transform: translateX(-50%);
   z-index: 998;
 `;
 
 const PopupContainer = styled.div`
-  width: 380px;
+  width: 330px;
   background: white;
   border-radius: 15px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.25);
@@ -24,7 +24,7 @@ const PopupContainer = styled.div`
 
 const BannerImage = styled.img`
   width: 100%;
-  height: 400px; 
+  height: 300px; 
   object-fit: cover; 
   display: block;
   transition: opacity 0.5s ease-in-out;

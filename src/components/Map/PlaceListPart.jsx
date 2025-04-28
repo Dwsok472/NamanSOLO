@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import MapPicker from '../Story/MapPicker';
+import MapPicker from '../MapPicker/MapPicker';
 import {
   uploadRecommendPlaceImages,
   saveRecommendPlace,
@@ -505,7 +505,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [isEditingInModal, setIsEditingInModal] = useState(false);
   const [showFormInModal, setShowFormInModal] = useState(false);
 
-  
+
   const showPrevImage = (placeId, total) => {
     const currentIndex = activeImageIndex[placeId] || 0;
     setActiveImageIndex((prev) => ({
@@ -603,10 +603,10 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const handleImage = (e) => {
     const files = Array.from(e.target.files);
     if (files.length > 0) {
-      setImages(files); 
+      setImages(files);
       setNewPlace((prev) => ({
         ...prev,
-        images: files, 
+        images: files,
         preview: URL.createObjectURL(files[0]),
       }));
     }
@@ -729,7 +729,7 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         alert('이미지를 업로드해주세요.');
         return;
       }
-  
+
       const placeDTO = {
         name: newPlace.name,
         address: newPlace.address,
@@ -739,27 +739,27 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         latitude: 0,
         longitude: 0,
       };
-  
+
       const savedPlace = await uploadRecommendPlaceImages(
         placeDTO,
         newPlace.images
       );
-  
+
       if (savedPlace?.id && selectedCategories.length > 0) {
         await registerCategoryMapping(savedPlace.id, selectedCategories);
-  
+
         const updatedPlaces = await getPlacesByRegion(selectedRegion);
-  
+
         setRegionPlaces((prev) => ({
           ...prev,
           [selectedRegion]: updatedPlaces,
         }));
-  
+
         setFilteredPlaces(updatedPlaces);
       }
-  
+
       alert(' 등록 성공!');
-  
+
       setNewPlace({
         name: '',
         category: '',
@@ -768,43 +768,43 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
         images: [],
         preview: '',
       });
-      setShowFormInModal(false); 
-  
+      setShowFormInModal(false);
+
     } catch (err) {
       console.error('등록 실패:', err);
     }
 
     const updatedPlaces = await getPlacesByRegion(selectedRegion);
 
-setRegionPlaces((prev) => ({
-  ...prev,
-  [selectedRegion]: updatedPlaces,
-}));
+    setRegionPlaces((prev) => ({
+      ...prev,
+      [selectedRegion]: updatedPlaces,
+    }));
 
-setFilteredPlaces(updatedPlaces)
+    setFilteredPlaces(updatedPlaces)
   };
-  
+
   const smoothScrollTo = (container, targetOffset) => {
     const start = container.scrollTop;
     const change = targetOffset - start;
     const duration = 500;
     let currentTime = 0;
-  
+
     const easeOut = (t) => t * (2 - t);
-  
+
     const animateScroll = () => {
       currentTime += 20;
       const val = easeOut(currentTime / duration);
       container.scrollTop = start + change * val;
-  
+
       if (currentTime < duration) {
         setTimeout(animateScroll, 20);
       }
     };
-  
+
     animateScroll();
   };
-  
+
 
   if (!selectedRegion) return <Wrapper>지역을 선택해주세요</Wrapper>;
 
@@ -815,41 +815,41 @@ setFilteredPlaces(updatedPlaces)
       <CategoryFilterGroup>
         {['전체', ...categories].map((cat) => (
           <CategoryButton
-          key={cat}
-          onClick={() => {
-            if (activeCategory !== cat) {
-              setActiveCategory(cat);
-              setSelectedId(null);
-            }
-          }}
-          $active={activeCategory === cat}
-        >
-          {cat}
-        </CategoryButton>
+            key={cat}
+            onClick={() => {
+              if (activeCategory !== cat) {
+                setActiveCategory(cat);
+                setSelectedId(null);
+              }
+            }}
+            $active={activeCategory === cat}
+          >
+            {cat}
+          </CategoryButton>
         ))}
       </CategoryFilterGroup>
 
       <ListContainer ref={listContainerRef}>
-      {filteredPlaces?.map((place) => (
-        <React.Fragment key={`place-${place.id}`}>
-          <Card
-            ref={(el) => (cardRefs.current[place.id] = el)}
-            onClick={() => setSelectedPlace(place)}
-          >
-      <Thumbnail
-        src={
-          place.mediaUrl && place.mediaUrl.length > 0
-            ? `${place.mediaUrl[0].mediaUrl}`
-            : 'https://via.placeholder.com/60?text=No+Image'
-        }
-        alt={place.name}
-      />
-      <Info>
-        <div className="category">{place.category}</div>
-        <div className="title">{place.name}</div>
-        <div className="address">{place.address}</div>
-      </Info>
-    </Card>
+        {filteredPlaces?.map((place) => (
+          <React.Fragment key={`place-${place.id}`}>
+            <Card
+              ref={(el) => (cardRefs.current[place.id] = el)}
+              onClick={() => setSelectedPlace(place)}
+            >
+              <Thumbnail
+                src={
+                  place.mediaUrl && place.mediaUrl.length > 0
+                    ? `${place.mediaUrl[0].mediaUrl}`
+                    : 'https://via.placeholder.com/60?text=No+Image'
+                }
+                alt={place.name}
+              />
+              <Info>
+                <div className="category">{place.category}</div>
+                <div className="title">{place.name}</div>
+                <div className="address">{place.address}</div>
+              </Info>
+            </Card>
 
             {selectedId === place.id && (
               <Detail>
@@ -860,10 +860,9 @@ setFilteredPlaces(updatedPlaces)
                 {place.mediaUrl && place.mediaUrl.length > 0 ? (
                   <SliderWrapper>
                     <FixedSizeImage
-                      src={`${
-                        place.mediaUrl[activeImageIndex[place.id] || 0]
+                      src={`${place.mediaUrl[activeImageIndex[place.id] || 0]
                           ?.mediaUrl
-                      }`}
+                        }`}
                       alt="장소 이미지"
                     />
                     {place.mediaUrl.length > 1 && (
@@ -1041,183 +1040,183 @@ setFilteredPlaces(updatedPlaces)
       </ListContainer>
 
       {showFormInModal && (
-  <ModalBackground onClick={() => setShowFormInModal(false)}>
-    <ModalContent onClick={(e) => e.stopPropagation()}>
-      <ModalCloseBtn onClick={() => setShowFormInModal(false)}>
-        ✖
-      </ModalCloseBtn>
+        <ModalBackground onClick={() => setShowFormInModal(false)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalCloseBtn onClick={() => setShowFormInModal(false)}>
+              ✖
+            </ModalCloseBtn>
 
-      <h2>장소 등록</h2>
+            <h2>장소 등록</h2>
 
-      <FormGroup>
-        <label>이름</label>
-        <input
-          type="text"
-          value={newPlace.name}
-          onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
-          placeholder="장소 이름"
-        />
-      </FormGroup>
+            <FormGroup>
+              <label>이름</label>
+              <input
+                type="text"
+                value={newPlace.name}
+                onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
+                placeholder="장소 이름"
+              />
+            </FormGroup>
 
-      <FormGroup>
-        <label>주소</label>
-        <input
-          type="text"
-          value={newPlace.address}
-          onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })}
-          placeholder="장소 주소"
-        />
-      </FormGroup>
+            <FormGroup>
+              <label>주소</label>
+              <input
+                type="text"
+                value={newPlace.address}
+                onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })}
+                placeholder="장소 주소"
+              />
+            </FormGroup>
 
-      <FormGroup>
-        <label>설명</label>
-        <textarea
-          value={newPlace.description}
-          onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })}
-          placeholder="장소 설명"
-        />
-      </FormGroup>
+            <FormGroup>
+              <label>설명</label>
+              <textarea
+                value={newPlace.description}
+                onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })}
+                placeholder="장소 설명"
+              />
+            </FormGroup>
 
-      <FormGroup>
-        <label>이미지</label>
-        <input type="file" multiple onChange={handleImage} />
-        {newPlace.preview && (
-          <img
-            src={newPlace.preview}
-            alt="미리보기"
-            style={{ width: '100%', marginTop: '10px', borderRadius: '8px' }}
-          />
-        )}
-      </FormGroup>
+            <FormGroup>
+              <label>이미지</label>
+              <input type="file" multiple onChange={handleImage} />
+              {newPlace.preview && (
+                <img
+                  src={newPlace.preview}
+                  alt="미리보기"
+                  style={{ width: '100%', marginTop: '10px', borderRadius: '8px' }}
+                />
+              )}
+            </FormGroup>
 
-      <ButtonGroup>
-        <SmallBtn onClick={handleRegister}>등록</SmallBtn>
-        <SmallBtn onClick={() => setShowFormInModal(false)}>취소</SmallBtn>
-      </ButtonGroup>
-    </ModalContent>
-  </ModalBackground>
-)}
+            <ButtonGroup>
+              <SmallBtn onClick={handleRegister}>등록</SmallBtn>
+              <SmallBtn onClick={() => setShowFormInModal(false)}>취소</SmallBtn>
+            </ButtonGroup>
+          </ModalContent>
+        </ModalBackground>
+      )}
 
 
       {selectedPlace && (
-  <ModalBackground onClick={() => {
-    setSelectedPlace(null);
-    setShowMapInModal(false);
-    setIsEditingInModal(false);
-  }}>
-    <ModalContent onClick={(e) => e.stopPropagation()}>
-      <ModalCloseBtn onClick={() => {
-        setSelectedPlace(null);
-        setShowMapInModal(false);
-        setIsEditingInModal(false);
-      }}>
-        ✖
-      </ModalCloseBtn>
+        <ModalBackground onClick={() => {
+          setSelectedPlace(null);
+          setShowMapInModal(false);
+          setIsEditingInModal(false);
+        }}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalCloseBtn onClick={() => {
+              setSelectedPlace(null);
+              setShowMapInModal(false);
+              setIsEditingInModal(false);
+            }}>
+              ✖
+            </ModalCloseBtn>
 
-      {/* 수정 모드 */}
-      {isEditingInModal ? (
-        <div>
-        <h2>수정하기</h2>
-      
-        <FormGroup>
-          <label>이름</label>
-          <input
-            type="text"
-            value={newPlace.name}
-            placeholder="장소 이름"
-            onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
-          />
-        </FormGroup>
-      
-        <FormGroup>
-          <label>주소</label>
-          <input
-            type="text"
-            value={newPlace.address}
-            placeholder="장소 주소"
-            onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })}
-          />
-        </FormGroup>
-      
-        <FormGroup>
-          <label>설명</label>
-          <textarea
-            value={newPlace.description}
-            placeholder="장소 설명"
-            onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })}
-          />
-        </FormGroup>
-      
-        <ButtonGroup>
-          <SmallBtn onClick={handleSavePlace}>저장</SmallBtn>
-          <SmallBtn onClick={() => setIsEditingInModal(false)}>취소</SmallBtn>
-        </ButtonGroup>
-      </div>
-      
-      ) : (
-        <div>
-          <h2>{selectedPlace.name}</h2>
+            {/* 수정 모드 */}
+            {isEditingInModal ? (
+              <div>
+                <h2>수정하기</h2>
 
-          <FixedSizeImage
-            src={selectedPlace.mediaUrl?.[0]?.mediaUrl || 'https://via.placeholder.com/300x200'}
-            alt={selectedPlace.name}
-          />
+                <FormGroup>
+                  <label>이름</label>
+                  <input
+                    type="text"
+                    value={newPlace.name}
+                    placeholder="장소 이름"
+                    onChange={(e) => setNewPlace({ ...newPlace, name: e.target.value })}
+                  />
+                </FormGroup>
 
-          <p>{selectedPlace.address}</p>
-          <p>{selectedPlace.description}</p>
+                <FormGroup>
+                  <label>주소</label>
+                  <input
+                    type="text"
+                    value={newPlace.address}
+                    placeholder="장소 주소"
+                    onChange={(e) => setNewPlace({ ...newPlace, address: e.target.value })}
+                  />
+                </FormGroup>
 
-          {/* 지도 보기 */}
-          {showMapInModal && (
-            <MapWrapper id="map-in-modal" />
-          )}
+                <FormGroup>
+                  <label>설명</label>
+                  <textarea
+                    value={newPlace.description}
+                    placeholder="장소 설명"
+                    onChange={(e) => setNewPlace({ ...newPlace, description: e.target.value })}
+                  />
+                </FormGroup>
 
-          <ButtonGroup>
-            <SmallBtn onClick={() => setShowMapInModal(!showMapInModal)}>
-              {showMapInModal ? "지도 닫기" : "지도 보기"}
-            </SmallBtn>
+                <ButtonGroup>
+                  <SmallBtn onClick={handleSavePlace}>저장</SmallBtn>
+                  <SmallBtn onClick={() => setIsEditingInModal(false)}>취소</SmallBtn>
+                </ButtonGroup>
+              </div>
 
-            {isAdmin && (
-              <>
-                <SmallBtn onClick={() => {
-                  setIsEditingInModal(true);
-                  setNewPlace({
-                    name: selectedPlace.name,
-                    address: selectedPlace.address,
-                    description: selectedPlace.description,
-                    mediaUrl: selectedPlace.mediaUrl || [],
-                  });
-                }}>
-                  ✏ 수정
-                </SmallBtn>
+            ) : (
+              <div>
+                <h2>{selectedPlace.name}</h2>
 
-                <SmallBtn onClick={() => handleDelete(selectedPlace.id)}>
-                  🗑 삭제
-                </SmallBtn>
-              </>
+                <FixedSizeImage
+                  src={selectedPlace.mediaUrl?.[0]?.mediaUrl || 'https://via.placeholder.com/300x200'}
+                  alt={selectedPlace.name}
+                />
+
+                <p>{selectedPlace.address}</p>
+                <p>{selectedPlace.description}</p>
+
+                {/* 지도 보기 */}
+                {showMapInModal && (
+                  <MapWrapper id="map-in-modal" />
+                )}
+
+                <ButtonGroup>
+                  <SmallBtn onClick={() => setShowMapInModal(!showMapInModal)}>
+                    {showMapInModal ? "지도 닫기" : "지도 보기"}
+                  </SmallBtn>
+
+                  {isAdmin && (
+                    <>
+                      <SmallBtn onClick={() => {
+                        setIsEditingInModal(true);
+                        setNewPlace({
+                          name: selectedPlace.name,
+                          address: selectedPlace.address,
+                          description: selectedPlace.description,
+                          mediaUrl: selectedPlace.mediaUrl || [],
+                        });
+                      }}>
+                        ✏ 수정
+                      </SmallBtn>
+
+                      <SmallBtn onClick={() => handleDelete(selectedPlace.id)}>
+                        🗑 삭제
+                      </SmallBtn>
+                    </>
+                  )}
+                </ButtonGroup>
+              </div>
             )}
-          </ButtonGroup>
-        </div>
+          </ModalContent>
+        </ModalBackground>
       )}
-    </ModalContent>
-  </ModalBackground>
-)}
 
       {isAdmin && !showForm && (
         <AddButton
-        onClick={() => {
-          setShowFormInModal(true);
-          setSelectedId(null);
-          setEditingId(null);
-          setNewPlace({
-            name: '',
-            category: '',
-            address: '',
-            description: '',
-            images: [],
-            preview: '',
-          });
-        }}
-      >
+          onClick={() => {
+            setShowFormInModal(true);
+            setSelectedId(null);
+            setEditingId(null);
+            setNewPlace({
+              name: '',
+              category: '',
+              address: '',
+              description: '',
+              images: [],
+              preview: '',
+            });
+          }}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
               d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"

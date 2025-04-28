@@ -36,7 +36,7 @@ const Subtitle = styled.p`
 const Title = styled.h2`
   font-size: 3.5rem;
   font-weight: 800;
-  color: #8c0d17;
+  color: #dd7676;
 `;
 
 const CardGrid = styled.div`
@@ -71,8 +71,9 @@ const StoryMenuBubbles = () => {
             icon={storyall}
             title="다른 연인들의<br />이야기가 궁금하다면?"
             meta="전체 스토리"
-            $bgColor="#ff7f51"
-            $backColor="#fd7240"
+            $bgColor="#bb1616"
+            $backColor="#b93d3d"
+            $delay={0} $duration={3}
           />
         </Link>
         <div onClick={() => handleClick("/mypage/album")}>
@@ -80,8 +81,9 @@ const StoryMenuBubbles = () => {
             icon={mystory}
             title="우리의 추억,<br />하나 하나 놓치지 마세요!"
             meta="나의 스토리"
-            $bgColor="#ce4257"
-            $backColor="#ca344a"
+            $bgColor="#f5deb0"
+            $backColor="#f1e1bf"
+            $delay={1} $duration={3.5}
           />
         </div>
 
@@ -90,8 +92,9 @@ const StoryMenuBubbles = () => {
             icon={maincallender}
             title="너와 나의 기념일,<br />꼭 기억해요"
             meta="캘린더"
-            $bgColor="#be9e92"
-            $backColor="#a57b6c"
+            $bgColor="#dd7676"
+            $backColor="#da8b8b"
+            $delay={0.5} $duration={4}
           />
         </div>
         <Link to="/map">
@@ -99,8 +102,9 @@ const StoryMenuBubbles = () => {
             icon={mainmap}
             title="저희의 추천 명소를<br />구경해보실래요?"
             meta="데이트 장소 추천"
-            $bgColor="#8c1c13"
-            $backColor="#8b1209"
+            $bgColor="#c80a0a"
+            $backColor="#c53f3f"
+            $delay={1.5} $duration={3.2}
           />
         </Link>
       </CardGrid>
