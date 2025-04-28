@@ -69,7 +69,7 @@ const regions = [
   { name: '전라남도', top: 63, left: 27 },
   { name: '경상북도', top: 45, left: 68 },
   { name: '경상남도', top: 58, left: 57 },
-  { name: '제주도', top: 91, left: 30 },
+  { name: '제주도', top: 91, left: 15 },
 ];
 
 function ImageMapMapPart({ onRegionClick }) {

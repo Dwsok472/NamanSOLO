@@ -36,9 +36,9 @@ const ListContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  overflow-y: auto;
   width: 100%;
-  max-height: 70vh;
+  max-height: 71vh;
+  overflow-y: hidden;
   padding-right: 6px;
 
   &::-webkit-scrollbar {
@@ -82,6 +82,32 @@ const AddButton = styled.button`
   }
 `;
 
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  /* margin-top: 20px; */
+  gap: 8px;
+`;
+
+const PageButton = styled.button`
+  background: white;
+  color: black;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &.active {
+    background-color: #0c0c0c;
+    color: white;
+  }
+`;
+
 
 
 function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
@@ -92,8 +118,15 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [showFormModal, setShowFormModal] = useState(false);
   const [editingPlace, setEditingPlace] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   const categories = ['맛집', '카페', '호텔', '관광지', '포토존'];
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredPlaces.slice(indexOfFirstItem, indexOfLastItem);
+
 
   useEffect(() => {
     if (!selectedRegion) return;
@@ -157,14 +190,32 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
       />
 
       <ListContainer>
-        {filteredPlaces.map((place) => (
-          <PlaceCard
-            key={place.id}
-            place={place}
-            onClick={() => setSelectedPlace(place)}
-          />
-        ))}
+       {currentItems.map((place) => (
+        <PlaceCard
+          key={place.id}
+          place={place}
+          onClick={() => setSelectedPlace(place)}
+        />
+      ))}
       </ListContainer>
+
+      <PaginationWrapper>
+        <PageButton 
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          이전
+        </PageButton>
+
+        <PageButton 
+          onClick={() => setCurrentPage(prev => 
+            prev < Math.ceil(filteredPlaces.length / itemsPerPage) ? prev + 1 : prev
+          )}
+          disabled={currentPage >= Math.ceil(filteredPlaces.length / itemsPerPage)}
+        >
+          다음
+        </PageButton>
+      </PaginationWrapper>
 
       {/* 추가 버튼 (관리자만 보임) */}
       {isAdmin && !showFormModal && (

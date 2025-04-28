@@ -11,7 +11,6 @@ const DetailWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; 
   gap: 20px;
   overflow-y: auto;
 `;
@@ -36,7 +35,6 @@ const Description = styled.p`
   max-width: 80%;
 `;
 
-
 const ButtonGroup = styled.div`
   display: flex;
   gap: 8px;
@@ -58,30 +56,6 @@ const SmallButton = styled.button`
   }
 `;
 
-const MapModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-`;
-
-const MapModalContent = styled.div`
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 30px;
-  width: 95%;
-  max-width: 1100px;
-  max-height: 90%;
-  overflow-y: auto;
-  position: relative;
-`;
-
 const ImageWrapper = styled.div`
   width: 100%;
   max-width: 600px;
@@ -90,16 +64,29 @@ const ImageWrapper = styled.div`
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
 `;
 
+const MapWrapper = styled.div`
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+`;
+
+const Section = styled.div`
+  width: 100%;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+`;
+
 
 function PlaceDetail({ place, onEdit, onDelete, isAdmin }) {
-  const [showMapModal, setShowMapModal] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const [mapCoords, setMapCoords] = useState(null);
 
   const handleShowMap = async () => {
     try {
       const { lat, lng } = await geocodeByAddress(place.address);
       setMapCoords({ lat, lng });
-      setShowMapModal(true);
+      setShowMap((prev) => !prev); 
     } catch (error) {
       console.error('주소 변환 실패:', error);
       alert('주소를 찾을 수 없습니다.');
@@ -108,38 +95,26 @@ function PlaceDetail({ place, onEdit, onDelete, isAdmin }) {
 
   return (
     <DetailWrapper>
-      <Title>{place.name}</Title>
+       <Section>
+        <Title>{place.name}</Title>
+      </Section>
 
-      <Address>{place.address}</Address>
+      <Section>
+        <Address>{place.address}</Address>
+      </Section>
 
-      <Description>{place.description}</Description>
+        <Description>{place.description}</Description>
 
       {place.mediaUrl && place.mediaUrl.length > 0 && (
-          <ImageWrapper>
-        <ImageSlider images={place.mediaUrl.map((img) => img.mediaUrl)} />
+        <ImageWrapper>
+          <ImageSlider images={place.mediaUrl.map((img) => img.mediaUrl)} />
         </ImageWrapper>
-        )}
-
-        {showMapModal && mapCoords && (
-        <MapModalBackground onClick={() => setShowMapModal(false)}>
-            <MapModalContent onClick={(e) => e.stopPropagation()}>
-            <MapPicker
-                initialAddress={place.address}
-                initialLat={mapCoords.lat}
-                initialLng={mapCoords.lng}
-                onSelect={() => setShowMapModal(false)}
-                onClose={() => setShowMapModal(false)}
-            />
-            <SmallButton onClick={() => setShowMapModal(false)}>닫기</SmallButton>
-            </MapModalContent>
-        </MapModalBackground>
-        )}
+      )}
 
       <ButtonGroup>
         <SmallButton onClick={handleShowMap}>
-        지도 보기
+          {showMap ? '지도 닫기' : '지도 보기'}
         </SmallButton>
-
 
         {isAdmin && (
           <>
@@ -148,6 +123,19 @@ function PlaceDetail({ place, onEdit, onDelete, isAdmin }) {
           </>
         )}
       </ButtonGroup>
+
+      {showMap && mapCoords && (
+        <MapWrapper>
+          <MapPicker
+            initialAddress={place.address}
+            initialLat={mapCoords.lat}
+            initialLng={mapCoords.lng}
+            onSelect={() => {}}
+            onClose={() => {}}
+            hideSearch={true}
+          />
+        </MapWrapper>
+      )}
     </DetailWrapper>
   );
 }

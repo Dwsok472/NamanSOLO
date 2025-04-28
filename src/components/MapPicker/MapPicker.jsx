@@ -82,7 +82,10 @@ const AddressText = styled.p`
   font-weight: 500;
 `;
 
-function MapPicker({ onSelect, onClose, initialAddress = "", initialLat = 37.5665, initialLng = 126.978 }) {
+function MapPicker({ onSelect, onClose, initialAddress = "", 
+  initialLat = 37.5665, 
+  initialLng = 126.978,
+  hideSearch = false }) {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
@@ -100,7 +103,7 @@ function MapPicker({ onSelect, onClose, initialAddress = "", initialLat = 37.566
     const center = { lat: initialLat, lng: initialLng };
     const mapInstance = new window.google.maps.Map(mapRef.current, {
       center: center,
-      zoom: 13,
+      zoom: 18,
     });
     setMap(mapInstance);
   
@@ -238,15 +241,18 @@ function MapPicker({ onSelect, onClose, initialAddress = "", initialLat = 37.566
   return (
     <MapContainer>
       <Title> 위치 검색</Title>
-      <Controls>
-        <Input
-          type="text"
-          value={searchInput}
-          onChange={handleSearchInput}
-          placeholder="장소를 입력하세요"
-        />
-        <Button onClick={handleCurrentLocation}>현재 위치</Button>
-      </Controls>
+      {!hideSearch && (
+        <Controls>
+          <Input
+            type="text"
+            value={searchInput}
+            onChange={handleSearchInput}
+            placeholder="장소를 입력하세요"
+          />
+          <Button onClick={handleCurrentLocation}>현재 위치</Button>
+        </Controls>
+      )}
+
 
       {predictions.length > 0 && (
         <PredictionList>
