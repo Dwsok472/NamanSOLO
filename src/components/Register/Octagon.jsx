@@ -1,10 +1,5 @@
 import styled from "styled-components";
-import {
-  IconBirthday,
-  IconEmail,
-  IconPhone,
-  IconUser,
-} from "../Icons";
+import { IconBirthday, IconEmail, IconPhone, IconUser } from "../Icons";
 import { useEffect, useState } from "react";
 import { ModifyUserInfo } from "../api";
 import { checkEmailDuplicate, checkPhoneDuplicate } from "../api2";
@@ -13,7 +8,6 @@ const CardWrap = styled.div`
   width: ${(props) => props.$width || "550px"};
   margin: 0 auto;
   border-radius: 3px;
-
 `;
 
 const Card = styled.div`
@@ -36,7 +30,7 @@ const Buttom = styled.div`
   width: 100%;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr;
-  background-color: white;
+  background-color: #f6f2ea;
   border-radius: 10px;
   margin: 0 auto;
   gap: 10px;
@@ -60,7 +54,7 @@ const SmallBox = styled.div`
   position: relative;
   button {
     background-color: #a0a0a0;
-    font-size:0.6rem;
+    font-size: 0.6rem;
     font-weight: 700;
     border-radius: 20px;
     color: white;
@@ -79,11 +73,10 @@ const Input = styled.input`
   outline: none;
   padding-left: 30px;
   background-color: ${(props) => (props.$readOnly ? "#e0e0e0" : "#fefefe")};
-&::placeholder{
-font-size: 0.7rem;
-}
+  &::placeholder {
+    font-size: 0.7rem;
+  }
 `;
-
 
 const ButtonWrap = styled.div`
   display: flex;
@@ -92,7 +85,6 @@ const ButtonWrap = styled.div`
   height: auto;
   padding: 20px 0;
 `;
-
 
 // 회원가입 유저 정보 입력 및 마이프로필 커플 정보 조회 및 수정에서 사용
 function Octagon({
@@ -103,7 +95,7 @@ function Octagon({
   isProfilePage,
   data,
   onChange,
-  onStatusChange
+  onStatusChange,
 }) {
   const [name, setName] = useState(data.name);
   const [birthday, setBirthday] = useState(data.birthday);
@@ -153,7 +145,7 @@ function Octagon({
     setEmailStatus(false);
     setEmailButtonText("중복확인");
   }, [email]);
-  
+
   useEffect(() => {
     setPhoneStatus(false);
     setPhoneButtonText("중복확인");
@@ -186,8 +178,12 @@ function Octagon({
                 type="text"
                 value={name}
                 onChange={(e) => {
-                  const value = e.target.value.replace(/[^ㄱ-ㅎ가-힣a-zA-Z\s]/g, "");
-                  setName(value); if (onChange) {
+                  const value = e.target.value.replace(
+                    /[^ㄱ-ㅎ가-힣a-zA-Z\s]/g,
+                    ""
+                  );
+                  setName(value);
+                  if (onChange) {
                     onChange("name", value);
                   }
                 }}

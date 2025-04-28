@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { fetchFemalePresents, fetchMalePresents } from "./api2";
-import gift1 from "./img/gift1.jpg";
-import gift2 from "./img/gift2.jpg";
-import gift3 from "./img/gift3.jpg";
 
 const Container = styled.div`
   padding: 40px 20px;
@@ -22,10 +19,19 @@ const Title = styled.h1`
 `;
 
 const Subtitle = styled.h3`
+  width: 82%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: #5f5b5b;
-  margin-bottom: 30px;
+  opacity: 0.7;
+  /* margin-bottom: 30px; */
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid rgba(153, 153, 153, 0.5);
 `;
 
 const CategoryContainer = styled.div`
@@ -84,8 +90,17 @@ const GiftItem = styled.div`
   h3 {
     font-size: 1rem;
     margin: 10px 0 5px;
-    height: 50px;
+    width: 85%;
+    justify-content: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    /* overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; */
   }
 
   p {
@@ -104,9 +119,9 @@ const ButtonWrapper = styled.div`
 const Button = styled.div`
   width: 82%;
   margin: 0 auto;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   display: flex;
-  justify-content: left;
+  justify-content: center;
   gap: 20px;
   align-items: center;
 `;
@@ -207,7 +222,7 @@ function Event() {
               }}
               active={activeTab === "woman"}
             >
-              여성을 위한 추천 선물
+              여성 추천 선물
             </TabButton>
             <TabButton
               onClick={() => {
@@ -216,7 +231,7 @@ function Event() {
               }}
               active={activeTab === "man"}
             >
-              남성을 위한 추천 선물
+              남성 추천 선물
             </TabButton>
           </Button>
 
