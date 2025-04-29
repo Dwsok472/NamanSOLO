@@ -340,6 +340,9 @@ const Box = styled.div`
     padding-left: 10px;
     font-weight: 700;
   }
+  .title{
+    width: 400px;
+  }
   .button {
     display: flex;
     justify-content: end;
