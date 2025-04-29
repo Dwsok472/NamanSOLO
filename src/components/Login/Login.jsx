@@ -50,7 +50,13 @@ function Login() {
   };
 
   const handleGoMain = () => {
-    navigate("/"); // MainPage 이동
+    if (view=="register") {
+      confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.") ? 
+      navigate("/") : 
+      console.log("메인으로 이동 취소");
+    } else {
+      navigate("/"); // MainPage 이동
+    }
   };
 
   async function handleSubmit() {
@@ -179,7 +185,11 @@ function Login() {
           <RegisterStep1 onNext={() => navigate("/register")} />
         </FindIdCardWrap>
       )}
-      <Icon onClick={() => navigate(-1)}>
+      <Icon onClick={() =>{ if (view=="register") {
+        confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.") ? 
+        navigate("/") : 
+        console.log("메인으로 이동 취소");} 
+        else {navigate(-1)}}}>
         <IconBehind />
       </Icon>
     </Container>
