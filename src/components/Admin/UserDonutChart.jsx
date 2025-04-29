@@ -5,11 +5,14 @@ import styled from 'styled-components';
 
 const ChartContainer = styled.div`
   width: 100%;
-  height: 280px;
+  height: 380px;
   background: #fff;
   padding: 16px;
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
 `;
+
 
 const ChartTitle = styled.h4`
   text-align: center;

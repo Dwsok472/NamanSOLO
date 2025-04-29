@@ -13,12 +13,15 @@ import { getUserJoinDates } from '../api1';
 
 const ChartWrapper = styled.div`
   width: 100%;
-  height: 300px;
+  height: 400px;
   background: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
 `;
+
 
 const Title = styled.h3`
   margin-bottom: 10px;
