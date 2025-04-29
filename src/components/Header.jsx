@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useUserStore } from './Login/Login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { getCurrentUser } from './api2';
 
 function Header(props) {
   const {
@@ -31,6 +32,20 @@ function Header(props) {
   const [showHeader, setShowHeader] = useState(true);
   const lastScrollY = useRef(0);
 
+  useEffect(() => {
+    if (!isLoggedIn) return;
+  
+    const fetchUser = async () => {
+      try {
+        const userData = await getCurrentUser();
+        useUserStore.setState({ user: userData }); // Zustand에 직접 업데이트
+      } catch (err) {
+        console.error("유저 정보 불러오기 실패", err);
+      }
+    };
+  
+    fetchUser();
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,6 +86,12 @@ function Header(props) {
             {logoText}
           </Logo>
         </Link>
+        {isLoggedIn && user && (
+          <UserProfile>
+            <span className='username'>{user.username}</span>
+            <img className='userImage' src={user.mediaDTO?.mediaUrl}/>
+          </UserProfile>
+        )}
       </Container>
       )}
 
@@ -183,6 +204,17 @@ const Container = styled.header`
   /* background-color: white; */
   transition: transform 0.3s ease-in-out;
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(-100%)')};
+  .username {
+    align-items: end;
+  }
+  .userImage {
+
+  }
+`;
+
+const UserProfile = styled.div`
+  width: auto;
+  align-items: end;
 `;
 
 const Logo = styled.h1`
