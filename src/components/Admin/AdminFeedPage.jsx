@@ -8,6 +8,7 @@ import FeedAvgBox from './FeedAvgBox';
 import EventModal from './EventModal';
 
 const Layout = styled.div`
+margin-top: 80px;
   display: flex;
 `;
 

@@ -27,6 +27,7 @@ const dummyUsers = [
 ];
 
 const Layout = styled.div`
+margin-top: 80px;
   display: flex;
 `;
 
