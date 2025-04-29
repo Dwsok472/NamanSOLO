@@ -4,6 +4,7 @@ import heartswithrate from "../img/heartswithrate1.png";
 import NextButton from "../Button/NextButton";
 import { useRegisterStore } from "../api2";
 import CityDropdown from "./DropdownButton";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -111,6 +112,30 @@ function RegisterStep3({ onNext }) {
     setDDay(selected);
     setFormData({ dDay: selected });
   };
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ''; // 브라우저 기본 confirm 띄우기
+    };
+
+    const handlePopState = (e) => {
+      if (!window.confirm('정말 나가시겠습니까? 작성한 정보가 사라집니다.')) {
+        navigate(location.pathname, { replace: true }); 
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate, location.pathname]);
 
   const handleCitySelect = (selectedCity) => {
     setCity(selectedCity);
