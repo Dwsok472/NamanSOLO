@@ -11,6 +11,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { ResponsiveContainer } from 'recharts';
 import { getDailyFeedStats } from '../api1';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
@@ -28,9 +29,17 @@ const Container = styled.div`
   background: white;
   padding: 20px;
   border-radius: 12px;
-  width: 90%;
-  height: 400px;
+  width: 100%;
+  height: 350px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const LineChartWrapper = styled.div`
+  flex: 1;
+  position: relative;
 `;
 
 const Title = styled.h3`
@@ -104,6 +113,7 @@ const FeedLineChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: { legend: { display: false } },
     scales: {
       y: {
@@ -125,7 +135,10 @@ const FeedLineChart = () => {
         <span>{from} ~ {to}</span>
         <button onClick={() => setStartDate(prev => moveDays(prev, 7))}><FaChevronRight /></button>
       </Nav>
-      <Line data={chartData} options={options} />
+  
+      <LineChartWrapper>
+        <Line data={chartData} options={options} />
+      </LineChartWrapper>
     </Container>
   );
 };
