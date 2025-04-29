@@ -61,20 +61,18 @@ function Header(props) {
 
   return (
     <>
-      <Container $show={showHeader}>
       {(!isSidebarOpen&& 
-        <>
-          <Hamburger onClick={() => setSidebarOpen(true)}>
-            <FontAwesomeIcon icon={faBars} />
-          </Hamburger>
-          <Link to="/">
-            <Logo ref={logoRef} $visible={showLogo !== false}>
-              {logoText}
-            </Logo>
-          </Link>
-        </>
-      )}
+      <Container $show={showHeader}>
+        <Hamburger onClick={() => setSidebarOpen(true)}>
+          <FontAwesomeIcon icon={faBars} />
+        </Hamburger>
+        <Link to="/">
+          <Logo ref={logoRef} $visible={showLogo !== false}>
+            {logoText}
+          </Logo>
+        </Link>
       </Container>
+      )}
 
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
       <Sidebar ref={sidebarRef} $open={isSidebarOpen}>
