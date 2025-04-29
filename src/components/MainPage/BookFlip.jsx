@@ -142,7 +142,7 @@ const BookFlip = () => {
     if (isLoggedIn) {
       navigate('/mypage/album');
     } else {
-      navigate('/story/all');
+      navigate('/album/all');
     }
   };
 
