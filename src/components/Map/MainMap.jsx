@@ -1,23 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Lottie from 'lottie-react';
-import mapjson from '../img/map.json';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Lottie from "lottie-react";
+import mapjson from "../img/map.json";
 
 // import background from "../img/back2.jpg";
-import place from '../img/place.png';
-import question from '../img/question.png';
-import heart from '../img/heart.png';
-import course1 from '../img/banner1.jpg';
-import course2 from '../img/banner2.jpg';
-import course3 from '../img/banner3.jpg';
-import leftkey from '../img/leftkey.png';
-import rightkey from '../img/rightkey.png';
+import place from "../img/place.png";
+import question from "../img/question.png";
+import heart from "../img/heart.png";
+import course1 from "../img/banner1.jpg";
+import course2 from "../img/banner2.jpg";
+import course3 from "../img/banner3.jpg";
+import leftkey from "../img/leftkey.png";
+import rightkey from "../img/rightkey.png";
 
-import ImageMapMapPart from './ImageMapMapPart';
-import PlaceListPart from './PlaceListPart';
+import ImageMapMapPart from "./ImageMapMapPart";
+import PlaceListPart from "./PlaceListPart";
 
 const Container = styled.div`
   width: 100%;
+  height: 105vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,6 +26,7 @@ const Container = styled.div`
 
 const ContentBox = styled.div`
   display: flex;
+  margin-top: 70px;
   width: 100%;
   height: calc(100vh - 60px);
   flex-direction: row;
@@ -74,10 +76,9 @@ const RightBox = styled.div`
   }
 `;
 
-
 const InnerBox = styled.div`
   width: 100%;
-  max-width: ${({ $full }) => ($full ? 'none' : '600px')};
+  max-width: ${({ $full }) => ($full ? "none" : "600px")};
   padding: 40px;
   box-sizing: border-box;
 
@@ -106,7 +107,6 @@ const CardWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 
 const AnimationArea = styled.div`
   width: 100%;
@@ -212,11 +212,10 @@ const GuideText = styled.p`
   margin: 0;
 `;
 
-
 function MainMap() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [selectedRegion, setSelectedRegion] = useState(null);
-  const categories = ['전체', '맛집', '카페', '호텔', '관광지', '포토존'];
+  const categories = ["전체", "맛집", "카페", "호텔", "관광지", "포토존"];
   const [regionPlaces, setRegionPlaces] = useState({});
   const [categoryPlaces, setCategoryPlaces] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -250,13 +249,13 @@ function MainMap() {
   // });
 
   const slides = [
-    { label: '데이트 코스 1', image: course1 },
-    { label: '데이트 코스 2', image: course2 },
-    { label: '데이트 코스 3', image: course3 },
+    { label: "데이트 코스 1", image: course1 },
+    { label: "데이트 코스 2", image: course2 },
+    { label: "데이트 코스 3", image: course3 },
   ];
 
   const scrollToContent = () => {
-    const element = document.getElementById('contentBox');
+    const element = document.getElementById("contentBox");
     if (element) {
       const elementPosition = element.offsetTop;
       const offsetPosition = elementPosition - 78;
@@ -330,25 +329,20 @@ function MainMap() {
           <InnerBox $full>
             {!selectedRegion ? (
               <>
-               <CardWrapper>
-               <AnimationArea>
-                <LottieWrapper>
-                  <StyledLottie
-                    animationData={mapjson}
-                    loop
-                    speed={0.5}
-                  />
-                </LottieWrapper>
-              </AnimationArea>
-                <TextOverlay>
-                  <h3>마음이 가는 지역을 클릭해보세요</h3>
-                  <p>두분의 특별한 하루가 시작됩니다.</p>
-                </TextOverlay>
-              </CardWrapper>
-
+                <CardWrapper>
+                  <AnimationArea>
+                    <LottieWrapper>
+                      <StyledLottie animationData={mapjson} loop speed={0.5} />
+                    </LottieWrapper>
+                  </AnimationArea>
+                  <TextOverlay>
+                    <h3>마음이 가는 지역을 클릭해보세요</h3>
+                    <p>두분의 특별한 하루가 시작됩니다.</p>
+                  </TextOverlay>
+                </CardWrapper>
               </>
             ) : (
-              <ScrollWrapper key={selectedRegion || 'default'}>
+              <ScrollWrapper key={selectedRegion || "default"}>
                 <PlaceListPart
                   selectedRegion={selectedRegion}
                   regionPlaces={regionPlaces}
@@ -364,7 +358,7 @@ function MainMap() {
           <InnerBox $full>
             <MapCardWrapper>
               <MapAnimationArea>
-                <LottieWrapper style={{ pointerEvents: 'none' }}>
+                <LottieWrapper style={{ pointerEvents: "none" }}>
                   <ImageMapMapPart onRegionClick={setSelectedRegion} />
                 </LottieWrapper>
               </MapAnimationArea>
@@ -376,8 +370,6 @@ function MainMap() {
             </LabelGuide>
           </InnerBox>
         </RightBox>
-
-
       </ContentBox>
     </Container>
   );
