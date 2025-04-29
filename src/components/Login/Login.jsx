@@ -107,68 +107,74 @@ function Login() {
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
       {view === "login" && (
-        <CardWrap>
-          <Card>
-            <Top>
-              <H1>LOGIN</H1>
-            </Top>
-            <ButtomWrap>
-              <Buttom>
-                {/* 입력 필드들 */}
-                <SmallBox>
-                  <IconUser />
-                  <Input
-                    type="text"
-                    placeholder="아이디를 입력해주세요"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </SmallBox>
-                <SmallBox>
-                  <IconPassword />
-                  <Input
-                    type="password"
-                    placeholder="비밀번호를 입력해주세요"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </SmallBox>
+        <>
+          <CardWrap>              
+            <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
+            <Card>        
+              <Top>
+                <H1>LOGIN</H1>
+              </Top>
+              <ButtomWrap>
+                <Buttom>
+                  {/* 입력 필드들 */}
+                  <SmallBox>
+                    <IconUser />
+                    <Input
+                      type="text"
+                      placeholder="아이디를 입력해주세요"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </SmallBox>
+                  <SmallBox>
+                    <IconPassword />
+                    <Input
+                      type="password"
+                      placeholder="비밀번호를 입력해주세요"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </SmallBox>
 
-                <FindBox>
-                  <StyledButton onClick={() => handleViewChange("find-id")}>
-                    아이디 찾기
-                  </StyledButton>
-                  <StyledButton onClick={() => handleViewChange("find-pwd")}>
-                    비밀번호 찾기
-                  </StyledButton>
-                  <StyledButton onClick={() => handleViewChange("register")}>
-                    회원가입
-                  </StyledButton>
-                </FindBox>
+                  <FindBox>
+                    <StyledButton onClick={() => handleViewChange("find-id")}>
+                      아이디 찾기
+                    </StyledButton>
+                    <StyledButton onClick={() => handleViewChange("find-pwd")}>
+                      비밀번호 찾기
+                    </StyledButton>
+                    <StyledButton onClick={() => handleViewChange("register")}>
+                      회원가입
+                    </StyledButton>
+                  </FindBox>
 
-                <ButtonWrap>
-                  <LoginButton onClick={handleSubmit} />
-                </ButtonWrap>
-              </Buttom>
-            </ButtomWrap>
-          </Card>
-        </CardWrap>
+                  <ButtonWrap>
+                    <LoginButton onClick={handleSubmit} />
+                  </ButtonWrap>
+                </Buttom>
+              </ButtomWrap>
+            </Card>
+          </CardWrap>
+        </>
       )}
 
       {view === "find-id" && (
         <FindIdCardWrap>
+          <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
           <FindIdOrPwd isFindId={true} />
         </FindIdCardWrap>
       )}
 
       {view === "find-pwd" && (
         <FindIdCardWrap>
+          <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
           <FindIdOrPwd isFindId={false} />
         </FindIdCardWrap>
       )}
 
       {view === "register" && (
         <FindIdCardWrap>
+          <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
           <RegisterStep1 onNext={() => navigate("/register")} />
         </FindIdCardWrap>
       )}
@@ -357,4 +363,17 @@ const Container = styled.div`
   overflow: hidden;
   position: relative;
   background-color: white;
+  .main {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #dbd4d4;
+    background-color : #946969;
+    position: absolute;
+    top: 40px;
+    right: 30px;
+    &:hover {
+      color: #08a750;
+      background-color: #a1294d;
+    }
+  }
 `;
