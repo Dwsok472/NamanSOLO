@@ -114,7 +114,7 @@ function RegisterStep2({ onNext }) {
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       e.preventDefault();
-      e.returnValue = ''; // 브라우저 기본 confirm 띄우기
+      e.returnValue = '';
     };
 
     const handlePopState = (e) => {
