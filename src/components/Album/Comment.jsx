@@ -10,6 +10,7 @@ function Comment({ albumData, onCommentAdd }) {
   const [loading, setLoading] = useState(true); // 로딩 상태
   const [isCommentVisible, setIsCommentVisible] = useState({}); // 각 댓글의 답글 표시 여부 상태 관리
   const currentUser = useUserStore((state) => state.user?.username);
+  const isAdmin = useUserStore((state) => state.user?.authority);
 
   async function GetCommentByAlbumId() {
     try {
@@ -88,6 +89,34 @@ function Comment({ albumData, onCommentAdd }) {
     }));
   };
 
+  async function deleteByAdmin(id) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      const response = await axios.delete(
+        `/api/comment/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return alert(response.data);
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+      return null;
+    }
+  }
+
+  async function handleDeleteComment(id) {
+    const confirmDelete = window.confirm(`댓글을 정말 삭제하시겠어요?`);
+    if (!confirmDelete) return;
+    await deleteByAdmin(id);
+    setData((prev) => prev.filter((item) => item.id !== id));
+  }
+
+
   return (
     <Container>
       <CommentList>
@@ -98,6 +127,7 @@ function Comment({ albumData, onCommentAdd }) {
             <Box key={comment.id}>
               <span className="username">{comment.username}</span>
               <span className="date">{comment.addDate}</span>
+              {isAdmin === "ROLE_ADMIN" && <button className='admin' onClick={() => handleDeleteComment(comment.id)}>삭제</button>}
               <div className="wrap">
                 <Text>{comment.content}</Text>
                 <button
@@ -156,6 +186,7 @@ const Box = styled.div`
   padding-top: 3px;
   font-size: 1rem;
   color: #ffffff;
+position: relative;
   .username {
     padding-left: 10px;
     font-weight: 700;
@@ -179,7 +210,26 @@ const Box = styled.div`
       color: #cccccc;
     }
   }
+  .admin{
+  position: absolute;
+  right: 20px;
+background-color: #000;
+color: #fff;
+border-radius: 6px;
+border: 1px solid #444;
+font-size: 0.6rem;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+z-index: 100;
+&:hover {
+  background-color: #fff;
+  color: #000;
+}
+  }
 `;
+
+
 const Text = styled.div`
   width: 85%;
   padding-left: 10px;

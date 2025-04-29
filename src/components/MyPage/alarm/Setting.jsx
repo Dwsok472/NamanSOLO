@@ -323,7 +323,7 @@ function Setting({ onClose }) {
             </StyledWrapper>
           </AlarmItem>
           <AlarmItem>
-            <TextWrapper>기념일 7일 전 날씨 알람</TextWrapper>
+            <TextWrapper>기념일 3일 전 날씨 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
                 <input

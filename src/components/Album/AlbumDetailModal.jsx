@@ -22,6 +22,7 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
   const [userLikes, setUserLikes] = useState({}); // 유저별 좋아요 상태 관리
   const [commentCount, setCommentCount] = useState(albumData.comments.length);
   const currentUser = useUserStore((state) => state.user?.username);
+  const isAdmin = useUserStore((state) => state.user?.authority);
   const location = useLocation();
   console.log(albumData);
   console.log(userLikes);
@@ -91,6 +92,37 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
       return null;
     }
   }
+
+  async function deleteByAdmin(albumId) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      const response = await axios.delete(
+        `/api/album/delete/${albumId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return alert(response.data);
+    } catch (error) {
+      console.error('앨범 삭제 실패:', error);
+      return null;
+    }
+  }
+
+  //해당 ID를 가진 앨범을 삭제하기
+  async function handleDeleteAlbum(id) {
+    const confirmDelete = window.confirm(`앨범을 정말 삭제하시겠어요?`);
+    if (!confirmDelete) return;
+    await deleteByAdmin(id);
+    setSelectedAlbumId(null);
+    window.location.reload();
+  }
+
+
   // 해당 앨범에 전체 좋아요를 한 username을 가지고 오기
   const getAllGreats = async () => {
     const jwt = sessionStorage.getItem('jwt-token');
@@ -176,9 +208,9 @@ function AlbumDetailModal({ albumData, onClose, onEdit }) {
               />
             )}
             <div style={{ position: 'relative' }}>
-              {isMyPage && (
+              {isMyPage ? (
                 <EditButton onClick={() => onEdit(albumData)}>수정</EditButton>
-              )}
+              ) : isAdmin === "ROLE_ADMIN" && <Admin onClick={() => handleDeleteAlbum(albumData.id)}>삭제</Admin>}
               {currentMedia.mediaType === 'PICTURE' ? (
                 <img
                   src={currentMedia.mediaUrl}
@@ -404,6 +436,26 @@ const EditButton = styled.button`
     background-color: #fff;
     color: #000;
   }
+`;
+
+const Admin = styled.button`
+position: absolute;
+top: 10px;
+right: 10px;
+background-color: #000;
+color: #fff;
+padding: 6px 12px;
+border-radius: 6px;
+border: 1px solid #444;
+font-size: 0.9rem;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+z-index: 100;
+&:hover {
+  background-color: #fff;
+  color: #000;
+}
 `;
 
 const TopBar = styled.div`
