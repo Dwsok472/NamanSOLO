@@ -30,19 +30,15 @@ const IntroText = styled.div`
 `;
 
 const Intro = ({ showIntro, animateToLogo, logoPosition, displayText, slideOut }) => {
-  if (!showIntro) return null;
-
   return (
     <>
-      {logoPosition && (
-        <IntroText
-          $animateToLogo={animateToLogo}
-          $top={animateToLogo ? logoPosition.top : undefined}
-          $left={animateToLogo ? logoPosition.left : undefined}
-        >
-          {displayText}
-        </IntroText>
-      )}
+      <IntroText
+        $animateToLogo={animateToLogo}
+        $top={animateToLogo ? logoPosition?.top : undefined}
+        $left={animateToLogo ? logoPosition?.left : undefined}
+      >
+        {displayText}
+      </IntroText>
       <IntroWrapper $slideOut={slideOut} />     
     </>
   );

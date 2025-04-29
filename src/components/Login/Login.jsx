@@ -364,9 +364,12 @@ const Container = styled.div`
   position: relative;
   background-color: white;
   .main {
+    line-height: center;
+    padding: 7.5px;
+    width: 95px;
     font-size: 1rem;
-    font-weight: 500;
-    color: #dbd4d4;
+    font-weight: 700;
+    color: #fff;
     background-color : #946969;
     position: absolute;
     top: 40px;

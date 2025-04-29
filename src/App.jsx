@@ -67,18 +67,23 @@ function AppRoutes() {
   const location = useLocation();
   const isMainPage = location.pathname === "/";
   const [showLogo, setShowLogo] = useState(false);
+  const introPlayed = sessionStorage.getItem("introPlayed")
+  const logoRef = useRef(null);
 
   const hide =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/register");
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  useEffect(()=> {
+    if (isMainPage && !introPlayed) {
+      const timer = setTimeout(() => {
+        setShowLogo(true);
+        return ()=>clearTimeout(timer);
+      }, 3500);
+    } else {
       setShowLogo(true);
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, []);
+    }
+  }, [introPlayed]);
 
   return (
     <AppWrapper>
@@ -86,6 +91,7 @@ function AppRoutes() {
       <WebSocketManager />
       {!hide && (
         <Header
+          logoRef={logoRef}
           logoText="WeARE"
           showLogo={showLogo}
           menuItems={[
@@ -107,7 +113,7 @@ function AppRoutes() {
 
       <MainContent>
         <Routes>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<MainPage logoRef={logoRef} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterMain />} />
           <Route path="/album/all" element={<AlbumBoard key="all" />} />

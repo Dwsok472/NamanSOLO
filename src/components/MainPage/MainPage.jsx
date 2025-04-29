@@ -20,7 +20,7 @@ const MainContent = styled.div`
   user-select: ${({ $blur }) => ($blur ? 'none' : 'auto')};
 
   opacity: ${({ $show }) => ($show ? 1 : 0)};
-  transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(20px)')};
+  transform: none;
   transition: all 0.8s ease-in-out;
 `;
 
@@ -49,7 +49,7 @@ const LovePhrase = styled.h2`
   animation: ${floatUpDown} 3s ease-in-out infinite;
 `;
 
-function MainPage() {
+function MainPage({logoRef}) {
   const [displayText, setDisplayText] = useState('');
   const [showIntro, setShowIntro] = useState(() => {
     const played = sessionStorage.getItem('introPlayed');
@@ -60,7 +60,6 @@ function MainPage() {
   const [slideOut, setSlideOut] = useState(false);
   const [flipped, setFlipped] = useState(false);
   const fullTextRef = useRef('WeARE');
-  const logoRef = useRef(null);
   const [logoPosition, setLogoPosition] = useState(null);
   const [showLogo, setShowLogo] = useState(false);
   const didSetRef = useRef(false);
@@ -101,7 +100,6 @@ function MainPage() {
 
   useEffect(() => {
     if (!showIntro) {
-      // 인트로 안 보여줄 거면 그냥 바로 showMain true로
       setShowMain(true);
       setShowLogo(true);
 
@@ -130,7 +128,7 @@ function MainPage() {
 
   return (
     <>
-      <Header
+      {/* <Header
         logoRef={logoRef}
         showLogo={showLogo}
         logoText="WeARE"
@@ -149,7 +147,7 @@ function MainPage() {
         ]}
         loginText="로그인"
         signupText="회원가입"
-      />
+      /> */}
       <PageContainer>
         {showIntro && (
           <Intro
