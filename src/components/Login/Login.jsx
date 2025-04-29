@@ -365,7 +365,7 @@ const Container = styled.div`
   position: relative;
   background-color: white;
   .main {
-    line-height: center;
+    align-items: center;
     padding: 3px;
     width: 40px;
     height: 40px;
@@ -380,7 +380,7 @@ const Container = styled.div`
       transition: filter 0.3s ease;
       filter: brightness(0) invert(1);
       height: fit-content;
-      width: 30px;
+      width: 22px;
     }
     &:hover {
       background-color: #b84040;
