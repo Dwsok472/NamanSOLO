@@ -51,8 +51,21 @@ const ListContainer = styled.div`
   }
 `;
 
+
+const RegionTitleWrapper = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+`;
+
 const AddButton = styled.button`
-  position: absolute;
+  margin-top: 100px;
+  position: absolute; 
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
   bottom: 10px;
   right: 10px;
   width: 55px;
@@ -202,7 +215,20 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
 
   return (
     <Wrapper>
-      <RegionTitle>{selectedRegion} 장소</RegionTitle>
+      <RegionTitleWrapper>
+        <RegionTitle>{selectedRegion} 장소</RegionTitle>
+
+        {isAdmin && !showFormModal && (
+          <AddButton onClick={() => {
+            setEditingPlace(null);
+            setShowFormModal(true);
+          }}>
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" />
+            </svg>
+          </AddButton>
+        )}
+      </RegionTitleWrapper>
 
       <CategoryFilter
         categories={categories}
@@ -237,18 +263,6 @@ function PlaceListPart({ selectedRegion, regionPlaces, setRegionPlaces }) {
           다음
         </PageButton>
       </PaginationWrapper>
-
-      {/* 추가 버튼 (관리자만 보임) */}
-      {isAdmin && !showFormModal && (
-        <AddButton onClick={() => {
-          setEditingPlace(null); 
-          setShowFormModal(true);
-        }}>
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 5v14M5 12h14" stroke="currentColor" />
-          </svg>
-        </AddButton>
-      )}
 
       {/* 장소 상세 모달 */}
       {selectedPlace && (
