@@ -5,6 +5,7 @@ import styled from "styled-components";
 import LoginButton from "../Button/LoginButton";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import home from ".././img/home.png";
 import { useRef, useState } from "react";
 import Find from "../FindIdAndPwd/Find";
 import { UserLogin } from "../api";
@@ -103,13 +104,13 @@ function Login() {
 
   return (
     <Container>
-      <ImgWrap onClick={handleGoMain}>
+      <ImgWrap>
         <img src={images[currentImage]} alt={`slide-${currentImage}`} />
       </ImgWrap>
       {view === "login" && (
         <>
           <CardWrap>              
-            <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
+            <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
             <Card>        
               <Top>
                 <H1>LOGIN</H1>
@@ -160,21 +161,21 @@ function Login() {
 
       {view === "find-id" && (
         <FindIdCardWrap>
-          <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
+          <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
           <FindIdOrPwd isFindId={true} />
         </FindIdCardWrap>
       )}
 
       {view === "find-pwd" && (
         <FindIdCardWrap>
-          <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
+          <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
           <FindIdOrPwd isFindId={false} />
         </FindIdCardWrap>
       )}
 
       {view === "register" && (
         <FindIdCardWrap>
-          <button value="메인으로" className="main" onClick={handleGoMain}>메인으로</button>
+          <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
           <RegisterStep1 onNext={() => navigate("/register")} />
         </FindIdCardWrap>
       )}
@@ -365,18 +366,27 @@ const Container = styled.div`
   background-color: white;
   .main {
     line-height: center;
-    padding: 7.5px;
-    width: 95px;
-    font-size: 1rem;
-    font-weight: 700;
+    padding: 3px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     color: #fff;
-    background-color : #946969;
+    background-color : #a1294d;
     position: absolute;
     top: 40px;
-    right: 30px;
+    right: 43.5px;
+
+    img {
+      transition: filter 0.3s ease;
+      filter: brightness(0) invert(1);
+      height: fit-content;
+      width: 30px;
+    }
     &:hover {
-      color: #08a750;
-      background-color: #a1294d;
+      background-color: #b84040;
+      img {
+        filter: brightness(0) invert(0.8);
+      }
     }
   }
 `;

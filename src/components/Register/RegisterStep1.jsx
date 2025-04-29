@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { IconPassword, IconUser } from "../Icons";
 import NextButton from "../Button/NextButton";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { IconBehind } from "../Icons";
 import { checkUsernameDuplicate, useRegisterStore } from "../api2";
 
@@ -201,6 +201,28 @@ function RegisterStep1({ onNext }) {
   const pwdRef = useRef();
   const matchPwdRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      e.preventDefault();
+      e.returnValue = ''; // 브라우저 기본 confirm 띄우기
+    };
+
+    const handlePopState = (e) => {
+      if (!window.confirm('정말 나가시겠습니까? 작성한 정보가 사라집니다.')) {
+        navigate(location.pathname, { replace: true }); 
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate, location.pathname]);
 
   const handleChange = () => {
     setIsChecked(!isChecked);
