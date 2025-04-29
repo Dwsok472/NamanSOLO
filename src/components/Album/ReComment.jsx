@@ -8,6 +8,7 @@ function ReComment({ commentId }) {
   const [data, setData] = useState([]); // 리댓글 데이터
   const [loading, setLoading] = useState(true); // 로딩 상태
   const currentUser = useUserStore((state) => state.user?.username);
+  const isAdmin = useUserStore((state) => state.user?.authority);
 
   async function GetCommentByCommentId() {
     try {
@@ -73,6 +74,34 @@ function ReComment({ commentId }) {
     }
   };
 
+  async function deleteByAdmin(id) {
+    const jwt = sessionStorage.getItem('jwt-token');
+    if (!jwt) return;
+    try {
+      const response = await axios.delete(
+        `/api/recomment/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+
+      return alert(response.data);
+    } catch (error) {
+      console.error('댓글 삭제 실패:', error);
+      return null;
+    }
+  }
+
+  async function handleDeleteRecomment(id) {
+    const confirmDelete = window.confirm(`대댓글을 정말 삭제하시겠어요?`);
+    if (!confirmDelete) return;
+    await deleteByAdmin(id);
+    setData((prev) => prev.filter((item) => item.id !== id));
+  }
+
+
   return (
     <Container>
       <ReCommentList>
@@ -83,6 +112,7 @@ function ReComment({ commentId }) {
             <Box key={recomment.id}>
               <span className="username">{recomment.username}</span>
               <span className="date">{recomment.addDate}</span>
+              {isAdmin === "ROLE_ADMIN" && <button className='admin' onClick={() => handleDeleteRecomment(recomment.id)}>삭제</button>}
               <Text>{recomment.content}</Text>
             </Box>
           ))
@@ -127,6 +157,23 @@ const Box = styled.div`
   .date {
     padding-left: 10px;
     color: #999999;
+  }
+  .admin{
+  position: absolute;
+  right: 30px;
+color: #000;
+background-color: #f6f2ea;
+border: none;
+border-radius: 6px;
+font-size: 0.6rem;
+font-weight: bold;
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+z-index: 100;
+&:hover {
+background-color: #000;
+color: #fff;
+}
   }
 `;
 const Text = styled.div`
