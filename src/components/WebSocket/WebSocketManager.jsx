@@ -168,6 +168,8 @@ function WebSocketManager() {
         return "/mypage/album";
       case "FOLLOW":
         return "/mypage/follow";
+      case "TODO":
+        return "/mypage/todo";
       default:
         return "/";
     }
