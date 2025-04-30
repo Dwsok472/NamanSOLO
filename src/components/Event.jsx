@@ -37,6 +37,9 @@ const Subtitle = styled.h3`
 const CategoryContainer = styled.div`
   width: 90%;
   margin: 0 auto 70px;
+  .loading {
+    text-align: center;
+  }
 `;
 
 const GiftList = styled.div`
