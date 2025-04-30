@@ -50,10 +50,10 @@ function Login() {
   };
 
   const handleGoMain = () => {
-    if (view=="register") {
-      confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.") ? 
-      navigate("/") : 
-      console.log("메인으로 이동 취소");
+    if (view == "register") {
+      confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.")
+        ? navigate("/")
+        : console.log("메인으로 이동 취소");
     } else {
       navigate("/"); // MainPage 이동
     }
@@ -97,6 +97,11 @@ function Login() {
       throw error;
     }
   }
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -115,9 +120,11 @@ function Login() {
       </ImgWrap>
       {view === "login" && (
         <>
-          <CardWrap>              
-            <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
-            <Card>        
+          <CardWrap>
+            <button value="메인으로" className="main" onClick={handleGoMain}>
+              <img src={home} />
+            </button>
+            <Card>
               <Top>
                 <H1>LOGIN</H1>
               </Top>
@@ -140,6 +147,7 @@ function Login() {
                       placeholder="비밀번호를 입력해주세요"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={handleKeyDown}
                     />
                   </SmallBox>
 
@@ -167,29 +175,41 @@ function Login() {
 
       {view === "find-id" && (
         <FindIdCardWrap>
-          <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
+          <button value="메인으로" className="main" onClick={handleGoMain}>
+            <img src={home} />
+          </button>
           <FindIdOrPwd isFindId={true} />
         </FindIdCardWrap>
       )}
 
       {view === "find-pwd" && (
         <FindIdCardWrap>
-          <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
+          <button value="메인으로" className="main" onClick={handleGoMain}>
+            <img src={home} />
+          </button>
           <FindIdOrPwd isFindId={false} />
         </FindIdCardWrap>
       )}
 
       {view === "register" && (
         <FindIdCardWrap>
-          <button value="메인으로" className="main" onClick={handleGoMain}><img src={home}/></button>
+          <button value="메인으로" className="main" onClick={handleGoMain}>
+            <img src={home} />
+          </button>
           <RegisterStep1 onNext={() => navigate("/register")} />
         </FindIdCardWrap>
       )}
-      <Icon onClick={() =>{ if (view=="register") {
-        confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.") ? 
-        navigate("/") : 
-        console.log("메인으로 이동 취소");} 
-        else {navigate(-1)}}}>
+      <Icon
+        onClick={() => {
+          if (view == "register") {
+            confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.")
+              ? navigate("/")
+              : console.log("메인으로 이동 취소");
+          } else {
+            navigate(-1);
+          }
+        }}
+      >
         <IconBehind />
       </Icon>
     </Container>
@@ -381,7 +401,7 @@ const Container = styled.div`
     height: 40px;
     border-radius: 50%;
     color: #fff;
-    background-color : #a1294d;
+    background-color: #a1294d;
     position: absolute;
     top: 40px;
     right: 43.5px;
