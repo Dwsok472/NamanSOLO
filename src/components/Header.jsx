@@ -91,7 +91,10 @@ function Header(props) {
         {isLoggedIn && user && (
           <UserProfile onClick={()=>navigate("/mypage/todo")}>
             <img className='userImage' src={user.mediaDTO?.mediaUrl}/>
-            <span className='username'>{user.username}</span>
+            <div className='user'>
+              <span className='username'>{user.username}님</span>
+              <span className='welcome'>환영합니다!</span>
+            </div>
           </UserProfile>
         )}
       </Container>
@@ -220,16 +223,26 @@ const UserProfile = styled.div`
   align-items: center;
   gap: 10px;
   cursor: pointer;
-  .username {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #333;
-  }
+
   .userImage {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+  }
+  .user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .username {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;      
+  }
+  .welcome {
+    font-size:0.6rem;
+    color: #777;
   }
 `;
 
