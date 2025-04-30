@@ -147,18 +147,20 @@ function Header(props) {
               {isSidebarSubOpen &&
                 subMenuItems.map(({ to, label }) => (
                 <li key={to} className='sub'>
-                  <li to={to} onClick={() => {
-                    closeSidebar();
-                    if (!isLoggedIn) {
-                      alert("로그인 후 이용이 가능합니다");
-                      navigate('/login');
-                    }
-                    else {
-                      navigate(to);
-                    }
-                  }} className='others'>
-                    {label}
-                  </li>
+                  <ul>
+                    <li to={to} onClick={() => {
+                      closeSidebar();
+                      if (!isLoggedIn) {
+                        alert("로그인 후 이용이 가능합니다");
+                        navigate('/login');
+                      }
+                      else {
+                        navigate(to);
+                      }
+                    }} className='others'>
+                      {label}
+                    </li>
+                  </ul>
                 </li>
               ))}          
             </>
