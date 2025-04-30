@@ -90,8 +90,8 @@ function Header(props) {
         </Left>
         {isLoggedIn && user && (
           <UserProfile onClick={()=>navigate("/mypage/todo")}>
-            <span className='username'>{user.username}</span>
             <img className='userImage' src={user.mediaDTO?.mediaUrl}/>
+            <span className='username'>{user.username}</span>
           </UserProfile>
         )}
       </Container>
