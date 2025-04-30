@@ -135,14 +135,14 @@ const TabButton = styled.button`
   font-weight: ${(props) => (props.active ? "700" : "600")};
   color: ${(props) => (props.active ? "#f6f2ea" : "#8c0d17")};
   background-color: ${(props) => (props.active ? "#8c0d17" : "#f6f2ea")};
-  border: none;
+  border: 0.5px solid ${(props) => (props.active ? "#8c0d17" : "#f6f2ea")};
   border-radius: 6px;
   cursor: pointer;
   transition: 0.3s;
 
   &:hover {
-    background-color: #8c0d17;
-    color: #f6f2ea;
+    font-weight: 500;
+    border: 0.5px solid #7c7474;
   }
 `;
 
