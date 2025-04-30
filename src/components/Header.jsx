@@ -90,7 +90,7 @@ function Header(props) {
         </Left>
         {isLoggedIn && user && (
           <UserProfile onClick={()=>navigate("/mypage/todo")}>
-            {user.mediaDTO?.id === 1 ?
+            {user.mediaDTO?.id === 1 || 2 || 3 || 4 ?
               (<img className='userImage' src={user.mediaDTO?.mediaUrl} />)
               :(<img className='userImage' src={`${user.mediaDTO?.mediaUrl}?v=${new Date().getTime()}`}/>)
             }
