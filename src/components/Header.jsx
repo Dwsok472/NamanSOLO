@@ -90,7 +90,10 @@ function Header(props) {
         </Left>
         {isLoggedIn && user && (
           <UserProfile onClick={()=>navigate("/mypage/todo")}>
-            <img className='userImage' src={`${user.mediaDTO?.mediaUrl}?v=${new Date().getTime()}`}/>
+            {user.mediaDTO?.id === 1 ?
+              (<img className='userImage' src={user.mediaDTO?.mediaUrl} />)
+              :(<img className='userImage' src={`${user.mediaDTO?.mediaUrl}?v=${new Date().getTime()}`}/>)
+            }
             <div className='user'>
               <span className='username'>{user.username}님</span>
               <span className='welcome'>환영합니다!</span>
