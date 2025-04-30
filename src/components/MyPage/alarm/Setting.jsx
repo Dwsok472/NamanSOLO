@@ -4,8 +4,8 @@ import { IconClose } from "../../Icons";
 
 const Container = styled.div`
   position: absolute;
-  bottom: 50px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
-  right: 500px; // 화면 오른쪽에서 적당히 띄움
+  bottom: 118px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
+  right: 480px; // 화면 오른쪽에서 적당히 띄움
   z-index: 250;
 `;
 
@@ -14,7 +14,7 @@ const ModalContainer = styled.div`
   border-radius: 10px;
   min-width: 350px;
   max-width: 400px;
-  height: 430px;
+  height: 360px;
   text-align: center;
   position: relative;
   cursor: pointer;
@@ -187,12 +187,11 @@ function Setting({ onClose }) {
         if (!res.ok) throw new Error("인증 실패");
         const data = await res.json();
         setAlarmSettings({
+          storyLikeAlarm: data.great === "true",
+          followAlarm: data.follow === "true",
           storyCommentAlarm: data.comment === "true",
           storyReCommentAlarm: data.recomment === "true",
-          storyLikeAlarm: data.great === "true",
           anniversaryWeatherAlarm: data.weather === "true",
-          anniversaryOneMonthAlarm: data.todo === "true",
-          followAlarm: data.follow === "true",
         });
       } catch (err) {
         console.error("설정 불러오기 실패:", err);
@@ -270,6 +269,32 @@ function Setting({ onClose }) {
         </Top>
 
         <ContainerMain>
+          <AlarmItem>
+            <TextWrapper>좋아요 알람</TextWrapper>
+            <StyledWrapper>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={alarmSettings.storyLikeAlarm}
+                  onChange={() => handleSwitchChange("storyLikeAlarm")}
+                />
+                <span className="slider" />
+              </label>
+            </StyledWrapper>
+          </AlarmItem>
+          <AlarmItem>
+            <TextWrapper>팔로우 알람</TextWrapper>
+            <StyledWrapper>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={alarmSettings.followAlarm}
+                  onChange={() => handleSwitchChange("followAlarm")}
+                />
+                <span className="slider" />
+              </label>
+            </StyledWrapper>
+          </AlarmItem>
           {/* <AlarmItem>
             <TextWrapper>기념일 당일 알람</TextWrapper>
             <StyledWrapper>
@@ -309,19 +334,7 @@ function Setting({ onClose }) {
               </label>
             </StyledWrapper>
           </AlarmItem>
-          <AlarmItem>
-            <TextWrapper>좋아요 알람</TextWrapper>
-            <StyledWrapper>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={alarmSettings.storyLikeAlarm}
-                  onChange={() => handleSwitchChange("storyLikeAlarm")}
-                />
-                <span className="slider" />
-              </label>
-            </StyledWrapper>
-          </AlarmItem>
+
           <AlarmItem>
             <TextWrapper>기념일 3일 전 날씨 알람</TextWrapper>
             <StyledWrapper>
@@ -335,7 +348,7 @@ function Setting({ onClose }) {
               </label>
             </StyledWrapper>
           </AlarmItem>
-          <AlarmItem>
+          {/* <AlarmItem>
             <TextWrapper>기념일 7일 전에 알람</TextWrapper>
             <StyledWrapper>
               <label className="switch">
@@ -349,20 +362,8 @@ function Setting({ onClose }) {
                 <span className="slider" />
               </label>
             </StyledWrapper>
-          </AlarmItem>
-          <AlarmItem>
-            <TextWrapper>팔로우 알람</TextWrapper>
-            <StyledWrapper>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={alarmSettings.followAlarm}
-                  onChange={() => handleSwitchChange("followAlarm")}
-                />
-                <span className="slider" />
-              </label>
-            </StyledWrapper>
-          </AlarmItem>
+          </AlarmItem> */}
+
           {/* <AlarmItem>
             <TextWrapper>페이지 변환 알람</TextWrapper>
             <StyledWrapper>
