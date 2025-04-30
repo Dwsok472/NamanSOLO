@@ -21,7 +21,7 @@ const IntroText = styled.div`
   z-index: 10001;
   font-weight: bold;
   font-family: 'inherit';
-  color: #8c0d17;
+  color: #bb1616;
   font-size: ${({ $animateToLogo }) => ($animateToLogo ? '2.5rem' : '10rem')};
   top: ${({ $top }) => ($top !== undefined ? `${$top}px` : '50%')};
   left: ${({ $left }) => ($left !== undefined ? `${$left}px` : '50%')};
