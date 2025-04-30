@@ -9,9 +9,8 @@ import { useUserStore } from "../../Login/Login";
 import axios from "axios";
 // import { fetchMyAlarms } from "../../api3";
 
-
 const Container = styled.div`
-  position: absolute; /* 벨 버튼 기준으로 위치 */
+  position: fixed; /* 벨 버튼 기준으로 위치 */
   bottom: 50px; /* 버튼 아래 여백 */
   right: 100px; /* 오른쪽 정렬 */
   z-index: 20000;
@@ -216,11 +215,9 @@ function Alarm({ onClose /*, isOpen*/ }) {
   const currentUser = useUserStore((state) => state.user?.username);
   const { alarmList } = useAlarmList();
   useEffect(() => {
-    const filter = alarmList.filter(
-      (alarm) => alarm.recipient === currentUser
-    );
+    const filter = alarmList.filter((alarm) => alarm.recipient === currentUser);
     setFilteredAlarms(filter);
-  }, [alarmList, currentUser])
+  }, [alarmList, currentUser]);
 
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
 
@@ -454,10 +451,8 @@ function Alarm({ onClose /*, isOpen*/ }) {
                     >
                       삭제
                     </button>
-
                   )}
                 </AlarmItem>
-
               );
             })}
           </ContainerMain>

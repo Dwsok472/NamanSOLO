@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { IconClose } from "../../Icons";
 
 const Container = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 118px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
-  right: 480px; // 화면 오른쪽에서 적당히 띄움
+  right: 500px; // 화면 오른쪽에서 적당히 띄움
   z-index: 250;
 `;
 
