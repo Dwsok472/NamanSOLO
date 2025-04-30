@@ -162,13 +162,13 @@ function UserTable() {
           onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
           disabled={page === 0}
         >
-          ◀
+          이전
         </button>
         <button
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages - 1))}
           disabled={page >= totalPages - 1}
         >
-          ▶
+          다음
         </button>
       </Pagination>
     </TableWrapper>
