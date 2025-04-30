@@ -67,18 +67,18 @@ function AppRoutes() {
   const location = useLocation();
   const isMainPage = location.pathname === "/";
   const [showLogo, setShowLogo] = useState(false);
-  const introPlayed = sessionStorage.getItem("introPlayed")
+  const introPlayed = sessionStorage.getItem("introPlayed");
   const logoRef = useRef(null);
 
   const hide =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/register");
 
-  useEffect(()=> {
+  useEffect(() => {
     if (isMainPage && !introPlayed) {
       const timer = setTimeout(() => {
         setShowLogo(true);
-        return ()=>clearTimeout(timer);
+        return () => clearTimeout(timer);
       }, 3500);
     } else {
       setShowLogo(true);
