@@ -211,7 +211,7 @@ const Container = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 1002;
   /* background-color: white; */
   transition: transform 0.3s ease-in-out;
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(-100%)')};
