@@ -27,6 +27,7 @@ const HeroWrapper = styled.section`
   position: relative;
   padding: 60px 20px;
   overflow: hidden;
+  will-change: transform;
   .a1{
     position: absolute;
     min-height: 600px;

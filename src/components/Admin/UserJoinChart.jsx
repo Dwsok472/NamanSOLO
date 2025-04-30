@@ -105,7 +105,7 @@ function UserJoinChart() {
 
   return (
     <ChartWrapper>
-      <Title>📅 일별 유저 가입 통계</Title>
+      <Title>일별 유저 가입 통계</Title>
       <ButtonGroup>
         <NavBtn onClick={handlePrev}>이전</NavBtn>
         <NavBtn onClick={handleNext}>다음</NavBtn>
@@ -114,7 +114,7 @@ function UserJoinChart() {
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
-          <YAxis allowDecimals={false} />
+          <YAxis allowDecimals={false} domain={[0, 30]} />
           <Tooltip />
           <Bar dataKey="count" fill="#ff5777" radius={[4, 4, 0, 0]} />
         </BarChart>
