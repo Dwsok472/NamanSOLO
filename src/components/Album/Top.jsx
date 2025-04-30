@@ -89,11 +89,11 @@ function Top({ filter, onFilterChange }) {
           prevResults.map((user) =>
             user.username === targetUsername
               ? {
-                  ...user, //기존 유저 객체를 그대로 복사
-                  // 관계만 변경해주기
-                  relation:
-                    user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
-                }
+                ...user, //기존 유저 객체를 그대로 복사
+                // 관계만 변경해주기
+                relation:
+                  user.relation === 'FOLLOWER' ? 'FRIEND' : 'FOLLOWING',
+              }
               : user
           )
         );
@@ -143,9 +143,8 @@ function Top({ filter, onFilterChange }) {
           최신순
         </button>
         <button
-          className={`${selected === '좋아요순' ? 'selected' : ''} ${
-            filter === '좋아요순' ? 'active' : ''
-          }`}
+          className={`${selected === '좋아요순' ? 'selected' : ''} ${filter === '좋아요순' ? 'active' : ''
+            }`}
           id="like"
           onClick={() => {
             onFilterChange('좋아요순');
@@ -155,9 +154,8 @@ function Top({ filter, onFilterChange }) {
           좋아요순
         </button>
         <button
-          className={`${selected === '댓글순' ? 'selected' : ''} ${
-            filter === '댓글순'
-          }`}
+          className={`${selected === '댓글순' ? 'selected' : ''} ${filter === '댓글순'
+            }`}
           id="comment"
           onClick={() => {
             onFilterChange('댓글순');
@@ -235,15 +233,14 @@ function Top({ filter, onFilterChange }) {
                             {user.username}
                           </div>
                           <button
-                            className={`follow ${
-                              user.relation === 'FRIEND'
-                                ? 'friend'
-                                : user.relation === 'FOLLOWING'
+                            className={`follow ${user.relation === 'FRIEND'
+                              ? 'friend'
+                              : user.relation === 'FOLLOWING'
                                 ? 'following'
                                 : user.relation === 'FOLLOWER'
-                                ? 'follower'
-                                : 'none'
-                            }`}
+                                  ? 'follower'
+                                  : 'none'
+                              }`}
                             onClick={() => {
                               if (
                                 user.relation === 'FOLLOWER' ||
@@ -327,7 +324,7 @@ const Block = styled.div`
     margin-right: 5px;
   }
   .username {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 500;
     width: 55%;
     color: #1a1a1a;
@@ -335,12 +332,13 @@ const Block = styled.div`
   .follow {
     color: #ffffff;
     background-color: #1a1a1a;
-    width: 80px;
-    font-size: 0.6rem;
+    width: 100px;
+    font-size: 0.8rem;
     font-weight: 700;
   }
   .follow.friend {
     background-color: #707070;
+    cursor: default;
   }
 
   .follow.following {
