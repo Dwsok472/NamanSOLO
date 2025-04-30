@@ -90,7 +90,7 @@ function Header(props) {
         </Left>
         {isLoggedIn && user && (
           <UserProfile onClick={()=>navigate("/mypage/todo")}>
-            <img className='userImage' src={user.mediaDTO?.mediaUrl}/>
+            <img className='userImage' src={`${user.mediaDTO.mediaUrl}?v=${new Date().getTime()}`}/>
             <div className='user'>
               <span className='username'>{user.username}님</span>
               <span className='welcome'>환영합니다!</span>
@@ -206,7 +206,7 @@ const Container = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1001;
+  z-index: 99;
   /* background-color: white; */
   transition: transform 0.3s ease-in-out;
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(-100%)')};

@@ -17,6 +17,7 @@ import {
   fetchAnniversaries,
   fetchTravels,
 } from '../api2';
+import { useUserStore } from '../Login/Login';
 
 // ===== 스타일 컴포넌트 - 시작 =====
 
@@ -341,6 +342,12 @@ export default function MyPage() {
 
       if (selectedFile) {
         uploadedImageUrl = await uploadProfileImage(selectedFile);
+        useUserStore.setState((state) => ({
+          user: {
+            ...state.user,
+            mediaDTO: { mediaUrl: uploadedImageUrl }
+          }
+        }));
       }
 
       const updatedData = {
