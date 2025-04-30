@@ -161,11 +161,11 @@ function Setting({ onClose }) {
         },
 
         body: JSON.stringify({
+          great: newSettings.storyLikeAlarm.toString(),
           follow: newSettings.followAlarm.toString(),
           comment: newSettings.storyCommentAlarm.toString(),
           recomment: newSettings.storyReCommentAlarm.toString(),
-          great: newSettings.storyLikeAlarm.toString(),
-          todo: newSettings.anniversaryOneMonthAlarm.toString(),
+          // todo: newSettings.anniversaryOneMonthAlarm.toString(),
           weather: newSettings.anniversaryWeatherAlarm.toString(),
         }),
       });
