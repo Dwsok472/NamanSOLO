@@ -91,9 +91,26 @@ const FeedLineChart = () => {
 
   useEffect(() => {
     getDailyFeedStats(from, to)
-      .then(setData)
+      .then(apiData => {
+        const dateMap = {};
+        apiData.forEach(item => {
+          dateMap[item.date] = item.count;
+        });
+  
+        const filledData = [];
+        for (let i = 0; i < 7; i++) {
+          const date = formatDate(moveDays(startDate, i));
+          filledData.push({
+            date,
+            count: dateMap[date] ?? 0, // 데이터 없으면 0으로
+          });
+        }
+  
+        setData(filledData);
+      })
       .catch(err => console.error('차트 데이터 로딩 실패', err));
   }, [from, to]);
+  
 
   const chartData = {
     labels: data.map(d => d.date),
