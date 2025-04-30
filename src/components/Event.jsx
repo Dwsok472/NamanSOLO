@@ -176,7 +176,6 @@ function Event() {
     fetchGifts();
   }, []);
 
-  if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
 
   // 남자/여자 각각 2개씩 끊어서 줄 만들기
@@ -234,7 +233,9 @@ function Event() {
               남성 추천 선물
             </TabButton>
           </Button>
-
+          {loading? (
+           <div className="loading">로딩 중...</div>
+          ) : (
           <GiftList>
             {pageRows.map((row, rowIndex) => (
               <GiftRow key={rowIndex}>
@@ -286,7 +287,7 @@ function Event() {
               </GiftRow>
             ))}
           </GiftList>
-
+        )}
           <ButtonWrapper>
             <button onClick={handlePrev} disabled={currentPage === 0}>
               ◀ 이전
