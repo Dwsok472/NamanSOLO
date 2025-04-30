@@ -89,7 +89,7 @@ function Header(props) {
           </Link>
         </Left>
         {isLoggedIn && user && (
-          <UserProfile>
+          <UserProfile onClick={()=>navigate("/mypage/todo")}>
             <span className='username'>{user.username}</span>
             <img className='userImage' src={user.mediaDTO?.mediaUrl}/>
           </UserProfile>
@@ -219,6 +219,7 @@ const UserProfile = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
   .username {
     font-weight: bold;
     font-size: 1rem;
