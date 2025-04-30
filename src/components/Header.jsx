@@ -82,8 +82,8 @@ function Header(props) {
           <Hamburger onClick={() => setSidebarOpen(true)}>
             <FontAwesomeIcon icon={faBars} />
           </Hamburger>
-          <Link to="/">
-            <Logo ref={logoRef} $visible={showLogo !== false}>
+            <Link to="/">
+            <Logo ref={logoRef} $visible={showLogo}>
               {logoText}
             </Logo>
           </Link>

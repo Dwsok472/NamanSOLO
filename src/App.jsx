@@ -66,24 +66,23 @@ const GlobalStyle = createGlobalStyle`
 function AppRoutes() {
   const location = useLocation();
   const isMainPage = location.pathname === "/";
-  const [showLogo, setShowLogo] = useState(false);
   const introPlayed = sessionStorage.getItem("introPlayed");
+  const shouldDelayLogo = isMainPage && !introPlayed;
+  const [showLogo, setShowLogo] = useState(!shouldDelayLogo);
   const logoRef = useRef(null);
 
   const hide =
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/register");
 
-  useEffect(() => {
-    if (isMainPage && !introPlayed) {
-      const timer = setTimeout(() => {
-        setShowLogo(true);
+    useEffect(() => {
+      if (shouldDelayLogo) {
+        const timer = setTimeout(() => {
+          setShowLogo(true);
+        }, 3500); // 로고 도착 타이밍에 맞게
         return () => clearTimeout(timer);
-      }, 3500);
-    } else {
-      setShowLogo(true);
-    }
-  }, [introPlayed]);
+      }
+    }, [shouldDelayLogo]);
 
   return (
     <AppWrapper>
