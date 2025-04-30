@@ -60,7 +60,6 @@ function WebSocketManager() {
     }
   };
 
-
   useEffect(() => {
     const token = sessionStorage.getItem("jwt-token");
     if (token && isLoggedIn) {
@@ -76,7 +75,10 @@ function WebSocketManager() {
       },
       onConnect: () => {
         stompClientRef.current = client;
-        client.subscribe(`/user/${user.username}/queue/private`, onNotificationReceived);
+        client.subscribe(
+          `/user/${user.username}/queue/private`,
+          onNotificationReceived
+        );
       },
       onStompError: (frame) => {
         client.deactivate();
@@ -100,7 +102,9 @@ function WebSocketManager() {
         id: raw.id || Date.now(),
         username: raw.username || user?.username,
         text: raw.message || "예정된 날씨 알림이 도착했습니다!",
-        img: raw.icon ? `http://openweathermap.org/img/w/${raw.icon}.png` : null,
+        img: raw.icon
+          ? `http://openweathermap.org/img/w/${raw.icon}.png`
+          : null,
         alt: "WEATHER",
         link: "/weather",
         isRead: false,
@@ -157,10 +161,13 @@ function WebSocketManager() {
   function resolveLink(type) {
     switch (type) {
       case "COMMENT":
+        return "/mypage/album";
       case "RECOMMENT":
-        return "/mypage/story";
+        return "/mypage/album";
+      case "GREAT":
+        return "/mypage/album";
       case "FOLLOW":
-        return "/mypage/follower";
+        return "/mypage/follow";
       default:
         return "/";
     }

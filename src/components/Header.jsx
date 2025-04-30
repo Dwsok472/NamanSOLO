@@ -78,14 +78,16 @@ function Header(props) {
     <>
       {(!isSidebarOpen&& 
       <Container $show={showHeader}>
-        <Hamburger onClick={() => setSidebarOpen(true)}>
-          <FontAwesomeIcon icon={faBars} />
-        </Hamburger>
-        <Link to="/">
-          <Logo ref={logoRef} $visible={showLogo !== false}>
-            {logoText}
-          </Logo>
-        </Link>
+        <Left>
+          <Hamburger onClick={() => setSidebarOpen(true)}>
+            <FontAwesomeIcon icon={faBars} />
+          </Hamburger>
+          <Link to="/">
+            <Logo ref={logoRef} $visible={showLogo !== false}>
+              {logoText}
+            </Logo>
+          </Link>
+        </Left>
         {isLoggedIn && user && (
           <UserProfile>
             <span className='username'>{user.username}</span>
@@ -196,6 +198,7 @@ const Container = styled.header`
   display: flex;
   gap: 10px;
   align-items: center;
+  justify-content: space-between;
   padding: 0 2rem;
   position: fixed;
   top: 0;
@@ -204,17 +207,29 @@ const Container = styled.header`
   /* background-color: white; */
   transition: transform 0.3s ease-in-out;
   transform: ${({ $show }) => ($show ? 'translateY(0)' : 'translateY(-100%)')};
-  .username {
-    align-items: end;
-  }
-  .userImage {
+`;
 
-  }
+const Left = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
 `;
 
 const UserProfile = styled.div`
-  width: auto;
-  align-items: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  .username {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+  }
+  .userImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 
 const Logo = styled.h1`
