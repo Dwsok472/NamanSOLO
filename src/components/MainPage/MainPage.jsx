@@ -67,6 +67,18 @@ function MainPage({logoRef}) {
   const [blurred, setBlurred] = useState(false);
 
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  
+    // 0.1초 후 강제로 스크롤 초기화 (Hero 로딩 후)
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  }, []);
+  
+
+  useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
       if (index <= fullTextRef.current.length) {

@@ -7,25 +7,6 @@ import UserDonutChart from './UserDonutChart';
 import UserTable from './UserTable';
 import EventModal from './EventModal';
 
-
-const dummyUsers = [
-  { id: 1, username: 'USER1', date: '2025.01.01 12:00:01' },
-  { id: 2, username: 'USER2', date: '2025.01.02 13:20:15' },
-  { id: 3, username: 'USER3', date: '2025.01.03 14:11:33' },
-  { id: 4, username: 'USER4', date: '2025.01.04 16:42:00' },
-  { id: 5, username: 'USER5', date: '2025.01.05 18:30:20' },
-  { id: 6, username: 'USER1', date: '2025.01.01 12:00:01' },
-  { id: 7, username: 'USER2', date: '2025.01.02 13:20:15' },
-  { id: 8, username: 'USER3', date: '2025.01.03 14:11:33' },
-  { id: 9, username: 'USER4', date: '2025.01.04 16:42:00' },
-  { id: 10, username: 'USER5', date: '2025.01.05 18:30:20' },
-  { id: 11, username: 'USER1', date: '2025.01.01 12:00:01' },
-  { id: 12, username: 'USER2', date: '2025.01.02 13:20:15' },
-  { id: 13, username: 'USER3', date: '2025.01.03 14:11:33' },
-  { id: 14, username: 'USER4', date: '2025.01.04 16:42:00' },
-  { id: 15, username: 'USER5', date: '2025.01.05 18:30:20' },
-];
-
 const Layout = styled.div`
 margin-top: 80px;
   display: flex;
