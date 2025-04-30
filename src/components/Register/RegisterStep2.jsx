@@ -117,7 +117,7 @@ function RegisterStep2({ onNext }) {
       e.returnValue = '';
     };
 
-    const handlePopState = (e) => {
+    const handlePopState = () => {
       if (!confirm('정말 나가시겠습니까? 작성한 정보가 사라집니다.')) {
         navigate(location.pathname, { replace: true }); 
       }

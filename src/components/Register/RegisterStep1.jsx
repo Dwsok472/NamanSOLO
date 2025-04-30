@@ -231,6 +231,7 @@ function RegisterStep1({ onNext }) {
   async function handleCheckUsername() {
     if (username.length < 6 || username.length > 12) {
       alert("아이디는 6~12자의 영문 또는 숫자를 입력해주세요.")
+      return;
     }
     try {
       const isAvaliable = await checkUsernameDuplicate(username);
@@ -359,7 +360,7 @@ function RegisterStep1({ onNext }) {
                 <IconUser />
                 <Input
                   ref={usernameRef}
-                  type="text"
+                  type="email"
                   maxLength={12}
                   placeholder="아이디를 입력해주세요"
                   autoComplete="off"

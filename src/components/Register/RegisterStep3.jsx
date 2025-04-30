@@ -158,7 +158,7 @@ function RegisterStep3({ onNext }) {
       deleteForm();
       setTimeout(() => {
         onNext();
-      }, 100);
+      }, 1);
     } catch (error) {
       console.error("회원가입 중 에러:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
