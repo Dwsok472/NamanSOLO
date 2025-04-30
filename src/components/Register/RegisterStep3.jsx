@@ -98,6 +98,7 @@ function RegisterStep3({ onNext }) {
   const [dDay, setDDay] = useState("");
   const [city, setCity] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleDateChange = (e) => {
     const selected = e.target.value;
@@ -143,6 +144,7 @@ function RegisterStep3({ onNext }) {
   };
 
   const handleSubmit = async () => {
+    if (loading) return; 
     if (!dDay) {
       alert("날짜를 선택해주세요.");
       return;
@@ -154,14 +156,14 @@ function RegisterStep3({ onNext }) {
     }
 
     try {
+      setLoading(true); 
       await submitRegistration({ dDay, city });
       deleteForm();
-      setTimeout(() => {
-        onNext();
-      }, 1);
+      onNext();
     } catch (error) {
       console.error("회원가입 중 에러:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
+      setLoading(false);
     }
   };
 
@@ -197,7 +199,7 @@ function RegisterStep3({ onNext }) {
         />
       </div>
       <ButtonWrap>
-        <NextButton onClick={handleSubmit} text="가입하기" />
+        <NextButton onClick={!loading ? handleSubmit : undefined} text={loading ? "가입 중..." : "가입하기"} />
       </ButtonWrap>
     </Container>
   );

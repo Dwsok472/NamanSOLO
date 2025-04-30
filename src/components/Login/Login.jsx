@@ -203,7 +203,7 @@ function Login() {
         onClick={() => {
           if (view == "register") {
             confirm("정말 이동하시겠습니까? 작성중인 정보는 저장되지 않습니다.")
-              ? navigate("/")
+              ? navigate(-1)
               : console.log("메인으로 이동 취소");
           } else {
             navigate(-1);
