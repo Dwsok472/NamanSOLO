@@ -65,6 +65,13 @@ function MainPage({logoRef}) {
   const didSetRef = useRef(false);
   const bookRef = useRef(null);
   const [blurred, setBlurred] = useState(false);
+  const [showHeader, setShowHeader] = useState(false); // 추가
+
+useEffect(() => {
+  if (!showIntro) {
+    setShowHeader(true); // showIntro가 끝난 뒤 Header 보이게
+  }
+}, [showIntro]);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
