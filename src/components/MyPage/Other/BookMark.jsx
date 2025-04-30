@@ -35,8 +35,16 @@ function BookMark() {
       return;
     }
     const stored = localStorage.getItem(`bookmarkedAlbums_${currentUser}`);
+    if (!stored) {
+      setLoading(false);
+      return;
+    }
     const parsed = JSON.parse(stored);
     console.log(stored);
+    if (!parsed || parsed.length === 0) {
+      setLoading(false);
+      return;
+    }
     try {
       // 서버로 중복 확인 요청
       const response = await axios.get('/api/album/ids', {
@@ -59,7 +67,7 @@ function BookMark() {
       setLoading(false);
       console.log(response.data);
     } catch (error) {
-      alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
+      alert('즐겨찾기를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
     }
   }
@@ -103,21 +111,24 @@ function BookMark() {
             data.map((item) => (
               <SmallBox
                 key={item.albumId}
-                onClick={() => {
-                  handleAlbumId(item.albumId);
-                }}
               >
                 <DeleteButton onClick={() => handleDelete(item.albumId)}>
                   <IconClose />
                 </DeleteButton>
                 <Left>
                   {item.url.mediaType === 'PICTURE' ? (
-                    <Img src={item.url.mediaUrl} />
+                    <Img src={item.url.mediaUrl}
+                      onClick={() => {
+                        handleAlbumId(item.albumId);
+                      }} />
                   ) : (
                     <video
                       src={item.url.mediaUrl}
                       muted
                       className="video"
+                      onClick={() => {
+                        handleAlbumId(item.albumId);
+                      }}
                     ></video>
                   )}
                 </Left>
