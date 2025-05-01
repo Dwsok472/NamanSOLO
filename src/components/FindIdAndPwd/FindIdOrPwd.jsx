@@ -114,22 +114,24 @@ function FindIdOrPwd({ isFindId }) {
     }
 
     const handleCopy = (text) => {
+        // 클립보드에 접근 객체이면
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text)
                 .then(() => alert("복사되었습니다"))
                 .catch(() => alert("복사에 실패했습니다."));
+            //Clipboard API가 지원되지 않는 환경(HTTPS가 아니면 지원을 하지 않기 때문)
         } else {
             const textarea = document.createElement("textarea");
-            textarea.value = text;
+            textarea.value = text; //해당 USERNAME을 TEXTAREA에 넣음
             document.body.appendChild(textarea);
-            textarea.select();
+            textarea.select(); // 그 텍스트 선택하기 
             try {
                 document.execCommand("copy");
                 alert("복사되었습니다");
             } catch {
                 alert("복사에 실패했습니다.");
             }
-            document.body.removeChild(textarea);
+            document.body.removeChild(textarea);  // 끝나면 제외하기
         }
     };
 
