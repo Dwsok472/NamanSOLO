@@ -47,12 +47,13 @@ function WebSocketManager() {
           };
         });
 
-      const unread = alarms.filter((a) => !a.isRead).length;
+      // const unread = alarms.filter((a) => !a.isRead).length;
 
-      useAlarmList.setState({
-        alarmList: alarms,
-        unreadCount: unread,
-      });
+      // useAlarmList.setState({
+      //   alarmList: alarms,
+      //   unreadCount: unread,
+      // });
+      useAlarmList.getState().syncAlarmList(alarms);
 
       console.log(" 알림 정상 로딩", alarms);
     } catch (err) {
