@@ -113,6 +113,25 @@ function FindIdOrPwd({ isFindId }) {
         }
     }
 
+    const handleCopy = (text) => {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text)
+                .then(() => alert("복사되었습니다"))
+                .catch(() => alert("복사에 실패했습니다."));
+        } else {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand("copy");
+                alert("복사되었습니다");
+            } catch {
+                alert("복사에 실패했습니다.");
+            }
+            document.body.removeChild(textarea);
+        }
+    };
 
     return (
         <Container>
@@ -180,7 +199,7 @@ function FindIdOrPwd({ isFindId }) {
                                         value={id}
                                         readOnly
                                     />
-                                    <button onClick={() => navigator.clipboard.writeText(id).then(() => alert("아이디가 복사되었습니다")).catch(() => alert('복사에 실패했습니다.'))}>복사</button>
+                                    <button onClick={() => handleCopy(id)}>복사</button>
                                 </SmallBox>
                             </Buttom>
                         </ButtomWrap>
