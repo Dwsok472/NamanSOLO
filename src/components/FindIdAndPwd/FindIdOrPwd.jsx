@@ -180,7 +180,7 @@ function FindIdOrPwd({ isFindId }) {
                                         value={id}
                                         readOnly
                                     />
-                                    <button onClick={() => navigator.clipboard.writeText(id)}>복사</button>
+                                    <button onClick={() => navigator.clipboard.writeText(id).then(() => alert("아이디가 복사되었습니다")).catch(() => alert('복사에 실패했습니다.'))}>복사</button>
                                 </SmallBox>
                             </Buttom>
                         </ButtomWrap>
