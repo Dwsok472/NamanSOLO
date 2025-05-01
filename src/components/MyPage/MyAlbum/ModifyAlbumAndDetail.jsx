@@ -352,7 +352,7 @@ const Back = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: 150;
+  z-index: 1003;
 `;
 
 const BoxWrap = styled.div`
@@ -363,7 +363,7 @@ const BoxWrap = styled.div`
   background-color: #000000;
   padding-bottom: 10px;
   padding-top: 10px;
-  z-index: 210;
+  z-index: 1005;
   display: flex;
   position: fixed;
   top: 50%; /* 화면 중앙에 위치하도록 수정 */

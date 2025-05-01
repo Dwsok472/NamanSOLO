@@ -6,7 +6,7 @@ const Container = styled.div`
   position: fixed;
   bottom: 118px; // 원하는 위치로 조절 (알람 모달과 겹치지 않게)
   right: 500px; // 화면 오른쪽에서 적당히 띄움
-  z-index: 250;
+  z-index: 1006;
 `;
 
 const ModalContainer = styled.div`
