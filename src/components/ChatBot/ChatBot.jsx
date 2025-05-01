@@ -126,6 +126,7 @@ const BackDrop = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1003;
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
@@ -139,7 +140,7 @@ const Container = styled.div`
   height: 500px;
   bottom: 5%;
   right: 8%;
-  z-index: 200;
+  z-index: 1005;
 `;
 const Card = styled.div`
   width: 100%;
