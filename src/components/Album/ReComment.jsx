@@ -112,7 +112,7 @@ function ReComment({ commentId }) {
             <Box key={recomment.id}>
               <span className="username">{recomment.username}</span>
               <span className="date">{recomment.addDate}</span>
-              {isAdmin === "ROLE_ADMIN" && <button className='admin' onClick={() => handleDeleteRecomment(recomment.id)}>삭제</button>}
+              {isAdmin === "ROLE_ADMIN" && <button className='admin1' onClick={() => handleDeleteRecomment(recomment.id)}>삭제</button>}
               <Text>{recomment.content}</Text>
             </Box>
           ))
@@ -158,7 +158,7 @@ const Box = styled.div`
     padding-left: 10px;
     color: #999999;
   }
-  .admin{
+  .admin1{
   position: absolute;
   right: 30px;
 color: #000;
