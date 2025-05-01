@@ -20,6 +20,17 @@ function FindIdOrPwd({ isFindId }) {
     const [selectedOption, setSelectedOption] = useState("phone");
     const navigate = useNavigate(); // useNavigate 훅으로 페이지 이동 함수 생성
 
+    const formatPhoneNumber = (value) => {
+    const numbersOnly = value.replace(/\D/g, ""); // 숫자만 추출
+    const match = numbersOnly.match(/^(\d{3})(\d{3,4})(\d{4})$/);
+
+    if (match) {
+        return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+
+    return numbersOnly;
+    };
+
     async function verifyUser() {
         try {
             const res = await axios.get('api/user/exist', {
@@ -172,10 +183,17 @@ function FindIdOrPwd({ isFindId }) {
                                         <IconPhone />
                                         <Input
                                             type="text"
+                                            maxLength={13}
+                                            onChange={(e) => {
+                                                const formatted = formatPhoneNumber(e.target.value);
+                                                setPhone(formatted);
+                                                if (onChange) {
+                                                  setPhone(onChange("phone", formatted));
+                                                }
+                                              }}
                                             placeholder="전화번호를 입력해주세요"
                                             autoComplete="off" // 자동완성 기능 끄기
                                             value={phone}
-                                            onChange={(e) => setPhone(e.target.value)}
                                         />
                                     </SmallBox>
                                 ) : (
