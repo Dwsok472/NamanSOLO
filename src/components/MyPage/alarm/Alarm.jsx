@@ -196,7 +196,7 @@ const Backdrop = styled.div`
   z-index: 210;
 `;
 
-function Alarm({ onClose /*, isOpen*/ }) {
+function Alarm({ onClose }) {
   const navigate = useNavigate(); // useNavigate 훅 사용
   const [expandedId, setExpandedId] = useState(null); // 펼쳐진 알림 ID
   const [city, setCity] = useState(cities[0]); // 기본 도시를 서울로 설정
@@ -220,6 +220,20 @@ function Alarm({ onClose /*, isOpen*/ }) {
   }, [alarmList, currentUser]);
 
   const resetUnreadCount = useAlarmList((state) => state.resetUnreadCount);
+
+  useEffect(() => {
+    if (!currentUser || filteredAlarms.length === 0) return;
+
+    const key = `read-alarms-${currentUser}`;
+    const prev = JSON.parse(localStorage.getItem(key) || "[]");
+    const now = filteredAlarms.map((a) => a.id);
+    const merged = [...new Set([...prev, ...now])];
+
+    localStorage.setItem(key, JSON.stringify(merged));
+
+    now.forEach((id) => useAlarmList.getState().markAsRead(id));
+    useAlarmList.getState().resetUnreadCount();
+  }, [filteredAlarms, currentUser]);
 
   // const [alarmList, setAlarmList] = useState([]);
   // const userId = 1; // 실제 로그인 유저 ID 넣기
