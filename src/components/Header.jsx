@@ -88,7 +88,7 @@ function Header(props) {
             </Logo>
           </Link>
         </Left>
-        {isLoggedIn && user && (
+        {isLoggedIn && user ? (
           <UserProfile onClick={()=>{if (user.authority === 'ROLE_USER') {return navigate("/mypage/todo")} else {return navigate("/admin/users")}}}>
             {user.mediaDTO?.id === 1 || 2 || 3 || 4 ?
               (<img className='userImage' src={user.mediaDTO?.mediaUrl} />)
@@ -97,6 +97,13 @@ function Header(props) {
             <div className='user'>
               <span className='username'>{user.username}님</span>
               <span className='welcome'>환영합니다!</span>
+            </div>
+          </UserProfile>
+        ) : (
+          <UserProfile onClick={() => navigate("/login")}>
+            <div className='user'>
+              <span className='username'>로그인해주세요.</span>
+              <span className='welcome'>일부 서비스는 이용하려면 로그인이 필요합니다!</span>
             </div>
           </UserProfile>
         )}
