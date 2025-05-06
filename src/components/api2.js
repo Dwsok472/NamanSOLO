@@ -312,7 +312,7 @@ const user_url = '/user';
 
 export const registerUser = async (formData) => {
   try {
-    const response = await axios.post(`${BASE_URL}${user_url}/register`, get().formData);
+    const response = await axios.post(`${BASE_URL}${user_url}/register`, formData);
     return response.data;
   } catch (error) {
     console.error("회원가입 API 에러:", error.response?.data || error.message);
@@ -337,7 +337,7 @@ export const useRegisterStore = create(
         authority: "ROLE_USER",
         city: "",
         addDate: new Date().toISOString().split("T")[0],
-        dDay: "",
+        dday: "",
         alarmAlert: true,
         commentAlert: true,
         followAlert: true,

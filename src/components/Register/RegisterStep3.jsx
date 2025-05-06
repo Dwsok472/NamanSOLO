@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import heartswithrate from "../img/heartswithrate1.png";
 import NextButton from "../Button/NextButton";
-import { useRegisterStore } from "../api2";
+import { registerUser, useRegisterStore } from "../api2";
 import CityDropdown from "./DropdownButton";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -94,8 +94,8 @@ const Label = styled.label`
 `;
 
 function RegisterStep3({ onNext }) {
-  const { setFormData, submitRegistration, deleteForm } = useRegisterStore();
-  const [dDay, setDDay] = useState("");
+  const { setFormData, formData, deleteForm } = useRegisterStore();
+  const [dday, setdday] = useState("");
   const [city, setCity] = useState("");
   const [daysDiff, setDaysDiff] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -110,7 +110,7 @@ function RegisterStep3({ onNext }) {
     const diff = Math.floor((today - selectedDate) / (1000 * 60 * 60 * 24));
     setDaysDiff(diff >= 0 ? diff : null);
 
-    setDDay(selected);
+    setdday(selected);
     setFormData({ dDay: selected });
   };
 
@@ -125,6 +125,7 @@ function RegisterStep3({ onNext }) {
 
     const handlePopState = (e) => {
       if (!window.confirm('정말 나가시겠습니까? 작성한 정보가 사라집니다.')) {
+        deleteForm();
         navigate(location.pathname, { replace: true }); 
       }
     };
@@ -145,7 +146,7 @@ function RegisterStep3({ onNext }) {
 
   const handleSubmit = async () => {
     if (loading) return; 
-    if (!dDay) {
+    if (!dday) {
       alert("날짜를 선택해주세요.");
       return;
     }
@@ -157,7 +158,7 @@ function RegisterStep3({ onNext }) {
 
     try {
       setLoading(true); 
-      await submitRegistration({ dDay, city });
+      await registerUser(formData);
       deleteForm();
       onNext();
     } catch (error) {
@@ -193,13 +194,13 @@ function RegisterStep3({ onNext }) {
           type="date"
           placeholder="사귄 날짜를 입력해주세요"
           autoComplete="off"
-          value={dDay}
+          value={dday}
           onChange={handleDateChange}
           max={new Date().toISOString().split("T")[0]}
         />
       </div>
       <ButtonWrap>
-        <NextButton onClick={!loading ? handleSubmit : undefined} text={loading ? "가입 중..." : "가입하기"} />
+        <NextButton onClick={!loading ? handleSubmit : undefined} text={"가입하기"} $loading={loading} />
       </ButtonWrap>
     </Container>
   );
