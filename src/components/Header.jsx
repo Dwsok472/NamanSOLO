@@ -5,6 +5,7 @@ import { useUserStore } from './Login/Login';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { getCurrentUser } from './api2';
+import { IconClose } from './Icons';
 
 function Header(props) {
   const {
@@ -112,6 +113,9 @@ function Header(props) {
 
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
       <Sidebar ref={sidebarRef} $open={isSidebarOpen}>
+        <div onClick={closeSidebar}>
+          <IconClose></IconClose>
+        </div>
         <ul>
           <li>
             <Link to="/" onClick={closeSidebar}>
@@ -184,10 +188,7 @@ function Header(props) {
               }}
             >
               <span>로그아웃</span>
-            </li> : <></>}
-
-
-          {!isLoggedIn && !isLoginPage && (
+            </li> : (
             <>
               <li>
                 <Link to="/login" onClick={closeSidebar}>
@@ -294,6 +295,17 @@ const Sidebar = styled.div`
   z-index: 1000;
   padding: 100px 20px 0;
   padding-left: 33px;
+
+  svg {
+    position: absolute;
+    top: 3%;
+    right: 3%;
+    width: 25px;
+    height: 25px;
+
+    filter: brightness(0.1) invert(1);
+    cursor: pointer;
+  }
 
   ul {
     list-style: none;
