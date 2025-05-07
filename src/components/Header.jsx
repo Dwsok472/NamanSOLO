@@ -117,23 +117,22 @@ function Header(props) {
           <IconClose></IconClose>
         </div>
         <ul>
-          <li>
-            <Link to="/" onClick={closeSidebar}>
+          <Link to="/" onClick={closeSidebar}>
+            <li>
               메인으로
-            </Link>
-          </li>
-          <li>
-            <Link to="/album/all" onClick={closeSidebar}>
+            </li>
+          </Link>
+          <Link to="/album/all" onClick={closeSidebar}>
+            <li>
               전체 앨범
-            </Link>
-          </li>
-          <li>
+            </li>
+          </Link>
             <Link to="/map" onClick={closeSidebar}>
-              추천 여행지
+              <li>
+                  추천 여행지
+              </li>
             </Link>
-          </li>
-          <li>
-            <span onClick={() => {
+          <li onClick={() => {
               closeSidebar();
               if (!isLoggedIn) {
                 alert("로그인 후 이용이 가능합니다");
@@ -142,17 +141,18 @@ function Header(props) {
               else {
                 navigate('/events');
               }
-            }} className='other'>
+            }}>
+            <span className='other'>
               선물 랭킹
             </span>
           </li>
 
           {user?.authority === 'ROLE_ADMIN' ? (
-            <li>
-              <Link to="/admin/users" onClick={closeSidebar}>
-                관리자 페이지
-              </Link>
-            </li>
+            <Link to="/admin/users" onClick={closeSidebar}>
+              <li>
+                  관리자 페이지
+              </li>
+            </Link>
           ) : (
             <>
               <li onClick={() => setSidebarSubOpen(!isSidebarSubOpen)}>
@@ -190,16 +190,16 @@ function Header(props) {
               <span>로그아웃</span>
             </li> : (
             <>
-              <li>
-                <Link to="/login" onClick={closeSidebar}>
-                  {loginText}
-                </Link>
-              </li>
-              <li>
-                <Link to="/login?view=register" onClick={closeSidebar}>
-                  {signupText}
-                </Link>
-              </li>
+              <Link to="/login" onClick={closeSidebar}>
+                <li>
+                    {loginText}
+                </li>
+              </Link>
+              <Link to="/login?view=register" onClick={closeSidebar}>
+                <li>
+                    {signupText}
+                </li>
+              </Link>
             </>
           )}
         </ul>
@@ -312,14 +312,15 @@ const Sidebar = styled.div`
     padding: 0;
     li {
       padding: 12px 0;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
 
       a,
       span {
-        color: #fff;
         text-decoration: none;
-        font-size: 1.2rem;
         font-weight: 700;
-        cursor: pointer;
       }
       .other{
         color: #fff;
@@ -331,7 +332,7 @@ const Sidebar = styled.div`
       .others{
         color: #fff;
         text-decoration: none;
-        font-size: 1rem;
+        font-size: 1.0rem;
         font-weight: 500;
         cursor: pointer;
       }
