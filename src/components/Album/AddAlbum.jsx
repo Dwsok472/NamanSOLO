@@ -305,7 +305,7 @@ const BoxWrap = styled.div`
   background-color: #000000;
   padding-bottom: 10px;
   padding-top: 10px;
-  z-index: 210;
+  z-index: 1006;
   display: flex;
   position: fixed;
   top: 50%; /* 화면 중앙에 위치하도록 수정 */
