@@ -119,7 +119,7 @@ const Backdrop = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.3);
-  z-index: 150;
+  z-index: 1500;
 `;
 
 const BottomBox = styled.div`
