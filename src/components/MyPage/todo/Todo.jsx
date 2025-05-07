@@ -854,8 +854,8 @@ function Todo({ originalMeetingDate }) {
 
               const eventToAdd = {
                 title: newAnniversaryEvent.title,
-                start_date: newAnniversaryEvent.start_date,
-                end_date: newAnniversaryEvent.end_date,
+                startDate: newAnniversaryEvent.start_date,
+                endDate: newAnniversaryEvent.end_date,
                 color: newAnniversaryEvent.color,
                 type: newAnniversaryEvent.type,
               };
