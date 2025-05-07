@@ -91,8 +91,8 @@ export const createTravel = async (travelEvent) => {
 
     const dto = {
       title: travelEvent.title,
-      startDate: travelEvent.start_date,
-      endDate: travelEvent.end_date,
+      start_date: travelEvent.start_date,
+      end_date: travelEvent.end_date,
       color: travelEvent.color,
       type: 'TRAVEL',
       editable: true,
