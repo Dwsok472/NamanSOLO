@@ -103,7 +103,7 @@ function Header(props) {
           <UserProfile onClick={() => navigate("/login")}>
             <div className='user'>
               <span className='username'>로그인해주세요.</span>
-              <span className='welcome'>일부 서비스는 이용하려면 로그인이 필요합니다!</span>
+              <span className='welcome'>일부 서비스는 로그인해야 이용이 가능합니다!</span>
             </div>
           </UserProfile>
         )}
@@ -115,7 +115,7 @@ function Header(props) {
         <ul>
           <li>
             <Link to="/" onClick={closeSidebar}>
-              홈
+              메인으로
             </Link>
           </li>
           <li>
@@ -125,7 +125,7 @@ function Header(props) {
           </li>
           <li>
             <Link to="/map" onClick={closeSidebar}>
-              맵
+              추천 여행지
             </Link>
           </li>
           <li>
@@ -235,6 +235,10 @@ const UserProfile = styled.div`
   align-items: center;
   gap: 10px;
   cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   .userImage {
     width: 40px;
