@@ -151,7 +151,7 @@ function ModifyAlbumAndDetail({
         })),
       );
       setSelectedPlace({ address: editData.location });
-      setIsPublic(editData.isPublic);
+      setIsPublic(editData.visibility === "PUBLIC");
     }
   }, [editMode, editData]);
 

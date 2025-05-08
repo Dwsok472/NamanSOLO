@@ -2,13 +2,17 @@ import React from 'react';
 import styled from 'styled-components';
 
 const SwitchButton = ({ isChecked, onChange }) => {
+
+  const handleSwitch = async () => {
+    await onChange();
+  }
   return (
     <StyledWrapper>
       <label className="switch">
         <input
           type="checkbox"
           checked={isChecked} // 공개/비공개 상태
-          onChange={onChange} // 상태 변경 핸들러
+          onChange={handleSwitch} // 상태 변경 핸들러
         />
         <span className="slider" />
       </label>
