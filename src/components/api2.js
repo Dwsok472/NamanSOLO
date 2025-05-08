@@ -91,8 +91,8 @@ export const createTravel = async (travelEvent) => {
 
     const dto = {
       title: travelEvent.title,
-      start_date: travelEvent.start_date,
-      end_date: travelEvent.end_date,
+      start_date: travelEvent.startDate,
+      end_date: travelEvent.endDate,
       color: travelEvent.color,
       type: 'TRAVEL',
       editable: true,
@@ -111,8 +111,8 @@ export const createTravel = async (travelEvent) => {
 
     return {
       ...res.data,
-      start_date: res.data.startDate,
-      end_date: res.data.endDate,
+      start_date: res.data.start_date,
+      end_date: res.data.end_date,
       editable: true,
       type: 'TRAVEL',
       mediaUrl: res.data.mediaUrl.map((media) => ({
@@ -206,8 +206,8 @@ export const updateTravel = async (id, travelData) => {
 
     return {
       ...res.data,
-      start_date: res.data.startDate,
-      end_date: res.data.endDate,
+      start_date: res.data.start_date,
+      end_date: res.data.end_date,
       editable: true,
       type: res.data.type,
       mediaUrl: (res.data.mediaUrl || []).map(media => ({
