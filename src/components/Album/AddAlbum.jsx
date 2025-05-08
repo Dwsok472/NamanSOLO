@@ -114,11 +114,7 @@ function AddAlbum({ onClose, onAddAlbum }) {
     console.log(files);
     setImages((prevImages) => [...prevImages, ...files]);
   };
-  const prevImage = () => {
-    setImageIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : images.length - 1
-    );
-  };
+
 
   // IconClose 클릭 시 해당 이미지 삭제
   const handleImageDelete = (id) => {
@@ -126,6 +122,11 @@ function AddAlbum({ onClose, onAddAlbum }) {
     if (imageIndex > 0) {
       setImageIndex(imageIndex - 1);
     }
+  };
+  const prevImage = () => {
+    setImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : images.length - 1
+    );
   };
 
   const nextImage = () => {
@@ -372,6 +373,7 @@ const Box = styled.div`
       top: 50%;
       opacity: 0.8;
       cursor: pointer;
+      z-index: 10000;
     }
     .rightkey {
       object-fit: cover;
@@ -382,6 +384,7 @@ const Box = styled.div`
       top: 50%;
       opacity: 0.8;
       cursor: pointer;
+      z-index: 10000;
     }
     .fileinput {
       position: absolute;
