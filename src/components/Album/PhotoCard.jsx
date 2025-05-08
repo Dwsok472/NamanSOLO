@@ -153,18 +153,13 @@ const CardWrapper = styled.div`
 const Pin = styled.div`
   font-size: 20px;
   position: absolute;
-  /* top: -14px; */
-  top: -19px;
-  /* left: 0; */
-  left: 50%;
-  /* transform: translateX(-50%) rotate(45deg); */
-  transform: translateX(-50%);
+  top: -14px;
+  left: 0;
+  transform: translateX(-50%) rotate(45deg);
   .pin {
     object-fit: cover;
-    /* width: 40px;
-    height: 40px; */
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
   }
 `;
 

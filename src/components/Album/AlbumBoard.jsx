@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import PhotoCard from './PhotoCard';
-import tape1 from '../img/tape8.png';
-import tape2 from '../img/tape9.png';
-import tape3 from '../img/tape10.png';
-import tape4 from '../img/tape11.png';
-import tape5 from '../img/tape12.png';
-import tape6 from '../img/tape13.png';
-import tape7 from '../img/tape14.png';
+import tape1 from '../img/tape1.png';
+import tape2 from '../img/tape2.png';
+import tape3 from '../img/tape3.png';
+import tape4 from '../img/tape4.png';
+import tape5 from '../img/tape5.png';
+import tape6 from '../img/tape6.png';
+import tape7 from '../img/tape7.png';
 import zzzz from '../img/zzzz.png';
 
 import AlbumDetailModal from './AlbumDetailModal';
