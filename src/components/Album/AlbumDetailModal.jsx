@@ -373,7 +373,7 @@ const Box = styled.div`
     font-weight: 700;
   }
   .title{
-    width: 400px;
+    width: auto;
   }
   .button {
     display: flex;
