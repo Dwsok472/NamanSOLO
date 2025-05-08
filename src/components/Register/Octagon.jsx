@@ -211,7 +211,7 @@ function Octagon({
               <IconEmail />
               <Input
                 maxLength={26}
-                type="text"
+                type="email"
                 value={email}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^a-zA-Z0-9@._-]/g, ""); // 허용 문자만 필터
