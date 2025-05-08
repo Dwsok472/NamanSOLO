@@ -89,27 +89,30 @@ export const createTravel = async (travelEvent) => {
   try {
     const mediaList = travelEvent.mediaUrl || [];
 
-    const dto = {
+    const res = await axios.post(`${BASE_URL}${todo_url}/travel/save`, {
       title: travelEvent.title,
-      start_date: travelEvent.startDate,
-      end_date: travelEvent.endDate,
+      startDate: travelEvent.start_date,  // ✅ camelCase
+      endDate: travelEvent.end_date,
       color: travelEvent.color,
       type: 'TRAVEL',
       editable: true,
       mediaUrl: mediaList.map(media => ({
         id: media.id || null,
         mediaUrl: media.mediaUrl,
-        mediaType: media.mediaType || (media.mediaUrl.endsWith('.mp4') ? 'VIDEO' : 'PICTURE')
+        mediaType: media.mediaType || (media.mediaUrl.endsWith('.mp4') ? 'VIDEO' : 'PICTURE'),
       })),
-    };
-
-    const res = await axios.post(`${BASE_URL}${todo_url}/travel/save`, dto, {
+    }, {
       headers: {
-        'Authorization': `Bearer ${sessionStorage.getItem('jwt-token')}`,
-      }
+        Authorization: `Bearer ${sessionStorage.getItem('jwt-token')}`,
+      },
     });
-
-    return res.data;
+    return {
+      ...res.data,
+      start_date: res.data.startDate,
+      end_date: res.data.endDate,
+      editable: true,
+      type: 'TRAVEL',
+    };    
   } catch (e) {
     handleError('createTravel', e);
   }
@@ -196,8 +199,8 @@ export const updateTravel = async (id, travelData) => {
 
     return {
       ...res.data,
-      start_date: res.data.start_date,
-      end_date: res.data.end_date,
+      start_date: res.data.startDate,
+      end_date: res.data.endDate,
       editable: true,
       type: res.data.type,
       mediaUrl: (res.data.mediaUrl || []).map(media => ({
