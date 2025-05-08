@@ -35,7 +35,7 @@ function Header(props) {
 
   useEffect(() => {
     if (!isLoggedIn) return;
-  
+
     const fetchUser = async () => {
       try {
         const userData = await getCurrentUser();
@@ -44,7 +44,7 @@ function Header(props) {
         console.error("유저 정보 불러오기 실패", err);
       }
     };
-  
+
     fetchUser();
   }, [isLoggedIn]);
 
@@ -77,38 +77,44 @@ function Header(props) {
 
   return (
     <>
-      {(!isSidebarOpen&& 
-      <Container $show={showHeader}>
-        <Left>
-          <Hamburger onClick={() => setSidebarOpen(true)}>
-            <FontAwesomeIcon icon={faBars} />
-          </Hamburger>
+      {(!isSidebarOpen &&
+        <Container $show={showHeader}>
+          <Left>
+            <Hamburger onClick={() => setSidebarOpen(true)}>
+              <FontAwesomeIcon icon={faBars} />
+            </Hamburger>
             <Link to="/">
-            <Logo ref={logoRef} $visible={showLogo}>
-              {logoText}
-            </Logo>
-          </Link>
-        </Left>
-        {isLoggedIn && user ? (
-          <UserProfile onClick={()=>{if (user.authority === 'ROLE_USER') {return navigate("/mypage/todo")} else {return navigate("/admin/users")}}}>
-            {user.mediaDTO?.id === 1 || 2 || 3 || 4 ?
-              (<img className='userImage' src={user.mediaDTO?.mediaUrl} />)
-              :(<img className='userImage' src={`${user.mediaDTO?.mediaUrl}?v=${new Date().getTime()}`}/>)
-            }
-            <div className='user'>
-              <span className='username'>{user.username}님</span>
-              <span className='welcome'>환영합니다!</span>
-            </div>
-          </UserProfile>
-        ) : (
-          <UserProfile onClick={() => navigate("/login")}>
-            <div className='user'>
-              <span className='username'>로그인해주세요.</span>
-              <span className='welcome'>일부 서비스는 로그인해야 이용이 가능합니다!</span>
-            </div>
-          </UserProfile>
-        )}
-      </Container>
+              <Logo ref={logoRef} $visible={showLogo}>
+                {logoText}
+              </Logo>
+            </Link>
+          </Left>
+          {isLoggedIn && user ? (
+            <UserProfile >
+              {user.mediaDTO?.id === 1 || 2 || 3 || 4 ?
+                (<img className='userImage' src={user.mediaDTO?.mediaUrl} onClick={() => { if (user.authority === 'ROLE_USER') { return navigate("/mypage/todo") } else { return navigate("/admin/users") } }} />)
+                : (<img className='userImage' src={`${user.mediaDTO?.mediaUrl}?v=${new Date().getTime()}`} onClick={() => { if (user.authority === 'ROLE_USER') { return navigate("/mypage/todo") } else { return navigate("/admin/users") } }} />)
+              }
+              <div className='user'>
+                <span className='username'>{user.username}님</span>
+                {/* <span className='welcome'>환영합니다!</span> */}
+                <span className='logout' onClick={() => {
+                  navigate("/");
+                  logout();
+                  closeSidebar();
+                }}>로그아웃</span>
+              </div>
+              {/* <span className='logout'>로그아웃</span> */}
+            </UserProfile>
+          ) : (
+            <UserProfile onClick={() => navigate("/login")}>
+              <div className='user'>
+                <span className='username'>로그인해주세요.</span>
+                <span className='logout'>일부 서비스는 로그인해야 이용이 가능합니다!</span>
+              </div>
+            </UserProfile>
+          )}
+        </Container>
       )}
 
       <Overlay $open={isSidebarOpen} onClick={closeSidebar} />
@@ -127,21 +133,21 @@ function Header(props) {
               전체 앨범
             </li>
           </Link>
-            <Link to="/map" onClick={closeSidebar}>
-              <li>
-                  추천 여행지
-              </li>
-            </Link>
+          <Link to="/map" onClick={closeSidebar}>
+            <li>
+              추천 여행지
+            </li>
+          </Link>
           <li onClick={() => {
-              closeSidebar();
-              if (!isLoggedIn) {
-                alert("로그인 후 이용이 가능합니다");
-                navigate('/login');
-              }
-              else {
-                navigate('/events');
-              }
-            }}>
+            closeSidebar();
+            if (!isLoggedIn) {
+              alert("로그인 후 이용이 가능합니다");
+              navigate('/login');
+            }
+            else {
+              navigate('/events');
+            }
+          }}>
             <span className='other'>
               선물 랭킹
             </span>
@@ -150,7 +156,7 @@ function Header(props) {
           {user?.authority === 'ROLE_ADMIN' ? (
             <Link to="/admin/users" onClick={closeSidebar}>
               <li>
-                  관리자 페이지
+                관리자 페이지
               </li>
             </Link>
           ) : (
@@ -160,44 +166,44 @@ function Header(props) {
               </li>
               {isSidebarSubOpen &&
                 subMenuItems.map(({ to, label }) => (
-                <li key={to} className='sub'>
-                  <ul>
-                    <li to={to} onClick={() => {
-                      closeSidebar();
-                      if (!isLoggedIn) {
-                        alert("로그인 후 이용이 가능합니다");
-                        navigate('/login');
-                      }
-                      else {
-                        navigate(to);
-                      }
-                    }} className='others'>
-                      {label}
-                    </li>
-                  </ul>
-                </li>
-              ))}          
+                  <li key={to} className='sub'>
+                    <ul>
+                      <li to={to} onClick={() => {
+                        closeSidebar();
+                        if (!isLoggedIn) {
+                          alert("로그인 후 이용이 가능합니다");
+                          navigate('/login');
+                        }
+                        else {
+                          navigate(to);
+                        }
+                      }} className='others'>
+                        {label}
+                      </li>
+                    </ul>
+                  </li>
+                ))}
             </>
           )}
 
-            {isLoggedIn ? <li
-              onClick={() => {
-                navigate("/");
-                logout();
-                closeSidebar();
-              }}
-            >
-              <span>로그아웃</span>
-            </li> : (
+          {isLoggedIn ? <li
+            onClick={() => {
+              navigate("/");
+              logout();
+              closeSidebar();
+            }}
+          >
+            <span>로그아웃</span>
+          </li> : (
             <>
               <Link to="/login" onClick={closeSidebar}>
                 <li>
-                    {loginText}
+                  {loginText}
                 </li>
               </Link>
               <Link to="/login?view=register" onClick={closeSidebar}>
                 <li>
-                    {signupText}
+                  {signupText}
                 </li>
               </Link>
             </>
@@ -235,31 +241,34 @@ const UserProfile = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
-
+  /* cursor: pointer;
   &:hover {
     opacity: 0.8;
-  }
-
+  } */
   .userImage {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
+    cursor: pointer;
   }
   .user {
     display: flex;
     flex-direction: column;
     align-items: center;
+    user-select: none;
   }
   .username {
     font-weight: bold;
     font-size: 1rem;
-    color: #333;      
+    color: #333;   
+       
   }
-  .welcome {
-    font-size:0.6rem;
+
+  .logout{
+    font-size:0.7rem;
     color: #777;
+    cursor: pointer;
   }
 `;
 
