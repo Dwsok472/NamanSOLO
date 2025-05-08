@@ -113,6 +113,8 @@ function AddAlbum({ onClose, onAddAlbum }) {
     }));
     console.log(files);
     setImages((prevImages) => [...prevImages, ...files]);
+
+    e.target.value = null;
   };
 
 
