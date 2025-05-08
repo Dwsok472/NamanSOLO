@@ -109,17 +109,7 @@ export const createTravel = async (travelEvent) => {
       }
     });
 
-    return {
-      ...res.data,
-      start_date: res.data.start_date,
-      end_date: res.data.end_date,
-      editable: true,
-      type: 'TRAVEL',
-      mediaUrl: res.data.mediaUrl.map((media) => ({
-        ...media,
-        mediaType: media.mediaType || (media.mediaUrl.endsWith('.mp4') ? 'VIDEO' : 'PICTURE')
-      })),
-    };
+    return res.data;
   } catch (e) {
     handleError('createTravel', e);
   }
