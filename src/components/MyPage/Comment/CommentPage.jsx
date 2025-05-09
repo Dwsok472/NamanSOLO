@@ -220,7 +220,7 @@ const CommentPage = () => {
           <Date>작성일자 : {item.addDate}</Date>
           <TitleRow>제목 : {item.albumTitle}</TitleRow>
           <CommentRow>
-            {editingId === item.id && editingId.type === (isReply ? 'recomment' : 'comment') ? (
+            {editingId.id === item.id && editingId.type === (isReply ? 'recomment' : 'comment') ? (
               <CommentText
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
@@ -230,7 +230,7 @@ const CommentPage = () => {
               <span className="comment">내용 : {item.content}</span>
             )}
             <ButtonGroup>
-              {editingId === item.id && editingId.type === (isReply ? 'recomment' : 'comment') ? (
+              {editingId.id === item.id ? (
                 <Button onClick={() => handleSave(item.id, isReply)}>
                   저장
                 </Button>
