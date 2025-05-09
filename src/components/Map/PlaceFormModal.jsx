@@ -34,7 +34,6 @@ const CloseButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  z-index: 10000;
   color: #333;
 
   &:hover {
