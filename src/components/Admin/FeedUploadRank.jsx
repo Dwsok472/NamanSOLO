@@ -123,7 +123,7 @@ function FeedUploadRank() {
     <Wrapper>
       <Container>
         <TitleRow>
-          <h3>기간별 피드 업로드 유저 통계</h3>
+          <h3>기간별 앨범 업로드 유저 통계</h3>
           <div className="nav">
             <button onClick={handlePrevMonth}><FaChevronLeft /></button>
             {currentMonth.replace('-', '년 ')}월
