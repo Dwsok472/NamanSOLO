@@ -160,7 +160,7 @@ function RegisterStep3({ onNext }) {
       setLoading(true); 
       await registerUser(formData);
       deleteForm();
-      onNext();
+      navigate('/login');
     } catch (error) {
       console.error("회원가입 중 에러:", error);
       alert("회원가입 중 문제가 발생했습니다. 다시 시도해주세요.");
