@@ -30,7 +30,7 @@ const Title = styled.h3`
 
 const FeedDonutChart = ({ total }) => {
   const chartData = {
-    labels: ['업로드된 피드 수', '잔여 비율'],
+    labels: ['업로드된 앨범 수', '잔여 비율'],
     datasets: [
       {
         data: [total, 100 - total],
@@ -52,7 +52,7 @@ const FeedDonutChart = ({ total }) => {
 
   return (
     <Container>
-      <Title>월별 피드 업로드 통계</Title>
+      <Title>월별 앨범 업로드 통계</Title>
       <Doughnut data={chartData} options={options} />
       <div style={{
         position: 'absolute',

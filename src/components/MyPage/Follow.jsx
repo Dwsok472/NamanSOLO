@@ -74,7 +74,7 @@ function Follow({ type }) {
                 <Right>
                   <TopButton>
                     {" "}
-                    {type === "follower" ? "차단" : "피드 구경가기"}
+                    {type === "follower" ? "차단" : "앨범 구경가기"}
                   </TopButton>
                   <ButtomButton>
                     {" "}
