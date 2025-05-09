@@ -96,7 +96,7 @@ const FeedActivityTable = () => {
       <Table>
         <thead>
           <tr>
-            <th>#</th>
+            <th>번호</th>
             <th>유저</th>
             <th>마지막 활동일</th>
           </tr>
