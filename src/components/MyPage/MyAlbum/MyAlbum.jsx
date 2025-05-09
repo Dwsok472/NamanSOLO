@@ -27,6 +27,8 @@ const MyAlbum = () => {
   const [$columns, setColumns] = useState(5); // 기본값: 5개 보기
   const [isTrashDragOver, setIsTrashDragOver] = useState(false);
   const [myPosts, setMyPosts] = useState([]); // 나의 포스트들~~
+
+
   // 내 앨범 가지고 오기!!!!!
   async function GetMyAlbum() {
     const jwt = sessionStorage.getItem('jwt-token');
@@ -45,6 +47,7 @@ const MyAlbum = () => {
         return;
       }
       setMyPosts(response.data);
+      console.log(myPosts)
     } catch (error) {
       alert('정보를 불러오는 과장에서 에러가 발생하였습니다! ');
       throw error; // 에러 처리
@@ -83,6 +86,7 @@ const MyAlbum = () => {
     setIsAddModalOpen(true);
   };
 
+  console.log(editingPost)
   //앨범 정보를 수정한 후 화면에 반영
   //updatedAlbum.id와 일치하는 게시글을 찾아서, 그 자리만 updatedAlbum으로 바꿈
   const handleUpdateAlbum = (updatedAlbum) => {

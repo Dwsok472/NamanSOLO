@@ -23,6 +23,8 @@ function ModifyAlbumAndDetail({
   const [isPublic, setIsPublic] = useState(true); // 공개 비공개 여부
   const [showMap, setShowMap] = useState(false); // 지도 펼치기 여부
   const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소
+
+  console.log(tags)
   const handleOpenMap = () => setShowMap(true);
   const handleCloseMap = () => setShowMap(false);
   const handleLocationSelect = (location) => {
@@ -77,6 +79,9 @@ function ModifyAlbumAndDetail({
         ...uploadedMedia, //새로 추가된 이미지
       ];
 
+      const taglist = tags.map((tag) => ({
+        name: tag.text,
+      }))
 
       // 공통 앨범 데이터
       const albumData = {
@@ -86,13 +91,9 @@ function ModifyAlbumAndDetail({
         latitude: selectedPlace?.lat || 0,
         longitude: selectedPlace?.lng || 0,
         location: selectedPlace?.address || "",
-        tagList: tags.map((tag, index) => ({
-          id: index,
-          name: tag.text,
-        })),
+        tagList: taglist
       };
-
-      let res;
+      console.log(taglist);
 
       if (editMode && onEditAlbum && editData) {
         const updateAlbum = {
@@ -137,11 +138,13 @@ function ModifyAlbumAndDetail({
     }
   }
   //기존 데이터를 폼에 자동으로 채워주는 기능과 공개/비공개 스위치 제어 기능
+
+
   useEffect(() => {
     if (editMode && editData) {
       setTitle(editData.title);
       setTags(
-        editData.albumTags.map((t) => ({ id: Date.now() + Math.random(), text: t }))
+        editData.albumTags.map((t) => ({ text: t }))
       );
       setImages(
         editData.url.map((img) => ({
@@ -201,16 +204,16 @@ function ModifyAlbumAndDetail({
       if (value.trim()) {
         setTags((prevTags) => [
           ...prevTags,
-          { id: Date.now(), text: `#${value.trim()}` },
+          { text: `#${value.trim()}` },
         ]);
         e.target.value = ''; // 입력 필드를 비웁니다.
       }
     }
   };
-
+  console.log(tags)
   // 태그 삭제 함수
-  const handleTagDelete = (id) => {
-    setTags((prevTags) => prevTags.filter((tag) => tag.id !== id));
+  const handleTagDelete = (text) => {
+    setTags((prevTags) => prevTags.filter((tag) => tag.text !== text));
   };
   console.log(images);
   console.log(imageIndex);
@@ -296,10 +299,10 @@ function ModifyAlbumAndDetail({
               />
               <div className="tags-list">
                 {tags.map((tag) => (
-                  <div key={tag.id} className="tag-item">
+                  <div key={tag.text} className="tag-item">
                     <div
                       className="close1"
-                      onClick={() => handleTagDelete(tag.id)}
+                      onClick={() => handleTagDelete(tag.text)}
                     >
                       <IconClose1 /> {/* 태그 삭제 아이콘 */}
                     </div>
