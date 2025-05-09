@@ -343,6 +343,7 @@ const Block = styled.div`
 
   .follow.following {
     background-color: #ffe600;
+    cursor: default;
   }
 
   .follow.follower {
