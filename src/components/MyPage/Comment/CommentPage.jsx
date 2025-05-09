@@ -6,7 +6,7 @@ import leftkey from '../../img/leftkey.png';
 import AlbumDetailModal from '../../Album/AlbumDetailModal';
 
 const CommentPage = () => {
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState({ id: null, type: null });
   const [editValue, setEditValue] = useState('');
   const [comments, setComments] = useState([]);
   const [replies, setReplies] = useState([]);
@@ -166,7 +166,7 @@ const CommentPage = () => {
 
   const handleSave = (id, isReply) => {
     Update(id, isReply);
-    setEditingId(null);
+    setEditingId({ id: null, type: null });
     setEditValue('');
   };
 
@@ -220,7 +220,7 @@ const CommentPage = () => {
           <Date>작성일자 : {item.addDate}</Date>
           <TitleRow>제목 : {item.albumTitle}</TitleRow>
           <CommentRow>
-            {editingId === item.id ? (
+            {editingId === item.id && editingId.type === (isReply ? 'recomment' : 'comment') ? (
               <CommentText
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
@@ -237,7 +237,7 @@ const CommentPage = () => {
               ) : (
                 <Button
                   onClick={() => {
-                    setEditingId(item.id);
+                    setEditingId({ id: item.id, type: isReply ? 'recomment' : 'comment' });
                     setEditValue(item.content);
                   }}
                 >
