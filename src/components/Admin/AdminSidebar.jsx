@@ -85,7 +85,7 @@ function AdminSidebar({ setShowModal }) {
 
       <MenuGroup>
         <MenuItem to="/admin/users">유저 정보 및 통계</MenuItem>
-        <MenuItem to="/admin/feeds">피드 정보 및 통계</MenuItem>
+        <MenuItem to="/admin/feeds">앨범 정보 및 통계</MenuItem>
         <MenuButton onClick={() => setShowModal(true)}>
           이벤트 관리
         </MenuButton>

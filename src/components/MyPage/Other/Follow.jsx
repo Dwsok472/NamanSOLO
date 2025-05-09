@@ -294,7 +294,7 @@ function Follow({ type }) {
                         await addFollow(item.username); // 팔로우 요청
                       }
                       if (type === 'following' && !item.mutualFollow) {
-                        navigate(`/user/story/${item.username}`); // 피드 구경
+                        navigate(`/user/story/${item.username}`); // 앨범 구경
                       }
                     }}
                   >
@@ -304,7 +304,7 @@ function Follow({ type }) {
                         : '팔로우 하기'
                       : item.mutualFollow
                       ? '맞팔중'
-                      : '피드 구경하기'}
+                      : '앨범 구경하기'}
                   </TopButton>
                   <ButtomButton
                     onClick={() =>

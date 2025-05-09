@@ -116,7 +116,7 @@ const FeedLineChart = () => {
     labels: data.map(d => d.date),
     datasets: [
       {
-        label: '피드 수',
+        label: '앨범 수',
         data: data.map(d => d.count),
         borderColor: '#1e90ff',
         backgroundColor: 'rgba(30, 144, 255, 0.3)',
@@ -146,7 +146,7 @@ const FeedLineChart = () => {
 
   return (
     <Container>
-      <Title>일별 피드 생성 비율 통계</Title>
+      <Title>일별 앨범 생성 비율 통계</Title>
       <Nav>
         <button onClick={() => setStartDate(prev => moveDays(prev, -7))}><FaChevronLeft /></button>
         <span>{from} ~ {to}</span>
