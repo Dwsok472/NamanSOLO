@@ -230,7 +230,7 @@ const CommentPage = () => {
               <span className="comment">내용 : {item.content}</span>
             )}
             <ButtonGroup>
-              {editingId === item.id ? (
+              {editingId === item.id && editingId.type === (isReply ? 'recomment' : 'comment') ? (
                 <Button onClick={() => handleSave(item.id, isReply)}>
                   저장
                 </Button>
